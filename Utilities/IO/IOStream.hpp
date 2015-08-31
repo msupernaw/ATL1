@@ -122,7 +122,7 @@ namespace atl {
 
     /**
      * Simple class for reading space and tab delimited 
-     * streamed input.
+     * input. Considers "#" as comment.
      */
     template<class T>
     class StreamedDataFile {
