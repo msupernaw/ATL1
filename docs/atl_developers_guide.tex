@@ -1,0 +1,266 @@
+
+\documentclass[12pt,a4paper]{article}
+\usepackage[top=30pt,bottom=30pt,left=48pt,right=46pt]{geometry}
+
+\usepackage[printwatermark]{xwatermark}
+\newwatermark[allpages,color=red!50,angle=45,scale=3,xpos=0,ypos=0]{DRAFT}
+
+\usepackage{pgfplots}
+\usepackage{color}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    linktoc=all,
+    citecolor=blue,
+    filecolor=blue,
+    linkcolor=blue,
+    urlcolor=blue
+}
+\usepackage{titlesec}
+
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset { %
+    language=C++,
+    backgroundcolor=\color{black!5}, % set backgroundcolor
+    basicstyle=\footnotesize,% basic font setting
+}
+
+\usepackage{amsmath}
+\usepackage{graphicx} 
+\usepackage{wrapfig}
+\usepackage{forest}
+\usepackage{tikz}
+\usepackage{tikz-qtree}
+\usepackage{fix-cm}
+\usepackage{algorithm,algpseudocode,float}
+\usepackage{lipsum}
+\newcommand{\Code}[1]{%
+\lstinline{#1}}
+\usepackage[T1]{fontenc}
+\usepackage[many]{tcolorbox}
+\tcbuselibrary{listings}
+
+\newcommand{\Out}[1]{%
+\begin{lstlisting}[language=bash]
+#1
+\end{lstlisting}
+}
+\newtcblisting{cppsource}{
+  colback=white,
+  boxrule=0pt,
+  arc=0pt,
+  outer arc=0pt,
+  top=0pt,
+  bottom=0pt,
+  colframe=white,
+  listing only,
+ left=15.5pt,
+  enhanced,
+  listing options={
+    columns=flexible,
+    basicstyle=\small\ttfamily,
+    keywordstyle=\color{blue},
+    backgroundcolor=\color{black!4}, % set backgroundcolor
+    language=C++,
+    showstringspaces=false,
+    tabsize=2,
+  }
+}
+\newtcblisting{smallcppsource}{
+  colback=white,
+  boxrule=0pt,
+  arc=0pt,
+  outer arc=0pt,
+  top=0pt,
+  bottom=0pt,
+  colframe=white,
+  listing only,
+ left=15.5pt,
+  enhanced,
+  listing options={
+    columns=flexible,
+    basicstyle=\tiny\ttfamily,
+    keywordstyle=\color{blue},
+    backgroundcolor=\color{black!4}, % set backgroundcolor
+    language=C++,
+    showstringspaces=false,
+    tabsize=2,
+  }
+}
+
+\newtcblisting{myoutput}{
+  colback=white,
+  boxrule=0pt,
+  arc=0pt,
+  outer arc=0pt,
+  top=0pt,
+  bottom=0pt,
+  colframe=white,
+  listing only,
+  listing options={
+    basicstyle=\scriptsize\ttfamily,
+    breaklines=false,
+    columns=flexible,
+     backgroundcolor=\color{white}, % set backgroundcolor
+    language=bash,
+  }
+}
+% -------------------------------------------------------------------------------------
+% BEGIN DOCUMENT
+% -------------------------------------------------------------------------------------
+%\begin{document}
+
+%\title{%
+%          Automatic Differentiation In ATL \\
+%          A Developer's Guide}
+%\author{Matthew Supernaw}
+
+\begin{document}
+%titlepage
+\thispagestyle{empty}
+\begin{center}
+\begin{minipage}{0.75\linewidth}
+    \centering
+%NOAA logo
+ %  \centerline{\includegraphics{noaa_fisheries_small2.png}}
+%    \rule{0.4\linewidth}{0.15\linewidth}\par
+    \vspace{5cm}
+%Thesis title
+    {{\huge \textbf{
+    The Analytics Template Library} \\
+                        \textit{A Developer's Guide}\par}}
+    \vspace{3cm}
+%Author's name
+    {\Large Matthew Supernaw \\
+                 NOAA Fisheries\par}
+    \vspace{3cm}
+
+    \vspace{3cm}
+%Date and versio
+    {\Large Version 1.0} \\
+    {\Large August 2015\par}
+\end{minipage}
+\end{center}
+\clearpage
+
+%\maketitle
+\pagestyle{empty}
+
+% -------------------------------------------------------------------------------------
+% TABLE OF CONTENTS
+% -------------------------------------------------------------------------------------
+\tableofcontents
+
+\newpage
+
+\section{Introduction}
+The Analytics Template Library (ATL) is a generic scientific computing library that leverages the power of Template Metaprogramming for flexibility and speed.  This guide is intended to give the user a basic understanding of how to develop programs in ATL. The information in this document is intended for anyone interested in scientific computing in C++ and it is expected that the reader will have a basic understanding of the C++ programming language, as well as scientific computing.
+\section{Template Metaprogramming}
+Template metaprogramming is a technique in which templates are used by the compiler to generate source code. This allows the developer to focus on the architecture and flow of the program and delegate any implementation required to the compiler. This technique has the benefit of reducing source code and development time. Here is an example of how template metaprogramming works in C++.
+\begin{cppsource}
+
+/**
+ * Generic Function to add two values.
+ *
+ * @param a
+ * @param b
+ * @return 
+ */
+template<class T>
+T add(T a, T b) {
+    return a + b;
+}
+
+    double d = add<double>(1.01, 1.01);
+    std::cout << d << "\n";
+
+    float f = add<float>(1.01f, 1.01f);
+    std::cout << f << "\n";
+
+    int i = add<int>(1, 1);
+    std::cout << i << "\n";
+    
+\end{cppsource}
+
+\textbf{Output}
+\begin{myoutput}
+2.02
+2.02
+2
+\end{myoutput}
+As you can see, we have one template function that successfully handled three different data types. So, true to the nature of template metaprogramming, we have reduce the amout of source code required and thus reduced development time. Templates can also be applied to classes as well, for example the following will give us the identical output:
+
+\begin{cppsource}
+
+template <class T>
+class Add{
+    public:
+    T Evaluate(T a, T b){
+        return a+b;
+    }
+};
+
+\end{cppsource}
+\textbf{Output}
+\begin{myoutput}
+2.02
+2.02
+2
+\end{myoutput}
+  
+\subsection{Expression Templates}
+Expression templates is a template metaprogramming technique in which templates are used to represent part of an expression. The expression template can be evaluated at a later time, or even passed to a function. Expression templates are considered a source code optimization technique because there use reduces the amount of temporary variables created in a given calculation. Furthermore, expression templates are a special case of static polymorphism, this is a form of polymorphism that is handled at compile time, rather than runtime.
+\section{Automatic Differentiation}
+\subsection{Computing Derivatives}
+\subsubsection{Gradient Vectors}
+\subsubsection{Hessian Matrices}
+\subsection{Controlling The Gradient Structure}
+\subsection{Adjoint Entries}
+\section{Containers}
+\subsection{Vectors}
+\subsection{Matrices}
+\section{Probability Distributions}
+\subsection{Probability Densities}
+\subsection{Cumulative Probabilities}
+\subsection{Inverse Cumulative Probabilities}
+\subsection{Random Numbers}
+\subsection{Distribution Objects}
+\subsection{Available Distributions}
+\subsubsection{Beta}
+\subsubsection{Binomial}
+\subsubsection{Cauchy}
+\subsubsection{Chi-Square}
+\subsubsection{Exponential}
+\subsubsection{F}
+\subsubsection{Gamma}
+\subsubsection{Geometric}
+\subsubsection{Hypergeometric}
+\subsubsection{Logistic}
+\subsubsection{Log Normal}
+\subsubsection{Negative Binomial}
+\subsubsection{Normal}
+\subsubsection{Poisson}
+\subsubsection{Student's t}
+\subsubsection{Weibull}
+\section{Descriptive Statistics}
+\section{Optimization}
+\subsection{Function Minimization}
+\section{Concurrency}
+\subsection{Concurrency For Containers}
+\subsection{Concurrency AD Types}
+\subsubsection{Handling Threads With Shared Dependency}
+\section{Graphics}
+\subsection{Line Plots}
+\subsection{Scatter Plots}
+\subsection{Pie Charts, Bar Plots, and Histograms}
+\subsection{Vector Fields}
+\subsection{Surfaces and Volumes}
+\section{Future Work}
+\subsection{Random Effects Modelling}
+\subsection{MPI}
+\section{References}
+\section{Appendices}
+\end{document}
