@@ -28,7 +28,7 @@
 #include <boost/container/flat_set.hpp>
 #include <boost/container/flat_map.hpp>
 #else
-//#include <set>
+#include <set>
 #include "../Utilities/flat_map.hpp"
 #include "../Utilities/flat_set.hpp"
 #endif
