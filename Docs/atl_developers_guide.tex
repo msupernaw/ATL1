@@ -157,7 +157,7 @@
 \newpage
 
 \section{Introduction}
-The Analytics Template Library (ATL) is a generic scientific computing library that leverages the power of Template Metaprogramming for flexibility and speed.  This guide is intended to give the user a basic understanding of how to develop programs in ATL. The information in this document is intended for anyone interested in scientific computing in C++ and it is expected that the reader will have a basic understanding of the C++ programming language, as well as scientific computing.
+The Analytics Template Library (ATL) is a generic scientific computing library that leverages the power of template metaprogramming for flexibility and speed.  This guide is intended to give the user a basic understanding of how to develop programs in ATL. The information in this document is intended for anyone interested in scientific computing in C++ and it is expected that the reader will have a basic understanding of the C++ programming language, as well as scientific computing.
 \section{Template Metaprogramming}
 Template metaprogramming is a technique in which templates are used by the compiler to generate source code. This allows the developer to focus on the architecture and flow of the program and delegate any implementation required to the compiler. This technique has the benefit of reducing source code and development time. Here is an example of how template metaprogramming works in C++.
 \begin{cppsource}
@@ -212,9 +212,150 @@ class Add{
 \end{myoutput}
   
 \subsection{Expression Templates}
-Expression templates is a template metaprogramming technique in which templates are used to represent part of an expression. The expression template can be evaluated at a later time, or even passed to a function. Expression templates are considered a source code optimization technique because there use reduces the amount of temporary variables created in a given calculation. Furthermore, expression templates are a special case of static polymorphism, this is a form of polymorphism that is handled at compile time, rather than runtime.
+Expression templates is a template metaprogramming technique in which templates are used to represent part of an expression. The expression template can be evaluated at a later time, or even passed to a function. Expression templates are considered a source code optimization technique because their use reduces the amount of temporary variables created in a given calculation. Furthermore, expression templates are a special case of static polymorphism, this is a form of polymorphism that is handled at compile time, rather than runtime.
+\
+To demonstrate how expression templates work, let's create a small vector library that can handle simple operators such as + and -. First, we'll need a base class.
+\begin{cppsource}
+
+template<class T, class A>
+struct VectorExpr {
+
+    const A & Cast() const {
+        return static_cast<const A&> (*this);
+    }
+
+    T operator()(int i) const {
+        return Cast().operator()(i);
+    }
+    
+    VectorExpr& operator=(const VectorExpr & exp) const {
+        return *this;
+    }
+};
+\end{cppsource}
+Ok, now we have a base class, that can take a template parameter T as the base data type, and template parameter A, which will be the class inheriting from \textit{VectorExpr}. Now, lets inherit from \textit{VectorExpr} and create another class to perform the addition operation:
+\begin{cppsource}
+
+template<class T, class LHS, class RHS>
+struct VectorAdd : public VectorExpr<T, VectorAdd<T, LHS, RHS> > {
+    const LHS& lhs;
+    const RHS& rhs;
+
+    VectorAdd(const VectorExpr<T, LHS>& l,
+            const VectorExpr<T, RHS>& r)
+    : lhs(l.Cast()), rhs(r.Cast()) {
+    }
+
+    T operator()(int i) const {
+        return lhs(i) + rhs(i);
+    }
+
+};
+
+template<class T, class LHS, class RHS>
+inline const VectorAdd<T, LHS, RHS> operator+(const VectorExpr<T, LHS>& l, 
+const VectorExpr<T, RHS>& r) {
+    return VectorAdd<T, LHS, RHS>(l.Cast(), r.Cast());
+}
+
+\end{cppsource}
+As you can see from the above code listing, we have a class called \textit{VectorAdd}, which inherits from \textit{VectorExpr}. We have overloaded the function \textit{T operator()(int i) const} to provide the appropriate operation. In addition, we created the operator \textit{operator+} to handle the actual operation. Notice that \textit{operator+} returns an instance of \textit{VectorAdd} rather than an instance of a \textit{Vector}, which is defined below. We can also do this for the operation -:
+\begin{cppsource}
+
+template<class T, class LHS, class RHS>
+struct VectorMinus : public VectorExpr<T, VectorMinus<T, LHS, RHS> > {
+    const LHS& lhs;
+    const RHS& rhs;
+
+    VectorMinus(const VectorExpr<T, LHS>& l,
+            const VectorExpr<T, RHS>& r)
+    : lhs(l.Cast()), rhs(r.Cast()) {
+    }
+
+    T operator()(int i) const {
+        return lhs(i) - rhs(i);
+    }
+
+};
+
+template<class T, class LHS, class RHS>
+inline const VectorMinus<T, LHS, RHS> operator-(const VectorExpr<T, LHS>& l, 
+const VectorExpr<T, RHS>& r) {
+    return VectorMinus<T, LHS, RHS>(l.Cast(), r.Cast());
+}
+
+\end{cppsource}
+
+Lets create the actual \textit{Vector} class:
+
+\begin{cppsource}
+template<class T, int SIZE>
+class Vector : public VectorExpr<T, Vector<T, SIZE> > {
+    T data[SIZE];
+
+public:
+
+    Vector() {
+    }
+
+    Vector& operator=(const T& value){
+        for (int i = 0; i < SIZE; i++) {
+            data[i] = value;
+        }
+        return *this;
+    }
+    
+    template<class R, class A>
+    Vector& operator=(const VectorExpr<R, A>& exp) {
+        for (int i = 0; i < SIZE; i++) {
+            data[i] = exp(i);
+        }
+        return *this;
+    }
+
+    T operator()(int i) const {
+        return data[i];
+    }
+
+    size_t Size(){
+        return SIZE;
+    }
+ };   
+\end{cppsource}
+In the above \textit{Vector} definition, we have overloaded the operator \textit{T operator()(int i) const} just as we did with  \textit{VectorAdd} and \textit{VectorMinus}, the difference being that a stored value is returned rather than a computed one. Now we can use this code to do work:
+\begin{cppsource}
+
+int main() {
+
+    Vector<double, 2> a;
+    a = 1.0;
+    
+    Vector<double, 2> b;
+    b = 2.0;
+    
+    Vector<double, 2> c;
+    b = 3.0;
+    
+    Vector<double, 2> d;
+    d = a - b + c;
+
+    for(int i =0; i < d.Size(); i++){
+        std::cout<<d(i)<<" ";
+    }
+
+    return 0;
+}
+\end{cppsource}
+
+\textbf{Output}
+\begin{myoutput}
+2 2
+\end{myoutput}
+
+In this simple example, we've created a small library to do elementary operations on vectors using template metaprogramming techniques. Of course, the advantage of writing code like this is that we only had to write one vector library that can handle multiple data types and we've used the expression templates to eliminate the need to create and allocate memory for intermediate \textit{Vector}'s at each operation(+ and -).
+
 \section{Automatic Differentiation}
-The term "Automatic Differentiation" refers to a set of methods to numerically evaluate the derivative of a function in a computer program. Automatic Differentiation (AD) exploits the fact that every computer program, no matter how complicated, executes a sequence of elementary arithmetic operations (addition, subtraction, multiplication, division, etc.) and elementary functions (exp, log, sin, cos, etc.) ("Automatic differentiation.", 2015). The AD components in ATL are fast and are not only capable of computing exact gradients, but also exact Hessian matrices. This is particularly useful for gradient-based optimization problems when the Hessian is desired to improve search direction.
+The term "Automatic Differentiation" refers to a set of methods to numerically evaluate the derivative of a function in a computer program. Automatic Differentiation (AD) exploits the fact that every computer program, no matter how complicated, executes a sequence of elementary arithmetic operations (addition, subtraction, multiplication, division, etc.) and elementary functions (exp, log, sin, cos, etc.) ("Automatic differentiation.", 2015). The AD components in ATL are expression template based and are not only capable of computing exact gradients, but also exact Hessian matrices. This is particularly useful for gradient-based optimization problems when the Hessian is desired to improve search direction.
 In this section, we provide a very basic description of automatic differentiation. Compared to finite-difference techniques, AD has proven to be more efficient for accurately computing partial derivatives. At the heart of AD is the chain rule. Recall from calculus, the chain rule is a method for computing the derivative of two or more functions:\\
  \begin{equation}
  y = f(g(x)) 
@@ -420,7 +561,7 @@ The Hessian matrix is a square matrix of all the second order partial derivative
 
  All we've done is extend the level of recording on the tape and added an additional loop in the reverse mode procedure to accumulate hessian elements. 
 \subsection{Examples}
-In this section we'll show how to use the ATL AutoDiff package. We'll start with simple examples to compute gradients and Hessian matrices, followed by an example of how we can use this information in optimization problems. 
+In this section we'll show how to use the ATL AutoDiff package. We'll start with simple examples to compute gradients and Hessian matrices, followed by an example of how we can use this information in optimization problems by implementing Newton's Method. 
 \subsubsection{Computing Derivatives}
 
 We'll start with our simple example from the section on Automatic Differentiation. Recall we had the expression $f(x_1,x_2) = ln(g(x_1,x_2))$. This is how it is coded in ATL.
@@ -1144,8 +1285,32 @@ Hessian:
  \end{myoutput}
 As you can see from the above output, our function minimizer was able to find a solution in just 11 iterations. For this simple test, it would appear that our Newton minimizer is all that is needed for real world problems, however this is not the case. Inverting the Hessian matrix is an expensive operation for highly parameterized problems. It's often more efficient to just solve $[H(f(x_n)]p_n = \nabla f(x_n)$ as a system of linear equations. Another option is to turn to Quasi-Newton methods for function minimization.  These methods do not use the inverse of the Hessian, but rather estimates it to find a search direction. Some of these methods are implemented in ATL and can be found in the the \textit{FunctionMinimizer} class found in the \textit{ATL/Optimization} package. 
 \section{Containers}
+Currently there are three container types in ATL, Array, Vector, Matrix. All of which are dense, with plans to implement sparse variants in later versions. ATL containers implement expression templates for operations just as the AutoDiff package does, which help to reduce temporary variables, however one must be mindful of stack overflows. Large expressions can cause a stack overflow and the user will not receive an error as to why the program terminated. Furthermore, if your program is compiled with \textit{$-DPROMOTE\_BINARY\_OPERATORS$}, container types that have a \textit{atl::Variable} for a base will have operators that return expression templates rather than a value, which will increase the chance for a stack overflow because you have an expression template operating on expression templates. That said, compiling with \textit{$-DPROMOTE\_BINARY\_OPERATORS$} can lead to faster container operations for containers operating on \textit{atl::Variable} types.
 \subsection{Vectors}
+ATL provides one dense, dynamic vector type called \textit{atl::Vector}. Future version will allow for static and sparse vector types. Vectors support all elementary operations (+,-.*,/), as well as intrinsic functions. A full listing of functions involving \textit{atl::Vector} is available in Appendix A. Here is an example of using a \textit{atl::Vector}:
+\begin{cppsource}
+
+    atl::Vector<double> a = {1, 2, 3, 4, 5};
+    atl::Vector<double> b = {6, 7, 8, 9, 10};
+    atl::Vector<double> c = a * b;
+    std::cout<<a<<" * "<<b<<" = "<<c<<"\n";
+  
+\end{cppsource}
+In the above example, the operation "*" does not return a new \textit{atl::Vector}, but instead returns an object called \textit{VectorMultiply}, which is used to initialize \textit{atl::Vector c};
+
 \subsection{Matrices}
+ATL provides one dense, dynamic matrix type called \textit{atl::Matrix}. Future version will allow for static and sparse matrix types. Matrix support all elementary operations (+,-.*,/), as well as intrinsic functions. A full listing of functions involving \textit{atl::Matrix} is available in Appendix A. Here is an example of using a \textit{atl::Matrix}:
+\begin{cppsource}
+
+    atl::Vector<double> a = {1, 2, 3, 4, 5};
+    atl::Vector<double> b = {6, 7, 8, 9, 10};
+    atl::Vector<double> c = a * b;
+    std::cout<<a<<" * "<<b<<" = "<<c<<"\n";
+  
+\end{cppsource}
+
+\subsection{Arrays}
+Arrays are basic containers in ATL and can have up to seven dimensions.  
 \section{Probability Distributions}
 \subsection{Probability Densities}
 \subsection{Cumulative Probabilities}

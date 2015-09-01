@@ -474,6 +474,17 @@ namespace atl {
             return *this;
         }
 
+        inline Matrix& operator++() {
+            *this = *this+static_cast<T> (1.0);
+            return *this;
+        }
+
+        inline const Matrix operator++(int i) {
+            Matrix temp = *this;
+            *this = static_cast<T> (1.0)+ (*this);
+            return temp;
+        }
+
         inline const size_t Size(const int32_t & dimension) const {
             switch (dimension) {
                 case 0:
@@ -649,13 +660,14 @@ namespace atl {
         std::stringstream ss;
 
 
-        out << ss.str();
+        
         for (int i = 0; i < expr.Size(0); i++) {
+            out<<"[ ";
             for (int j = 0; j < expr.Size(1); j++) {
 
                 out << expr(i, j) << " ";
             }
-            out << "\n";
+            out << "]\n";
         }
 
 

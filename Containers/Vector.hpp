@@ -110,7 +110,7 @@ namespace atl {
             return *this;
         }
 
-        Vector& operator = (const std::initializer_list<T>& l) {
+        Vector& operator=(const std::initializer_list<T>& l) {
             isize = l.size();
             typename std::initializer_list<T>::iterator it;
             data_m.resize(isize);
@@ -121,7 +121,7 @@ namespace atl {
             }
             return *this;
         }
-        
+
         Vector& operator=(const Vector &other) {
             this->isize = other.isize;
             data_m.resize(other.data_m.size());
@@ -494,6 +494,17 @@ namespace atl {
                     return 0;
 
             }
+        }
+
+         inline Vector& operator++() {
+            *this = *this+static_cast<T> (1.0);
+            return *this;
+        }
+
+        inline const Vector operator++(int i) {
+            Vector temp = *this;
+            *this = static_cast<T> (1.0)+ (*this);
+            return temp;
         }
 
         inline const size_t Dimensions() const {

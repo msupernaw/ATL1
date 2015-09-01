@@ -76,20 +76,20 @@ namespace atl {
     
     
     template<class T2, class A>
-    std::ostream& operator<<(std::ostream& out, atl::VectorExpression< T2, A> &expr) {
+    std::ostream& operator<<(std::ostream& out,const atl::VectorExpression< T2, A> &expr) {
 
         int dims = expr.Dimensions();
         std::stringstream ss;
 
 //        ss << "[0]:";
-//        out << ss.str();
+        out <<"[ ";
         for (int i = 0; i < expr.Size(0); i++) {
             if ((i % 15) == 0 && i != 0) {
                 std::cout << "\n" << ss.str();
             }
             out << expr.AtRaw(i) << " ";
         }
-        out << "\n";
+        out << "]";
 
         return out;
     }
