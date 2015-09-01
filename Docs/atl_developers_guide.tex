@@ -1296,21 +1296,44 @@ ATL provides one dense, dynamic vector type called \textit{atl::Vector}. Future 
     std::cout<<a<<" * "<<b<<" = "<<c<<"\n";
   
 \end{cppsource}
-In the above example, the operation "*" does not return a new \textit{atl::Vector}, but instead returns an object called \textit{VectorMultiply}, which is used to initialize \textit{atl::Vector c};
+\textbf{Output}
+\begin{myoutput}
+[ 1 2 3 4 5 ] * [ 6 7 8 9 10 ] = [ 6 14 24 36 50 ]
+\end{myoutput}
+In the above example, the operation "*" does not return a new \textit{atl::Vector}, but instead returns an object called \textit{VectorMultiply}, which is used to initialize \textit{atl::Vector c}.
 
 \subsection{Matrices}
 ATL provides one dense, dynamic matrix type called \textit{atl::Matrix}. Future version will allow for static and sparse matrix types. Matrix support all elementary operations (+,-.*,/), as well as intrinsic functions. A full listing of functions involving \textit{atl::Matrix} is available in Appendix A. Here is an example of using a \textit{atl::Matrix}:
 \begin{cppsource}
-
-    atl::Vector<double> a = {1, 2, 3, 4, 5};
-    atl::Vector<double> b = {6, 7, 8, 9, 10};
-    atl::Vector<double> c = a * b;
-    std::cout<<a<<" * "<<b<<" = "<<c<<"\n";
+ 
+  atl::Matrix<double> a = {
+        {1, 2, 3, 4, 5},
+        {1, 2, 3, 4, 5}
+    };
+    atl::Matrix<double> b = {
+        {6, 7, 8, 9, 10},
+        {6, 7, 8, 9, 10}};
+    atl::Matrix<double> c = a * b;
+    
+    std::cout << a << " * \n" << b << " = \n" << c << "\n";
   
 \end{cppsource}
+\textbf{Output}
+\begin{myoutput}
+
+[ 1 2 3 4 5 ]
+[ 1 2 3 4 5 ]
+ * 
+[ 6 7 8 9 10 ]
+[ 6 7 8 9 10 ]
+ = 
+[ 18 21 24 27 30 ]
+[ 18 21 24 27 30 ]
+
+\end{myoutput}
 
 \subsection{Arrays}
-Arrays are basic containers in ATL and can have up to seven dimensions.  
+Arrays are basic containers in ATL and can have up to seven dimensions.  Unlike \textit{atl::Vector} and \textit{atl::Matrix},  \textit{atl::Array} cannot be initialized with an initializer list as demonstrated above. Simply put, \textit{atl::Array}
 \section{Probability Distributions}
 \subsection{Probability Densities}
 \subsection{Cumulative Probabilities}

@@ -8,6 +8,7 @@
 #ifndef ET4AD_VARIABLE_HPP
 #define	ET4AD_VARIABLE_HPP
 
+#include <math.h>
 #include <stack>
 #include <vector>
 #include <valarray>
