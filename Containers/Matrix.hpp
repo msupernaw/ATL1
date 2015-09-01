@@ -15,6 +15,8 @@
 #include <vector>
 #endif
 
+#include <initializer_list>
+
 #include <iostream>
 #include <sstream>
 
@@ -90,6 +92,21 @@ namespace atl {
         isize(0), jsize(0) {
         }
 
+        Matrix(const std::initializer_list<std::initializer_list<T> >& l) {
+            isize = l.size();
+            jsize = l.begin()->size();
+            typename std::initializer_list<std::initializer_list<T> >::iterator it;
+            typename std::initializer_list<T>::iterator jt;
+            data_m.resize(isize * jsize);
+            int index = 0;
+            for (it = l.begin(); it != l.end(); ++it) {
+                for (jt = it->begin(); jt != it->end(); ++jt) {
+                    data_m[index] = (*jt);
+                    index++;
+                }
+            }
+        }
+
         Matrix(const size_t& i, const size_t& j)
         :
         isize(i), jsize(j) {
@@ -124,6 +141,22 @@ namespace atl {
         Matrix& operator=(const T& val) {
             for (int i = 0; i < data_m.size(); i++) {
                 data_m[i] = val;
+            }
+            return *this;
+        }
+
+        Matrix& operator=(const std::initializer_list<std::initializer_list<T> >& l) {
+            isize = l.size();
+            jsize = l.begin()->size();
+            typename std::initializer_list<std::initializer_list<T> >::iterator it;
+            typename std::initializer_list<T>::iterator jt;
+            data_m.resize(isize * jsize);
+            int index = 0;
+            for (it = l.begin(); it != l.end(); ++it) {
+                for (jt = it->begin(); jt != it->end(); ++jt) {
+                    data_m[index] = (*jt);
+                    index++;
+                }
             }
             return *this;
         }
@@ -580,7 +613,7 @@ namespace atl {
     template<class T, class A>
     T Det(int n, const atl::MatrixExpression< T, A>& mat) {
         T d = 0;
-//        int n = mat.Size(0);
+        //        int n = mat.Size(0);
         if (mat.Size(0) != mat.Size(1)) {
             std::cout << __func__ << " Error: matrix must be square";
             exit(0);
@@ -603,7 +636,7 @@ namespace atl {
                     }
                     subi++;
                 }
-                d = d + (pow(-1.0, (T)c) * mat(0, c) * Det(n-1,submat));
+                d = d + (pow(-1.0, (T) c) * mat(0, c) * Det(n - 1, submat));
             }
         }
         return d;
@@ -628,8 +661,8 @@ namespace atl {
 
         return out;
     }
-    
-       /**
+
+    /**
      * \ingroup Matrix
      * Minor of a Matrix.
      * @param m
@@ -651,12 +684,12 @@ namespace atl {
                 }
             }
         } else {
-            std::cout<< "Matrix exception. call to Minor, Index for minor out of range";
+            std::cout << "Matrix exception. call to Minor, Index for minor out of range";
             exit(0);
         }
         return ret;
     }
-    
+
     /**
      * \ingroup Matrix
      * Determine if this Matrix is positive definite.
@@ -664,7 +697,7 @@ namespace atl {
      * @return 
      */
     template<class T, class A>
-    bool IsPositveDefinite(const MatrixExpression<T,A> &m) {
+    bool IsPositveDefinite(const MatrixExpression<T, A> &m) {
 
         for (unsigned int i = 0; i < m.Size(0); i++) {
 
@@ -676,16 +709,14 @@ namespace atl {
         return true;
     }
 
-
-
-  /**
+    /**
      * \ingroup Matrix
      * Determine if this Matrix is negative definite.
      * @param m
      * @return 
      */
     template<class T, class A>
-    bool IsNegativeDefinite(const MatrixExpression<T,A> &m) {
+    bool IsNegativeDefinite(const MatrixExpression<T, A> &m) {
         for (unsigned int i = 0; i < m.Size(0); i++) {
 
             if (Det(Minor(m, i, i)) >= T(0)) {
@@ -702,8 +733,8 @@ namespace atl {
      * @param m
      * @return 
      */
-    template<class T,class A>
-    bool IsPositveSemidefinite(const MatrixExpression<T,A> &m) {
+    template<class T, class A>
+    bool IsPositveSemidefinite(const MatrixExpression<T, A> &m) {
         for (unsigned int i = 0; i < m.Size(0); i++) {
 
             if (Det(Minor(m, i, i)) < T(0)) {
@@ -721,8 +752,8 @@ namespace atl {
      * @param m
      * @return 
      */
-    template<class T,class A>
-    bool IsNegativeSemidefinite(const MatrixExpression<T,A> &m) {
+    template<class T, class A>
+    bool IsNegativeSemidefinite(const MatrixExpression<T, A> &m) {
         for (unsigned int i = 0; i < m.Size(0); i++) {
 
             if (Det(Minor(m, i, i)) > T(0)) {

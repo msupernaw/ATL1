@@ -81,8 +81,8 @@ namespace atl {
         int dims = expr.Dimensions();
         std::stringstream ss;
 
-        ss << "[0]:";
-        out << ss.str();
+//        ss << "[0]:";
+//        out << ss.str();
         for (int i = 0; i < expr.Size(0); i++) {
             if ((i % 15) == 0 && i != 0) {
                 std::cout << "\n" << ss.str();

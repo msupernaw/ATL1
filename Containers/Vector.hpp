@@ -27,6 +27,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <initializer_list>
 
 namespace atl {
 
@@ -64,6 +65,17 @@ namespace atl {
             data_m.resize(i);
         }
 
+        Vector(const std::initializer_list<T>& l) {
+            isize = l.size();
+            typename std::initializer_list<T>::iterator it;
+            data_m.resize(isize);
+            int index = 0;
+            for (it = l.begin(); it != l.end(); ++it) {
+                data_m[index] = (*it);
+                index++;
+            }
+        }
+
         Vector(const Vector &orig)
         : isize(orig.isize) {
             this->isize = orig.isize;
@@ -98,6 +110,18 @@ namespace atl {
             return *this;
         }
 
+        Vector& operator = (const std::initializer_list<T>& l) {
+            isize = l.size();
+            typename std::initializer_list<T>::iterator it;
+            data_m.resize(isize);
+            int index = 0;
+            for (it = l.begin(); it != l.end(); ++it) {
+                data_m[index] = (*it);
+                index++;
+            }
+            return *this;
+        }
+        
         Vector& operator=(const Vector &other) {
             this->isize = other.isize;
             data_m.resize(other.data_m.size());
@@ -505,11 +529,11 @@ namespace atl {
          *Returns the last valid index for this vector. 
          */
         inline const size_t IndexMax() const {
-            return this->isize-1;
+            return this->isize - 1;
         }
-        
-        inline void IsAliased(bool& aliased, void* ptr) const{
-            if((void*)&this->data_m == ptr){
+
+        inline void IsAliased(bool& aliased, void* ptr) const {
+            if ((void*) & this->data_m == ptr) {
                 aliased = true;
             }
         }
@@ -521,7 +545,7 @@ namespace atl {
          * @return 
          */
         inline const RET_TYPE AtRaw(const uint32_t & i) const {
-            return  data_m[i];
+            return data_m[i];
         }
 
         inline void ExpressionLength(uint32_t& length)const {
@@ -529,15 +553,15 @@ namespace atl {
         }
 
     };
-    
+
     template<typename REAL_T>
-    std::ifstream& operator >> (std::ifstream& in, const atl::Vector<REAL_T>& v){
-        for(int i = v.IndexMin(); i<=v.IndexMax(); i++){
-            in>>v(i);
+    std::ifstream& operator>>(std::ifstream& in, const atl::Vector<REAL_T>& v) {
+        for (int i = v.IndexMin(); i <= v.IndexMax(); i++) {
+            in >> v(i);
         }
         return in;
     }
-    
+
 
 }
 

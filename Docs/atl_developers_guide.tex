@@ -214,11 +214,935 @@ class Add{
 \subsection{Expression Templates}
 Expression templates is a template metaprogramming technique in which templates are used to represent part of an expression. The expression template can be evaluated at a later time, or even passed to a function. Expression templates are considered a source code optimization technique because there use reduces the amount of temporary variables created in a given calculation. Furthermore, expression templates are a special case of static polymorphism, this is a form of polymorphism that is handled at compile time, rather than runtime.
 \section{Automatic Differentiation}
-\subsection{Computing Derivatives}
-\subsubsection{Gradient Vectors}
-\subsubsection{Hessian Matrices}
-\subsection{Controlling The Gradient Structure}
-\subsection{Adjoint Entries}
+The term "Automatic Differentiation" refers to a set of methods to numerically evaluate the derivative of a function in a computer program. Automatic Differentiation (AD) exploits the fact that every computer program, no matter how complicated, executes a sequence of elementary arithmetic operations (addition, subtraction, multiplication, division, etc.) and elementary functions (exp, log, sin, cos, etc.) ("Automatic differentiation.", 2015). The AD components in ATL are fast and are not only capable of computing exact gradients, but also exact Hessian matrices. This is particularly useful for gradient-based optimization problems when the Hessian is desired to improve search direction.
+In this section, we provide a very basic description of automatic differentiation. Compared to finite-difference techniques, AD has proven to be more efficient for accurately computing partial derivatives. At the heart of AD is the chain rule. Recall from calculus, the chain rule is a method for computing the derivative of two or more functions:\\
+ \begin{equation}
+ y = f(g(x)) 
+ \end{equation}
+  \\
+ with \textit{y=f(g(x))} as the outer function and \textit{g(x)} as the inner function. \\ 
+ \\
+ \textbf{Chain Rule:} \\ \\
+  \begin{equation}
+ \textit{f(g(x))' = g'(x) f'(g(x))} \\
+ \end{equation}
+ or \\
+\begin{equation}
+\frac{df}{dx} = \frac{dg}{dx}\frac{df}{dg}
+\end{equation}
+\\
+with \textit{$\frac{df}{dg}$} as the outer derivative and \textit{$\frac{dg}{dx}$} as the inner derivative. In general,
+there are two modes of AD, forward and reverse. 
+\subsection{Forward Mode}
+Forward mode (or tangent linear) AD traverses the chain rule from inside to outside. That is, from (3),  \textit{$\frac{df}{dg}$} is computed before \textit{$\frac{dg}{dx}$}. To demonstrate how the forward accumulation of the chain rule works, consider the expressions $f(x_1,x_2) = ln(x_1x_2)$. Here $g(x_1,x_2) = x_1x_2$ and $f(x_1,x_2) = ln(g(x_1,x_2))$. So, to find the gradient $\nabla f(x_1,x_2) $ we must evaluate $f(x_1,x_2)$ and record these operations to a "Tape" so we can evaluate the partial derivatives later.\\
+\\
+\begin{tikzpicture}
+\node[right]  (zero) at (-3, 0) {\textbf{Evaluation}} ;
+\node[right]  (one) at (3, 0) {\textbf{Tape}} ;
+\node[right]  (zero) at (-3, -.5) { \small \textit{$x_1 = 3.1459$}};
+\node[right]  (zero) at (3, -.5) { \small \textit{$x_1' = 0.0$}};
+\node[right]  (zero) at (-3, -1) { \small \textit{$x_2 = 2.0$}};
+\node[right]  (zero) at (3, -1) { \small \textit{$x_2' = 0.0$}};
+\node[right]  (zero) at (3, -1.5) { \small \textit{---------------}};
+\node[right]  (zero) at (-3, -1.5) { \small \textit{---------------}};
+\node[right]  (zero) at (-3, -2) { \small \textit{$g(x_1,x_2) = x_1x_2$}};
+\node[right]  (zero) at (3, -2) { \small \textit{$g(x_1,x_2)' = x_1'x_2 + x_1x_2'$}};
+\node[right]  (zero) at (-3, -2.5) { \small \textit{$f(g(x_1,x_2)) =ln(g(x_1,x_2))$}};
+\node[right]  (zero) at (3, -2.5) { \small \textit{$f(g(x_1,x_2))' = \frac{g(x_1,x_2)'}{g(x_1,x_2)}$}};
+\node[right]  (astart2) at (-4, 0) {} ;
+\node[right]  (aend2) at (-4,-2.5) {} ;
+\draw[->,solid,line width=1mm,fill=red] (astart2) -- (aend2);
+\end{tikzpicture}
+\\
+\\
+Now that we have a record of $f(x_1,x_2)$ on the "Tape", we can apply the forward mode accumulation of the chain rule and compute the gradient:
+\\
+\\
+\begin{tikzpicture}
+\node[right]  (zero) at (-3, 1.5) {\textbf{Let $\nabla f(x_1,x_2) = [x_1',x_2']$}} ;
+\node[right]  (zero) at (-3, .5) {\textbf{Compute: $x_1'$} };
+\node[right]  (one) at (-3, 0) {\textbf{Tape}} ;
+\node[right]  (zero) at (-3, -.5) { \small \textit{$x_1' = 1.0 \textbf{(seed)}$}};
+\node[right]  (zero) at (-3, -1) { \small \textit{$x_2' = 0.0$}};
+\node[right]  (zero) at (-3, -1.5) { \small \textit{---------------}};
+\node[right]  (zero) at (-3, -2) { \small \textit{$g(x_1,x_2)' = x_1'x_2 + x_1x_2' = 1.0*2.0+ 3.1459*0 = 2.0$}};
+\node[right]  (zero) at (-3, -2.8) { \small \textit{$f(g(x_1,x_2))' = \frac{g(x_1,x_2)'}{g(x_1,x_2)} = \frac{2.0}{2.0*3.1459} = 0.317874$}};
+\node[right]  (astart) at (-4, 0) {} ;
+\node[right]  (aend) at (-4,-2.8) {} ;
+\draw[->,solid,line width=1mm,fill=red] (astart) -- (aend);
+\node[right]  (zero) at (-3, -4.5) {\textbf{Compute: $x_2'$} };
+\node[right]  (one) at (-3, -5) {\textbf{Tape}} ;
+\node[right]  (zero) at (-3, -5.5) { \small \textit{$x_1' = 0.0$}};
+\node[right]  (zero) at (-3, -6) { \small \textit{$x_2' = 1.0 \textbf{(seed)}$}};
+\node[right]  (zero) at (-3, -6.5) { \small \textit{---------------}};
+\node[right]  (zero) at (-3, -7) { \small \textit{$g(x_1,x_2)' = x_1'x_2 + x_1x_2' = 0.0*2.0+ 3.1459*1.0 = 3.1459$}};
+\node[right]  (zero) at (-3, -7.8) { \small \textit{$f(g(x_1,x_2))' = \frac{g(x_1,x_2)'}{g(x_1,x_2)} = \frac{3.1459}{2.0*3.1459} = 0.5$}};
+\node[right]  (astart2) at (-4, -5) {} ;
+\node[right]  (aend2) at (-4,-7.8) {} ;
+\draw[->,solid,line width=1mm,fill=red] (astart2) -- (aend2);
+\node[right]  (zero) at (-3, -8.8) {\textbf{Gives:}} ;
+\node[right]  (zero) at (-3, -9.8) {\textbf{$\nabla f(x_1,x_2) = [\frac{df}{dx_1},\frac{df}{dx_2}] = [0.317874,0.5]$}} ;
+\end{tikzpicture}
+\\
+\\
+The above "Tape" evaluation can be generalized algorithmically by:\\
+\\
+\\
+\newpage
+ \begin{algorithm}
+  \caption{Forward Mode Accumulation}
+  \begin{algorithmic}[1]
+\State $\hat{w} = [ x_1',x_2',x_3'...x_m']$ 
+\For{$i = 1$ to ${m}$}
+\State $\hat{w}[i] = 1.0$ 
+\For{$j = 1$ to ${n}$}
+\State $Tape[j]\rightarrow Evaluate$ 
+\EndFor
+\State $\nabla f[i] = Tape[n]\rightarrow Value$
+\State  $\hat{w}[i] = 0.0$ 
+\EndFor
+\end{algorithmic}
+ \end{algorithm}
+
+As you can see from Algorithm 1, for a function $f(x_1,x_2..., x_m)$ the "Tape" must be evaluated \textit{m} times to compute the gradient. For highly parameterized functions, it may be desirable to compute the gradient using reverse mode accumulation.
+\\
+\\
+\subsection{Reverse Mode}
+Reverse mode (or the adjoint method) AD traverses the chain rule from outside to inside. That is, from (3),  \textit{$\frac{dg}{dx}$} is computed before \textit{$\frac{df}{dg}$}. It works by accumulating a series of adjoints in the opposite direction of the forward mode method. This can be generalized by the following algorithm (Griewank, 1989):
+\begin{algorithm*}
+  \caption{Reverse Mode Accumulation}
+  \begin{algorithmic}[1]
+\State \textbf{Input:} \textit{Tape} 
+\State $\bar{w} = [\bar{ x_1},\bar{x_2},\bar{x_3}...\bar{x_{m-1}}] = 0$ 
+\State $\bar{w}[m] = 1$
+\For{$i = m$ to ${1}$}
+\State $\frac{df}{dx_i}=\bar{w}[i]$
+\State $\bar{w}[i] = 0$
+\For{$j = 1$ to ${i}$}
+\State $\bar{w}[j] +=  \frac{\partial f}{\partial x_i}\bar{w}[j]$
+\EndFor
+\EndFor
+\State \textbf{Output:} $\nabla f = \bar{w} =  [\bar{ x_1},\bar{x_2},\bar{x_3}...\bar{x_{m}}]$
+\end{algorithmic}
+ \end{algorithm*}
+ 
+To demonstrate the reverse mode method, lets revisit our example from the forward mode description in the previous section with slight modifications to the "Tape" in order to represent the partial derivative entries. \\
+ \begin{tikzpicture}
+\node[right]  (zero) at (-3, 0) {\textbf{Evaluation}} ;
+\node[right]  (one) at (3, 0) {\textbf{Tape}} ;
+\node[right]  (zero) at (-3, -.5) { \small \textit{$x_1 = 3.1459$}};
+\node[right]  (zero) at (3, -.5) { \small \textit{$x_1' = 0.0$}};
+\node[right]  (zero) at (-3, -1) { \small \textit{$x_2 = 2.0$}};
+\node[right]  (zero) at (3, -1) { \small \textit{$x_2' = 0.0$}};
+\node[right]  (zero) at (3, -1.5) { \small \textit{---------------}};
+\node[right]  (zero) at (-3, -1.5) { \small \textit{---------------}};
+\node[right]  (zero) at (-3, -2) { \small \textit{$g(x_1,x_2) = x_1x_2$}};
+\node[right]  (zero) at (3, -2) { \small \textit{$x_3'=g(x_1,x_2)' = [[x_1',\frac{\partial g}{\partial x_1} = 1.0*2.0],[ x_2',\frac{\partial g}{\partial x_2} = 1.0*3.1459]]$}};
+\node[right]  (zero) at (-3, -2.5) { \small \textit{$ f(g(x_1,x_2)) =ln(g(x_1,x_2))$}};
+\node[right]  (zero) at (3, -2.5) { \small \textit{$x_4' = f(g(x_1,x_2))' = [g(x_1,x_2)' ,\frac{\partial f}{\partial x_3} = (2.0*3.1459)^{-1}]$}};
+\node[right]  (astart2) at (-4, 0) {} ;
+\node[right]  (aend2) at (-4,-2.5) {} ;
+\draw[->,solid,line width=1mm,fill=red] (astart2) -- (aend2);
+\end{tikzpicture}
+
+Now we have a tape that contains entries that each have a list of adjoints to use in the reverse mode calculation. By traversing the tape from the bottom up, we can easily compute the full gradient using \textbf{Algorithm 2}:\\
+
+ \begin{tikzpicture}
+\node[right]  (one) at (-3, 0) {$\nabla f =  \bar{w} =  [\bar{ x_1},\bar{x_2},\bar{x_3}, \bar{x_4}]$};
+\node[right]  (one) at (-3, -.5) {\textbf{Tape}} ;
+\node[right]  (one) at (5.5, -.5) {\textbf{Trace}} ;
+\node[right]  (one) at (-3, -1) {\textbf{m = 2}  \small // last elementary operation} ;
+\node[right]  (one) at (-3, -1.5) {$\bar{w}[m] = 1 \small \textbf{(seed)}$};
+\node[right]  (one) at (-3, -2) {----------------------------------------------------};
+\node[right]  (one) at (-3, -2.5) {\textbf{i = m = 2}};
+\node[right]  (one) at (-3, -3) {$w =\bar{w}[i] $};
+\node[right]  (one) at (-3, -3.5) {$\bar{w}[i]  = 0$};
+\node[right]  (one) at (-3, -4) {$\bar{w}[3] += w\frac{\partial f}{\partial x_3} = 1*(2.0*3.1459)^{-1} = 0.159$};
+\node[right]  (one) at (5.5, -2.75) {$\nabla f =  \bar{w} =  [0,0, 0.159,0]$};
+\node[right]  (one) at (-3, -4.5) {----------------------------------------------------};
+\node[right]  (one) at (-3, -5) {\textbf{i = m-1 = 1}};
+\node[right]  (one) at (-3, -5.5) {$w =\bar{w}[i] $};
+\node[right]  (one) at (-3, -6) {$\bar{w}[i]  = 0$};
+\node[right]  (one) at (-3, -6.5) {$\bar{w}[1] += w\frac{\partial g}{\partial x_1}= 0.159*2.0 = 0.317874$};
+\node[right]  (one) at (-3, -7) {$\bar{w} [2]+= w\frac{\partial g}{\partial x_2} = 0.159*3.1459 = 0.5$};
+\node[right]  (one) at (5.5, -6) {$\nabla f =  \bar{w} =  [0.317874,0.5, 0,0]$};
+\node[right]  (one) at (-3, -7.5) {----------------------------------------------------};
+\node[right]  (one) at (-3, -8) {\textbf{Final Result: }$\nabla f =  [0.317874,0.5, 0,0]$};
+\node[right]  (astart2) at (-4, -2) {} ;
+\node[right]  (aend2) at (-4,-7.5) {} ;
+\draw[->,solid,line width=1mm,fill=red] (astart2) -- (aend2);
+\end{tikzpicture}
+
+Reverse mode requires only one sweep to compute all the partials for a function $f(x_1,x_2..., x_m)$, therefore it is more efficient for functions having $m > 1$ variables.
+
+ \subsection{Reverse Mode with Hessian Extension}
+The Hessian matrix is a square matrix of all the second order partial derivatives for a function. It describes the local curvature of a function of many variables.("Hessian matrix", 2015) It is often desirable to have the Hessian matrix for a function. Extending Algorithm 2 to compute the Hessian as well as the gradient is simple (Algorithm 3).
+
+\newpage
+
+\begin{algorithm*}[!htb]
+  \caption{Reverse Mode With Hessian Accumulation}
+  \begin{algorithmic}[1]
+\State \textbf{Input:} \textit{Tape} 
+\State $\bar{w} = [\bar{ x_1},\bar{x_2},\bar{x_3}...\bar{x_{m-1}}] = 0$ \\
+\State  $\bar{h} = \left| \begin{array}{ccccc}
+\frac{\partial^2 f}{\partial x_1^2} & \frac{\partial^2 f}{\partial x_1 \partial x_2} & \frac{\partial^2 f}{\partial x_1 \partial x_3} & ... & \frac{\partial^2 f}{\partial x_1 \partial x_m} \\
+\frac{\partial^2 f}{\partial x_2^2} & \frac{\partial^2 f}{\partial x_2 \partial x_2} & \frac{\partial^2 f}{\partial x_2 \partial x_3} & ... & \frac{\partial^2 f}{\partial x_2 \partial x_m}  \\
+\frac{\partial^2 f}{\partial x_3^2} & \frac{\partial^2 f}{\partial x_3 \partial x_2} & \frac{\partial^2 f}{\partial x_3 \partial x_3} & ... & \frac{\partial^2 f}{\partial x_3 \partial x_m} \\
+. & . & . & ... & . \\
+. & . & . & ... & . \\
+. & . & . & ... & . \\
+\frac{\partial^2 f}{\partial x_m^2} & \frac{\partial^2 f}{\partial x_m \partial x_2} & \frac{\partial^2 f}{\partial x_m \partial x_3} & ... & \frac{\partial^2 f}{\partial x_m \partial x_m} \\
+  \end{array} \right| = 0$ \\
+\State $\bar{w}[m] = 1$
+\For{$i = m$ to ${1}$}
+\State $\frac{df}{dx_i}=\bar{w}[i]$
+\State $\bar{w}[i] = 0$
+\For{$j = 1$ to ${i}$}
+\State $\bar{w}[j] +=  \frac{\partial f}{\partial x_i}\bar{w}[i]$
+\For{$k = 1$ to ${i}$}
+\State  $\bar{h}[j][k] += \bar{h}[i][k]  \frac{\partial f}{\partial x_j} + \bar{h}[i][j]  \frac{\partial f}{\partial x_k}+\bar{h}[i][i]  \frac{\partial f}{\partial x_k} \frac{\partial f}{\partial x_j} + w\frac{\partial^2 f}{\partial x_j \partial x_k}$
+\EndFor
+\EndFor
+\EndFor
+\State \textbf{Output:}  \\ \\ $\nabla f = \bar{w} =  [\bar{ x_1},\bar{x_2},\bar{x_3}...\bar{x_{m}}]$\\
+\State  $\nabla f^2 =\bar{h} = \left| \begin{array}{ccccc}
+\frac{\partial^2 f}{\partial x_1^2} & \frac{\partial^2 f}{\partial x_1 \partial x_2} & \frac{\partial^2 f}{\partial x_1 \partial x_3} & ... & \frac{\partial^2 f}{\partial x_1 \partial x_m} \\ \\
+\frac{\partial^2 f}{\partial x_2^2} & \frac{\partial^2 f}{\partial x_2 \partial x_2} & \frac{\partial^2 f}{\partial x_2 \partial x_3} & ... & \frac{\partial^2 f}{\partial x_2 \partial x_m}  \\
+\frac{\partial^2 f} {\partial x_3^2} & \frac{\partial^2 f}{\partial x_3 \partial x_2} & \frac{\partial^2 f}{\partial x_3 \partial x_3} & ... & \frac{\partial^2 f}{\partial x_3 \partial x_m} \\
+. & . & . & ... & . \\
+. & . & . & ... & . \\
+. & . & . & ... & . \\
+\frac{\partial^2 f}{\partial x_m^2} & \frac{\partial^2 f}{\partial x_m \partial x_2} & \frac{\partial^2 f}{\partial x_m \partial x_3} & ... & \frac{\partial^2 f}{\partial x_m \partial x_m} \\
+  \end{array} \right|$
+\end{algorithmic}
+ \end{algorithm*}
+
+ All we've done is extend the level of recording on the tape and added an additional loop in the reverse mode procedure to accumulate hessian elements. 
+\subsection{Examples}
+In this section we'll show how to use the ATL AutoDiff package. We'll start with simple examples to compute gradients and Hessian matrices, followed by an example of how we can use this information in optimization problems. 
+\subsubsection{Computing Derivatives}
+
+We'll start with our simple example from the section on Automatic Differentiation. Recall we had the expression $f(x_1,x_2) = ln(g(x_1,x_2))$. This is how it is coded in ATL.
+\begin{cppsource}
+int main() {
+    //using 64-bit precision
+    typedef atl::Variable<double> variable; 
+    
+    
+    std::vector<double> gradient;
+    std::vector<std::vector<double> > hessian;
+
+    //initialize x1 and x2 and add them to a list;
+    std::vector<variable*> variables;
+    variable x1 = 3.1459;
+    variable x2 = 2.0;
+    variables.push_back(&x1);
+    variables.push_back(&x2);
+    
+    
+    //evaluate our function
+    variable f = atl::log(x1 * x2);
+    std::cout<<"f = "<<f<<"\n\n";
+    
+    //compute and extract the gradient and hessian
+    variable::ComputeGradientAndHessian(
+    variable::gradient_structure_g, //default gradient structure 
+     variables,                    //list of independent variables
+      gradient,                    //the gradient vector
+      hessian                      //the hessian matrix
+      );
+    std::cout<<"gradient:\n" << gradient;
+    std::cout << "\n\nHessian:\n" << hessian;
+    
+    return 0;
+}
+\end{cppsource}
+This simple program gives the following output:
+\begin{myoutput}
+f = 1.83925
+
+gradient:
+[3.17874e-01    5.00000e-01    ]
+
+Hessian:
+[-1.01044e-01   0.00000e+00    ]
+[0.00000e+00    -2.50000e-01   ]
+\end{myoutput}
+It is not necessary to use vectors to hold gradient and Hessian information.  An alternative method of the above example can be accomplished by:
+\begin{cppsource}
+int main(){
+   //using 64-bit precision
+  typedef atl::Variable<double> variable;
+
+    //initialize x1 and x2 and add them to a list;
+    std::vector<variable*> variables;
+    variable x1 = 3.1459;
+    variable x2 = 2.0;
+    variables.push_back(&x1);
+    variables.push_back(&x2);
+
+
+    //evaluate our function
+    variable f = atl::log(x1 * x2);
+    std::cout << "f = " << f << "\n\n";
+    variable::gradient_structure_g.HessianAndGradientAccumulate();
+
+    std::cout <<std::scientific<< "gradient:\n" << x1.info->dvalue << "   " << x2.info->dvalue << "\n";
+    std::cout << "hessian:\n" << x1.info->hessian_row[x1.info] << "   " << x1.info->hessian_row[x2.info] << "\n";
+    std::cout << x2.info->hessian_row[x1.info] << "   " << x2.info->hessian_row[x2.info] << "\n";
+ }
+\end{cppsource}
+
+\begin{myoutput}
+f = 1.83925
+
+gradient:
+3.178741e-01   5.000000e-01
+hessian:
+-1.010439e-01   0.000000e+00
+0.000000e+00   -2.500000e-01
+
+\end{myoutput}
+
+\subsubsection{Controlling The \textit{GradientStructure}}
+After you have computed derivatives, you can reset the gradient structure (Tape) by calling \Code{void Reset()} on the instance of GradientStructure. Note, you should be mindful of this routine. Failing to call \Code{void Reset()}  will result in a polluted recording and give wrong derivatives as a result.
+
+\begin{cppsource}
+    typedef double real_t;
+    typedef atl::Variable<real_t> variable_t;
+   
+    std::vector<real_t> gradient;
+    std::vector<std::vector<real_t> > hessian;
+
+    /// initialize x1 and x2 and add them to a list;
+    std::vector<variable_t*> variables;
+    variable_t x1 = real_t(3.1459);
+    variable_t x2 = real_t(2.0);
+    variables.push_back(&x1);
+    variables.push_back(&x2);
+
+    //put the operations in a loop and reset after derivatives are computed
+    for (int i = 0; i < 5; i++) {
+
+        //evaluate our function
+        variable_t f = atl::log(x1 * x2);
+
+        std::cout << "f = " << f << "\n\n";
+
+        //compute and extract the gradient and hessian
+       variable::ComputeGradientAndHessian(
+       variable::gradient_structure_g, //default gradient structure 
+        variables,                    //list of independent variables
+         gradient,                    //the gradient vector
+         hessian                      //the hessian matrix
+         );
+        std::cout << "gradient:\n" << gradient;
+        std::cout << "\n\nHessian:\n" << hessian;
+        std::cout << "\n\n";
+        
+        //reset the gradient structure
+        variable_t::gradient_structure_g.Reset();
+
+    }
+\end{cppsource}
+
+\begin{myoutput}
+f = 1.83925
+
+gradient:
+[3.17874e-01    5.00000e-01    ]
+
+Hessian:
+[-1.01044e-01   0.00000e+00    ]
+[0.00000e+00    -2.50000e-01   ]
+
+
+f = 1.83925e+00
+
+gradient:
+[3.17874e-01    5.00000e-01    ]
+
+Hessian:
+[-1.01044e-01   0.00000e+00    ]
+[0.00000e+00    -2.50000e-01   ]
+
+
+f = 1.83925e+00
+
+gradient:
+[3.17874e-01    5.00000e-01    ]
+
+Hessian:
+[-1.01044e-01   0.00000e+00    ]
+[0.00000e+00    -2.50000e-01   ]
+
+
+f = 1.83925e+00
+
+gradient:
+[3.17874e-01    5.00000e-01    ]
+
+Hessian:
+[-1.01044e-01   0.00000e+00    ]
+[0.00000e+00    -2.50000e-01   ]
+
+
+f = 1.83925e+00
+
+gradient:
+[3.17874e-01    5.00000e-01    ]
+
+Hessian:
+[-1.01044e-01   0.00000e+00    ]
+[0.00000e+00    -2.50000e-01   ]
+\end{myoutput}
+\newpage
+
+You can also pause recording. This is particular useful when line searching and you don't need derivatives.
+\begin{cppsource}
+    typedef double real_t;
+    typedef atl::Variable<real_t> variable_t;
+
+
+
+    /// initialize x1 and x2 and add them to a list;
+    std::vector<variable_t*> variables;
+    variable_t x1 = real_t(3.1459);
+    variable_t x2 = real_t(2.0);
+    variables.push_back(&x1);
+    variables.push_back(&x2);
+
+    std::vector<real_t> gradient;
+    std::vector<std::vector<real_t> > hessian;
+
+    //put the operations in a loop and reset after derivatives are computed
+    for (int i = 0; i < 5; i++) {
+
+        if ((i % 2) == 0) {
+            std::cout << "Not Recording\n";
+            variable_t::gradient_structure_g.SetRecording(false);
+        } else {
+            std::cout << "Recording\n";
+            variable_t::gradient_structure_g.SetRecording(true);
+        }
+        //evaluate our function
+        variable_t f = atl::log(x1 * x2);
+
+        std::cout << "f = " << f << "\n\n";
+
+        //extract the gradient and hessian
+        //compute and extract the gradient and hessian
+       variable::ComputeGradientAndHessian(
+       variable::gradient_structure_g, //default gradient structure 
+        variables,                    //list of independent variables
+         gradient,                    //the gradient vector
+         hessian                      //the hessian matrix
+         );
+        std::cout << "gradient:\n" << gradient;
+        std::cout << "\n\nHessian:\n" << hessian;
+        std::cout << "\n\n";
+        variable_t::gradient_structure_g.Reset();
+
+    }
+\end{cppsource}  
+\newpage  
+\textbf{Output}
+\begin{myoutput}
+Not Recording
+f = 1.83925
+
+gradient:
+[0.00000e+00    0.00000e+00    ]
+
+Hessian:
+[0.00000e+00    0.00000e+00    ]
+[0.00000e+00    0.00000e+00    ]
+
+
+Recording
+f = 1.83925e+00
+
+gradient:
+[3.17874e-01    5.00000e-01    ]
+
+Hessian:
+[-1.01044e-01   0.00000e+00    ]
+[0.00000e+00    -2.50000e-01   ]
+
+
+Not Recording
+f = 1.83925e+00
+
+gradient:
+[0.00000e+00    0.00000e+00    ]
+
+Hessian:
+[0.00000e+00    0.00000e+00    ]
+[0.00000e+00    0.00000e+00    ]
+
+
+Recording
+f = 1.83925e+00
+
+gradient:
+[3.17874e-01    5.00000e-01    ]
+
+Hessian:
+[-1.01044e-01   0.00000e+00    ]
+[0.00000e+00    -2.50000e-01   ]
+
+
+Not Recording
+f = 1.83925e+00
+
+gradient:
+[0.00000e+00    0.00000e+00    ]
+
+Hessian:
+[0.00000e+00    0.00000e+00    ]
+[0.00000e+00    0.00000e+00    ]
+\end{myoutput}
+Notice from the above output, when the instance of \textit{GradientStructure} is paused, derivatives are zero, assuming that it was reset before the evaluation. If the \textit{GradientStructure} was not reset, the previous derivatives will be recycled, but no new entries will be recorded.
+\subsubsection{Using \textit{GradientStructure}'s Other Than The Default}
+To use an instance of \textit{GradientStructure} other than the default, the  \textit{atl::Variable} class has an additional member function called \Code{void Assign}. Here is an example of using an instance of \textit{GradientStructure} other than the default:
+\begin{cppsource}
+    typedef double real_t;
+    typedef atl::Variable<real_t> variable_t;
+    //create an instance of GradientStructure
+    atl::GradientStructure<real_t> gradient_structure;
+
+
+
+    /// initialize x1 and x2 and add them to a list;
+    std::vector<variable_t*> variables;
+    variable_t x1 = real_t(3.1459);
+    variable_t x2 = real_t(2.0);
+    variables.push_back(&x1);
+    variables.push_back(&x2);
+
+    std::vector<real_t> gradient;
+    std::vector<std::vector<real_t> > hessian;
+
+
+        //evaluate our function
+        variable_t f;
+        //call the Assign function using our instance of GradientStructure
+        f.Assign(gradient_structure, atl::log(x1 * x2));
+
+        std::cout << "f = " << f << "\n\n";
+
+        //extract the gradient and hessian from our instance of GradientStructure
+         variable::ComputeGradientAndHessian(
+        gradient_structure,      //other gradient structure 
+        variables,                    //list of independent variables
+         gradient,                    //the gradient vector
+         hessian                      //the hessian matrix
+         );
+        std::cout << "gradient:\n" << gradient;
+        std::cout << "\n\nHessian:\n" << hessian;
+        std::cout << "\n\n";
+        gradient_structure.Reset();
+\end{cppsource}
+\textbf{Output}
+\begin{myoutput}
+f = 1.83925
+
+gradient:
+[3.17874e-01    5.00000e-01    ]
+
+Hessian:
+[-1.01044e-01   0.00000e+00    ]
+[0.00000e+00    -2.50000e-01   ]
+
+\end{myoutput} 
+Having this capability is particularly useful when one wishes to run multiple models concurrently. Also, even though entries in the \textit{GradientStructure} are thread safe, they use atomic operations, which can result in cache contention between threads. Furthermore, threads sharing the same \textit{GradientStructure} must not have shared dependency as this will result in errors in the accumulation of derivatives. Using a separate \textit{GradientStructure} in each thread, computing the derivatives and adding them to the main instance of \textit{GradientStructure} may help to alleviate these problem. An example of this technique will be covered in the next section \textbf{Adjoint Code/Entries}.
+\subsubsection{Adjoint Code/Entries}
+In this section we'll discuss the topic of adjoint code. Adjoint code is something that can be found in ADMB (Fournier et al) and we've just expanded the concept for ATL.  This is a particularly convenient method for both reducing the stack size, as well as accomplishing concurrency for threads with shared dependency. The following code listing shows how to  use adjoint code:
+
+\begin{cppsource}
+
+
+template<class REAL_T>
+const atl::Variable<REAL_T> F(atl::Variable<REAL_T>& x, atl::Variable<REAL_T>& y) {
+    //compute the value
+    REAL_T f = std::sin(x.GetValue()) * std::cos(y.GetValue());
+    atl::Variable<REAL_T> ret(f);
+    
+    //make a list of pointers to independent variables
+    std::vector<atl::Variable<REAL_T>* > independents;
+    independents.push_back(&x);
+    independents.push_back(&y);
+
+    //set the gradient values for this function
+    std::vector<REAL_T> gradient(2);
+    gradient[0] = std::cos(x.GetValue()) * cos(y.GetValue());
+    gradient[1] = -1.0 * std::sin(x.GetValue()) * std::sin(y.GetValue());
+
+    //set the Hessian values for this function
+    std::vector<std::vector<REAL_T> > hessian(2, std::vector<REAL_T>(2));
+    hessian[0][0] = -1.0 * std::sin(x.GetValue()) * std::cos(y.GetValue());
+    hessian[0][1] = -1.0 * std::cos(x.GetValue()) * std::sin(y.GetValue());
+    hessian[1][0] = -1.0 * std::cos(x.GetValue()) * std::sin(y.GetValue());
+    hessian[1][1] = -1.0 * std::sin(x.GetValue()) * std::cos(y.GetValue());
+
+    //build the adjoint entry from the next one in the global gradient structure
+    atl::Variable<REAL_T>::BuildAdjointEntry(
+            atl::Variable<REAL_T>::gradient_structure_g.NextEntry(),
+            ret,
+            independents,
+            gradient,
+            hessian);
+
+    //return a Variable
+    return ret;
+}
+
+int main(int argc, char** argv) {
+
+    atl::Variable<double> x(3.14);
+    atl::Variable<double> y(1.5);
+
+    std::vector<atl::Variable<double>* > independents;
+    independents.push_back(&x);
+    independents.push_back(&y);
+
+    atl::Variable<double> f = F(x, y);
+    std::vector<double> gradient(2);
+    std::vector<std::vector<double> > hessian(2, std::vector<double>(2));
+
+    atl::Variable<double>::ComputeGradientAndHessian(
+            atl::Variable<double>::gradient_structure_g,
+            independents,
+            gradient,
+            hessian);
+\end{cppsource} 
+\begin{cppsource} 
+    std::cout<<"Result from adjoint entry:\n";
+    std::cout <<"gradient"<< gradient << "\n";
+    std::cout <<"Hessian:\n"<< hessian << "\n";
+    
+    atl::Variable<double>::gradient_structure_g.Reset();
+
+    atl::Variable<double>f2 = atl::sin(x) * atl::cos(y);
+    
+    atl::Variable<double>::ComputeGradientAndHessian(
+            atl::Variable<double>::gradient_structure_g,
+            independents,
+            gradient,
+            hessian);
+
+    std::cout<<"Result from computed entry:\n";
+    std::cout <<"gradient"<< gradient << "\n";
+    std::cout <<"Hessian:\n"<< hessian << "\n";
+}
+
+\end{cppsource} 
+
+\textbf{Output:}
+
+\begin{myoutput}
+Result from adjoint entry:
+gradient[-7.07371e-02   -1.58866e-03   ]
+Hessian:
+[-1.12660e-04   9.97494e-01    ]
+[9.97494e-01    -1.12660e-04   ]
+
+Result from computed entry:
+gradient[-7.07371e-02   -1.58866e-03   ]
+Hessian:
+[-1.12660e-04   9.97494e-01    ]
+[9.97494e-01    -1.12660e-04   ]
+
+\end{myoutput}
+
+In the above example, we computed all the necessary derivatives to supply our main \textit{GradientStructure} with an adjoint entry. The result is a reduced amount of entries into our main \textit{GradientStructure}. In the  \textit{Concurrency} section, we'll expand on this concept and give an example of this technique can be useful for threads that have shared variable dependency. 
+
+
+\subsubsection{Implementing Newton's Method}
+Now we'll see how we can apply this derivative information to an optimization problem. Newton's method in optimization is an iterative procedure for finding the roots of a objective function that is differentiable. In a single parameter objective function, Newton's method attempts to converge to a stationary point using:
+ \begin{equation}
+x_{n+1} = x_n - \frac{f'(x_n)}{f''(x_n)}
+ \end{equation}
+ For objective functions with more than one parameter:
+  \begin{equation}
+x_{n+1} = x_n - [Hf(x_n)]^-1 \nabla f(x_n)
+ \end{equation}
+Lets start by creating a class called "MyFunctionMinimizer".\\
+\begin{cppsource}
+ template<class T>
+    class MyFunctionMinimizer {
+        std::vector<T> gradient;
+        std::vector<std::vector<T> > hessian;
+        std::vector<atl::Variable<T>* > parameters;
+    public:
+
+        virtual void ObjectiveFunction(atl::Variable<T>& f) {
+
+        }
+    };
+\end{cppsource}
+Recall from (5), we'll need the inverse of the Hessian matrix for functions with more than one parameter. Lets add a function to compute the inverse of the Hessian using the Gauss-Jordan elimination algorithm.\\
+\begin{cppsource}
+
+    template<class T>
+    class MyFunctionMinimizer {
+        ...
+        /**
+         * Invert the Hessian using Gauss-Jordan Elimination.
+         */
+        void InvertHessian() {
+            int nrows = this->parameters.size();
+            for (size_t i = 0; i < nrows; ++i) {
+                for (size_t j = 0; j < nrows; ++j) {
+                    if(i == j){
+                        inverse_hessian[i][j] = 1.0;
+                    }else{
+                        inverse_hessian[i][j] = 0.0;
+                    }
+                }
+            }
+
+
+            for (size_t dindex = 0; dindex < nrows; ++dindex) {
+
+                if (hessian(dindex, dindex) == 0) {
+                    hessian[dindex].swap(hessian[dindex + 1]);
+                    inverse_hessian[dindex].swap(inverse_hessian[dindex + 1]);
+                }
+
+
+                T tempval = 1.0 / hessian[dindex][dindex];
+
+                for (size_t col = 0; col < nrows; col++) {
+                    hessian[dindex][col] *= tempval;
+                    inverse_hessian[dindex][col] *= tempval;
+                }
+
+                for (size_t row = (dindex + 1); row < nrows; ++row) {
+                    T wval = hessian[row][dindex];
+                    for (size_t col = 0; col < nrows; col = col + 1) {
+                        hessian[row][col] -= wval * hessian[dindex][col];
+                        inverse_hessian[row][col] -= wval * inverse_hessian[dindex][col];
+                    }
+                }
+            }
+
+            for (long dindex = nrows - 1; dindex >= 0; --dindex) {
+                for (long row = dindex - 1; row >= 0; --row) {
+                    T wval = hessian[row][dindex];
+                    for (size_t col = 0; col < nrows; col = col + 1) {
+                        hessian[row][col] -= wval * hessian[dindex][col];
+                        inverse_hessian[row][col] -= wval * inverse_hessian[dindex][col];
+                    }
+                }
+            }
+
+        }
+
+
+    };
+\end{cppsource}
+Now adding the function to actually do the minimization, we have an exact Newton minimizer:   
+\begin{cppsource}
+
+    template<class T>
+    class MyFunctionMinimizer {
+        ...
+        
+       bool Minimize(int max_iterations, T tolerance = 1e-4) {
+            bool found = false;
+
+            atl::Variable<T> f;
+            atl::Variable<T>::SetRecording(true);
+            gradient.resize(parameters.size());
+            hessian.resize(parameters.size());
+            inverse_hessian.resize(parameters.size());
+            for (int i = 0; i < parameters.size(); i++) {
+                hessian[i].resize(parameters.size());
+                inverse_hessian[i].resize(parameters.size());
+            }
+
+            for (int iteration = 0; iteration < max_iterations; iteration++) {
+
+                T max_gradient = std::numeric_limits<T>::min();
+                bool all_positive = true;
+                f = 0.0;
+                atl::Variable<T>::gradient_structure_g.Reset();
+                ObjectiveFunction(f);
+                atl::Variable<T>::ComputeGradientAndHessian(
+                atl::Variable<T>::gradient_structure_g,
+                        parameters,
+                        gradient,
+                        hessian);
+                //
+                if ((iteration % 10) == 0) {
+                    std::cout << "Iteration: " << iteration << std::endl;
+                    std::cout << "Function value = " << f << "\n";
+                    std::cout << "Number of Parameters: " << parameters.size() << "\n";
+                    if (parameters.size() <= 10) {
+                        std::cout << "Parameters = [";
+                        for (int i = 0; i < parameters.size(); i++) {
+                            std::cout << parameters[i]->GetValue() << " ";
+                        }
+                        std::cout << "]\n";
+                        std::cout << "Gradient = " << gradient << "\n";
+                        std::cout << "Hessian:\n" << hessian << "\n\n\n";
+                    }
+                }
+                for (int i = 0; i < gradient.size(); i++) {
+                    if (std::fabs(gradient[i]) > max_gradient) {
+                        max_gradient = std::fabs(gradient[i]);
+                    }
+                    if (hessian[i][i] < 0) {
+                        all_positive = false;
+                    }
+                }
+\end{cppsource}
+\begin{cppsource}
+
+                if (max_gradient < tolerance && all_positive) {
+
+                    std::cout << "Successful Convergence!\n";
+                    std::cout << "Iteration: " << iteration << std::endl;
+                    std::cout << "Function value = " << f << "\n";
+                    std::cout << "Number of Parameters: " << parameters.size() << "\n";
+                    if (parameters.size() <= 10) {
+                        std::cout << "Parameters = [";
+                        for (int i = 0; i < parameters.size(); i++) {
+                            std::cout << parameters[i]->GetValue() << " ";
+                        }
+                        std::cout << "]\n";
+                        std::cout << "Gradient = " << gradient << "\n";
+                        std::cout << "Hessian:\n" << hessian << "\n\n\n";
+                    }
+                    found = true;
+                    break;
+                }
+
+                if (parameters.size() > 1) {
+                    this->InvertHessian();
+
+                    for (int j = 0; j < parameters.size(); j++) {
+                        T val = 0;
+                        for (int k = 0; k < parameters.size(); k++) {
+                            val += inverse_hessian[j][k] * gradient[k];
+                        }
+                        parameters[j]->SetValue(parameters[j]->GetValue() -  val);
+                    }
+
+                } else {
+                    parameters[0]->SetValue(parameters[0]->GetValue() 
+                                              - (gradient[0]) / hessian[0][0]);
+                }
+            }
+            return found;
+        }
+    ...
+    };
+ \end{cppsource}
+ \newpage
+
+Ok, lets test our function minimizer on a real function. In the field of gradient-based optimization, the Rosenbrock function is a non-convex function used to test the performance minimization algorithms and is defined by:
+ \begin{equation}
+ f(x_1,x_2,...,x_m) = \sum_{i=1}^{i=m-1} [100(x_{i+1} - x_i^2)^2 + (1 - x_i)^2]
+ \end{equation}
+ 
+We'll start by inheriting from the \textit{MyFunctionMinimizer} class and overriding the function \\ \Code{void ObjectiveFunction(atl::Variable<T>& f)}. We'll also add an additional function to initialize our Rosenbrock class. The initialization method will randomly choose starting points for our parameters and add them to the list of parameters that our minimizer will attempt to estimate.
+ \begin{cppsource}
+  template<class T>
+    class Rosenbrock : public MyFunctionMinimizer<T> {
+    public:
+        typedef atl::Variable<T> variable;
+        std::vector<variable > x;
+
+        void Initialize() {
+        
+            //number of estimable parameters 
+            int nobs = 5;
+            
+            //random seed
+            srand(2015);
+
+            //set some random starting values
+            for (int i = 0; i < nobs; i++) {
+                double r;
+                r = ((double) rand() / (RAND_MAX)) + 1;
+                this->x.push_back(variable(0.0 + 2.0 * r));
+            }
+
+            //register the estimable parameters with the function minimizer
+            for (int i = 0; i < x.size(); i++) {
+                this->parameters.push_back(&x[i]);
+            }
+        }
+
+        //Rosenbrock Function
+        void ObjectiveFunction(atl::Variable<T>& f) {
+            f = 0;
+            for (int i = 0; i < x.size() - 1; i++) {
+                f += 100.0 * ((x[i + 1] - x[i] * x[i])*
+                        (x[i + 1] - x[i] * x[i])) + (x[i] - 1.0)*(x[i] - 1.0);
+            }
+        }
+    };
+    
+    
+    
+ int main(int argc, char** argv) {
+
+     Rosenbrock<double> rosenbrock;
+     rosenbrock.Initialize();
+     rosenbrock.Minimize(1000);
+    
+     return 0;
+  }   
+\end{cppsource}
+\newpage
+\textbf{Output:} 
+ \begin{myoutput}
+Iteration: 0
+Function value = 6387.77
+Number of Parameters: 5
+Parameters = [2.03154 2.09729 3.08945 2.36003 3.05197 ]
+Gradient = [1.65157e+03    6.94495e+02    8.62100e+03    9.42607e+02    -5.03557e+02   ]
+Hessian:
+[4.11567e+03    -8.12616e+02   0.00000e+00    0.00000e+00    0.00000e+00    ]
+[-8.12616e+02   4.24455e+03    -8.38914e+02   0.00000e+00    0.00000e+00    ]
+[0.00000e+00    -8.38914e+02   1.07116e+04    -1.23578e+03   0.00000e+00    ]
+[0.00000e+00    0.00000e+00    -1.23578e+03   5.66491e+03    -9.44013e+02   ]
+[0.00000e+00    0.00000e+00    0.00000e+00    -9.44013e+02   2.00000e+02    ]
+
+
+
+Iteration: 10
+Function value = 5.07479e-10
+Number of Parameters: 5
+Parameters = [1.00000e+00 1.00000e+00 1.00001e+00 1.00001e+00 1.00002e+00 ]
+Gradient = [1.75074e-05    6.19819e-05    2.44997e-04    6.03291e-04    -3.58108e-04   ]
+Hessian:
+[8.02002e+02    -4.00001e+02   0.00000e+00    0.00000e+00    0.00000e+00    ]
+[-4.00001e+02   1.00200e+03    -4.00001e+02   0.00000e+00    0.00000e+00    ]
+[0.00000e+00    -4.00001e+02   1.00201e+03    -4.00002e+02   0.00000e+00    ]
+[0.00000e+00    0.00000e+00    -4.00002e+02   1.00202e+03    -4.00004e+02   ]
+[0.00000e+00    0.00000e+00    0.00000e+00    -4.00004e+02   2.00000e+02    ]
+
+
+
+Successful Convergence!
+Iteration: 11
+Function value = 1.30504e-17
+Number of Parameters: 5
+Parameters = [1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]
+Gradient = [8.04885e-10    2.83979e-09    1.14278e-08    4.20190e-08    -2.02847e-08   ]
+Hessian:
+[8.02000e+02    -4.00000e+02   0.00000e+00    0.00000e+00    0.00000e+00    ]
+[-4.00000e+02   1.00200e+03    -4.00000e+02   0.00000e+00    0.00000e+00    ]
+[0.00000e+00    -4.00000e+02   1.00200e+03    -4.00000e+02   0.00000e+00    ]
+[0.00000e+00    0.00000e+00    -4.00000e+02   1.00200e+03    -4.00000e+02   ]
+[0.00000e+00    0.00000e+00    0.00000e+00    -4.00000e+02   2.00000e+02    ]
+ \end{myoutput}
+As you can see from the above output, our function minimizer was able to find a solution in just 11 iterations. For this simple test, it would appear that our Newton minimizer is all that is needed for real world problems, however this is not the case. Inverting the Hessian matrix is an expensive operation for highly parameterized problems. It's often more efficient to just solve $[H(f(x_n)]p_n = \nabla f(x_n)$ as a system of linear equations. Another option is to turn to Quasi-Newton methods for function minimization.  These methods do not use the inverse of the Hessian, but rather estimates it to find a search direction. Some of these methods are implemented in ATL and can be found in the the \textit{FunctionMinimizer} class found in the \textit{ATL/Optimization} package. 
 \section{Containers}
 \subsection{Vectors}
 \subsection{Matrices}
