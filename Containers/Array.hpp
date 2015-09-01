@@ -11,6 +11,7 @@
 #include <assert.h>
 #include <iostream>
 #include <sstream>
+#include <initializer_list>
 
 #if defined(ATL_CONCURRENCY_ENABLED)
 #include  "tbb42_20140601oss/include/tbb/concurrent_vector.h"
@@ -232,6 +233,70 @@ namespace atl {
             data_m.resize(orig.data_m.size());
             data_m.insert(data_m.begin(), orig.data_m.begin(), orig.data_m.end());
 
+        }
+
+        Array(const std::initializer_list<T>& l)
+        : dims_m(1),
+        isize(l.size()),
+        jsize(1),
+        ksize(1),
+        lsize(1),
+        msize(1),
+        nsize(1),
+        osize(1) {
+            typename std::initializer_list<T>::iterator it;
+            data_m.resize(isize);
+            int index = 0;
+            for (it = l.begin(); it != l.end(); ++it) {
+                data_m[index] = (*it);
+                index++;
+            }
+        }
+
+        Array(const std::initializer_list<std::initializer_list<T> >& l)
+        : dims_m(2),
+        isize(l.size()),
+        jsize(l.begin()->size()),
+        ksize(1),
+        lsize(1),
+        msize(1),
+        nsize(1),
+        osize(1) {
+            typename std::initializer_list<std::initializer_list<T> >::iterator it;
+            typename std::initializer_list<T>::iterator jt;
+            data_m.resize(isize * jsize);
+            int index = 0;
+            for (it = l.begin(); it != l.end(); ++it) {
+                for (jt = it->begin(); jt != it->end(); ++jt) {
+                    data_m[index] = (*jt);
+                    index++;
+                }
+            }
+        }
+
+        Array(const std::initializer_list<std::initializer_list<std::initializer_list<T> > >& l)
+        : dims_m(3),
+        isize(l.size()),
+        jsize(l.begin()->size()),
+        ksize(l.begin()->begin()->size()),
+        lsize(1),
+        msize(1),
+        nsize(1),
+        osize(1) {
+            typename std::initializer_list<std::initializer_list<std::initializer_list<T> > >::iterator it;
+            typename std::initializer_list<std::initializer_list<T> >::iterator jt;
+            typename std::initializer_list<T>::iterator kt;
+            data_m.resize(isize * jsize * ksize);
+            int index = 0;
+            for (it = l.begin(); it != l.end(); ++it) {
+                for (jt = it->begin(); jt != it->end(); ++jt) {
+                    for (kt = jt->begin(); kt != jt->end(); ++kt) {
+                        data_m[index] = (*kt);
+                        std::cout << data_m[index] << "\n";
+                        index++;
+                    }
+                }
+            }
         }
 
         template<class T2, class A>
@@ -1439,7 +1504,7 @@ namespace atl {
             CheckBounds(i, j, k);
 #endif
 
-            return data_m[(i * jsize)+(j * ksize) + k];
+            return data_m[(i * jsize * ksize)+(j * ksize) + k];
         }
 
         inline const T& operator()(const uint32_t& i, const uint32_t & j, const uint32_t & k, const uint32_t & l)const {
@@ -1495,7 +1560,7 @@ namespace atl {
             CheckBounds(i, j, k);
 #endif
 
-            return data_m[(i * jsize)+(j * ksize) + k];
+            return data_m[(i * jsize * ksize)+(j * ksize) + k];
         }
 
         inline T& operator()(const uint32_t& i, const uint32_t & j, const uint32_t & k, const uint32_t & l) {
