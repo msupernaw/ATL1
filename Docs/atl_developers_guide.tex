@@ -1333,7 +1333,65 @@ ATL provides one dense, dynamic matrix type called \textit{atl::Matrix}. Future 
 \end{myoutput}
 
 \subsection{Arrays}
-Arrays are basic containers in ATL and can have up to seven dimensions.  Unlike \textit{atl::Vector} and \textit{atl::Matrix},  \textit{atl::Array} cannot be initialized with an initializer list as demonstrated above. Simply put, \textit{atl::Array} are basic multidimensional containers to hold data.
+Arrays are basic containers in ATL and can have up to seven dimensions.   Simply put, \textit{atl::Array} are basic multidimensional containers to hold data. Here is an example of initializing an instance of \textit{atl::Array} of four dimensions using an initializer list:
+\begin{cppsource}
+
+  atl::Array<double> a = {
+        {
+            {
+                {1, 2, 3},
+                {4, 5, 6}
+            },
+            {
+                {7, 8, 9},
+                {10, 11, 12}
+            }
+        },
+        {
+            {
+                {13, 14, 15},
+                {16, 17, 18}
+            },
+            {
+                {19, 20, 21},
+                {22, 23, 24}
+            }
+        }
+    };
+
+    std::cout << "Array a has " << a.Dimensions() << " dimensions" << std::endl;
+    std::cout << "Array a = " << a.Size(0) << " x " << a.Size(1) 
+                  << " x " << a.Size(2) << " x " << a.Size(3) << std::endl;
+    for (int i = 0; i < a.Size(0); i++) {
+        for (int j = 0; j < a.Size(1); j++) {
+            for (int k = 0; k < a.Size(2); k++) {
+                for (int l = 0; l < a.Size(3); l++) {
+                    std::cout << a(i, j, k,l) << " ";
+                }
+                std::cout << "\n";
+            }
+        }
+    }
+ \end{cppsource}   
+ 
+ \textbf{Output} 
+ 
+ \begin{myoutput}
+ 
+Array a has 4 dimensions
+Array a = 2 x 2 x 2 x 3
+1 2 3 
+4 5 6 
+7 8 9 
+10 11 12 
+13 14 15 
+16 17 18 
+19 20 21 
+22 23 24 
+ 
+
+ \end{myoutput}
+
 
 
 \section{Probability Distributions}

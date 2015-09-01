@@ -292,8 +292,136 @@ namespace atl {
                 for (jt = it->begin(); jt != it->end(); ++jt) {
                     for (kt = jt->begin(); kt != jt->end(); ++kt) {
                         data_m[index] = (*kt);
-                        std::cout << data_m[index] << "\n";
                         index++;
+                    }
+                }
+            }
+        }
+
+        Array(const std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<T> > > >& l)
+        : dims_m(4),
+        isize(l.size()),
+        jsize(l.begin()->size()),
+        ksize(l.begin()->begin()->size()),
+        lsize(l.begin()->begin()->begin()->size()),
+        msize(1),
+        nsize(1),
+        osize(1) {
+            typename std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<T> > > >::iterator it;
+            typename std::initializer_list<std::initializer_list<std::initializer_list<T> > >::iterator jt;
+            typename std::initializer_list<std::initializer_list<T> >::iterator kt;
+            typename std::initializer_list<T>::iterator lt;
+            data_m.resize(isize * jsize * ksize * lsize);
+            int index = 0;
+            for (it = l.begin(); it != l.end(); ++it) {
+                for (jt = it->begin(); jt != it->end(); ++jt) {
+                    for (kt = jt->begin(); kt != jt->end(); ++kt) {
+                        for (lt = kt->begin(); lt != kt->end(); ++lt) {
+                            data_m[index] = (*lt);
+                            index++;
+                        }
+                    }
+                }
+            }
+        }
+
+        Array(const std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<T> > > > >& l)
+        : dims_m(5),
+        isize(l.size()),
+        jsize(l.begin()->size()),
+        ksize(l.begin()->begin()->size()),
+        lsize(l.begin()->begin()->begin()->size()),
+        msize(l.begin()->begin()->begin()->begin()->size()),
+        nsize(1),
+        osize(1) {
+            typename std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<T> > > > >::iterator it;
+            typename std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<T> > > >::iterator jt;
+            typename std::initializer_list<std::initializer_list<std::initializer_list<T> > >::iterator kt;
+            typename std::initializer_list<std::initializer_list<T> >::iterator lt;
+            typename std::initializer_list<T>::iterator mt;
+            ;
+            data_m.resize(isize * jsize * ksize * lsize * msize);
+            int index = 0;
+            for (it = l.begin(); it != l.end(); ++it) {
+                for (jt = it->begin(); jt != it->end(); ++jt) {
+                    for (kt = jt->begin(); kt != jt->end(); ++kt) {
+                        for (lt = kt->begin(); lt != kt->end(); ++lt) {
+                            for (mt = lt->begin(); mt != lt->end(); ++mt) {
+                                data_m[index] = (*mt);
+                                index++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        Array(const std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<T> > > > > >& l)
+        : dims_m(6),
+        isize(l.size()),
+        jsize(l.begin()->size()),
+        ksize(l.begin()->begin()->size()),
+        lsize(l.begin()->begin()->begin()->size()),
+        msize(l.begin()->begin()->begin()->begin()->size()),
+        nsize(l.begin()->begin()->begin()->begin()->begin()->size()),
+        osize(1) {
+            typename std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<T> > > > > >::iterator it;
+            typename std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<T> > > > >::iterator jt;
+            typename std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<T> > > >::iterator kt;
+            typename std::initializer_list<std::initializer_list<std::initializer_list<T> > >::iterator lt;
+            typename std::initializer_list<std::initializer_list<T> >::iterator mt;
+            typename std::initializer_list<T>::iterator nt;
+
+            data_m.resize(isize * jsize * ksize * lsize * msize * nsize);
+            int index = 0;
+            for (it = l.begin(); it != l.end(); ++it) {
+                for (jt = it->begin(); jt != it->end(); ++jt) {
+                    for (kt = jt->begin(); kt != jt->end(); ++kt) {
+                        for (lt = kt->begin(); lt != kt->end(); ++lt) {
+                            for (mt = lt->begin(); mt != lt->end(); ++mt) {
+                                for (nt = mt->begin(); nt != mt->end(); ++nt) {
+                                    data_m[index] = (*nt);
+                                    index++;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        Array(const std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<T> > > > > > >& l)
+        : dims_m(7),
+        isize(l.size()),
+        jsize(l.begin()->size()),
+        ksize(l.begin()->begin()->size()),
+        lsize(l.begin()->begin()->begin()->size()),
+        msize(l.begin()->begin()->begin()->begin()->size()),
+        nsize(l.begin()->begin()->begin()->begin()->begin()->size()),
+        osize(l.begin()->begin()->begin()->begin()->begin()->begin()->size()) {
+            typename std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<T> > > > > > >::iterator it;
+            typename std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<T> > > > > >::iterator jt;
+            typename std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<T> > > > >::iterator kt;
+            typename std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<T> > > >::iterator lt;
+            typename std::initializer_list<std::initializer_list<std::initializer_list<T> > >::iterator mt;
+            typename std::initializer_list<std::initializer_list<T> >::iterator nt;
+            typename std::initializer_list<T>::iterator ot;
+            ;
+            data_m.resize(isize * jsize * ksize * lsize * msize * nsize);
+            int index = 0;
+            for (it = l.begin(); it != l.end(); ++it) {
+                for (jt = it->begin(); jt != it->end(); ++jt) {
+                    for (kt = jt->begin(); kt != jt->end(); ++kt) {
+                        for (lt = kt->begin(); lt != kt->end(); ++lt) {
+                            for (mt = lt->begin(); mt != lt->end(); ++mt) {
+                                for (nt = mt->begin(); nt != mt->end(); ++nt) {
+                                    for (ot = nt->begin(); ot != nt->end(); ++ot) {
+                                        data_m[index] = (*ot);
+                                        index++;
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -703,6 +831,198 @@ namespace atl {
 
             return *this;
 
+        }
+
+        Array& operator=(const std::initializer_list<T>& l) {
+            dims_m = 1;
+            isize = l.size();
+            jsize = 1;
+            ksize = 1;
+            lsize = 1;
+            msize = 1;
+            nsize = 1;
+            osize = 1;
+            typename std::initializer_list<T>::iterator it;
+            data_m.resize(isize);
+            int index = 0;
+            for (it = l.begin(); it != l.end(); ++it) {
+                data_m[index] = (*it);
+                index++;
+            }
+        }
+
+        Array& operator=(const std::initializer_list<std::initializer_list<T> >& l) {
+            dims_m = 2;
+            isize = l.size();
+            jsize = l.begin()->size();
+            ksize = 1;
+            lsize = 1;
+            msize = 1;
+            nsize = 1;
+            osize = 1;
+            typename std::initializer_list<std::initializer_list<T> >::iterator it;
+            typename std::initializer_list<T>::iterator jt;
+            data_m.resize(isize * jsize);
+            int index = 0;
+            for (it = l.begin(); it != l.end(); ++it) {
+                for (jt = it->begin(); jt != it->end(); ++jt) {
+                    data_m[index] = (*jt);
+                    index++;
+                }
+            }
+        }
+
+        Array& operator=(const std::initializer_list<std::initializer_list<std::initializer_list<T> > >& l) {
+            dims_m = 3;
+            isize = l.size();
+            jsize = l.begin()->size();
+            ksize = l.begin()->begin()->size();
+            lsize = 1;
+            msize = 1;
+            nsize = 1;
+            osize = 1;
+            typename std::initializer_list<std::initializer_list<std::initializer_list<T> > >::iterator it;
+            typename std::initializer_list<std::initializer_list<T> >::iterator jt;
+            typename std::initializer_list<T>::iterator kt;
+            data_m.resize(isize * jsize * ksize);
+            int index = 0;
+            for (it = l.begin(); it != l.end(); ++it) {
+                for (jt = it->begin(); jt != it->end(); ++jt) {
+                    for (kt = jt->begin(); kt != jt->end(); ++kt) {
+                        data_m[index] = (*kt);
+                        index++;
+                    }
+                }
+            }
+        }
+
+        Array& operator=(const std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<T> > > >& l) {
+            dims_m = 4;
+            isize = l.size();
+            jsize = l.begin()->size();
+            ksize = l.begin()->begin()->size();
+            lsize = l.begin()->begin()->begin()->size();
+            msize = 1;
+            nsize = 1;
+            osize = 1;
+            typename std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<T> > > >::iterator it;
+            typename std::initializer_list<std::initializer_list<std::initializer_list<T> > >::iterator jt;
+            typename std::initializer_list<std::initializer_list<T> >::iterator kt;
+            typename std::initializer_list<T>::iterator lt;
+            data_m.resize(isize * jsize * ksize * lsize);
+            int index = 0;
+            for (it = l.begin(); it != l.end(); ++it) {
+                for (jt = it->begin(); jt != it->end(); ++jt) {
+                    for (kt = jt->begin(); kt != jt->end(); ++kt) {
+                        for (lt = kt->begin(); lt != kt->end(); ++lt) {
+                            data_m[index] = (*lt);
+                            index++;
+                        }
+                    }
+                }
+            }
+        }
+
+        Array& operator=(const std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<T> > > > >& l) {
+            dims_m = 5;
+            isize = l.size();
+            jsize = l.begin()->size();
+            ksize = l.begin()->begin()->size();
+            lsize = l.begin()->begin()->begin()->size();
+            msize = l.begin()->begin()->begin()->begin()->size();
+            nsize = 1;
+            osize = 1;
+            typename std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<T> > > > >::iterator it;
+            typename std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<T> > > >::iterator jt;
+            typename std::initializer_list<std::initializer_list<std::initializer_list<T> > >::iterator kt;
+            typename std::initializer_list<std::initializer_list<T> >::iterator lt;
+            typename std::initializer_list<T>::iterator mt;
+            ;
+            data_m.resize(isize * jsize * ksize * lsize * msize);
+            int index = 0;
+            for (it = l.begin(); it != l.end(); ++it) {
+                for (jt = it->begin(); jt != it->end(); ++jt) {
+                    for (kt = jt->begin(); kt != jt->end(); ++kt) {
+                        for (lt = kt->begin(); lt != kt->end(); ++lt) {
+                            for (mt = lt->begin(); mt != lt->end(); ++mt) {
+                                data_m[index] = (*mt);
+                                index++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        Array& operator=(const std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<T> > > > > >& l) {
+            dims_m = 6;
+            isize = l.size();
+            jsize = l.begin()->size();
+            ksize = l.begin()->begin()->size();
+            lsize = l.begin()->begin()->begin()->size();
+            msize = l.begin()->begin()->begin()->begin()->size();
+            nsize = l.begin()->begin()->begin()->begin()->begin()->size();
+            osize = 1;
+            typename std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<T> > > > > >::iterator it;
+            typename std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<T> > > > >::iterator jt;
+            typename std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<T> > > >::iterator kt;
+            typename std::initializer_list<std::initializer_list<std::initializer_list<T> > >::iterator lt;
+            typename std::initializer_list<std::initializer_list<T> >::iterator mt;
+            typename std::initializer_list<T>::iterator nt;
+
+            data_m.resize(isize * jsize * ksize * lsize * msize * nsize);
+            int index = 0;
+            for (it = l.begin(); it != l.end(); ++it) {
+                for (jt = it->begin(); jt != it->end(); ++jt) {
+                    for (kt = jt->begin(); kt != jt->end(); ++kt) {
+                        for (lt = kt->begin(); lt != kt->end(); ++lt) {
+                            for (mt = lt->begin(); mt != lt->end(); ++mt) {
+                                for (nt = mt->begin(); nt != mt->end(); ++nt) {
+                                    data_m[index] = (*nt);
+                                    index++;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        Array& operator=(const std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<T> > > > > > >& l) {
+            dims_m = 7;
+            isize = l.size();
+            jsize = l.begin()->size();
+            ksize = l.begin()->begin()->size();
+            lsize = l.begin()->begin()->begin()->size();
+            msize = l.begin()->begin()->begin()->begin()->size();
+            nsize = l.begin()->begin()->begin()->begin()->begin()->size();
+            osize = l.begin()->begin()->begin()->begin()->begin()->begin()->size();
+            typename std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<T> > > > > > >::iterator it;
+            typename std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<T> > > > > >::iterator jt;
+            typename std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<T> > > > >::iterator kt;
+            typename std::initializer_list<std::initializer_list<std::initializer_list<std::initializer_list<T> > > >::iterator lt;
+            typename std::initializer_list<std::initializer_list<std::initializer_list<T> > >::iterator mt;
+            typename std::initializer_list<std::initializer_list<T> >::iterator nt;
+            typename std::initializer_list<T>::iterator ot;
+            ;
+            data_m.resize(isize * jsize * ksize * lsize * msize * nsize);
+            int index = 0;
+            for (it = l.begin(); it != l.end(); ++it) {
+                for (jt = it->begin(); jt != it->end(); ++jt) {
+                    for (kt = jt->begin(); kt != jt->end(); ++kt) {
+                        for (lt = kt->begin(); lt != kt->end(); ++lt) {
+                            for (mt = lt->begin(); mt != lt->end(); ++mt) {
+                                for (nt = mt->begin(); nt != mt->end(); ++nt) {
+                                    for (ot = nt->begin(); ot != nt->end(); ++ot) {
+                                        data_m[index] = (*ot);
+                                        index++;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         template<class T2, class A>
@@ -1507,28 +1827,29 @@ namespace atl {
             return data_m[(i * jsize * ksize)+(j * ksize) + k];
         }
 
-        inline const T& operator()(const uint32_t& i, const uint32_t & j, const uint32_t & k, const uint32_t & l)const {
+        inline const T& operator()(const uint32_t& i, const uint32_t & j, const uint32_t & k, const uint32_t & l) const {
 #ifdef ENABLE_BOUNDS_CHECKING
             CheckBounds(i, j, k, l);
 #endif
 
-            return data_m[(i * jsize)+(j * ksize) + (k * lsize) + l];
+            return data_m[(i * jsize * ksize * lsize)+(j * ksize * lsize) + (k * lsize) + l];
         }
 
-        inline const T& operator()(const uint32_t& i, const uint32_t & j, const uint32_t & k, const uint32_t & l, const uint32_t & m)const {
+        inline const T& operator()(const uint32_t& i, const uint32_t & j, const uint32_t & k, const uint32_t & l, const uint32_t & m) const {
 #ifdef ENABLE_BOUNDS_CHECKING
             CheckBounds(i, j, k, l, m);
 #endif
 
-            return data_m[(i * jsize)+(j * ksize) + (k * lsize) + (l * msize) + m];
+            return data_m[(i * jsize * ksize * lsize * msize)+(j * ksize * lsize * msize) + (k * lsize * msize) + (l * msize) + m];
         }
 
-        inline const T& operator()(const uint32_t& i, const uint32_t & j, const uint32_t & k, const uint32_t & l, const uint32_t & m, const uint32_t & n)const {
+        inline const T& operator()(const uint32_t& i, const uint32_t & j, const uint32_t & k, const uint32_t & l, const uint32_t & m, const uint32_t & n) const {
 #ifdef ENABLE_BOUNDS_CHECKING
             CheckBounds(i, j, k, l, m, n);
 #endif
 
-            return data_m[(i * jsize)+(j * ksize) + (k * lsize) + (l * msize) + (m * nsize) + n];
+            return data_m[(i * jsize * ksize * lsize * msize * nsize)+(j * ksize * lsize * msize * nsize)
+                    + (k * lsize * msize * nsize) + (l * msize * nsize) + (m * nsize) + n];
         }
 
         inline const T& operator()(const uint32_t& i, const uint32_t & j, const uint32_t & k, const uint32_t & l, const uint32_t & m, const uint32_t & n, const uint32_t & o) const {
@@ -1536,7 +1857,9 @@ namespace atl {
             CheckBounds(i, j, k, l, m, n, o);
 #endif
 
-            return data_m[(i * jsize)+(j * ksize) + (k * lsize) + (l * msize) + (m * nsize) + (n * osize) + o];
+            return data_m[(i * jsize * ksize * lsize * msize * nsize * osize)+
+                    (j * ksize * lsize * msize * nsize * osize) + (k * lsize * msize * nsize * osize)
+                    + (l * msize * nsize * osize) + (m * nsize * osize) + (n * osize) + o];
         }
 
         inline T& operator()(const uint32_t & i) {
@@ -1568,7 +1891,7 @@ namespace atl {
             CheckBounds(i, j, k, l);
 #endif
 
-            return data_m[(i * jsize)+(j * ksize) + (k * lsize) + l];
+            return data_m[(i * jsize * ksize * lsize)+(j * ksize * lsize) + (k * lsize) + l];
         }
 
         inline T& operator()(const uint32_t& i, const uint32_t & j, const uint32_t & k, const uint32_t & l, const uint32_t & m) {
@@ -1576,7 +1899,7 @@ namespace atl {
             CheckBounds(i, j, k, l, m);
 #endif
 
-            return data_m[(i * jsize)+(j * ksize) + (k * lsize) + (l * msize) + m];
+            return data_m[(i * jsize * ksize * lsize * msize)+(j * ksize * lsize * msize) + (k * lsize * msize) + (l * msize) + m];
         }
 
         inline T& operator()(const uint32_t& i, const uint32_t & j, const uint32_t & k, const uint32_t & l, const uint32_t & m, const uint32_t & n) {
@@ -1584,7 +1907,8 @@ namespace atl {
             CheckBounds(i, j, k, l, m, n);
 #endif
 
-            return data_m[(i * jsize)+(j * ksize) + (k * lsize) + (l * msize) + (m * nsize) + n];
+            return data_m[(i * jsize * ksize * lsize * msize * nsize)+(j * ksize * lsize * msize * nsize)
+                    + (k * lsize * msize * nsize) + (l * msize * nsize) + (m * nsize) + n];
         }
 
         inline T& operator()(const uint32_t& i, const uint32_t & j, const uint32_t & k, const uint32_t & l, const uint32_t & m, const uint32_t & n, const uint32_t & o) {
@@ -1592,7 +1916,9 @@ namespace atl {
             CheckBounds(i, j, k, l, m, n, o);
 #endif
 
-            return data_m[(i * jsize)+(j * ksize) + (k * lsize) + (l * msize) + (m * nsize) + (n * osize) + o];
+            return data_m[(i * jsize * ksize * lsize * msize * nsize * osize)+
+                    (j * ksize * lsize * msize * nsize * osize) + (k * lsize * msize * nsize * osize)
+                    + (l * msize * nsize * osize) + (m * nsize * osize) + (n * osize) + o];
         }
 
         inline void ExpressionLength(uint32_t& length)const {

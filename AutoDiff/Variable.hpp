@@ -55,7 +55,7 @@ namespace atl {
          * @param max
          * @return 
          */
-        virtual REAL_T External2Internal(REAL_T val, REAL_T min, REAL_T max) const = 0;
+        virtual REAL_T External2Internal(REAL_T val, REAL_T min_, REAL_T max_) const = 0;
         /**
          * Convert a variables internal value to its external representation.
          * @param val
@@ -63,7 +63,7 @@ namespace atl {
          * @param max
          * @return 
          */
-        virtual REAL_T Internal2External(REAL_T val, REAL_T min, REAL_T max) const = 0;
+        virtual REAL_T Internal2External(REAL_T val, REAL_T min_, REAL_T max_) const = 0;
         /**
          * The derivative of Internal2External.
          * @param val
@@ -71,7 +71,7 @@ namespace atl {
          * @param max
          * @return 
          */
-        virtual REAL_T DerivativeInternal2External(REAL_T val, REAL_T min, REAL_T max) const = 0;
+        virtual REAL_T DerivativeInternal2External(REAL_T val, REAL_T min_, REAL_T max_) const = 0;
 
     };
 
@@ -92,16 +92,16 @@ namespace atl {
     class TanhParameterTransformation : public ParameterTransformation<REAL_T> {
     public:
 
-        virtual REAL_T External2Internal(REAL_T val, REAL_T min, REAL_T max) const {
-            return min + .5 * (max - min)*(1.0 + std::tanh(val));
+        virtual REAL_T External2Internal(REAL_T val, REAL_T min_, REAL_T max_) const {
+            return min_ + .5 * (max_ - min_)*(1.0 + std::tanh(val));
         }
 
-        virtual REAL_T Internal2External(REAL_T val, REAL_T min, REAL_T max) const {
-            return std::atanh(2.0 * (val - min) / (max - min) - 1.0);
+        virtual REAL_T Internal2External(REAL_T val, REAL_T min_, REAL_T max_) const {
+            return std::atanh(2.0 * (val - min_) / (max_ - min_) - 1.0);
         }
 
-        virtual REAL_T DerivativeInternal2External(REAL_T val, REAL_T min, REAL_T max)const {
-            return 2.0 / ((max - min) * std::pow((1.0 - ((2.0 * (val - min)) / max - min - 1.0)), 2.0));
+        virtual REAL_T DerivativeInternal2External(REAL_T val, REAL_T min_, REAL_T max_)const {
+            return 2.0 / ((max_ - min_) * std::pow((1.0 - ((2.0 * (val - min_)) / max_ - min_ - 1.0)), 2.0));
         }
     };
 
@@ -112,51 +112,46 @@ namespace atl {
     class SinParameterTransformation : public ParameterTransformation<REAL_T> {
     public:
 
-        virtual REAL_T External2Internal(REAL_T val, REAL_T min, REAL_T max) const {
-            if (val < min) {
+        virtual REAL_T External2Internal(REAL_T val, REAL_T min_, REAL_T max_) const {
+            if (val < min_) {
                 return -M_PI / 2.0;
-            } else if (val > max) {
+            } else if (val > max_) {
                 return M_PI / 2.0;
             } else {
-                return 2, 0 * M_PI + std::asin(std::max(-1.0, std::min(1.0, (2.0 * (val - min) / (max - min) - 1.0))));
+                return 2, 0 * M_PI + std::asin(std::max(-1.0, std::min(1.0, (2.0 * (val - min_) / (max_ - min_) - 1.0))));
             }
         }
 
-        virtual REAL_T Internal2External(REAL_T val, REAL_T min, REAL_T max) const {
+        virtual REAL_T Internal2External(REAL_T val, REAL_T min_, REAL_T max_) const {
             //            return ((std::sin(val) + 1.0) / 2.0)*(max - min) + min;
-            return std::max(min, std::min(max, ((std::sin(val) + 1.0) / 2.0)*(max - min) + min));
+            return std::max(min_, std::min(max_, ((std::sin(val) + 1.0) / 2.0)*(max_ - min_) + min_));
         }
 
-        virtual REAL_T DerivativeInternal2External(REAL_T val, REAL_T min, REAL_T max)const {
-            return 0.5 * ((max - min) * std::cos(val));
+        virtual REAL_T DerivativeInternal2External(REAL_T val, REAL_T min_, REAL_T max_)const {
+            return 0.5 * ((max_ - min_) * std::cos(val));
         }
     };
 
-    
     template<typename REAL_T>
     class LogitParameterTransformation : public ParameterTransformation<REAL_T> {
     public:
 
-        virtual REAL_T External2Internal(REAL_T val, REAL_T min, REAL_T max)const {
-          REAL_T p=(val-min)/(max-min);
-          return std::log(p/(1-p));
+        virtual REAL_T External2Internal(REAL_T val, REAL_T min_, REAL_T max_)const {
+            REAL_T p = (val - min_) / (max_ - min_);
+            return std::log(p / (1 - p));
         }
 
-        virtual REAL_T Internal2External(REAL_T val, REAL_T min, REAL_T max) const{
-            REAL_T p = std::exp(val)/(1+std::exp(val));
-            return p * (max-min) + min;
+        virtual REAL_T Internal2External(REAL_T val, REAL_T min_, REAL_T max_) const {
+            REAL_T p = std::exp(val) / (1 + std::exp(val));
+            return p * (max_ - min_) + min_;
         }
 
-        virtual REAL_T DerivativeInternal2External(REAL_T val, REAL_T min, REAL_T max)const {
-         return (std::exp(val)*std::log(M_E)*(max-min))/(std::exp(val)+1.0)-
-                 (std::exp(2*val)*std::log(M_E)*(max - min))/std::pow((std::exp(val)+1),2.0);
+        virtual REAL_T DerivativeInternal2External(REAL_T val, REAL_T min_, REAL_T max_)const {
+            return (std::exp(val) * std::log(M_E)*(max_ - min_)) / (std::exp(val) + 1.0)-
+                    (std::exp(2 * val) * std::log(M_E)*(max_ - min_)) / std::pow((std::exp(val) + 1), 2.0);
         }
     };
-    
 
-    
-    
-    
     template<class REAL_T, //base type
     int group = 0 > //group identifier
     class Variable : public atl::ExpressionBase<REAL_T, Variable<REAL_T, group > > {
@@ -197,7 +192,7 @@ namespace atl {
             mapped_info = (this->info);
         }
 
-        Variable(const Variable& val) : info(val.info), min_boundary_m(val.min_boundary_m), max_boundary_m(val.max_boundary_m), bounded_m(val.bounded_m),transformation(&default_transformation) {
+        Variable(const Variable& val) : info(val.info), min_boundary_m(val.min_boundary_m), max_boundary_m(val.max_boundary_m), bounded_m(val.bounded_m), transformation(&default_transformation) {
             info->count++;
             mapped_info = (val.mapped_info);
         }
@@ -586,7 +581,7 @@ namespace atl {
                 gradient[i] = variables[i]->info->dvalue;
                 hessian[i].resize(size);
                 for (int j = 0; j < size; j++) {
-                    hessian[i][j] = variables[i]->info->GetHessianRowValue(variables[j]->info);//hessian_row[variables[j]->info];
+                    hessian[i][j] = variables[i]->info->GetHessianRowValue(variables[j]->info); //hessian_row[variables[j]->info];
                 }
             }
         }
@@ -637,7 +632,7 @@ namespace atl {
 
     template<typename REAL_T, int group>
     /* ATTRIBUTE_TLS */ GradientStructure<REAL_T> Variable<REAL_T, group>::gradient_structure_g;
-    
+
     template<typename REAL_T, int group>
     TanhParameterTransformation<REAL_T> Variable<REAL_T, group>::default_transformation;
     namespace atl_forward_test {
