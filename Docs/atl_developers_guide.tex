@@ -1310,9 +1310,11 @@ ATL provides one dense, dynamic matrix type called \textit{atl::Matrix}. Future 
         {1, 2, 3, 4, 5},
         {1, 2, 3, 4, 5}
     };
+    
     atl::Matrix<double> b = {
         {6, 7, 8, 9, 10},
         {6, 7, 8, 9, 10}};
+        
     atl::Matrix<double> c = a * b;
     
     std::cout << a << " * \n" << b << " = \n" << c << "\n";

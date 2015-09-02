@@ -1,5 +1,5 @@
-#ifndef MATRIXMATH_HPP
-#define MATRIXMATH_HPP
+#ifndef VECTORMATH_HPP
+#define VECTORMATH_HPP
 
 #ifdef ENABLE_BOUNDS_CHECKING
 #include <assert.h>
@@ -11,33 +11,30 @@
 namespace atl{
 
  template<class C>
-    struct MatrixACos : atl::MatrixExpression<typename C::RET_TYPE, MatrixACos<C> > {
+    struct VectorACos : atl::VectorExpression<typename C::RET_TYPE, VectorACos<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit MatrixACos(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit VectorACos(const atl::VectorExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
 
         }
 
         inline const size_t Size(const int32_t & dimension) const {
             switch (dimension) {
                 case 0:
-                    return c_m.Size(1);
-                case 1:
                     return c_m.Size(0);
                 default:
                     return 0;
             }
         }
 
-        inline const RET_TYPE operator()(size_t i, size_t j) const {
+        inline const RET_TYPE operator()(size_t i) const {
 #ifdef ENABLE_BOUNDS_CHECKING
             assert(i < c_m.Size(0));
-            assert(j < c_m.Size(1));
 #endif   
 
-            return ::acos(c_m(i,j));
+            return ::acos(c_m(i));
 
         }
         
@@ -62,11 +59,10 @@ namespace atl{
          * Get a value based on the raw indices for the underlying 
          * data. 
          * @param i
-         * @param j
          * @return 
          */
-        inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
-            return ::acos(c_m.AtRaw(i,j));
+        inline const RET_TYPE AtRaw(const uint32_t& i) const {
+            return ::acos(c_m.AtRaw(i));
         }
 
         /**
@@ -88,37 +84,34 @@ namespace atl{
     };
 
     template<class C>
-    inline const MatrixACos<C> acos(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) {
-        return MatrixACos<C>(c);
+    inline const VectorACos<C> acos(const atl::VectorExpression<typename C::RET_TYPE,C>& c) {
+        return VectorACos<C>(c);
     }
  template<class C>
-    struct MatrixASin : atl::MatrixExpression<typename C::RET_TYPE, MatrixASin<C> > {
+    struct VectorASin : atl::VectorExpression<typename C::RET_TYPE, VectorASin<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit MatrixASin(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit VectorASin(const atl::VectorExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
 
         }
 
         inline const size_t Size(const int32_t & dimension) const {
             switch (dimension) {
                 case 0:
-                    return c_m.Size(1);
-                case 1:
                     return c_m.Size(0);
                 default:
                     return 0;
             }
         }
 
-        inline const RET_TYPE operator()(size_t i, size_t j) const {
+        inline const RET_TYPE operator()(size_t i) const {
 #ifdef ENABLE_BOUNDS_CHECKING
             assert(i < c_m.Size(0));
-            assert(j < c_m.Size(1));
 #endif   
 
-            return ::asin(c_m(i,j));
+            return ::asin(c_m(i));
 
         }
         
@@ -143,11 +136,10 @@ namespace atl{
          * Get a value based on the raw indices for the underlying 
          * data. 
          * @param i
-         * @param j
          * @return 
          */
-        inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
-            return ::asin(c_m.AtRaw(i,j));
+        inline const RET_TYPE AtRaw(const uint32_t& i) const {
+            return ::asin(c_m.AtRaw(i));
         }
 
         /**
@@ -169,37 +161,34 @@ namespace atl{
     };
 
     template<class C>
-    inline const MatrixASin<C> asin(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) {
-        return MatrixASin<C>(c);
+    inline const VectorASin<C> asin(const atl::VectorExpression<typename C::RET_TYPE,C>& c) {
+        return VectorASin<C>(c);
     }
  template<class C>
-    struct MatrixATan : atl::MatrixExpression<typename C::RET_TYPE, MatrixATan<C> > {
+    struct VectorATan : atl::VectorExpression<typename C::RET_TYPE, VectorATan<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit MatrixATan(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit VectorATan(const atl::VectorExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
 
         }
 
         inline const size_t Size(const int32_t & dimension) const {
             switch (dimension) {
                 case 0:
-                    return c_m.Size(1);
-                case 1:
                     return c_m.Size(0);
                 default:
                     return 0;
             }
         }
 
-        inline const RET_TYPE operator()(size_t i, size_t j) const {
+        inline const RET_TYPE operator()(size_t i) const {
 #ifdef ENABLE_BOUNDS_CHECKING
             assert(i < c_m.Size(0));
-            assert(j < c_m.Size(1));
 #endif   
 
-            return ::atan(c_m(i,j));
+            return ::atan(c_m(i));
 
         }
         
@@ -224,11 +213,10 @@ namespace atl{
          * Get a value based on the raw indices for the underlying 
          * data. 
          * @param i
-         * @param j
          * @return 
          */
-        inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
-            return ::atan(c_m.AtRaw(i,j));
+        inline const RET_TYPE AtRaw(const uint32_t& i) const {
+            return ::atan(c_m.AtRaw(i));
         }
 
         /**
@@ -250,37 +238,34 @@ namespace atl{
     };
 
     template<class C>
-    inline const MatrixATan<C> atan(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) {
-        return MatrixATan<C>(c);
+    inline const VectorATan<C> atan(const atl::VectorExpression<typename C::RET_TYPE,C>& c) {
+        return VectorATan<C>(c);
     }
  template<class C>
-    struct MatrixACeil : atl::MatrixExpression<typename C::RET_TYPE, MatrixACeil<C> > {
+    struct VectorACeil : atl::VectorExpression<typename C::RET_TYPE, VectorACeil<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit MatrixACeil(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit VectorACeil(const atl::VectorExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
 
         }
 
         inline const size_t Size(const int32_t & dimension) const {
             switch (dimension) {
                 case 0:
-                    return c_m.Size(1);
-                case 1:
                     return c_m.Size(0);
                 default:
                     return 0;
             }
         }
 
-        inline const RET_TYPE operator()(size_t i, size_t j) const {
+        inline const RET_TYPE operator()(size_t i) const {
 #ifdef ENABLE_BOUNDS_CHECKING
             assert(i < c_m.Size(0));
-            assert(j < c_m.Size(1));
 #endif   
 
-            return ::ceil(c_m(i,j));
+            return ::ceil(c_m(i));
 
         }
         
@@ -305,11 +290,10 @@ namespace atl{
          * Get a value based on the raw indices for the underlying 
          * data. 
          * @param i
-         * @param j
          * @return 
          */
-        inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
-            return ::ceil(c_m.AtRaw(i,j));
+        inline const RET_TYPE AtRaw(const uint32_t& i) const {
+            return ::ceil(c_m.AtRaw(i));
         }
 
         /**
@@ -331,37 +315,34 @@ namespace atl{
     };
 
     template<class C>
-    inline const MatrixACeil<C> ceil(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) {
-        return MatrixACeil<C>(c);
+    inline const VectorACeil<C> ceil(const atl::VectorExpression<typename C::RET_TYPE,C>& c) {
+        return VectorACeil<C>(c);
     }
  template<class C>
-    struct MatrixCos : atl::MatrixExpression<typename C::RET_TYPE, MatrixCos<C> > {
+    struct VectorCos : atl::VectorExpression<typename C::RET_TYPE, VectorCos<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit MatrixCos(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit VectorCos(const atl::VectorExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
 
         }
 
         inline const size_t Size(const int32_t & dimension) const {
             switch (dimension) {
                 case 0:
-                    return c_m.Size(1);
-                case 1:
                     return c_m.Size(0);
                 default:
                     return 0;
             }
         }
 
-        inline const RET_TYPE operator()(size_t i, size_t j) const {
+        inline const RET_TYPE operator()(size_t i) const {
 #ifdef ENABLE_BOUNDS_CHECKING
             assert(i < c_m.Size(0));
-            assert(j < c_m.Size(1));
 #endif   
 
-            return ::cos(c_m(i,j));
+            return ::cos(c_m(i));
 
         }
         
@@ -386,11 +367,10 @@ namespace atl{
          * Get a value based on the raw indices for the underlying 
          * data. 
          * @param i
-         * @param j
          * @return 
          */
-        inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
-            return ::cos(c_m.AtRaw(i,j));
+        inline const RET_TYPE AtRaw(const uint32_t& i) const {
+            return ::cos(c_m.AtRaw(i));
         }
 
         /**
@@ -412,37 +392,34 @@ namespace atl{
     };
 
     template<class C>
-    inline const MatrixCos<C> cos(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) {
-        return MatrixCos<C>(c);
+    inline const VectorCos<C> cos(const atl::VectorExpression<typename C::RET_TYPE,C>& c) {
+        return VectorCos<C>(c);
     }
  template<class C>
-    struct MatrixCosh : atl::MatrixExpression<typename C::RET_TYPE, MatrixCosh<C> > {
+    struct VectorCosh : atl::VectorExpression<typename C::RET_TYPE, VectorCosh<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit MatrixCosh(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit VectorCosh(const atl::VectorExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
 
         }
 
         inline const size_t Size(const int32_t & dimension) const {
             switch (dimension) {
                 case 0:
-                    return c_m.Size(1);
-                case 1:
                     return c_m.Size(0);
                 default:
                     return 0;
             }
         }
 
-        inline const RET_TYPE operator()(size_t i, size_t j) const {
+        inline const RET_TYPE operator()(size_t i) const {
 #ifdef ENABLE_BOUNDS_CHECKING
             assert(i < c_m.Size(0));
-            assert(j < c_m.Size(1));
 #endif   
 
-            return ::cosh(c_m(i,j));
+            return ::cosh(c_m(i));
 
         }
         
@@ -467,11 +444,10 @@ namespace atl{
          * Get a value based on the raw indices for the underlying 
          * data. 
          * @param i
-         * @param j
          * @return 
          */
-        inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
-            return ::cosh(c_m.AtRaw(i,j));
+        inline const RET_TYPE AtRaw(const uint32_t& i) const {
+            return ::cosh(c_m.AtRaw(i));
         }
 
         /**
@@ -493,37 +469,34 @@ namespace atl{
     };
 
     template<class C>
-    inline const MatrixCosh<C> cosh(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) {
-        return MatrixCosh<C>(c);
+    inline const VectorCosh<C> cosh(const atl::VectorExpression<typename C::RET_TYPE,C>& c) {
+        return VectorCosh<C>(c);
     }
  template<class C>
-    struct MatrixExp : atl::MatrixExpression<typename C::RET_TYPE, MatrixExp<C> > {
+    struct VectorExp : atl::VectorExpression<typename C::RET_TYPE, VectorExp<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit MatrixExp(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit VectorExp(const atl::VectorExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
 
         }
 
         inline const size_t Size(const int32_t & dimension) const {
             switch (dimension) {
                 case 0:
-                    return c_m.Size(1);
-                case 1:
                     return c_m.Size(0);
                 default:
                     return 0;
             }
         }
 
-        inline const RET_TYPE operator()(size_t i, size_t j) const {
+        inline const RET_TYPE operator()(size_t i) const {
 #ifdef ENABLE_BOUNDS_CHECKING
             assert(i < c_m.Size(0));
-            assert(j < c_m.Size(1));
 #endif   
 
-            return ::exp(c_m(i,j));
+            return ::exp(c_m(i));
 
         }
         
@@ -548,11 +521,10 @@ namespace atl{
          * Get a value based on the raw indices for the underlying 
          * data. 
          * @param i
-         * @param j
          * @return 
          */
-        inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
-            return ::exp(c_m.AtRaw(i,j));
+        inline const RET_TYPE AtRaw(const uint32_t& i) const {
+            return ::exp(c_m.AtRaw(i));
         }
 
         /**
@@ -574,37 +546,34 @@ namespace atl{
     };
 
     template<class C>
-    inline const MatrixExp<C> exp(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) {
-        return MatrixExp<C>(c);
+    inline const VectorExp<C> exp(const atl::VectorExpression<typename C::RET_TYPE,C>& c) {
+        return VectorExp<C>(c);
     }
  template<class C>
-    struct MatrixFabs : atl::MatrixExpression<typename C::RET_TYPE, MatrixFabs<C> > {
+    struct VectorFabs : atl::VectorExpression<typename C::RET_TYPE, VectorFabs<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit MatrixFabs(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit VectorFabs(const atl::VectorExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
 
         }
 
         inline const size_t Size(const int32_t & dimension) const {
             switch (dimension) {
                 case 0:
-                    return c_m.Size(1);
-                case 1:
                     return c_m.Size(0);
                 default:
                     return 0;
             }
         }
 
-        inline const RET_TYPE operator()(size_t i, size_t j) const {
+        inline const RET_TYPE operator()(size_t i) const {
 #ifdef ENABLE_BOUNDS_CHECKING
             assert(i < c_m.Size(0));
-            assert(j < c_m.Size(1));
 #endif   
 
-            return ::fabs(c_m(i,j));
+            return ::fabs(c_m(i));
 
         }
         
@@ -629,11 +598,10 @@ namespace atl{
          * Get a value based on the raw indices for the underlying 
          * data. 
          * @param i
-         * @param j
          * @return 
          */
-        inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
-            return ::fabs(c_m.AtRaw(i,j));
+        inline const RET_TYPE AtRaw(const uint32_t& i) const {
+            return ::fabs(c_m.AtRaw(i));
         }
 
         /**
@@ -655,37 +623,34 @@ namespace atl{
     };
 
     template<class C>
-    inline const MatrixFabs<C> fabs(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) {
-        return MatrixFabs<C>(c);
+    inline const VectorFabs<C> fabs(const atl::VectorExpression<typename C::RET_TYPE,C>& c) {
+        return VectorFabs<C>(c);
     }
  template<class C>
-    struct MatrixFloor : atl::MatrixExpression<typename C::RET_TYPE, MatrixFloor<C> > {
+    struct VectorFloor : atl::VectorExpression<typename C::RET_TYPE, VectorFloor<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit MatrixFloor(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit VectorFloor(const atl::VectorExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
 
         }
 
         inline const size_t Size(const int32_t & dimension) const {
             switch (dimension) {
                 case 0:
-                    return c_m.Size(1);
-                case 1:
                     return c_m.Size(0);
                 default:
                     return 0;
             }
         }
 
-        inline const RET_TYPE operator()(size_t i, size_t j) const {
+        inline const RET_TYPE operator()(size_t i) const {
 #ifdef ENABLE_BOUNDS_CHECKING
             assert(i < c_m.Size(0));
-            assert(j < c_m.Size(1));
 #endif   
 
-            return ::floor(c_m(i,j));
+            return ::floor(c_m(i));
 
         }
         
@@ -710,11 +675,10 @@ namespace atl{
          * Get a value based on the raw indices for the underlying 
          * data. 
          * @param i
-         * @param j
          * @return 
          */
-        inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
-            return ::floor(c_m.AtRaw(i,j));
+        inline const RET_TYPE AtRaw(const uint32_t& i) const {
+            return ::floor(c_m.AtRaw(i));
         }
 
         /**
@@ -736,37 +700,34 @@ namespace atl{
     };
 
     template<class C>
-    inline const MatrixFloor<C> floor(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) {
-        return MatrixFloor<C>(c);
+    inline const VectorFloor<C> floor(const atl::VectorExpression<typename C::RET_TYPE,C>& c) {
+        return VectorFloor<C>(c);
     }
  template<class C>
-    struct MatrixLog : atl::MatrixExpression<typename C::RET_TYPE, MatrixLog<C> > {
+    struct VectorLog : atl::VectorExpression<typename C::RET_TYPE, VectorLog<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit MatrixLog(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit VectorLog(const atl::VectorExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
 
         }
 
         inline const size_t Size(const int32_t & dimension) const {
             switch (dimension) {
                 case 0:
-                    return c_m.Size(1);
-                case 1:
                     return c_m.Size(0);
                 default:
                     return 0;
             }
         }
 
-        inline const RET_TYPE operator()(size_t i, size_t j) const {
+        inline const RET_TYPE operator()(size_t i) const {
 #ifdef ENABLE_BOUNDS_CHECKING
             assert(i < c_m.Size(0));
-            assert(j < c_m.Size(1));
 #endif   
 
-            return ::log(c_m(i,j));
+            return ::log(c_m(i));
 
         }
         
@@ -791,11 +752,10 @@ namespace atl{
          * Get a value based on the raw indices for the underlying 
          * data. 
          * @param i
-         * @param j
          * @return 
          */
-        inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
-            return ::log(c_m.AtRaw(i,j));
+        inline const RET_TYPE AtRaw(const uint32_t& i) const {
+            return ::log(c_m.AtRaw(i));
         }
 
         /**
@@ -817,37 +777,34 @@ namespace atl{
     };
 
     template<class C>
-    inline const MatrixLog<C> log(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) {
-        return MatrixLog<C>(c);
+    inline const VectorLog<C> log(const atl::VectorExpression<typename C::RET_TYPE,C>& c) {
+        return VectorLog<C>(c);
     }
  template<class C>
-    struct MatrixLog10 : atl::MatrixExpression<typename C::RET_TYPE, MatrixLog10<C> > {
+    struct VectorLog10 : atl::VectorExpression<typename C::RET_TYPE, VectorLog10<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit MatrixLog10(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit VectorLog10(const atl::VectorExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
 
         }
 
         inline const size_t Size(const int32_t & dimension) const {
             switch (dimension) {
                 case 0:
-                    return c_m.Size(1);
-                case 1:
                     return c_m.Size(0);
                 default:
                     return 0;
             }
         }
 
-        inline const RET_TYPE operator()(size_t i, size_t j) const {
+        inline const RET_TYPE operator()(size_t i) const {
 #ifdef ENABLE_BOUNDS_CHECKING
             assert(i < c_m.Size(0));
-            assert(j < c_m.Size(1));
 #endif   
 
-            return ::log10(c_m(i,j));
+            return ::log10(c_m(i));
 
         }
         
@@ -872,11 +829,10 @@ namespace atl{
          * Get a value based on the raw indices for the underlying 
          * data. 
          * @param i
-         * @param j
          * @return 
          */
-        inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
-            return ::log10(c_m.AtRaw(i,j));
+        inline const RET_TYPE AtRaw(const uint32_t& i) const {
+            return ::log10(c_m.AtRaw(i));
         }
 
         /**
@@ -898,37 +854,34 @@ namespace atl{
     };
 
     template<class C>
-    inline const MatrixLog10<C> log10(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) {
-        return MatrixLog10<C>(c);
+    inline const VectorLog10<C> log10(const atl::VectorExpression<typename C::RET_TYPE,C>& c) {
+        return VectorLog10<C>(c);
     }
  template<class C>
-    struct MatrixSin : atl::MatrixExpression<typename C::RET_TYPE, MatrixSin<C> > {
+    struct VectorSin : atl::VectorExpression<typename C::RET_TYPE, VectorSin<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit MatrixSin(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit VectorSin(const atl::VectorExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
 
         }
 
         inline const size_t Size(const int32_t & dimension) const {
             switch (dimension) {
                 case 0:
-                    return c_m.Size(1);
-                case 1:
                     return c_m.Size(0);
                 default:
                     return 0;
             }
         }
 
-        inline const RET_TYPE operator()(size_t i, size_t j) const {
+        inline const RET_TYPE operator()(size_t i) const {
 #ifdef ENABLE_BOUNDS_CHECKING
             assert(i < c_m.Size(0));
-            assert(j < c_m.Size(1));
 #endif   
 
-            return ::sin(c_m(i,j));
+            return ::sin(c_m(i));
 
         }
         
@@ -953,11 +906,10 @@ namespace atl{
          * Get a value based on the raw indices for the underlying 
          * data. 
          * @param i
-         * @param j
          * @return 
          */
-        inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
-            return ::sin(c_m.AtRaw(i,j));
+        inline const RET_TYPE AtRaw(const uint32_t& i) const {
+            return ::sin(c_m.AtRaw(i));
         }
 
         /**
@@ -979,37 +931,34 @@ namespace atl{
     };
 
     template<class C>
-    inline const MatrixSin<C> sin(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) {
-        return MatrixSin<C>(c);
+    inline const VectorSin<C> sin(const atl::VectorExpression<typename C::RET_TYPE,C>& c) {
+        return VectorSin<C>(c);
     }
  template<class C>
-    struct MatrixSinh : atl::MatrixExpression<typename C::RET_TYPE, MatrixSinh<C> > {
+    struct VectorSinh : atl::VectorExpression<typename C::RET_TYPE, VectorSinh<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit MatrixSinh(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit VectorSinh(const atl::VectorExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
 
         }
 
         inline const size_t Size(const int32_t & dimension) const {
             switch (dimension) {
                 case 0:
-                    return c_m.Size(1);
-                case 1:
                     return c_m.Size(0);
                 default:
                     return 0;
             }
         }
 
-        inline const RET_TYPE operator()(size_t i, size_t j) const {
+        inline const RET_TYPE operator()(size_t i) const {
 #ifdef ENABLE_BOUNDS_CHECKING
             assert(i < c_m.Size(0));
-            assert(j < c_m.Size(1));
 #endif   
 
-            return ::sinh(c_m(i,j));
+            return ::sinh(c_m(i));
 
         }
         
@@ -1034,11 +983,10 @@ namespace atl{
          * Get a value based on the raw indices for the underlying 
          * data. 
          * @param i
-         * @param j
          * @return 
          */
-        inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
-            return ::sinh(c_m.AtRaw(i,j));
+        inline const RET_TYPE AtRaw(const uint32_t& i) const {
+            return ::sinh(c_m.AtRaw(i));
         }
 
         /**
@@ -1060,37 +1008,34 @@ namespace atl{
     };
 
     template<class C>
-    inline const MatrixSinh<C> sinh(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) {
-        return MatrixSinh<C>(c);
+    inline const VectorSinh<C> sinh(const atl::VectorExpression<typename C::RET_TYPE,C>& c) {
+        return VectorSinh<C>(c);
     }
  template<class C>
-    struct MatrixSqrt : atl::MatrixExpression<typename C::RET_TYPE, MatrixSqrt<C> > {
+    struct VectorSqrt : atl::VectorExpression<typename C::RET_TYPE, VectorSqrt<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit MatrixSqrt(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit VectorSqrt(const atl::VectorExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
 
         }
 
         inline const size_t Size(const int32_t & dimension) const {
             switch (dimension) {
                 case 0:
-                    return c_m.Size(1);
-                case 1:
                     return c_m.Size(0);
                 default:
                     return 0;
             }
         }
 
-        inline const RET_TYPE operator()(size_t i, size_t j) const {
+        inline const RET_TYPE operator()(size_t i) const {
 #ifdef ENABLE_BOUNDS_CHECKING
             assert(i < c_m.Size(0));
-            assert(j < c_m.Size(1));
 #endif   
 
-            return ::sqrt(c_m(i,j));
+            return ::sqrt(c_m(i));
 
         }
         
@@ -1115,11 +1060,10 @@ namespace atl{
          * Get a value based on the raw indices for the underlying 
          * data. 
          * @param i
-         * @param j
          * @return 
          */
-        inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
-            return ::sqrt(c_m.AtRaw(i,j));
+        inline const RET_TYPE AtRaw(const uint32_t& i) const {
+            return ::sqrt(c_m.AtRaw(i));
         }
 
         /**
@@ -1141,37 +1085,34 @@ namespace atl{
     };
 
     template<class C>
-    inline const MatrixSqrt<C> sqrt(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) {
-        return MatrixSqrt<C>(c);
+    inline const VectorSqrt<C> sqrt(const atl::VectorExpression<typename C::RET_TYPE,C>& c) {
+        return VectorSqrt<C>(c);
     }
  template<class C>
-    struct MatrixTan : atl::MatrixExpression<typename C::RET_TYPE, MatrixTan<C> > {
+    struct VectorTan : atl::VectorExpression<typename C::RET_TYPE, VectorTan<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit MatrixTan(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit VectorTan(const atl::VectorExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
 
         }
 
         inline const size_t Size(const int32_t & dimension) const {
             switch (dimension) {
                 case 0:
-                    return c_m.Size(1);
-                case 1:
                     return c_m.Size(0);
                 default:
                     return 0;
             }
         }
 
-        inline const RET_TYPE operator()(size_t i, size_t j) const {
+        inline const RET_TYPE operator()(size_t i) const {
 #ifdef ENABLE_BOUNDS_CHECKING
             assert(i < c_m.Size(0));
-            assert(j < c_m.Size(1));
 #endif   
 
-            return ::tan(c_m(i,j));
+            return ::tan(c_m(i));
 
         }
         
@@ -1196,11 +1137,10 @@ namespace atl{
          * Get a value based on the raw indices for the underlying 
          * data. 
          * @param i
-         * @param j
          * @return 
          */
-        inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
-            return ::tan(c_m.AtRaw(i,j));
+        inline const RET_TYPE AtRaw(const uint32_t& i) const {
+            return ::tan(c_m.AtRaw(i));
         }
 
         /**
@@ -1222,37 +1162,34 @@ namespace atl{
     };
 
     template<class C>
-    inline const MatrixTan<C> tan(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) {
-        return MatrixTan<C>(c);
+    inline const VectorTan<C> tan(const atl::VectorExpression<typename C::RET_TYPE,C>& c) {
+        return VectorTan<C>(c);
     }
  template<class C>
-    struct MatrixTanh : atl::MatrixExpression<typename C::RET_TYPE, MatrixTanh<C> > {
+    struct VectorTanh : atl::VectorExpression<typename C::RET_TYPE, VectorTanh<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit MatrixTanh(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit VectorTanh(const atl::VectorExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
 
         }
 
         inline const size_t Size(const int32_t & dimension) const {
             switch (dimension) {
                 case 0:
-                    return c_m.Size(1);
-                case 1:
                     return c_m.Size(0);
                 default:
                     return 0;
             }
         }
 
-        inline const RET_TYPE operator()(size_t i, size_t j) const {
+        inline const RET_TYPE operator()(size_t i) const {
 #ifdef ENABLE_BOUNDS_CHECKING
             assert(i < c_m.Size(0));
-            assert(j < c_m.Size(1));
 #endif   
 
-            return ::tanh(c_m(i,j));
+            return ::tanh(c_m(i));
 
         }
         
@@ -1277,11 +1214,10 @@ namespace atl{
          * Get a value based on the raw indices for the underlying 
          * data. 
          * @param i
-         * @param j
          * @return 
          */
-        inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
-            return ::tanh(c_m.AtRaw(i,j));
+        inline const RET_TYPE AtRaw(const uint32_t& i) const {
+            return ::tanh(c_m.AtRaw(i));
         }
 
         /**
@@ -1303,11 +1239,11 @@ namespace atl{
     };
 
     template<class C>
-    inline const MatrixTanh<C> tanh(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) {
-        return MatrixTanh<C>(c);
+    inline const VectorTanh<C> tanh(const atl::VectorExpression<typename C::RET_TYPE,C>& c) {
+        return VectorTanh<C>(c);
     }
  template< class LHS, class RHS>
-    struct MatrixPow : MatrixExpression<typename atl::PromoteType<typename LHS::RET_TYPE, typename RHS::RET_TYPE >::return_type, MatrixPow<LHS, RHS> > {
+    struct VectorPow : VectorExpression<typename atl::PromoteType<typename LHS::RET_TYPE, typename RHS::RET_TYPE >::return_type, VectorPow<LHS, RHS> > {
         typedef typename LHS::RET_TYPE RET_TYPEL;
         typedef typename RHS::RET_TYPE RET_TYPER;
 
@@ -1317,7 +1253,7 @@ namespace atl{
         const LHS& lhs_m;
         const RHS& rhs_m;
 
-        inline explicit MatrixPow(const atl::MatrixExpression<typename LHS::RET_TYPE,LHS>& lhs, const atl::MatrixExpression<typename RHS::RET_TYPE,RHS>& rhs) : lhs_m(lhs.Cast()), rhs_m(rhs.Cast()) {
+        inline explicit VectorPow(const atl::VectorExpression<typename LHS::RET_TYPE,LHS>& lhs, const atl::VectorExpression<typename RHS::RET_TYPE,RHS>& rhs) : lhs_m(lhs.Cast()), rhs_m(rhs.Cast()) {
 
 
 
@@ -1327,8 +1263,8 @@ namespace atl{
             return lhs_m.Size(dimension) < rhs_m.Size(dimension) ? lhs_m.Size(dimension) : rhs_m.Size(dimension);
         }
 
-        inline const RET_TYPE operator()(const uint32_t& i, const uint32_t & j) const {
-            return ::pow(lhs_m(i, j), rhs_m(i, j));
+        inline const RET_TYPE operator()(const uint32_t& i) const {
+            return ::pow(lhs_m(i), rhs_m(i));
         }
 
         /*
@@ -1347,8 +1283,8 @@ namespace atl{
             return std::min(lhs_m.IndexMax(d), rhs_m.IndexMax(d));
         }
 
-        inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
-            return ::pow(lhs_m.AtRaw(i, j), rhs_m.AtRaw(i, j));
+        inline const RET_TYPE AtRaw(const uint32_t& i) const {
+            return ::pow(lhs_m.AtRaw(i), rhs_m.AtRaw(i));
         }
 
         /**
@@ -1373,14 +1309,14 @@ namespace atl{
     //
 
     template< class LHS, class T >
-    struct MatrixPowScalar : MatrixExpression<typename PromoteType<typename LHS::RET_TYPE, T>::return_type, MatrixPowScalar< LHS, T> > {
+    struct VectorPowScalar : VectorExpression<typename PromoteType<typename LHS::RET_TYPE, T>::return_type, VectorPowScalar< LHS, T> > {
         const LHS& lhs_m;
         const T& rhs_m;
 
         typedef typename atl::PromoteType<typename LHS::RET_TYPE, T>::return_type RET_TYPE;
         typedef typename atl::PromoteType<typename LHS::BASE_TYPE, T>::return_type BASE_TYPE;
 
-        inline explicit MatrixPowScalar(const MatrixExpression<typename LHS::RET_TYPE, LHS>& lhs, const T & rhs) : lhs_m(lhs.Cast()), rhs_m(rhs) {
+        inline explicit VectorPowScalar(const VectorExpression<typename LHS::RET_TYPE, LHS>& lhs, const T & rhs) : lhs_m(lhs.Cast()), rhs_m(rhs) {
 
 
 
@@ -1390,8 +1326,8 @@ namespace atl{
             return lhs_m.Size(dimension);
         }
 
-        inline const RET_TYPE operator()(const uint32_t& i, const uint32_t & j) const {
-            return ::pow(lhs_m(i, j), rhs_m);
+        inline const RET_TYPE operator()(const uint32_t& i) const {
+            return ::pow(lhs_m(i), rhs_m);
         }
 
         /*
@@ -1410,8 +1346,8 @@ namespace atl{
             return (lhs_m.IndexMax(d));
         }
 
-        inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
-            return ::pow(lhs_m.AtRaw(i, j), rhs_m);
+        inline const RET_TYPE AtRaw(const uint32_t& i) const {
+            return ::pow(lhs_m.AtRaw(i), rhs_m);
         }
 
         /**
@@ -1433,14 +1369,14 @@ namespace atl{
     };
 
     template<class T, class RHS>
-    struct ScalarMatrixPow : MatrixExpression<typename PromoteType<typename RHS::RET_TYPE, T>::return_type, ScalarMatrixPow<T, RHS> > {
+    struct ScalarVectorPow : VectorExpression<typename PromoteType<typename RHS::RET_TYPE, T>::return_type, ScalarVectorPow<T, RHS> > {
         typedef typename atl::PromoteType<T, typename RHS::RET_TYPE>::return_type RET_TYPE;
         typedef typename atl::PromoteType<T, typename RHS::BASE_TYPE>::return_type BASE_TYPE;
 
         const T& lhs_m;
         const RHS& rhs_m;
 
-        inline explicit ScalarMatrixPow(const T& lhs, const MatrixExpression<typename RHS::RET_TYPE, RHS> & rhs) : lhs_m(lhs), rhs_m(rhs.Cast()) {
+        inline explicit ScalarVectorPow(const T& lhs, const VectorExpression<typename RHS::RET_TYPE, RHS> & rhs) : lhs_m(lhs), rhs_m(rhs.Cast()) {
 
 
 
@@ -1450,8 +1386,8 @@ namespace atl{
             return rhs_m.Size(dimension);
         }
 
-        inline const RET_TYPE operator()(const uint32_t& i, const uint32_t & j) const {
-            return ::pow(lhs_m, rhs_m(i, j));
+        inline const RET_TYPE operator()(const uint32_t& i) const {
+            return ::pow(lhs_m, rhs_m(i));
         }
 
         /*
@@ -1470,8 +1406,8 @@ namespace atl{
             return (rhs_m.IndexMax(d));
         }
 
-        inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
-            return ::pow(lhs_m, rhs_m.AtRaw(i, j));
+        inline const RET_TYPE AtRaw(const uint32_t& i) const {
+            return ::pow(lhs_m, rhs_m.AtRaw(i));
         }
 
         /**
@@ -1496,58 +1432,58 @@ namespace atl{
     //typename et4ad::promote_trait<typename LHS::RET_TYPE , typename RHS::RET_TYPE >::return_type
 
     template <class LHS, class RHS>
-    inline const MatrixPow< LHS, RHS> operator+(const MatrixExpression<typename LHS::RET_TYPE, LHS>& a,
+    inline const VectorPow< LHS, RHS> operator+(const MatrixExpression<typename LHS::RET_TYPE, LHS>& a,
             const MatrixExpression<typename RHS::RET_TYPE, RHS>& b) {
-        return MatrixPow< LHS, RHS > (a.Cast(), b.Cast());
+        return VectorPow< LHS, RHS > (a.Cast(), b.Cast());
     }
 
 
 
-#define ATL_MATRIX_MatrixPow_SCALAR(TYPE) \
+#define ATL_VECTOR_VectorPow_SCALAR(TYPE) \
     template< class LHS>      \
-        inline const MatrixPowScalar<LHS,TYPE> \
-    pow(const MatrixExpression<typename LHS::RET_TYPE, LHS>& a, const TYPE& b) {\
-            return MatrixPowScalar<LHS,TYPE > (a.Cast(), b);\
+        inline const VectorPowScalar<LHS,TYPE> \
+    pow(const VectorExpression<typename LHS::RET_TYPE, LHS>& a, const TYPE& b) {\
+            return VectorPowScalar<LHS,TYPE > (a.Cast(), b);\
         } \
     
-    ATL_MATRIX_MatrixPow_SCALAR(short)
-    ATL_MATRIX_MatrixPow_SCALAR(unsigned short)
-    ATL_MATRIX_MatrixPow_SCALAR(int)
-    ATL_MATRIX_MatrixPow_SCALAR(unsigned int)
-    ATL_MATRIX_MatrixPow_SCALAR(long)
-    ATL_MATRIX_MatrixPow_SCALAR(unsigned long)
-    ATL_MATRIX_MatrixPow_SCALAR(float)
-    ATL_MATRIX_MatrixPow_SCALAR(double)
-    ATL_MATRIX_MatrixPow_SCALAR(long double)
-    ATL_MATRIX_MatrixPow_SCALAR(atl::Variable<float>)
-    ATL_MATRIX_MatrixPow_SCALAR(atl::Variable<double>)
-    ATL_MATRIX_MatrixPow_SCALAR(atl::Variable<long double>)
+    ATL_VECTOR_VectorPow_SCALAR(short)
+    ATL_VECTOR_VectorPow_SCALAR(unsigned short)
+    ATL_VECTOR_VectorPow_SCALAR(int)
+    ATL_VECTOR_VectorPow_SCALAR(unsigned int)
+    ATL_VECTOR_VectorPow_SCALAR(long)
+    ATL_VECTOR_VectorPow_SCALAR(unsigned long)
+    ATL_VECTOR_VectorPow_SCALAR(float)
+    ATL_VECTOR_VectorPow_SCALAR(double)
+    ATL_VECTOR_VectorPow_SCALAR(long double)
+    ATL_VECTOR_VectorPow_SCALAR(atl::Variable<float>)
+    ATL_VECTOR_VectorPow_SCALAR(atl::Variable<double>)
+    ATL_VECTOR_VectorPow_SCALAR(atl::Variable<long double>)
 
 
-#define ATL_MatrixPow_SCALAR_MATRIX(TYPE) \
+#define ATL_VectorPow_SCALAR_VECTOR(TYPE) \
     template< class RHS>      \
-        inline const ScalarMatrixPow<TYPE,RHS> \
-    pow(const TYPE& a, const MatrixExpression<typename RHS::RET_TYPE, RHS>& b ) {\
-            return ScalarMatrixPow<TYPE,RHS > (a, b.Cast());\
+        inline const ScalarVectorPow<TYPE,RHS> \
+    pow(const TYPE& a, const VectorExpression<typename RHS::RET_TYPE, RHS>& b ) {\
+            return ScalarVectorPow<TYPE,RHS > (a, b.Cast());\
         } \
             
-    ATL_MatrixPow_SCALAR_MATRIX(short)
-    ATL_MatrixPow_SCALAR_MATRIX(unsigned short)
-    ATL_MatrixPow_SCALAR_MATRIX(int)
-    ATL_MatrixPow_SCALAR_MATRIX(unsigned int)
-    ATL_MatrixPow_SCALAR_MATRIX(long)
-    ATL_MatrixPow_SCALAR_MATRIX(unsigned long)
-    ATL_MatrixPow_SCALAR_MATRIX(float)
-    ATL_MatrixPow_SCALAR_MATRIX(double)
-    ATL_MatrixPow_SCALAR_MATRIX(long double)
-    ATL_MatrixPow_SCALAR_MATRIX(atl::Variable<float>)
-    ATL_MatrixPow_SCALAR_MATRIX(atl::Variable<double>)
-    ATL_MatrixPow_SCALAR_MATRIX(atl::Variable<long double>)
+    ATL_VectorPow_SCALAR_VECTOR(short)
+    ATL_VectorPow_SCALAR_VECTOR(unsigned short)
+    ATL_VectorPow_SCALAR_VECTOR(int)
+    ATL_VectorPow_SCALAR_VECTOR(unsigned int)
+    ATL_VectorPow_SCALAR_VECTOR(long)
+    ATL_VectorPow_SCALAR_VECTOR(unsigned long)
+    ATL_VectorPow_SCALAR_VECTOR(float)
+    ATL_VectorPow_SCALAR_VECTOR(double)
+    ATL_VectorPow_SCALAR_VECTOR(long double)
+    ATL_VectorPow_SCALAR_VECTOR(atl::Variable<float>)
+    ATL_VectorPow_SCALAR_VECTOR(atl::Variable<double>)
+    ATL_VectorPow_SCALAR_VECTOR(atl::Variable<long double>)
 
 
 
  template< class LHS, class RHS>
-    struct MatrixATan2 : MatrixExpression<typename atl::PromoteType<typename LHS::RET_TYPE, typename RHS::RET_TYPE >::return_type, MatrixATan2<LHS, RHS> > {
+    struct VectorATan2 : VectorExpression<typename atl::PromoteType<typename LHS::RET_TYPE, typename RHS::RET_TYPE >::return_type, VectorATan2<LHS, RHS> > {
         typedef typename LHS::RET_TYPE RET_TYPEL;
         typedef typename RHS::RET_TYPE RET_TYPER;
 
@@ -1557,7 +1493,7 @@ namespace atl{
         const LHS& lhs_m;
         const RHS& rhs_m;
 
-        inline explicit MatrixATan2(const atl::MatrixExpression<typename LHS::RET_TYPE,LHS>& lhs, const atl::MatrixExpression<typename RHS::RET_TYPE,RHS>& rhs) : lhs_m(lhs.Cast()), rhs_m(rhs.Cast()) {
+        inline explicit VectorATan2(const atl::VectorExpression<typename LHS::RET_TYPE,LHS>& lhs, const atl::VectorExpression<typename RHS::RET_TYPE,RHS>& rhs) : lhs_m(lhs.Cast()), rhs_m(rhs.Cast()) {
 
 
 
@@ -1567,8 +1503,8 @@ namespace atl{
             return lhs_m.Size(dimension) < rhs_m.Size(dimension) ? lhs_m.Size(dimension) : rhs_m.Size(dimension);
         }
 
-        inline const RET_TYPE operator()(const uint32_t& i, const uint32_t & j) const {
-            return ::atan2(lhs_m(i, j), rhs_m(i, j));
+        inline const RET_TYPE operator()(const uint32_t& i) const {
+            return ::atan2(lhs_m(i), rhs_m(i));
         }
 
         /*
@@ -1587,8 +1523,8 @@ namespace atl{
             return std::min(lhs_m.IndexMax(d), rhs_m.IndexMax(d));
         }
 
-        inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
-            return ::atan2(lhs_m.AtRaw(i, j), rhs_m.AtRaw(i, j));
+        inline const RET_TYPE AtRaw(const uint32_t& i) const {
+            return ::atan2(lhs_m.AtRaw(i), rhs_m.AtRaw(i));
         }
 
         /**
@@ -1613,14 +1549,14 @@ namespace atl{
     //
 
     template< class LHS, class T >
-    struct MatrixATan2Scalar : MatrixExpression<typename PromoteType<typename LHS::RET_TYPE, T>::return_type, MatrixATan2Scalar< LHS, T> > {
+    struct VectorATan2Scalar : VectorExpression<typename PromoteType<typename LHS::RET_TYPE, T>::return_type, VectorATan2Scalar< LHS, T> > {
         const LHS& lhs_m;
         const T& rhs_m;
 
         typedef typename atl::PromoteType<typename LHS::RET_TYPE, T>::return_type RET_TYPE;
         typedef typename atl::PromoteType<typename LHS::BASE_TYPE, T>::return_type BASE_TYPE;
 
-        inline explicit MatrixATan2Scalar(const MatrixExpression<typename LHS::RET_TYPE, LHS>& lhs, const T & rhs) : lhs_m(lhs.Cast()), rhs_m(rhs) {
+        inline explicit VectorATan2Scalar(const VectorExpression<typename LHS::RET_TYPE, LHS>& lhs, const T & rhs) : lhs_m(lhs.Cast()), rhs_m(rhs) {
 
 
 
@@ -1630,8 +1566,8 @@ namespace atl{
             return lhs_m.Size(dimension);
         }
 
-        inline const RET_TYPE operator()(const uint32_t& i, const uint32_t & j) const {
-            return ::atan2(lhs_m(i, j), rhs_m);
+        inline const RET_TYPE operator()(const uint32_t& i) const {
+            return ::atan2(lhs_m(i), rhs_m);
         }
 
         /*
@@ -1650,8 +1586,8 @@ namespace atl{
             return (lhs_m.IndexMax(d));
         }
 
-        inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
-            return ::atan2(lhs_m.AtRaw(i, j), rhs_m);
+        inline const RET_TYPE AtRaw(const uint32_t& i) const {
+            return ::atan2(lhs_m.AtRaw(i), rhs_m);
         }
 
         /**
@@ -1673,14 +1609,14 @@ namespace atl{
     };
 
     template<class T, class RHS>
-    struct ScalarMatrixATan2 : MatrixExpression<typename PromoteType<typename RHS::RET_TYPE, T>::return_type, ScalarMatrixATan2<T, RHS> > {
+    struct ScalarVectorATan2 : VectorExpression<typename PromoteType<typename RHS::RET_TYPE, T>::return_type, ScalarVectorATan2<T, RHS> > {
         typedef typename atl::PromoteType<T, typename RHS::RET_TYPE>::return_type RET_TYPE;
         typedef typename atl::PromoteType<T, typename RHS::BASE_TYPE>::return_type BASE_TYPE;
 
         const T& lhs_m;
         const RHS& rhs_m;
 
-        inline explicit ScalarMatrixATan2(const T& lhs, const MatrixExpression<typename RHS::RET_TYPE, RHS> & rhs) : lhs_m(lhs), rhs_m(rhs.Cast()) {
+        inline explicit ScalarVectorATan2(const T& lhs, const VectorExpression<typename RHS::RET_TYPE, RHS> & rhs) : lhs_m(lhs), rhs_m(rhs.Cast()) {
 
 
 
@@ -1690,8 +1626,8 @@ namespace atl{
             return rhs_m.Size(dimension);
         }
 
-        inline const RET_TYPE operator()(const uint32_t& i, const uint32_t & j) const {
-            return ::atan2(lhs_m, rhs_m(i, j));
+        inline const RET_TYPE operator()(const uint32_t& i) const {
+            return ::atan2(lhs_m, rhs_m(i));
         }
 
         /*
@@ -1710,8 +1646,8 @@ namespace atl{
             return (rhs_m.IndexMax(d));
         }
 
-        inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
-            return ::atan2(lhs_m, rhs_m.AtRaw(i, j));
+        inline const RET_TYPE AtRaw(const uint32_t& i) const {
+            return ::atan2(lhs_m, rhs_m.AtRaw(i));
         }
 
         /**
@@ -1736,53 +1672,53 @@ namespace atl{
     //typename et4ad::promote_trait<typename LHS::RET_TYPE , typename RHS::RET_TYPE >::return_type
 
     template <class LHS, class RHS>
-    inline const MatrixATan2< LHS, RHS> operator+(const MatrixExpression<typename LHS::RET_TYPE, LHS>& a,
+    inline const VectorATan2< LHS, RHS> operator+(const MatrixExpression<typename LHS::RET_TYPE, LHS>& a,
             const MatrixExpression<typename RHS::RET_TYPE, RHS>& b) {
-        return MatrixATan2< LHS, RHS > (a.Cast(), b.Cast());
+        return VectorATan2< LHS, RHS > (a.Cast(), b.Cast());
     }
 
 
 
-#define ATL_MATRIX_MatrixATan2_SCALAR(TYPE) \
+#define ATL_VECTOR_VectorATan2_SCALAR(TYPE) \
     template< class LHS>      \
-        inline const MatrixATan2Scalar<LHS,TYPE> \
-    atan2(const MatrixExpression<typename LHS::RET_TYPE, LHS>& a, const TYPE& b) {\
-            return MatrixATan2Scalar<LHS,TYPE > (a.Cast(), b);\
+        inline const VectorATan2Scalar<LHS,TYPE> \
+    atan2(const VectorExpression<typename LHS::RET_TYPE, LHS>& a, const TYPE& b) {\
+            return VectorATan2Scalar<LHS,TYPE > (a.Cast(), b);\
         } \
     
-    ATL_MATRIX_MatrixATan2_SCALAR(short)
-    ATL_MATRIX_MatrixATan2_SCALAR(unsigned short)
-    ATL_MATRIX_MatrixATan2_SCALAR(int)
-    ATL_MATRIX_MatrixATan2_SCALAR(unsigned int)
-    ATL_MATRIX_MatrixATan2_SCALAR(long)
-    ATL_MATRIX_MatrixATan2_SCALAR(unsigned long)
-    ATL_MATRIX_MatrixATan2_SCALAR(float)
-    ATL_MATRIX_MatrixATan2_SCALAR(double)
-    ATL_MATRIX_MatrixATan2_SCALAR(long double)
-    ATL_MATRIX_MatrixATan2_SCALAR(atl::Variable<float>)
-    ATL_MATRIX_MatrixATan2_SCALAR(atl::Variable<double>)
-    ATL_MATRIX_MatrixATan2_SCALAR(atl::Variable<long double>)
+    ATL_VECTOR_VectorATan2_SCALAR(short)
+    ATL_VECTOR_VectorATan2_SCALAR(unsigned short)
+    ATL_VECTOR_VectorATan2_SCALAR(int)
+    ATL_VECTOR_VectorATan2_SCALAR(unsigned int)
+    ATL_VECTOR_VectorATan2_SCALAR(long)
+    ATL_VECTOR_VectorATan2_SCALAR(unsigned long)
+    ATL_VECTOR_VectorATan2_SCALAR(float)
+    ATL_VECTOR_VectorATan2_SCALAR(double)
+    ATL_VECTOR_VectorATan2_SCALAR(long double)
+    ATL_VECTOR_VectorATan2_SCALAR(atl::Variable<float>)
+    ATL_VECTOR_VectorATan2_SCALAR(atl::Variable<double>)
+    ATL_VECTOR_VectorATan2_SCALAR(atl::Variable<long double>)
 
 
-#define ATL_MatrixATan2_SCALAR_MATRIX(TYPE) \
+#define ATL_VectorATan2_SCALAR_VECTOR(TYPE) \
     template< class RHS>      \
-        inline const ScalarMatrixATan2<TYPE,RHS> \
-    atan2(const TYPE& a, const MatrixExpression<typename RHS::RET_TYPE, RHS>& b ) {\
-            return ScalarMatrixATan2<TYPE,RHS > (a, b.Cast());\
+        inline const ScalarVectorATan2<TYPE,RHS> \
+    atan2(const TYPE& a, const VectorExpression<typename RHS::RET_TYPE, RHS>& b ) {\
+            return ScalarVectorATan2<TYPE,RHS > (a, b.Cast());\
         } \
             
-    ATL_MatrixATan2_SCALAR_MATRIX(short)
-    ATL_MatrixATan2_SCALAR_MATRIX(unsigned short)
-    ATL_MatrixATan2_SCALAR_MATRIX(int)
-    ATL_MatrixATan2_SCALAR_MATRIX(unsigned int)
-    ATL_MatrixATan2_SCALAR_MATRIX(long)
-    ATL_MatrixATan2_SCALAR_MATRIX(unsigned long)
-    ATL_MatrixATan2_SCALAR_MATRIX(float)
-    ATL_MatrixATan2_SCALAR_MATRIX(double)
-    ATL_MatrixATan2_SCALAR_MATRIX(long double)
-    ATL_MatrixATan2_SCALAR_MATRIX(atl::Variable<float>)
-    ATL_MatrixATan2_SCALAR_MATRIX(atl::Variable<double>)
-    ATL_MatrixATan2_SCALAR_MATRIX(atl::Variable<long double>)
+    ATL_VectorATan2_SCALAR_VECTOR(short)
+    ATL_VectorATan2_SCALAR_VECTOR(unsigned short)
+    ATL_VectorATan2_SCALAR_VECTOR(int)
+    ATL_VectorATan2_SCALAR_VECTOR(unsigned int)
+    ATL_VectorATan2_SCALAR_VECTOR(long)
+    ATL_VectorATan2_SCALAR_VECTOR(unsigned long)
+    ATL_VectorATan2_SCALAR_VECTOR(float)
+    ATL_VectorATan2_SCALAR_VECTOR(double)
+    ATL_VectorATan2_SCALAR_VECTOR(long double)
+    ATL_VectorATan2_SCALAR_VECTOR(atl::Variable<float>)
+    ATL_VectorATan2_SCALAR_VECTOR(atl::Variable<double>)
+    ATL_VectorATan2_SCALAR_VECTOR(atl::Variable<long double>)
 
 
 
