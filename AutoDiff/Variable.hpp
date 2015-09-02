@@ -8,7 +8,6 @@
 #ifndef ET4AD_VARIABLE_HPP
 #define	ET4AD_VARIABLE_HPP
 
-#include <math.h>
 #include <cmath>
 #include <stack>
 #include <vector>
@@ -31,6 +30,13 @@
 #error "Define a thread local storage qualifier for your compiler/platform!"
 #endif
 
+
+#ifndef M_PI
+#define M_PI 3.141592653589793238462643383279502884197169399375105820974944592307816406
+#endif
+#ifndef M_E
+#define M_E 2.71828182845904523536028747135266249775724709369995957496696762772407663
+#endif
 
 
 
@@ -97,7 +103,7 @@ namespace atl {
         }
 
         virtual REAL_T Internal2External(REAL_T val, REAL_T min_, REAL_T max_) const {
-            return std::atanh(2.0 * (val - min_) / (max_ - min_) - 1.0);
+            return std::atanh(std::complex<double>(2.0 * (val - min_) / (max_ - min_) - 1.0)).real();
         }
 
         virtual REAL_T DerivativeInternal2External(REAL_T val, REAL_T min_, REAL_T max_)const {
