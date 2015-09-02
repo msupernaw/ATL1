@@ -8,15 +8,15 @@
 
 
 
-namespace atl{
+namespace atl {
 
- template<class C>
+    template<class C>
     struct MatrixACos : atl::MatrixExpression<typename C::RET_TYPE, MatrixACos<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit MatrixACos(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit MatrixACos(const atl::MatrixExpression<typename C::RET_TYPE, C>& c) : c_m(c.Cast()) {
 
         }
 
@@ -37,11 +37,10 @@ namespace atl{
             assert(j < c_m.Size(1));
 #endif   
 
-            return ::acos(c_m(i,j));
+            return ::acos(c_m(i, j));
 
         }
-        
-          
+
         /*
          *
          *Returns the first valid index for this container given dimension d. 
@@ -66,7 +65,7 @@ namespace atl{
          * @return 
          */
         inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
-            return ::acos(c_m.AtRaw(i,j));
+            return ::acos(c_m.AtRaw(i, j));
         }
 
         /**
@@ -88,16 +87,17 @@ namespace atl{
     };
 
     template<class C>
-    inline const MatrixACos<C> acos(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) {
+    inline const MatrixACos<C> acos(const atl::MatrixExpression<typename C::RET_TYPE, C>& c) {
         return MatrixACos<C>(c);
     }
- template<class C>
+
+    template<class C>
     struct MatrixASin : atl::MatrixExpression<typename C::RET_TYPE, MatrixASin<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit MatrixASin(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit MatrixASin(const atl::MatrixExpression<typename C::RET_TYPE, C>& c) : c_m(c.Cast()) {
 
         }
 
@@ -118,11 +118,10 @@ namespace atl{
             assert(j < c_m.Size(1));
 #endif   
 
-            return ::asin(c_m(i,j));
+            return ::asin(c_m(i, j));
 
         }
-        
-          
+
         /*
          *
          *Returns the first valid index for this container given dimension d. 
@@ -147,7 +146,7 @@ namespace atl{
          * @return 
          */
         inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
-            return ::asin(c_m.AtRaw(i,j));
+            return ::asin(c_m.AtRaw(i, j));
         }
 
         /**
@@ -169,16 +168,17 @@ namespace atl{
     };
 
     template<class C>
-    inline const MatrixASin<C> asin(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) {
+    inline const MatrixASin<C> asin(const atl::MatrixExpression<typename C::RET_TYPE, C>& c) {
         return MatrixASin<C>(c);
     }
- template<class C>
+
+    template<class C>
     struct MatrixATan : atl::MatrixExpression<typename C::RET_TYPE, MatrixATan<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit MatrixATan(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit MatrixATan(const atl::MatrixExpression<typename C::RET_TYPE, C>& c) : c_m(c.Cast()) {
 
         }
 
@@ -199,11 +199,10 @@ namespace atl{
             assert(j < c_m.Size(1));
 #endif   
 
-            return ::atan(c_m(i,j));
+            return ::atan(c_m(i, j));
 
         }
-        
-          
+
         /*
          *
          *Returns the first valid index for this container given dimension d. 
@@ -228,7 +227,7 @@ namespace atl{
          * @return 
          */
         inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
-            return ::atan(c_m.AtRaw(i,j));
+            return ::atan(c_m.AtRaw(i, j));
         }
 
         /**
@@ -250,16 +249,17 @@ namespace atl{
     };
 
     template<class C>
-    inline const MatrixATan<C> atan(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) {
+    inline const MatrixATan<C> atan(const atl::MatrixExpression<typename C::RET_TYPE, C>& c) {
         return MatrixATan<C>(c);
     }
- template<class C>
+
+    template<class C>
     struct MatrixACeil : atl::MatrixExpression<typename C::RET_TYPE, MatrixACeil<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit MatrixACeil(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit MatrixACeil(const atl::MatrixExpression<typename C::RET_TYPE, C>& c) : c_m(c.Cast()) {
 
         }
 
@@ -280,11 +280,10 @@ namespace atl{
             assert(j < c_m.Size(1));
 #endif   
 
-            return ::ceil(c_m(i,j));
+            return ::ceil(c_m(i, j));
 
         }
-        
-          
+
         /*
          *
          *Returns the first valid index for this container given dimension d. 
@@ -309,7 +308,7 @@ namespace atl{
          * @return 
          */
         inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
-            return ::ceil(c_m.AtRaw(i,j));
+            return ::ceil(c_m.AtRaw(i, j));
         }
 
         /**
@@ -331,16 +330,17 @@ namespace atl{
     };
 
     template<class C>
-    inline const MatrixACeil<C> ceil(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) {
+    inline const MatrixACeil<C> ceil(const atl::MatrixExpression<typename C::RET_TYPE, C>& c) {
         return MatrixACeil<C>(c);
     }
- template<class C>
+
+    template<class C>
     struct MatrixCos : atl::MatrixExpression<typename C::RET_TYPE, MatrixCos<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit MatrixCos(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit MatrixCos(const atl::MatrixExpression<typename C::RET_TYPE, C>& c) : c_m(c.Cast()) {
 
         }
 
@@ -361,11 +361,10 @@ namespace atl{
             assert(j < c_m.Size(1));
 #endif   
 
-            return ::cos(c_m(i,j));
+            return ::cos(c_m(i, j));
 
         }
-        
-          
+
         /*
          *
          *Returns the first valid index for this container given dimension d. 
@@ -390,7 +389,7 @@ namespace atl{
          * @return 
          */
         inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
-            return ::cos(c_m.AtRaw(i,j));
+            return ::cos(c_m.AtRaw(i, j));
         }
 
         /**
@@ -412,16 +411,17 @@ namespace atl{
     };
 
     template<class C>
-    inline const MatrixCos<C> cos(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) {
+    inline const MatrixCos<C> cos(const atl::MatrixExpression<typename C::RET_TYPE, C>& c) {
         return MatrixCos<C>(c);
     }
- template<class C>
+
+    template<class C>
     struct MatrixCosh : atl::MatrixExpression<typename C::RET_TYPE, MatrixCosh<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit MatrixCosh(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit MatrixCosh(const atl::MatrixExpression<typename C::RET_TYPE, C>& c) : c_m(c.Cast()) {
 
         }
 
@@ -442,11 +442,10 @@ namespace atl{
             assert(j < c_m.Size(1));
 #endif   
 
-            return ::cosh(c_m(i,j));
+            return ::cosh(c_m(i, j));
 
         }
-        
-          
+
         /*
          *
          *Returns the first valid index for this container given dimension d. 
@@ -471,7 +470,7 @@ namespace atl{
          * @return 
          */
         inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
-            return ::cosh(c_m.AtRaw(i,j));
+            return ::cosh(c_m.AtRaw(i, j));
         }
 
         /**
@@ -493,16 +492,17 @@ namespace atl{
     };
 
     template<class C>
-    inline const MatrixCosh<C> cosh(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) {
+    inline const MatrixCosh<C> cosh(const atl::MatrixExpression<typename C::RET_TYPE, C>& c) {
         return MatrixCosh<C>(c);
     }
- template<class C>
+
+    template<class C>
     struct MatrixExp : atl::MatrixExpression<typename C::RET_TYPE, MatrixExp<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit MatrixExp(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit MatrixExp(const atl::MatrixExpression<typename C::RET_TYPE, C>& c) : c_m(c.Cast()) {
 
         }
 
@@ -523,11 +523,10 @@ namespace atl{
             assert(j < c_m.Size(1));
 #endif   
 
-            return ::exp(c_m(i,j));
+            return ::exp(c_m(i, j));
 
         }
-        
-          
+
         /*
          *
          *Returns the first valid index for this container given dimension d. 
@@ -552,7 +551,7 @@ namespace atl{
          * @return 
          */
         inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
-            return ::exp(c_m.AtRaw(i,j));
+            return ::exp(c_m.AtRaw(i, j));
         }
 
         /**
@@ -574,16 +573,17 @@ namespace atl{
     };
 
     template<class C>
-    inline const MatrixExp<C> exp(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) {
+    inline const MatrixExp<C> exp(const atl::MatrixExpression<typename C::RET_TYPE, C>& c) {
         return MatrixExp<C>(c);
     }
- template<class C>
+
+    template<class C>
     struct MatrixFabs : atl::MatrixExpression<typename C::RET_TYPE, MatrixFabs<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit MatrixFabs(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit MatrixFabs(const atl::MatrixExpression<typename C::RET_TYPE, C>& c) : c_m(c.Cast()) {
 
         }
 
@@ -604,11 +604,10 @@ namespace atl{
             assert(j < c_m.Size(1));
 #endif   
 
-            return ::fabs(c_m(i,j));
+            return ::fabs(c_m(i, j));
 
         }
-        
-          
+
         /*
          *
          *Returns the first valid index for this container given dimension d. 
@@ -633,7 +632,7 @@ namespace atl{
          * @return 
          */
         inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
-            return ::fabs(c_m.AtRaw(i,j));
+            return ::fabs(c_m.AtRaw(i, j));
         }
 
         /**
@@ -655,16 +654,17 @@ namespace atl{
     };
 
     template<class C>
-    inline const MatrixFabs<C> fabs(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) {
+    inline const MatrixFabs<C> fabs(const atl::MatrixExpression<typename C::RET_TYPE, C>& c) {
         return MatrixFabs<C>(c);
     }
- template<class C>
+
+    template<class C>
     struct MatrixFloor : atl::MatrixExpression<typename C::RET_TYPE, MatrixFloor<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit MatrixFloor(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit MatrixFloor(const atl::MatrixExpression<typename C::RET_TYPE, C>& c) : c_m(c.Cast()) {
 
         }
 
@@ -685,11 +685,10 @@ namespace atl{
             assert(j < c_m.Size(1));
 #endif   
 
-            return ::floor(c_m(i,j));
+            return ::floor(c_m(i, j));
 
         }
-        
-          
+
         /*
          *
          *Returns the first valid index for this container given dimension d. 
@@ -714,7 +713,7 @@ namespace atl{
          * @return 
          */
         inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
-            return ::floor(c_m.AtRaw(i,j));
+            return ::floor(c_m.AtRaw(i, j));
         }
 
         /**
@@ -736,16 +735,17 @@ namespace atl{
     };
 
     template<class C>
-    inline const MatrixFloor<C> floor(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) {
+    inline const MatrixFloor<C> floor(const atl::MatrixExpression<typename C::RET_TYPE, C>& c) {
         return MatrixFloor<C>(c);
     }
- template<class C>
+
+    template<class C>
     struct MatrixLog : atl::MatrixExpression<typename C::RET_TYPE, MatrixLog<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit MatrixLog(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit MatrixLog(const atl::MatrixExpression<typename C::RET_TYPE, C>& c) : c_m(c.Cast()) {
 
         }
 
@@ -766,11 +766,10 @@ namespace atl{
             assert(j < c_m.Size(1));
 #endif   
 
-            return ::log(c_m(i,j));
+            return ::log(c_m(i, j));
 
         }
-        
-          
+
         /*
          *
          *Returns the first valid index for this container given dimension d. 
@@ -795,7 +794,7 @@ namespace atl{
          * @return 
          */
         inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
-            return ::log(c_m.AtRaw(i,j));
+            return ::log(c_m.AtRaw(i, j));
         }
 
         /**
@@ -817,16 +816,17 @@ namespace atl{
     };
 
     template<class C>
-    inline const MatrixLog<C> log(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) {
+    inline const MatrixLog<C> log(const atl::MatrixExpression<typename C::RET_TYPE, C>& c) {
         return MatrixLog<C>(c);
     }
- template<class C>
+
+    template<class C>
     struct MatrixLog10 : atl::MatrixExpression<typename C::RET_TYPE, MatrixLog10<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit MatrixLog10(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit MatrixLog10(const atl::MatrixExpression<typename C::RET_TYPE, C>& c) : c_m(c.Cast()) {
 
         }
 
@@ -847,11 +847,10 @@ namespace atl{
             assert(j < c_m.Size(1));
 #endif   
 
-            return ::log10(c_m(i,j));
+            return ::log10(c_m(i, j));
 
         }
-        
-          
+
         /*
          *
          *Returns the first valid index for this container given dimension d. 
@@ -876,7 +875,7 @@ namespace atl{
          * @return 
          */
         inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
-            return ::log10(c_m.AtRaw(i,j));
+            return ::log10(c_m.AtRaw(i, j));
         }
 
         /**
@@ -898,16 +897,17 @@ namespace atl{
     };
 
     template<class C>
-    inline const MatrixLog10<C> log10(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) {
+    inline const MatrixLog10<C> log10(const atl::MatrixExpression<typename C::RET_TYPE, C>& c) {
         return MatrixLog10<C>(c);
     }
- template<class C>
+
+    template<class C>
     struct MatrixSin : atl::MatrixExpression<typename C::RET_TYPE, MatrixSin<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit MatrixSin(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit MatrixSin(const atl::MatrixExpression<typename C::RET_TYPE, C>& c) : c_m(c.Cast()) {
 
         }
 
@@ -928,11 +928,10 @@ namespace atl{
             assert(j < c_m.Size(1));
 #endif   
 
-            return ::sin(c_m(i,j));
+            return ::sin(c_m(i, j));
 
         }
-        
-          
+
         /*
          *
          *Returns the first valid index for this container given dimension d. 
@@ -957,7 +956,7 @@ namespace atl{
          * @return 
          */
         inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
-            return ::sin(c_m.AtRaw(i,j));
+            return ::sin(c_m.AtRaw(i, j));
         }
 
         /**
@@ -979,16 +978,17 @@ namespace atl{
     };
 
     template<class C>
-    inline const MatrixSin<C> sin(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) {
+    inline const MatrixSin<C> sin(const atl::MatrixExpression<typename C::RET_TYPE, C>& c) {
         return MatrixSin<C>(c);
     }
- template<class C>
+
+    template<class C>
     struct MatrixSinh : atl::MatrixExpression<typename C::RET_TYPE, MatrixSinh<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit MatrixSinh(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit MatrixSinh(const atl::MatrixExpression<typename C::RET_TYPE, C>& c) : c_m(c.Cast()) {
 
         }
 
@@ -1009,11 +1009,10 @@ namespace atl{
             assert(j < c_m.Size(1));
 #endif   
 
-            return ::sinh(c_m(i,j));
+            return ::sinh(c_m(i, j));
 
         }
-        
-          
+
         /*
          *
          *Returns the first valid index for this container given dimension d. 
@@ -1038,7 +1037,7 @@ namespace atl{
          * @return 
          */
         inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
-            return ::sinh(c_m.AtRaw(i,j));
+            return ::sinh(c_m.AtRaw(i, j));
         }
 
         /**
@@ -1060,16 +1059,17 @@ namespace atl{
     };
 
     template<class C>
-    inline const MatrixSinh<C> sinh(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) {
+    inline const MatrixSinh<C> sinh(const atl::MatrixExpression<typename C::RET_TYPE, C>& c) {
         return MatrixSinh<C>(c);
     }
- template<class C>
+
+    template<class C>
     struct MatrixSqrt : atl::MatrixExpression<typename C::RET_TYPE, MatrixSqrt<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit MatrixSqrt(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit MatrixSqrt(const atl::MatrixExpression<typename C::RET_TYPE, C>& c) : c_m(c.Cast()) {
 
         }
 
@@ -1090,11 +1090,10 @@ namespace atl{
             assert(j < c_m.Size(1));
 #endif   
 
-            return ::sqrt(c_m(i,j));
+            return ::sqrt(c_m(i, j));
 
         }
-        
-          
+
         /*
          *
          *Returns the first valid index for this container given dimension d. 
@@ -1119,7 +1118,7 @@ namespace atl{
          * @return 
          */
         inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
-            return ::sqrt(c_m.AtRaw(i,j));
+            return ::sqrt(c_m.AtRaw(i, j));
         }
 
         /**
@@ -1141,16 +1140,17 @@ namespace atl{
     };
 
     template<class C>
-    inline const MatrixSqrt<C> sqrt(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) {
+    inline const MatrixSqrt<C> sqrt(const atl::MatrixExpression<typename C::RET_TYPE, C>& c) {
         return MatrixSqrt<C>(c);
     }
- template<class C>
+
+    template<class C>
     struct MatrixTan : atl::MatrixExpression<typename C::RET_TYPE, MatrixTan<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit MatrixTan(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit MatrixTan(const atl::MatrixExpression<typename C::RET_TYPE, C>& c) : c_m(c.Cast()) {
 
         }
 
@@ -1171,11 +1171,10 @@ namespace atl{
             assert(j < c_m.Size(1));
 #endif   
 
-            return ::tan(c_m(i,j));
+            return ::tan(c_m(i, j));
 
         }
-        
-          
+
         /*
          *
          *Returns the first valid index for this container given dimension d. 
@@ -1200,7 +1199,7 @@ namespace atl{
          * @return 
          */
         inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
-            return ::tan(c_m.AtRaw(i,j));
+            return ::tan(c_m.AtRaw(i, j));
         }
 
         /**
@@ -1222,16 +1221,17 @@ namespace atl{
     };
 
     template<class C>
-    inline const MatrixTan<C> tan(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) {
+    inline const MatrixTan<C> tan(const atl::MatrixExpression<typename C::RET_TYPE, C>& c) {
         return MatrixTan<C>(c);
     }
- template<class C>
+
+    template<class C>
     struct MatrixTanh : atl::MatrixExpression<typename C::RET_TYPE, MatrixTanh<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit MatrixTanh(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit MatrixTanh(const atl::MatrixExpression<typename C::RET_TYPE, C>& c) : c_m(c.Cast()) {
 
         }
 
@@ -1252,11 +1252,10 @@ namespace atl{
             assert(j < c_m.Size(1));
 #endif   
 
-            return ::tanh(c_m(i,j));
+            return ::tanh(c_m(i, j));
 
         }
-        
-          
+
         /*
          *
          *Returns the first valid index for this container given dimension d. 
@@ -1281,7 +1280,7 @@ namespace atl{
          * @return 
          */
         inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
-            return ::tanh(c_m.AtRaw(i,j));
+            return ::tanh(c_m.AtRaw(i, j));
         }
 
         /**
@@ -1303,10 +1302,11 @@ namespace atl{
     };
 
     template<class C>
-    inline const MatrixTanh<C> tanh(const atl::MatrixExpression<typename C::RET_TYPE,C>& c) {
+    inline const MatrixTanh<C> tanh(const atl::MatrixExpression<typename C::RET_TYPE, C>& c) {
         return MatrixTanh<C>(c);
     }
- template< class LHS, class RHS>
+
+    template< class LHS, class RHS>
     struct MatrixPow : MatrixExpression<typename atl::PromoteType<typename LHS::RET_TYPE, typename RHS::RET_TYPE >::return_type, MatrixPow<LHS, RHS> > {
         typedef typename LHS::RET_TYPE RET_TYPEL;
         typedef typename RHS::RET_TYPE RET_TYPER;
@@ -1317,7 +1317,7 @@ namespace atl{
         const LHS& lhs_m;
         const RHS& rhs_m;
 
-        inline explicit MatrixPow(const atl::MatrixExpression<typename LHS::RET_TYPE,LHS>& lhs, const atl::MatrixExpression<typename RHS::RET_TYPE,RHS>& rhs) : lhs_m(lhs.Cast()), rhs_m(rhs.Cast()) {
+        inline explicit MatrixPow(const atl::MatrixExpression<typename LHS::RET_TYPE, LHS>& lhs, const atl::MatrixExpression<typename RHS::RET_TYPE, RHS>& rhs) : lhs_m(lhs.Cast()), rhs_m(rhs.Cast()) {
 
 
 
@@ -1420,7 +1420,7 @@ namespace atl{
          * @param aliased
          * @param ptr
          */
-        inline void IsAliased(bool& aliased, void* ptr) const{
+        inline void IsAliased(bool& aliased, void* ptr) const {
             lhs_m.IsAliased(aliased, ptr);
         }
 
@@ -1480,7 +1480,7 @@ namespace atl{
          * @param aliased
          * @param ptr
          */
-        inline void IsAliased(bool& aliased, void* ptr) const{
+        inline void IsAliased(bool& aliased, void* ptr) const {
             rhs_m.IsAliased(aliased, ptr);
         }
 
@@ -1510,6 +1510,7 @@ namespace atl{
             return MatrixPowScalar<LHS,TYPE > (a.Cast(), b);\
         } \
     
+
     ATL_MATRIX_MatrixPow_SCALAR(short)
     ATL_MATRIX_MatrixPow_SCALAR(unsigned short)
     ATL_MATRIX_MatrixPow_SCALAR(int)
@@ -1546,7 +1547,7 @@ namespace atl{
 
 
 
- template< class LHS, class RHS>
+    template< class LHS, class RHS>
     struct MatrixATan2 : MatrixExpression<typename atl::PromoteType<typename LHS::RET_TYPE, typename RHS::RET_TYPE >::return_type, MatrixATan2<LHS, RHS> > {
         typedef typename LHS::RET_TYPE RET_TYPEL;
         typedef typename RHS::RET_TYPE RET_TYPER;
@@ -1557,7 +1558,7 @@ namespace atl{
         const LHS& lhs_m;
         const RHS& rhs_m;
 
-        inline explicit MatrixATan2(const atl::MatrixExpression<typename LHS::RET_TYPE,LHS>& lhs, const atl::MatrixExpression<typename RHS::RET_TYPE,RHS>& rhs) : lhs_m(lhs.Cast()), rhs_m(rhs.Cast()) {
+        inline explicit MatrixATan2(const atl::MatrixExpression<typename LHS::RET_TYPE, LHS>& lhs, const atl::MatrixExpression<typename RHS::RET_TYPE, RHS>& rhs) : lhs_m(lhs.Cast()), rhs_m(rhs.Cast()) {
 
 
 
@@ -1660,7 +1661,7 @@ namespace atl{
          * @param aliased
          * @param ptr
          */
-        inline void IsAliased(bool& aliased, void* ptr) const{
+        inline void IsAliased(bool& aliased, void* ptr) const {
             lhs_m.IsAliased(aliased, ptr);
         }
 
@@ -1720,7 +1721,7 @@ namespace atl{
          * @param aliased
          * @param ptr
          */
-        inline void IsAliased(bool& aliased, void* ptr) const{
+        inline void IsAliased(bool& aliased, void* ptr) const {
             rhs_m.IsAliased(aliased, ptr);
         }
 

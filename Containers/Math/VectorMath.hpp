@@ -8,15 +8,15 @@
 
 
 
-namespace atl{
+namespace atl {
 
- template<class C>
+    template<class C>
     struct VectorACos : atl::VectorExpression<typename C::RET_TYPE, VectorACos<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit VectorACos(const atl::VectorExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit VectorACos(const atl::VectorExpression<typename C::RET_TYPE, C>& c) : c_m(c.Cast()) {
 
         }
 
@@ -37,8 +37,7 @@ namespace atl{
             return ::acos(c_m(i));
 
         }
-        
-          
+
         /*
          *
          *Returns the first valid index for this container given dimension d. 
@@ -84,16 +83,17 @@ namespace atl{
     };
 
     template<class C>
-    inline const VectorACos<C> acos(const atl::VectorExpression<typename C::RET_TYPE,C>& c) {
+    inline const VectorACos<C> acos(const atl::VectorExpression<typename C::RET_TYPE, C>& c) {
         return VectorACos<C>(c);
     }
- template<class C>
+
+    template<class C>
     struct VectorASin : atl::VectorExpression<typename C::RET_TYPE, VectorASin<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit VectorASin(const atl::VectorExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit VectorASin(const atl::VectorExpression<typename C::RET_TYPE, C>& c) : c_m(c.Cast()) {
 
         }
 
@@ -114,8 +114,7 @@ namespace atl{
             return ::asin(c_m(i));
 
         }
-        
-          
+
         /*
          *
          *Returns the first valid index for this container given dimension d. 
@@ -161,16 +160,17 @@ namespace atl{
     };
 
     template<class C>
-    inline const VectorASin<C> asin(const atl::VectorExpression<typename C::RET_TYPE,C>& c) {
+    inline const VectorASin<C> asin(const atl::VectorExpression<typename C::RET_TYPE, C>& c) {
         return VectorASin<C>(c);
     }
- template<class C>
+
+    template<class C>
     struct VectorATan : atl::VectorExpression<typename C::RET_TYPE, VectorATan<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit VectorATan(const atl::VectorExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit VectorATan(const atl::VectorExpression<typename C::RET_TYPE, C>& c) : c_m(c.Cast()) {
 
         }
 
@@ -191,8 +191,7 @@ namespace atl{
             return ::atan(c_m(i));
 
         }
-        
-          
+
         /*
          *
          *Returns the first valid index for this container given dimension d. 
@@ -238,16 +237,17 @@ namespace atl{
     };
 
     template<class C>
-    inline const VectorATan<C> atan(const atl::VectorExpression<typename C::RET_TYPE,C>& c) {
+    inline const VectorATan<C> atan(const atl::VectorExpression<typename C::RET_TYPE, C>& c) {
         return VectorATan<C>(c);
     }
- template<class C>
+
+    template<class C>
     struct VectorACeil : atl::VectorExpression<typename C::RET_TYPE, VectorACeil<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit VectorACeil(const atl::VectorExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit VectorACeil(const atl::VectorExpression<typename C::RET_TYPE, C>& c) : c_m(c.Cast()) {
 
         }
 
@@ -268,8 +268,7 @@ namespace atl{
             return ::ceil(c_m(i));
 
         }
-        
-          
+
         /*
          *
          *Returns the first valid index for this container given dimension d. 
@@ -315,16 +314,17 @@ namespace atl{
     };
 
     template<class C>
-    inline const VectorACeil<C> ceil(const atl::VectorExpression<typename C::RET_TYPE,C>& c) {
+    inline const VectorACeil<C> ceil(const atl::VectorExpression<typename C::RET_TYPE, C>& c) {
         return VectorACeil<C>(c);
     }
- template<class C>
+
+    template<class C>
     struct VectorCos : atl::VectorExpression<typename C::RET_TYPE, VectorCos<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit VectorCos(const atl::VectorExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit VectorCos(const atl::VectorExpression<typename C::RET_TYPE, C>& c) : c_m(c.Cast()) {
 
         }
 
@@ -345,8 +345,7 @@ namespace atl{
             return ::cos(c_m(i));
 
         }
-        
-          
+
         /*
          *
          *Returns the first valid index for this container given dimension d. 
@@ -392,16 +391,17 @@ namespace atl{
     };
 
     template<class C>
-    inline const VectorCos<C> cos(const atl::VectorExpression<typename C::RET_TYPE,C>& c) {
+    inline const VectorCos<C> cos(const atl::VectorExpression<typename C::RET_TYPE, C>& c) {
         return VectorCos<C>(c);
     }
- template<class C>
+
+    template<class C>
     struct VectorCosh : atl::VectorExpression<typename C::RET_TYPE, VectorCosh<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit VectorCosh(const atl::VectorExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit VectorCosh(const atl::VectorExpression<typename C::RET_TYPE, C>& c) : c_m(c.Cast()) {
 
         }
 
@@ -422,8 +422,7 @@ namespace atl{
             return ::cosh(c_m(i));
 
         }
-        
-          
+
         /*
          *
          *Returns the first valid index for this container given dimension d. 
@@ -469,16 +468,17 @@ namespace atl{
     };
 
     template<class C>
-    inline const VectorCosh<C> cosh(const atl::VectorExpression<typename C::RET_TYPE,C>& c) {
+    inline const VectorCosh<C> cosh(const atl::VectorExpression<typename C::RET_TYPE, C>& c) {
         return VectorCosh<C>(c);
     }
- template<class C>
+
+    template<class C>
     struct VectorExp : atl::VectorExpression<typename C::RET_TYPE, VectorExp<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit VectorExp(const atl::VectorExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit VectorExp(const atl::VectorExpression<typename C::RET_TYPE, C>& c) : c_m(c.Cast()) {
 
         }
 
@@ -499,8 +499,7 @@ namespace atl{
             return ::exp(c_m(i));
 
         }
-        
-          
+
         /*
          *
          *Returns the first valid index for this container given dimension d. 
@@ -546,16 +545,17 @@ namespace atl{
     };
 
     template<class C>
-    inline const VectorExp<C> exp(const atl::VectorExpression<typename C::RET_TYPE,C>& c) {
+    inline const VectorExp<C> exp(const atl::VectorExpression<typename C::RET_TYPE, C>& c) {
         return VectorExp<C>(c);
     }
- template<class C>
+
+    template<class C>
     struct VectorFabs : atl::VectorExpression<typename C::RET_TYPE, VectorFabs<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit VectorFabs(const atl::VectorExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit VectorFabs(const atl::VectorExpression<typename C::RET_TYPE, C>& c) : c_m(c.Cast()) {
 
         }
 
@@ -576,8 +576,7 @@ namespace atl{
             return ::fabs(c_m(i));
 
         }
-        
-          
+
         /*
          *
          *Returns the first valid index for this container given dimension d. 
@@ -623,16 +622,17 @@ namespace atl{
     };
 
     template<class C>
-    inline const VectorFabs<C> fabs(const atl::VectorExpression<typename C::RET_TYPE,C>& c) {
+    inline const VectorFabs<C> fabs(const atl::VectorExpression<typename C::RET_TYPE, C>& c) {
         return VectorFabs<C>(c);
     }
- template<class C>
+
+    template<class C>
     struct VectorFloor : atl::VectorExpression<typename C::RET_TYPE, VectorFloor<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit VectorFloor(const atl::VectorExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit VectorFloor(const atl::VectorExpression<typename C::RET_TYPE, C>& c) : c_m(c.Cast()) {
 
         }
 
@@ -653,8 +653,7 @@ namespace atl{
             return ::floor(c_m(i));
 
         }
-        
-          
+
         /*
          *
          *Returns the first valid index for this container given dimension d. 
@@ -700,16 +699,17 @@ namespace atl{
     };
 
     template<class C>
-    inline const VectorFloor<C> floor(const atl::VectorExpression<typename C::RET_TYPE,C>& c) {
+    inline const VectorFloor<C> floor(const atl::VectorExpression<typename C::RET_TYPE, C>& c) {
         return VectorFloor<C>(c);
     }
- template<class C>
+
+    template<class C>
     struct VectorLog : atl::VectorExpression<typename C::RET_TYPE, VectorLog<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit VectorLog(const atl::VectorExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit VectorLog(const atl::VectorExpression<typename C::RET_TYPE, C>& c) : c_m(c.Cast()) {
 
         }
 
@@ -730,8 +730,7 @@ namespace atl{
             return ::log(c_m(i));
 
         }
-        
-          
+
         /*
          *
          *Returns the first valid index for this container given dimension d. 
@@ -777,16 +776,17 @@ namespace atl{
     };
 
     template<class C>
-    inline const VectorLog<C> log(const atl::VectorExpression<typename C::RET_TYPE,C>& c) {
+    inline const VectorLog<C> log(const atl::VectorExpression<typename C::RET_TYPE, C>& c) {
         return VectorLog<C>(c);
     }
- template<class C>
+
+    template<class C>
     struct VectorLog10 : atl::VectorExpression<typename C::RET_TYPE, VectorLog10<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit VectorLog10(const atl::VectorExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit VectorLog10(const atl::VectorExpression<typename C::RET_TYPE, C>& c) : c_m(c.Cast()) {
 
         }
 
@@ -807,8 +807,7 @@ namespace atl{
             return ::log10(c_m(i));
 
         }
-        
-          
+
         /*
          *
          *Returns the first valid index for this container given dimension d. 
@@ -854,16 +853,17 @@ namespace atl{
     };
 
     template<class C>
-    inline const VectorLog10<C> log10(const atl::VectorExpression<typename C::RET_TYPE,C>& c) {
+    inline const VectorLog10<C> log10(const atl::VectorExpression<typename C::RET_TYPE, C>& c) {
         return VectorLog10<C>(c);
     }
- template<class C>
+
+    template<class C>
     struct VectorSin : atl::VectorExpression<typename C::RET_TYPE, VectorSin<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit VectorSin(const atl::VectorExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit VectorSin(const atl::VectorExpression<typename C::RET_TYPE, C>& c) : c_m(c.Cast()) {
 
         }
 
@@ -884,8 +884,7 @@ namespace atl{
             return ::sin(c_m(i));
 
         }
-        
-          
+
         /*
          *
          *Returns the first valid index for this container given dimension d. 
@@ -931,16 +930,17 @@ namespace atl{
     };
 
     template<class C>
-    inline const VectorSin<C> sin(const atl::VectorExpression<typename C::RET_TYPE,C>& c) {
+    inline const VectorSin<C> sin(const atl::VectorExpression<typename C::RET_TYPE, C>& c) {
         return VectorSin<C>(c);
     }
- template<class C>
+
+    template<class C>
     struct VectorSinh : atl::VectorExpression<typename C::RET_TYPE, VectorSinh<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit VectorSinh(const atl::VectorExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit VectorSinh(const atl::VectorExpression<typename C::RET_TYPE, C>& c) : c_m(c.Cast()) {
 
         }
 
@@ -961,8 +961,7 @@ namespace atl{
             return ::sinh(c_m(i));
 
         }
-        
-          
+
         /*
          *
          *Returns the first valid index for this container given dimension d. 
@@ -1008,16 +1007,17 @@ namespace atl{
     };
 
     template<class C>
-    inline const VectorSinh<C> sinh(const atl::VectorExpression<typename C::RET_TYPE,C>& c) {
+    inline const VectorSinh<C> sinh(const atl::VectorExpression<typename C::RET_TYPE, C>& c) {
         return VectorSinh<C>(c);
     }
- template<class C>
+
+    template<class C>
     struct VectorSqrt : atl::VectorExpression<typename C::RET_TYPE, VectorSqrt<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit VectorSqrt(const atl::VectorExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit VectorSqrt(const atl::VectorExpression<typename C::RET_TYPE, C>& c) : c_m(c.Cast()) {
 
         }
 
@@ -1038,8 +1038,7 @@ namespace atl{
             return ::sqrt(c_m(i));
 
         }
-        
-          
+
         /*
          *
          *Returns the first valid index for this container given dimension d. 
@@ -1085,16 +1084,17 @@ namespace atl{
     };
 
     template<class C>
-    inline const VectorSqrt<C> sqrt(const atl::VectorExpression<typename C::RET_TYPE,C>& c) {
+    inline const VectorSqrt<C> sqrt(const atl::VectorExpression<typename C::RET_TYPE, C>& c) {
         return VectorSqrt<C>(c);
     }
- template<class C>
+
+    template<class C>
     struct VectorTan : atl::VectorExpression<typename C::RET_TYPE, VectorTan<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit VectorTan(const atl::VectorExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit VectorTan(const atl::VectorExpression<typename C::RET_TYPE, C>& c) : c_m(c.Cast()) {
 
         }
 
@@ -1115,8 +1115,7 @@ namespace atl{
             return ::tan(c_m(i));
 
         }
-        
-          
+
         /*
          *
          *Returns the first valid index for this container given dimension d. 
@@ -1162,16 +1161,17 @@ namespace atl{
     };
 
     template<class C>
-    inline const VectorTan<C> tan(const atl::VectorExpression<typename C::RET_TYPE,C>& c) {
+    inline const VectorTan<C> tan(const atl::VectorExpression<typename C::RET_TYPE, C>& c) {
         return VectorTan<C>(c);
     }
- template<class C>
+
+    template<class C>
     struct VectorTanh : atl::VectorExpression<typename C::RET_TYPE, VectorTanh<C> > {
         const C& c_m;
         typedef typename C::RET_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
-        inline explicit VectorTanh(const atl::VectorExpression<typename C::RET_TYPE,C>& c) : c_m(c.Cast()) {
+        inline explicit VectorTanh(const atl::VectorExpression<typename C::RET_TYPE, C>& c) : c_m(c.Cast()) {
 
         }
 
@@ -1192,8 +1192,7 @@ namespace atl{
             return ::tanh(c_m(i));
 
         }
-        
-          
+
         /*
          *
          *Returns the first valid index for this container given dimension d. 
@@ -1239,10 +1238,11 @@ namespace atl{
     };
 
     template<class C>
-    inline const VectorTanh<C> tanh(const atl::VectorExpression<typename C::RET_TYPE,C>& c) {
+    inline const VectorTanh<C> tanh(const atl::VectorExpression<typename C::RET_TYPE, C>& c) {
         return VectorTanh<C>(c);
     }
- template< class LHS, class RHS>
+
+    template< class LHS, class RHS>
     struct VectorPow : VectorExpression<typename atl::PromoteType<typename LHS::RET_TYPE, typename RHS::RET_TYPE >::return_type, VectorPow<LHS, RHS> > {
         typedef typename LHS::RET_TYPE RET_TYPEL;
         typedef typename RHS::RET_TYPE RET_TYPER;
@@ -1253,7 +1253,7 @@ namespace atl{
         const LHS& lhs_m;
         const RHS& rhs_m;
 
-        inline explicit VectorPow(const atl::VectorExpression<typename LHS::RET_TYPE,LHS>& lhs, const atl::VectorExpression<typename RHS::RET_TYPE,RHS>& rhs) : lhs_m(lhs.Cast()), rhs_m(rhs.Cast()) {
+        inline explicit VectorPow(const atl::VectorExpression<typename LHS::RET_TYPE, LHS>& lhs, const atl::VectorExpression<typename RHS::RET_TYPE, RHS>& rhs) : lhs_m(lhs.Cast()), rhs_m(rhs.Cast()) {
 
 
 
@@ -1356,7 +1356,7 @@ namespace atl{
          * @param aliased
          * @param ptr
          */
-        inline void IsAliased(bool& aliased, void* ptr) const{
+        inline void IsAliased(bool& aliased, void* ptr) const {
             lhs_m.IsAliased(aliased, ptr);
         }
 
@@ -1416,7 +1416,7 @@ namespace atl{
          * @param aliased
          * @param ptr
          */
-        inline void IsAliased(bool& aliased, void* ptr) const{
+        inline void IsAliased(bool& aliased, void* ptr) const {
             rhs_m.IsAliased(aliased, ptr);
         }
 
@@ -1446,6 +1446,7 @@ namespace atl{
             return VectorPowScalar<LHS,TYPE > (a.Cast(), b);\
         } \
     
+
     ATL_VECTOR_VectorPow_SCALAR(short)
     ATL_VECTOR_VectorPow_SCALAR(unsigned short)
     ATL_VECTOR_VectorPow_SCALAR(int)
@@ -1482,7 +1483,7 @@ namespace atl{
 
 
 
- template< class LHS, class RHS>
+    template< class LHS, class RHS>
     struct VectorATan2 : VectorExpression<typename atl::PromoteType<typename LHS::RET_TYPE, typename RHS::RET_TYPE >::return_type, VectorATan2<LHS, RHS> > {
         typedef typename LHS::RET_TYPE RET_TYPEL;
         typedef typename RHS::RET_TYPE RET_TYPER;
@@ -1493,7 +1494,7 @@ namespace atl{
         const LHS& lhs_m;
         const RHS& rhs_m;
 
-        inline explicit VectorATan2(const atl::VectorExpression<typename LHS::RET_TYPE,LHS>& lhs, const atl::VectorExpression<typename RHS::RET_TYPE,RHS>& rhs) : lhs_m(lhs.Cast()), rhs_m(rhs.Cast()) {
+        inline explicit VectorATan2(const atl::VectorExpression<typename LHS::RET_TYPE, LHS>& lhs, const atl::VectorExpression<typename RHS::RET_TYPE, RHS>& rhs) : lhs_m(lhs.Cast()), rhs_m(rhs.Cast()) {
 
 
 
@@ -1596,7 +1597,7 @@ namespace atl{
          * @param aliased
          * @param ptr
          */
-        inline void IsAliased(bool& aliased, void* ptr) const{
+        inline void IsAliased(bool& aliased, void* ptr) const {
             lhs_m.IsAliased(aliased, ptr);
         }
 
@@ -1656,7 +1657,7 @@ namespace atl{
          * @param aliased
          * @param ptr
          */
-        inline void IsAliased(bool& aliased, void* ptr) const{
+        inline void IsAliased(bool& aliased, void* ptr) const {
             rhs_m.IsAliased(aliased, ptr);
         }
 
