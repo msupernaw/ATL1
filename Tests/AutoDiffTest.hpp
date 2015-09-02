@@ -12,7 +12,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
-#include "../AutoDiff/AutoDiff.hpp"
+#include "../ATL.hpp"
 namespace atl {
     namespace tests {
         namespace auto_diff {

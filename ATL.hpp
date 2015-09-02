@@ -8,7 +8,6 @@
 #ifndef ATL_HPP
 #define	ATL_HPP
 
-#include "AutoDiff/AutoDiff.hpp"
 #include "Containers/Containers.hpp"
 #include "Containers/Array.hpp"
 #include "Containers/Vector.hpp"
@@ -22,13 +21,19 @@
 #include "Containers/MatrixSubtract.hpp"
 #include "Containers/MatrixDivide.hpp"
 #include "Containers/MatrixMultiply.hpp"
+#include "Containers/Math/MatrixMath.hpp"
 #include "Containers/ConcurrentOperators.hpp"
-#include "Containers/Math.h"
+
+
 #include "Distributions/Distributions.hpp"
 #include "SpecialFunctions/Functions.hpp"
 #include "Statistics/Descriptive.hpp"
 #include "Utilities/IO/Console.hpp"
 #include "Utilities/IO/IOStream.hpp"
+
+
+#include "AutoDiff/AutoDiff.hpp"
+
 //#include "Optimization/GradientBased/FunctionMinimizer.hpp"
 
 
