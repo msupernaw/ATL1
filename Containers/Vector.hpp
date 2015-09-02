@@ -71,7 +71,8 @@ namespace atl {
             data_m.resize(isize);
             int index = 0;
             for (it = l.begin(); it != l.end(); ++it) {
-                data_m[index] = (*it);
+                T v = (*it);
+                data_m[index] = v;
                 index++;
             }
         }
@@ -116,7 +117,8 @@ namespace atl {
             data_m.resize(isize);
             int index = 0;
             for (it = l.begin(); it != l.end(); ++it) {
-                data_m[index] = (*it);
+                T v = (*it);
+                data_m[index] = v;
                 index++;
             }
             return *this;
@@ -496,7 +498,7 @@ namespace atl {
             }
         }
 
-         inline Vector& operator++() {
+        inline Vector& operator++() {
             *this = *this+static_cast<T> (1.0);
             return *this;
         }

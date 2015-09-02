@@ -248,7 +248,8 @@ namespace atl {
             data_m.resize(isize);
             int index = 0;
             for (it = l.begin(); it != l.end(); ++it) {
-                data_m[index] = (*it);
+                T v = (*it);
+                data_m[index] = v;
                 index++;
             }
         }
@@ -268,7 +269,8 @@ namespace atl {
             int index = 0;
             for (it = l.begin(); it != l.end(); ++it) {
                 for (jt = it->begin(); jt != it->end(); ++jt) {
-                    data_m[index] = (*jt);
+                    T v = (*jt);
+                    data_m[index] = v;
                     index++;
                 }
             }
@@ -291,7 +293,8 @@ namespace atl {
             for (it = l.begin(); it != l.end(); ++it) {
                 for (jt = it->begin(); jt != it->end(); ++jt) {
                     for (kt = jt->begin(); kt != jt->end(); ++kt) {
-                        data_m[index] = (*kt);
+                        T v = (*kt);
+                        data_m[index] = v;
                         index++;
                     }
                 }
@@ -317,7 +320,8 @@ namespace atl {
                 for (jt = it->begin(); jt != it->end(); ++jt) {
                     for (kt = jt->begin(); kt != jt->end(); ++kt) {
                         for (lt = kt->begin(); lt != kt->end(); ++lt) {
-                            data_m[index] = (*lt);
+                            T v = (*lt);
+                            data_m[index] = v;
                             index++;
                         }
                     }
@@ -347,7 +351,8 @@ namespace atl {
                     for (kt = jt->begin(); kt != jt->end(); ++kt) {
                         for (lt = kt->begin(); lt != kt->end(); ++lt) {
                             for (mt = lt->begin(); mt != lt->end(); ++mt) {
-                                data_m[index] = (*mt);
+                                T v = (*mt);
+                                data_m[index] = v;
                                 index++;
                             }
                         }
@@ -380,7 +385,8 @@ namespace atl {
                         for (lt = kt->begin(); lt != kt->end(); ++lt) {
                             for (mt = lt->begin(); mt != lt->end(); ++mt) {
                                 for (nt = mt->begin(); nt != mt->end(); ++nt) {
-                                    data_m[index] = (*nt);
+                                    T v = (*nt);
+                                    data_m[index] = v;
                                     index++;
                                 }
                             }
@@ -416,7 +422,8 @@ namespace atl {
                             for (mt = lt->begin(); mt != lt->end(); ++mt) {
                                 for (nt = mt->begin(); nt != mt->end(); ++nt) {
                                     for (ot = nt->begin(); ot != nt->end(); ++ot) {
-                                        data_m[index] = (*ot);
+                                        T v = (*ot);
+                                        data_m[index] = v;
                                         index++;
                                     }
                                 }
@@ -846,7 +853,8 @@ namespace atl {
             data_m.resize(isize);
             int index = 0;
             for (it = l.begin(); it != l.end(); ++it) {
-                data_m[index] = (*it);
+                T v = (*it);
+                data_m[index] = v;
                 index++;
             }
         }
@@ -866,7 +874,8 @@ namespace atl {
             int index = 0;
             for (it = l.begin(); it != l.end(); ++it) {
                 for (jt = it->begin(); jt != it->end(); ++jt) {
-                    data_m[index] = (*jt);
+                    T v = (*jt);
+                    data_m[index] = v;
                     index++;
                 }
             }
@@ -889,7 +898,8 @@ namespace atl {
             for (it = l.begin(); it != l.end(); ++it) {
                 for (jt = it->begin(); jt != it->end(); ++jt) {
                     for (kt = jt->begin(); kt != jt->end(); ++kt) {
-                        data_m[index] = (*kt);
+                        T v = (*kt);
+                        data_m[index] = v;
                         index++;
                     }
                 }
@@ -915,7 +925,8 @@ namespace atl {
                 for (jt = it->begin(); jt != it->end(); ++jt) {
                     for (kt = jt->begin(); kt != jt->end(); ++kt) {
                         for (lt = kt->begin(); lt != kt->end(); ++lt) {
-                            data_m[index] = (*lt);
+                            T v = (*lt);
+                            data_m[index] = v;
                             index++;
                         }
                     }
@@ -945,7 +956,8 @@ namespace atl {
                     for (kt = jt->begin(); kt != jt->end(); ++kt) {
                         for (lt = kt->begin(); lt != kt->end(); ++lt) {
                             for (mt = lt->begin(); mt != lt->end(); ++mt) {
-                                data_m[index] = (*mt);
+                                T v = (*mt);
+                                data_m[index] = v;
                                 index++;
                             }
                         }
@@ -978,7 +990,8 @@ namespace atl {
                         for (lt = kt->begin(); lt != kt->end(); ++lt) {
                             for (mt = lt->begin(); mt != lt->end(); ++mt) {
                                 for (nt = mt->begin(); nt != mt->end(); ++nt) {
-                                    data_m[index] = (*nt);
+                                    T v = (*nt);
+                                    data_m[index] = v;
                                     index++;
                                 }
                             }
@@ -1014,7 +1027,8 @@ namespace atl {
                             for (mt = lt->begin(); mt != lt->end(); ++mt) {
                                 for (nt = mt->begin(); nt != mt->end(); ++nt) {
                                     for (ot = nt->begin(); ot != nt->end(); ++ot) {
-                                        data_m[index] = (*ot);
+                                        T v = (*ot);
+                                        data_m[index] = v;
                                         index++;
                                     }
                                 }

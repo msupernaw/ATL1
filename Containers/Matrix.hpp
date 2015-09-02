@@ -101,7 +101,8 @@ namespace atl {
             int index = 0;
             for (it = l.begin(); it != l.end(); ++it) {
                 for (jt = it->begin(); jt != it->end(); ++jt) {
-                    data_m[index] = (*jt);
+                    T v= (*jt);
+                    data_m[index] = v;
                     index++;
                 }
             }
@@ -154,7 +155,8 @@ namespace atl {
             int index = 0;
             for (it = l.begin(); it != l.end(); ++it) {
                 for (jt = it->begin(); jt != it->end(); ++jt) {
-                    data_m[index] = (*jt);
+                    T v= (*jt);
+                    data_m[index] = v;
                     index++;
                 }
             }
