@@ -78,6 +78,7 @@ namespace atl {
 
     public:
         typedef T RET_TYPE;
+        typedef T BASE_TYPE;
 
         /**
          * Default constructor.

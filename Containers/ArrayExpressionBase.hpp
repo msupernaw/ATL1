@@ -15,6 +15,7 @@ namespace atl {
     template< class T, class A>
     struct ArrayExpression {
         typedef T RET_TYPE;
+        typedef T BASE_TYPE;
 
         const A & Cast() const {
             return static_cast<const A&> (*this);

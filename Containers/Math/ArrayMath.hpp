@@ -20,6 +20,14 @@ namespace atl {
 
         }
 
+        inline const size_t Dimensions() const {
+            return c_m.Dimensions();
+        }
+
+        inline const size_t Size(const int32_t & d) const {
+            return c_m.Size(d);
+        }
+
         inline const RET_TYPE operator()(const uint32_t & i) const {
             return ::acos(c_m(i));
         }
@@ -68,7 +76,7 @@ namespace atl {
             return ::acos(c_m.AtRaw(i));
         }
 
-        inline const RET_TYPEAtRaw(const uint32_t& i, const uint32_t & j) const {
+        inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
             return ::acos(c_m.AtRaw(i, j));
         }
 
@@ -125,6 +133,14 @@ namespace atl {
 
         }
 
+        inline const size_t Dimensions() const {
+            return c_m.Dimensions();
+        }
+
+        inline const size_t Size(const int32_t & d) const {
+            return c_m.Size(d);
+        }
+
         inline const RET_TYPE operator()(const uint32_t & i) const {
             return ::asin(c_m(i));
         }
@@ -173,7 +189,7 @@ namespace atl {
             return ::asin(c_m.AtRaw(i));
         }
 
-        inline const RET_TYPEAtRaw(const uint32_t& i, const uint32_t & j) const {
+        inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
             return ::asin(c_m.AtRaw(i, j));
         }
 
@@ -230,6 +246,14 @@ namespace atl {
 
         }
 
+        inline const size_t Dimensions() const {
+            return c_m.Dimensions();
+        }
+
+        inline const size_t Size(const int32_t & d) const {
+            return c_m.Size(d);
+        }
+
         inline const RET_TYPE operator()(const uint32_t & i) const {
             return ::atan(c_m(i));
         }
@@ -278,7 +302,7 @@ namespace atl {
             return ::atan(c_m.AtRaw(i));
         }
 
-        inline const RET_TYPEAtRaw(const uint32_t& i, const uint32_t & j) const {
+        inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
             return ::atan(c_m.AtRaw(i, j));
         }
 
@@ -335,6 +359,14 @@ namespace atl {
 
         }
 
+        inline const size_t Dimensions() const {
+            return c_m.Dimensions();
+        }
+
+        inline const size_t Size(const int32_t & d) const {
+            return c_m.Size(d);
+        }
+
         inline const RET_TYPE operator()(const uint32_t & i) const {
             return ::ceil(c_m(i));
         }
@@ -383,7 +415,7 @@ namespace atl {
             return ::ceil(c_m.AtRaw(i));
         }
 
-        inline const RET_TYPEAtRaw(const uint32_t& i, const uint32_t & j) const {
+        inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
             return ::ceil(c_m.AtRaw(i, j));
         }
 
@@ -440,6 +472,14 @@ namespace atl {
 
         }
 
+        inline const size_t Dimensions() const {
+            return c_m.Dimensions();
+        }
+
+        inline const size_t Size(const int32_t & d) const {
+            return c_m.Size(d);
+        }
+
         inline const RET_TYPE operator()(const uint32_t & i) const {
             return ::cos(c_m(i));
         }
@@ -488,7 +528,7 @@ namespace atl {
             return ::cos(c_m.AtRaw(i));
         }
 
-        inline const RET_TYPEAtRaw(const uint32_t& i, const uint32_t & j) const {
+        inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
             return ::cos(c_m.AtRaw(i, j));
         }
 
@@ -545,6 +585,14 @@ namespace atl {
 
         }
 
+        inline const size_t Dimensions() const {
+            return c_m.Dimensions();
+        }
+
+        inline const size_t Size(const int32_t & d) const {
+            return c_m.Size(d);
+        }
+
         inline const RET_TYPE operator()(const uint32_t & i) const {
             return ::cosh(c_m(i));
         }
@@ -593,7 +641,7 @@ namespace atl {
             return ::cosh(c_m.AtRaw(i));
         }
 
-        inline const RET_TYPEAtRaw(const uint32_t& i, const uint32_t & j) const {
+        inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
             return ::cosh(c_m.AtRaw(i, j));
         }
 
@@ -650,6 +698,14 @@ namespace atl {
 
         }
 
+        inline const size_t Dimensions() const {
+            return c_m.Dimensions();
+        }
+
+        inline const size_t Size(const int32_t & d) const {
+            return c_m.Size(d);
+        }
+
         inline const RET_TYPE operator()(const uint32_t & i) const {
             return ::exp(c_m(i));
         }
@@ -698,7 +754,7 @@ namespace atl {
             return ::exp(c_m.AtRaw(i));
         }
 
-        inline const RET_TYPEAtRaw(const uint32_t& i, const uint32_t & j) const {
+        inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
             return ::exp(c_m.AtRaw(i, j));
         }
 
@@ -755,6 +811,14 @@ namespace atl {
 
         }
 
+        inline const size_t Dimensions() const {
+            return c_m.Dimensions();
+        }
+
+        inline const size_t Size(const int32_t & d) const {
+            return c_m.Size(d);
+        }
+
         inline const RET_TYPE operator()(const uint32_t & i) const {
             return ::fabs(c_m(i));
         }
@@ -803,7 +867,7 @@ namespace atl {
             return ::fabs(c_m.AtRaw(i));
         }
 
-        inline const RET_TYPEAtRaw(const uint32_t& i, const uint32_t & j) const {
+        inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
             return ::fabs(c_m.AtRaw(i, j));
         }
 
@@ -860,6 +924,14 @@ namespace atl {
 
         }
 
+        inline const size_t Dimensions() const {
+            return c_m.Dimensions();
+        }
+
+        inline const size_t Size(const int32_t & d) const {
+            return c_m.Size(d);
+        }
+
         inline const RET_TYPE operator()(const uint32_t & i) const {
             return ::floor(c_m(i));
         }
@@ -908,7 +980,7 @@ namespace atl {
             return ::floor(c_m.AtRaw(i));
         }
 
-        inline const RET_TYPEAtRaw(const uint32_t& i, const uint32_t & j) const {
+        inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
             return ::floor(c_m.AtRaw(i, j));
         }
 
@@ -965,6 +1037,14 @@ namespace atl {
 
         }
 
+        inline const size_t Dimensions() const {
+            return c_m.Dimensions();
+        }
+
+        inline const size_t Size(const int32_t & d) const {
+            return c_m.Size(d);
+        }
+
         inline const RET_TYPE operator()(const uint32_t & i) const {
             return ::log(c_m(i));
         }
@@ -1013,7 +1093,7 @@ namespace atl {
             return ::log(c_m.AtRaw(i));
         }
 
-        inline const RET_TYPEAtRaw(const uint32_t& i, const uint32_t & j) const {
+        inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
             return ::log(c_m.AtRaw(i, j));
         }
 
@@ -1070,6 +1150,14 @@ namespace atl {
 
         }
 
+        inline const size_t Dimensions() const {
+            return c_m.Dimensions();
+        }
+
+        inline const size_t Size(const int32_t & d) const {
+            return c_m.Size(d);
+        }
+
         inline const RET_TYPE operator()(const uint32_t & i) const {
             return ::log10(c_m(i));
         }
@@ -1118,7 +1206,7 @@ namespace atl {
             return ::log10(c_m.AtRaw(i));
         }
 
-        inline const RET_TYPEAtRaw(const uint32_t& i, const uint32_t & j) const {
+        inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
             return ::log10(c_m.AtRaw(i, j));
         }
 
@@ -1175,6 +1263,14 @@ namespace atl {
 
         }
 
+        inline const size_t Dimensions() const {
+            return c_m.Dimensions();
+        }
+
+        inline const size_t Size(const int32_t & d) const {
+            return c_m.Size(d);
+        }
+
         inline const RET_TYPE operator()(const uint32_t & i) const {
             return ::sin(c_m(i));
         }
@@ -1223,7 +1319,7 @@ namespace atl {
             return ::sin(c_m.AtRaw(i));
         }
 
-        inline const RET_TYPEAtRaw(const uint32_t& i, const uint32_t & j) const {
+        inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
             return ::sin(c_m.AtRaw(i, j));
         }
 
@@ -1280,6 +1376,14 @@ namespace atl {
 
         }
 
+        inline const size_t Dimensions() const {
+            return c_m.Dimensions();
+        }
+
+        inline const size_t Size(const int32_t & d) const {
+            return c_m.Size(d);
+        }
+
         inline const RET_TYPE operator()(const uint32_t & i) const {
             return ::sinh(c_m(i));
         }
@@ -1328,7 +1432,7 @@ namespace atl {
             return ::sinh(c_m.AtRaw(i));
         }
 
-        inline const RET_TYPEAtRaw(const uint32_t& i, const uint32_t & j) const {
+        inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
             return ::sinh(c_m.AtRaw(i, j));
         }
 
@@ -1385,6 +1489,14 @@ namespace atl {
 
         }
 
+        inline const size_t Dimensions() const {
+            return c_m.Dimensions();
+        }
+
+        inline const size_t Size(const int32_t & d) const {
+            return c_m.Size(d);
+        }
+
         inline const RET_TYPE operator()(const uint32_t & i) const {
             return ::sqrt(c_m(i));
         }
@@ -1433,7 +1545,7 @@ namespace atl {
             return ::sqrt(c_m.AtRaw(i));
         }
 
-        inline const RET_TYPEAtRaw(const uint32_t& i, const uint32_t & j) const {
+        inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
             return ::sqrt(c_m.AtRaw(i, j));
         }
 
@@ -1490,6 +1602,14 @@ namespace atl {
 
         }
 
+        inline const size_t Dimensions() const {
+            return c_m.Dimensions();
+        }
+
+        inline const size_t Size(const int32_t & d) const {
+            return c_m.Size(d);
+        }
+
         inline const RET_TYPE operator()(const uint32_t & i) const {
             return ::tan(c_m(i));
         }
@@ -1538,7 +1658,7 @@ namespace atl {
             return ::tan(c_m.AtRaw(i));
         }
 
-        inline const RET_TYPEAtRaw(const uint32_t& i, const uint32_t & j) const {
+        inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
             return ::tan(c_m.AtRaw(i, j));
         }
 
@@ -1595,6 +1715,14 @@ namespace atl {
 
         }
 
+        inline const size_t Dimensions() const {
+            return c_m.Dimensions();
+        }
+
+        inline const size_t Size(const int32_t & d) const {
+            return c_m.Size(d);
+        }
+
         inline const RET_TYPE operator()(const uint32_t & i) const {
             return ::tanh(c_m(i));
         }
@@ -1643,7 +1771,7 @@ namespace atl {
             return ::tanh(c_m.AtRaw(i));
         }
 
-        inline const RET_TYPEAtRaw(const uint32_t& i, const uint32_t & j) const {
+        inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
             return ::tanh(c_m.AtRaw(i, j));
         }
 
@@ -1709,6 +1837,10 @@ namespace atl {
 
         inline const size_t Size(const int32_t & dimension) const {
             return lhs_m.Size(dimension) < rhs_m.Size(dimension) ? lhs_m.Size(dimension) : rhs_m.Size(dimension);
+        }
+
+        inline const size_t Dimensions() const {
+            return lhs_m.Dimensions() < rhs_m.Dimensions() ? lhs_m.Dimensions() : rhs_m.Dimensions();
         }
 
         inline const RET_TYPE operator()(const uint32_t & i) const {
@@ -1822,6 +1954,10 @@ namespace atl {
             return lhs_m.Size(dimension);
         }
 
+        inline const size_t Dimensions() const {
+            return lhs_m.Dimensions();
+        }
+
         inline const RET_TYPE operator()(const uint32_t & i) const {
             return ::pow(lhs_m(i), rhs_m);
         }
@@ -1928,6 +2064,10 @@ namespace atl {
 
         inline const size_t Size(const int32_t & dimension) const {
             return rhs_m.Size(dimension);
+        }
+
+        inline const size_t Dimensions() const {
+            return rhs_m.Dimensions();
         }
 
         inline const RET_TYPE operator()(const uint32_t & i) const {
@@ -2096,6 +2236,10 @@ namespace atl {
             return lhs_m.Size(dimension) < rhs_m.Size(dimension) ? lhs_m.Size(dimension) : rhs_m.Size(dimension);
         }
 
+        inline const size_t Dimensions() const {
+            return lhs_m.Dimensions() < rhs_m.Dimensions() ? lhs_m.Dimensions() : rhs_m.Dimensions();
+        }
+
         inline const RET_TYPE operator()(const uint32_t & i) const {
             return ::atan2(lhs_m(i), rhs_m(i));
         }
@@ -2207,6 +2351,10 @@ namespace atl {
             return lhs_m.Size(dimension);
         }
 
+        inline const size_t Dimensions() const {
+            return lhs_m.Dimensions();
+        }
+
         inline const RET_TYPE operator()(const uint32_t & i) const {
             return ::atan2(lhs_m(i), rhs_m);
         }
@@ -2313,6 +2461,10 @@ namespace atl {
 
         inline const size_t Size(const int32_t & dimension) const {
             return rhs_m.Size(dimension);
+        }
+
+        inline const size_t Dimensions() const {
+            return rhs_m.Dimensions();
         }
 
         inline const RET_TYPE operator()(const uint32_t & i) const {
