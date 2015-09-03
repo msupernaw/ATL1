@@ -16,7 +16,7 @@
 #endif
 
 #include <initializer_list>
-
+#include <iomanip>
 #include <iostream>
 #include <sstream>
 
@@ -101,7 +101,7 @@ namespace atl {
             int index = 0;
             for (it = l.begin(); it != l.end(); ++it) {
                 for (jt = it->begin(); jt != it->end(); ++jt) {
-                    T v= (*jt);
+                    T v = (*jt);
                     data_m[index] = v;
                     index++;
                 }
@@ -155,7 +155,7 @@ namespace atl {
             int index = 0;
             for (it = l.begin(); it != l.end(); ++it) {
                 for (jt = it->begin(); jt != it->end(); ++jt) {
-                    T v= (*jt);
+                    T v = (*jt);
                     data_m[index] = v;
                     index++;
                 }
@@ -661,13 +661,13 @@ namespace atl {
         int dims = expr.Dimensions();
         std::stringstream ss;
 
-
-        
+        out.precision(4);
+//        out << std::scientific;
         for (int i = 0; i < expr.Size(0); i++) {
-            out<<"[ ";
+            out << "[ ";
             for (int j = 0; j < expr.Size(1); j++) {
 
-                out << expr(i, j) << " ";
+                out << std::setw(7) << expr(i, j) << " ";
             }
             out << "]\n";
         }
