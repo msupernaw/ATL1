@@ -1292,13 +1292,13 @@ ATL provides one dense, dynamic vector type called \textit{atl::Vector}. Future 
 
     atl::Vector<double> a = {1, 2, 3, 4, 5};
     atl::Vector<double> b = {6, 7, 8, 9, 10};
-    atl::Vector<double> c = a * b;
-    std::cout<<a<<" * "<<b<<" = "<<c<<"\n";
+    atl::Vector<double> c = atl::log(a * b);
+    std::cout<<"c = log(a*b) = "<<a<<" * "<<b<<" = "<<c<<"\n";
   
 \end{cppsource}
 \textbf{Output}
 \begin{myoutput}
-[ 1 2 3 4 5 ] * [ 6 7 8 9 10 ] = [ 6 14 24 36 50 ]
+c = log(a*b) = [ 1 2 3 4 5 ] * [ 6 7 8 9 10 ] = [ 1.79176 2.63906 3.17805 3.58352 3.91202 ]
 \end{myoutput}
 In the above example, the operation "*" does not return a new \textit{atl::Vector}, but instead returns an object called \textit{VectorMultiply}, which is used to initialize \textit{atl::Vector c}.
 
@@ -1315,11 +1315,13 @@ ATL provides one dense, dynamic matrix type called \textit{atl::Matrix}. Future 
     
 
     atl::Matrix<atl::Variable<double> > B = atl::exp(A);
-    
     std::cout<<"B = exp(A) = \n"<<B<<"\n";
     
+    atl::Matrix<atl::Variable<double> > C = atl::log(B);
+    std::cout<<"C = log(B) = \n"<< C<<"\n";
     
-    std::cout<<"C = log(B) = \n"<<atl::log(B);
+    atl::Matrix<atl::Variable<double> > D = A*B;
+    std::cout<<"D = A*B = \n"<< D;
   
 \end{cppsource}
 \textbf{Output}
@@ -1339,6 +1341,11 @@ C = log(B) =
 [ 1 1 0 ]
 [ 0 0 2 ]
 [ 0 0 -1 ]
+
+D = A*B = 
+[ 3.71828 3.71828 8.38906 ]
+[ 2 2 0.735759 ]
+[ -1 -1 -0.367879 ]
 
 \end{myoutput}
 
@@ -1440,8 +1447,10 @@ Array a = 2 x 2 x 2 x 3
 \subsection{Pie Charts, Bar Plots, and Histograms}
 \subsection{Vector Fields}
 \subsection{Surfaces and Volumes}
+\section{Debugging ATL Code}
+To debug code compiled against ATL, compile with flag -DATL_DEBUG. This will enable the following debug error handling:
 \section{Future Work}
-\subsection{Random Effects Modelling}
+\subsection{Random Effects Modeling}
 \subsection{MPI}
 \section{References}
 \section{Appendices}

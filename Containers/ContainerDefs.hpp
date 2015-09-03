@@ -11,7 +11,9 @@
 //#define ATL_CONCURRENCY_ENABLED
 //#define ATL_HAS_SSE 1
 
-//#define ENABLE_BOUNDS_CHECKING 
+#ifdef ATL_DEBUG
+#define ENABLE_BOUNDS_CHECKING
+#endif
 
 #endif	/* ATLDEFS_HPP */
 

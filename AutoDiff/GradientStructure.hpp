@@ -517,8 +517,9 @@ namespace atl {
         inline void Reset(bool empty_trash = true) {
 
 
-#pragma unroll
+
             if (this->recording) {
+                #pragma unroll
                 for (int i = (stack_current - 1); i >= 0; i--) {
                     this->gradient_stack[i].Reset();
                 }
