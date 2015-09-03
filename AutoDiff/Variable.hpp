@@ -635,6 +635,12 @@ namespace atl {
 
     template<typename REAL_T, int group>
     TanhParameterTransformation<REAL_T> Variable<REAL_T, group>::default_transformation;
+   
+    
+    /**
+     * Experimental code for forward mode AD. Uses the Transitionally Accumulated 
+     * Gradients method (TAG) from ET4AD. 
+     */
     namespace atl_forward_test {
 
         enum AD_Method {
