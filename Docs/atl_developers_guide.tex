@@ -1287,7 +1287,7 @@ As you can see from the above output, our function minimizer was able to find a 
 \section{Containers}
 Currently there are three container types in ATL, Array, Vector, Matrix. All of which are dense, with plans to implement sparse variants in later versions. ATL containers implement expression templates for operations just as the AutoDiff package does, which help to reduce temporary variables, however one must be mindful of stack overflows. Large expressions can cause a stack overflow and the user will not receive an error as to why the program terminated. Furthermore, if your program is compiled with \textit{$-DPROMOTE\_BINARY\_OPERATORS$}, container types that have a \textit{atl::Variable} for a base will have operators that return expression templates rather than a value, which will increase the chance for a stack overflow because you have an expression template operating on expression templates. That said, compiling with \textit{$-DPROMOTE\_BINARY\_OPERATORS$} can lead to faster container operations for containers operating on \textit{atl::Variable} types.
 \subsection{Vectors}
-ATL provides one dense, dynamic vector type called \textit{atl::Vector}. Future version will allow for static and sparse vector types. Vectors support all elementary operations (+,-.*,/), as well as intrinsic functions. A full listing of functions involving \textit{atl::Vector} is available in Appendix A. Here is an example of using a \textit{atl::Vector}:
+ATL provides one dense, dynamic vector type called \textit{atl::Vector}. Future version will allow for static and sparse vector types. Vectors support all elementary operations (+,-.*,/), as well as all common math functions. A full listing of functions involving \textit{atl::Vector} is available in Appendix A. Here is an example of using a \textit{atl::Vector}:
 \begin{cppsource}
 
     atl::Vector<double> a = {1, 2, 3, 4, 5};
@@ -1303,39 +1303,39 @@ ATL provides one dense, dynamic vector type called \textit{atl::Vector}. Future 
 In the above example, the operation "*" does not return a new \textit{atl::Vector}, but instead returns an object called \textit{VectorMultiply}, which is used to initialize \textit{atl::Vector c}.
 
 \subsection{Matrices}
-ATL provides one dense, dynamic matrix type called \textit{atl::Matrix}. Future version will allow for static and sparse matrix types. Matrix support all elementary operations (+,-.*,/), as well as intrinsic functions. A full listing of functions involving \textit{atl::Matrix} is available in Appendix A. Here is an example of using a \textit{atl::Matrix}:
+ATL provides one dense, dynamic matrix type called \textit{atl::Matrix}. Future version will allow for static and sparse matrix types. the textit{atl::Matrix} class supports all elementary operations (+,-.*,/), as well all common math functions. In addition, mixed types are also supported, with the large type being promoted. A full listing of functions involving \textit{atl::Matrix} is available in Appendix A. Here is an example of using a \textit{atl::Matrix}:
 \begin{cppsource}
  
-  atl::Matrix<double> a = {
-        {1, 2, 3, 4, 5},
-        {1, 2, 3, 4, 5}
+    atl::Matrix<float> A = {
+        {5, 6},
+        {3, 7}
     };
+    atl::Matrix<atl::Variable<double> > B = {
+        {3, 2},
+        {1, 5}
+    };
+
+    std::cout<<"AB = \n"<<A*B<<"\n";
     
-    atl::Matrix<double> b = {
-        {6, 7, 8, 9, 10},
-        {6, 7, 8, 9, 10}};
-        
-    atl::Matrix<double> c = a * b;
-    
-    std::cout << a << " * \n" << b << " = \n" << c << "\n";
+    std::cout<<"sin(AB) = \n"<<atl::sin(A*B);
   
 \end{cppsource}
 \textbf{Output}
 \begin{myoutput}
 
-[ 1 2 3 4 5 ]
-[ 1 2 3 4 5 ]
- * 
-[ 6 7 8 9 10 ]
-[ 6 7 8 9 10 ]
- = 
-[ 18 21 24 27 30 ]
-[ 18 21 24 27 30 ]
+AB = 
+[ 21 40 ]
+[ 16 41 ]
+
+sin(AB) = 
+[ 0.836656 0.745113 ]
+[ -0.287903 -0.158623 ]
+
 
 \end{myoutput}
 
 \subsection{Arrays}
-Arrays are basic containers in ATL and can have up to seven dimensions.   Simply put, \textit{atl::Array} are basic multidimensional containers to hold data. Here is an example of initializing an instance of \textit{atl::Array} of four dimensions using an initializer list:
+Arrays are basic containers in ATL and can have up to seven dimensions.   Simply put, \textit{atl::Array} are basic multidimensional containers to hold data. Just like the \textit{Vector} and \textit{Matrix} classes, the \textit{Array} class supports all elementary operations (+,-.*,/), as well as all common math functions. Here is an example of initializing an instance of \textit{atl::Array} of four dimensions using an initializer list:
 \begin{cppsource}
 
   atl::Array<double> a = {
