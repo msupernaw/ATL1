@@ -89,7 +89,7 @@ namespace atl {
             }
             out << expr.AtRaw(i) << " ";
         }
-        out << "]";
+        out << "]\n";
 
         return out;
     }

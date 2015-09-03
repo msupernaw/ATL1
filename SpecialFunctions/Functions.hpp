@@ -157,9 +157,9 @@ namespace atl {
      * @return 
      */
     template<class T>
-    static T InverseErf(T &y) {
+    static T InverseErf(const T &y) {
 
-        return T(.5) * sqrt(T(M_PI))*(y + ((T(M_PI) / T(12))*(y * y * y)) +
+        return T(.5) * std::sqrt(T(M_PI))*(y + ((T(M_PI) / T(12))*(y * y * y)) +
                 ((T(7) * T(M_PI) * T(M_PI) / T(480))*(y * y * y * y * y))+
                 ((T(127) * T(M_PI) * T(M_PI) * T(M_PI) / T(40320))*(y * y * y * y * y * y * y))+
                 ((T(4369) * T(M_PI) * T(M_PI) * T(M_PI) * T(M_PI) / T(5806080))*(y * y * y * y * y * y * y * y * y))+

@@ -1306,23 +1306,23 @@ In the above example, the operation "*" does not return a new \textit{atl::Vecto
 ATL provides one dense, dynamic matrix type called \textit{atl::Matrix}. Future version will allow for static and sparse matrix types. The \textit{atl::Matrix} class supports all elementary operations (+,-.*,/), as well all common math functions. In addition, mixed types are also supported, with the large type being promoted. A full listing of functions involving \textit{atl::Matrix} is available in Appendix A. Here is an example of using a \textit{atl::Matrix}:
 \begin{cppsource}
  
-    atl::Matrix<float> A = {
-        {1.0f, 1.0f, 0.0},
-        {0.0f, 0.0f, 2.0f},
-        { 0.0f, 0.0f, -1.0f}
-    };
-    std::cout<<"A = \n"<<A<<"\n";
-    
-
     atl::Matrix<atl::Variable<double> > B = atl::exp(A);
-    std::cout<<"B = exp(A) = \n"<<B<<"\n";
-    
+    std::cout << "B = exp(A) = \n" << B << "\n";
+
     atl::Matrix<atl::Variable<double> > C = atl::log(B);
-    std::cout<<"C = log(B) = \n"<< C<<"\n";
-    
+    std::cout << "C = log(B) = \n" << C << "\n";
+
     atl::Matrix<atl::Variable<double> > D = A*B;
-    std::cout<<"D = A*B = \n"<< D;
-  
+    std::cout << "D = A*B = \n" << D << "\n";
+
+    atl::Vector<atl::Variable<double> > row = atl::Row(D, 0);
+
+    std::cout << "D(0: ) = " << row << "\n";
+
+    atl::Vector<atl::Variable<double> > col = atl::Column(D, 0);
+
+    std::cout << "D(:0)= " << col << "\n";
+      
 \end{cppsource}
 \textbf{Output}
 \begin{myoutput}
@@ -1346,6 +1346,10 @@ D = A*B =
 [   3.718   3.718   8.389 ]
 [       2       2  0.7358 ]
 [      -1      -1 -0.3679 ]
+
+D(0: ) = [ 3.718 3.718 8.389 ]
+
+D(:0)= [ 3.718 2 -1 ]
 
 
 \end{myoutput}

@@ -223,7 +223,7 @@ namespace atl {
      */
     template<class T>
     const T qnorm(const T &probability, const T &mean, const T &sd) {
-
+//          return (T(22619537.0) * ::fabs(sd) * atl::InverseErf(T(2.0) * probability-T(1.0)) + T(15994428.0) * mean) / T(15994428.0);
         double guess = mean;
         double high = (100);
         double low = (-100);
