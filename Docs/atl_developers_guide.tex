@@ -1303,34 +1303,42 @@ ATL provides one dense, dynamic vector type called \textit{atl::Vector}. Future 
 In the above example, the operation "*" does not return a new \textit{atl::Vector}, but instead returns an object called \textit{VectorMultiply}, which is used to initialize \textit{atl::Vector c}.
 
 \subsection{Matrices}
-ATL provides one dense, dynamic matrix type called \textit{atl::Matrix}. Future version will allow for static and sparse matrix types. the textit{atl::Matrix} class supports all elementary operations (+,-.*,/), as well all common math functions. In addition, mixed types are also supported, with the large type being promoted. A full listing of functions involving \textit{atl::Matrix} is available in Appendix A. Here is an example of using a \textit{atl::Matrix}:
+ATL provides one dense, dynamic matrix type called \textit{atl::Matrix}. Future version will allow for static and sparse matrix types. The \textit{atl::Matrix} class supports all elementary operations (+,-.*,/), as well all common math functions. In addition, mixed types are also supported, with the large type being promoted. A full listing of functions involving \textit{atl::Matrix} is available in Appendix A. Here is an example of using a \textit{atl::Matrix}:
 \begin{cppsource}
  
     atl::Matrix<float> A = {
-        {5, 6},
-        {3, 7}
+        {1.0f, 1.0f, 0.0},
+        {0.0f, 0.0f, 2.0f},
+        { 0.0f, 0.0f, -1.0f}
     };
-    atl::Matrix<atl::Variable<double> > B = {
-        {3, 2},
-        {1, 5}
-    };
-
-    std::cout<<"AB = \n"<<A*B<<"\n";
+    std::cout<<"A = \n"<<A<<"\n";
     
-    std::cout<<"sin(AB) = \n"<<atl::sin(A*B);
+
+    atl::Matrix<atl::Variable<double> > B = atl::exp(A);
+    
+    std::cout<<"B = exp(A) = \n"<<B<<"\n";
+    
+    
+    std::cout<<"C = log(B) = \n"<<atl::log(B);
   
 \end{cppsource}
 \textbf{Output}
 \begin{myoutput}
 
-AB = 
-[ 21 40 ]
-[ 16 41 ]
+A = 
+[ 1 1 0 ]
+[ 0 0 2 ]
+[ 0 0 -1 ]
 
-sin(AB) = 
-[ 0.836656 0.745113 ]
-[ -0.287903 -0.158623 ]
+B = exp(A) = 
+[ 2.71828 2.71828 1 ]
+[ 1 1 7.38906 ]
+[ 1 1 0.367879 ]
 
+C = log(B) = 
+[ 1 1 0 ]
+[ 0 0 2 ]
+[ 0 0 -1 ]
 
 \end{myoutput}
 
