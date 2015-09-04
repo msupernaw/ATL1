@@ -1290,22 +1290,33 @@ Currently there are three container types in ATL, Array, Vector, Matrix. All of 
 ATL provides one dense, dynamic vector type called \textit{atl::Vector}. Future version will allow for static and sparse vector types. Vectors support all elementary operations (+,-.*,/), as well as all common math functions. A full listing of functions involving \textit{atl::Vector} is available in Appendix A. Here is an example of using a \textit{atl::Vector}:
 \begin{cppsource}
 
-    atl::Vector<double> a = {1, 2, 3, 4, 5};
+    atl::Vector<float> a = {1, 2, 3, 4, 5};
     atl::Vector<double> b = {6, 7, 8, 9, 10};
-    atl::Vector<double> c = atl::log(a * b);
-    std::cout<<"c = log(a*b) = "<<a<<" * "<<b<<" = "<<c<<"\n";
+    atl::Vector<double> c = atl::log(a * b); //element wise multiplication of a * b
+    
+    std::cout << "c = log(a*b) = " << a << " * " << b << " = " << c << "\n";
+
+    double d = atl::Dot(a, b);
+    std::cout <<"a dot b = " << d << "\n";
   
 \end{cppsource}
 \textbf{Output}
 \begin{myoutput}
 c = log(a*b) = [ 1 2 3 4 5 ] * [ 6 7 8 9 10 ] = [ 1.79176 2.63906 3.17805 3.58352 3.91202 ]
+a dot b = 130
 \end{myoutput}
-In the above example, the operation "*" does not return a new \textit{atl::Vector}, but instead returns an object called \textit{VectorMultiply}, which is used to initialize \textit{atl::Vector c}.
+In the above example, the operation "*" does not return a new \textit{atl::Vector}, but instead returns an object called\textit{VectorMultiply} and \textit{atl::log} returns and object called \textit{VectorLog} that operates on \textit{VectorMultiply}, which are used to initialize \textit{atl::Vector c}. Also, notice the \textit{atl::Vector a} has a base type of \textit{float}, ATL container support mixed precision with the higher being promoted. In this case, a*b returns an instance of \textit{VectorMultiply}  that has a base type of \textit{double}.
 
 \subsection{Matrices}
 ATL provides one dense, dynamic matrix type called \textit{atl::Matrix}. Future version will allow for static and sparse matrix types. The \textit{atl::Matrix} class supports all elementary operations (+,-.*,/), as well all common math functions. In addition, mixed types are also supported, with the large type being promoted. A full listing of functions involving \textit{atl::Matrix} is available in Appendix A. Here is an example of using a \textit{atl::Matrix}:
 \begin{cppsource}
- 
+    atl::Matrix<float> A = {
+        {1.0f, 1.0f, 0.0},
+        {0.0f, 0.0f, 2.0f},
+        { 0.0f, 0.0f, -1.0f}
+    };
+    std::cout << "A = \n" << A << "\n";
+
     atl::Matrix<atl::Variable<double> > B = atl::exp(A);
     std::cout << "B = exp(A) = \n" << B << "\n";
 
@@ -1319,9 +1330,9 @@ ATL provides one dense, dynamic matrix type called \textit{atl::Matrix}. Future 
 
     std::cout << "D(0: ) = " << row << "\n";
 
-    atl::Vector<atl::Variable<double> > col = atl::Column(D, 0);
+    atl::Vector<atl::Variable<double> > column = atl::Column(D, 0);
 
-    std::cout << "D(:0)= " << col << "\n";
+    std::cout << "D(:0)= " << column << "\n";
       
 \end{cppsource}
 \textbf{Output}
@@ -1413,6 +1424,129 @@ Array a = 2 x 2 x 2 x 3
  
 
  \end{myoutput}
+\subsection{Type Promotion}
+ATL containers have the ability to handle type promotion. Consider the class \textit{Vector}, it can be instantiated like:
+\begin{cppsource}
+atl::Vector<atl::Variable<double> > a; // Vector of AD types
+atl::Vector<double> b;                         // Vector of double precision types
+atl::Vector<int> c;                                // Vector of integer types
+\end{cppsource}
+
+What would happen if \textit{a} and \textit{b} are multiplied together? Obviously the resulting \textit{Vector} should be \textit{atl::Vector<atl::Variable<double> >}. One way to ensure this is the case would be to code specialized versions of 
+\text{operator*} for each possible case:
+\begin{cppsource}
+atl::Vector<atl::Variable<double> > operator*(
+      const atl::Vector<atl::Variable<double> >& a, const atl::Vector<double>& b)
+{
+    ...
+}
+\end{cppsource}
+This would clearly become cumbersome to code every possible combination of \text{operator*}. To get around this, we turn to a template metaprogramming technique called type promotion. So instead of coding every possible combination of \text{operator*},
+we simply create a class to handle the promotion:
+\begin{cppsource}
+
+    template<typename T1, typename T2>
+    struct PromoteType {
+         typedef T1 return_type;
+    };    
+\end{cppsource}
+Now we can create a simple specialized versions of \textit{struct PromoteType} to handle the desired promotion:
+
+\begin{cppsource}
+
+    template<atl::Vector<double>, double>
+    struct PromoteType {
+         typedef atl::Vector<double> return_type;
+    };    
+    
+    template<double, int>
+    struct PromoteType {
+         typedef double return_type;
+    };    
+    ...
+\end{cppsource}
+
+Using this concept we can write one \textit{operator*} that will handle all types:
+
+\begin{cppsource}
+ template<typename LHS, typename RHS>
+ atl::Vector<typename PromoteType<LHS,RHS>::return_type > operator*(
+      const atl::Vector<LHS>& a, const atl::Vector<RHS>& b)
+ {
+    ...
+ }
+ \end{cppsource}
+This can be particularly useful in cases where one has large amounts of data that is not given in high precision.  While the modeling may require a high degree of precision, it is not necessary to store the user supplied data at this level of precision. Using a float rather than double may suffice and help to reduce the memory requirements of your program.
+\section{Optimization}
+
+\begin{cppsource}
+template<class T>
+class Simple : public atl::FunctionMinimizer<T> {
+    int nobs = 10;
+    atl::Vector<T> x = {-1, 0, 1, 2, 3, 4, 5, 6, 7, 8};
+    atl::Vector<T> y = {1.4, 4.7, 5.1, 8.3, 9.0, 14.5, 14.0, 13.4, 19.2, 18};
+    atl::Variable<T> a;
+    atl::Variable<T> b;
+    atl::Vector<atl::Variable<T> > pred_y;
+public:
+
+    void Initialize() {
+    
+        a.SetName("a");
+        this->Register(a);
+
+        b.SetName("b");
+        this->Register(b);
+
+    }
+
+    void ObjectiveFunction(atl::Variable<T>& f) {
+        f = nobs / 2.0 * atl::log(atl::Norm2(((a * x + b)) - y));
+    }
+
+
+};
+
+int main() {
+
+    Simple<double> s;
+    s.Initialize();
+    s.Run();
+}    
+\end{cppsource}
+
+\textbf{Output:}
+
+\begin{myoutput}
+Iteration: 0
+Phase: 1 of 1
+Convergence Criteria: 0.0001
+Routine: L-BFGS
+Function Value: 36.4936
+Max Gradient:3.61269
+Id      Name      Value          Gradient       |Id      Name      Value          Gradient       
+1       a         0              -3.61269       2       b         0              -0.727814      
+
+Iteration: 10
+Phase: 1 of 1
+Convergence Criteria: 0.0001
+Routine: L-BFGS
+Function Value: 15.6174
+Max Gradient:10.2763
+Id      Name      Value          Gradient       |Id      Name      Value          Gradient       
+1       a         1.99319        10.2763        2       b         4.25282        2.06375        
+
+Iteration: 13
+Phase: 1 of 1
+Convergence Criteria: 0.0001
+Routine: L-BFGS
+Function Value: 14.9642
+Max Gradient:1.24121e-05
+Id      Name      Value          Gradient       |Id      Name      Value          Gradient       
+1       a         1.90909        -1.24121e-05   2       b         4.07818        2.81961e-06    
+
+
+\end{myoutput}
 
 
 
@@ -1440,7 +1574,6 @@ Array a = 2 x 2 x 2 x 3
 \subsubsection{Student's t}
 \subsubsection{Weibull}
 \section{Descriptive Statistics}
-\section{Optimization}
 \subsection{Function Minimization}
 \section{Concurrency}
 \subsection{Concurrency For Containers}

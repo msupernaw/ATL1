@@ -79,7 +79,7 @@ namespace atl {
             return Cast().EvaluateDerivative(a, b);
         }
 
-        ExpressionBase& operator=(const ExpressionBase & exp) const {
+        const ExpressionBase& operator=(const ExpressionBase & exp) const {
             return *this;
         }
     };

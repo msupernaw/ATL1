@@ -40,7 +40,7 @@
 
 #include "AutoDiff/AutoDiff.hpp"
 
-//#include "Optimization/GradientBased/FunctionMinimizer.hpp"
+#include "Optimization/FunctionMinimizer.hpp"
 
 
 

@@ -13,7 +13,7 @@
 #else
 #include <vector>
 #endif
-
+#include "../Traits/Type.hpp"
 #include "Array.hpp"
 #include "Matrix.hpp"
 #include "VectorExpressionBase.hpp"
@@ -100,6 +100,7 @@ namespace atl {
 
             for (int i = 0; i < isize; i++) {
                 data_m[i] = expr(i);
+                
             }
 
         }
@@ -143,7 +144,7 @@ namespace atl {
             assert(expr.Dimensions() == 1);
 #endif
             isize = expr.Size(0);
-
+        
 
             data_m.resize(isize);
 
@@ -517,7 +518,6 @@ namespace atl {
 #ifdef ENABLE_BOUNDS_CHECKING
             CheckBounds(i);
 #endif
-
             return data_m[i];
         }
 
@@ -525,7 +525,6 @@ namespace atl {
 #ifdef ENABLE_BOUNDS_CHECKING
             CheckBounds(i);
 #endif
-
             return data_m[i];
         }
 

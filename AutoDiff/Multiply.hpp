@@ -92,7 +92,6 @@ namespace atl {
         MultiplyConstant(const ExpressionBase<REAL_T, LHS>& lhs, const REAL_T & rhs)
         : lhs_m(lhs.Cast()), rhs_m(rhs) {
 
-
         }
 
         inline const REAL_T GetValue() const {
@@ -108,7 +107,6 @@ namespace atl {
         }
 
         inline REAL_T EvaluateDerivative(uint32_t id) const {
-
             return (rhs_m * lhs_m.EvaluateDerivative(id));
         }
 

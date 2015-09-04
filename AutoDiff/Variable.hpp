@@ -187,7 +187,8 @@ namespace atl {
         info(new VariableInfo<REAL_T>),
         bounded_m(false),
         min_boundary_m(std::numeric_limits<REAL_T>::min()),
-        max_boundary_m(std::numeric_limits<REAL_T>::max()) {
+        max_boundary_m(std::numeric_limits<REAL_T>::max()),
+         transformation(&default_transformation){
             info->vvalue = (val);
             mapped_info = (this->info);
         }
@@ -202,7 +203,8 @@ namespace atl {
         info(new VariableInfo<REAL_T>),
         bounded_m(false),
         min_boundary_m(std::numeric_limits<REAL_T>::min()),
-        max_boundary_m(std::numeric_limits<REAL_T>::max()) {
+        max_boundary_m(std::numeric_limits<REAL_T>::max()),
+        transformation(&default_transformation) {
             mapped_info = (this->info);
             if (Variable<REAL_T>::gradient_structure_g.recording) {
 
@@ -289,24 +291,33 @@ namespace atl {
         }
 
         inline Variable<REAL_T>& operator=(const REAL_T & value) {
+            
             this->SetValue(value);
             return *this;
         }
 
         inline Variable<REAL_T>& operator=(const Variable<REAL_T> & other) {
+            if (Variable<REAL_T>::gradient_structure_g.recording) {
+                 Adjoint<REAL_T>& entry = Variable<REAL_T>::gradient_structure_g.gradient_stack[Variable<REAL_T>::gradient_structure_g.NextIndex()];
+                entry.w = info;
+                entry.entries.push_back(AdjointDerivative<REAL_T>((other.info), 1.0));
+                entry.second_order_partials.resize(1,1.0);
+                
+                
+            }
             this->SetValue(other.GetValue());
             return *this;
         }
 
+        
         template<class A>
         inline Variable& operator=(const ExpressionBase<REAL_T, A>& exp) {
-
             if (Variable<REAL_T>::gradient_structure_g.recording) {
-
+                
                 Adjoint<REAL_T>& entry = Variable<REAL_T>::gradient_structure_g.gradient_stack[Variable<REAL_T>::gradient_structure_g.NextIndex()];
 
                 entry.w = info;
-
+                
                 ids.clear();
                 exp.PushIds(ids);
                 int isize = ids.size();

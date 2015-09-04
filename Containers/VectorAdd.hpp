@@ -132,7 +132,7 @@ namespace atl {
         typedef typename atl::PromoteBinaryOpReturnType<typename LHS::RET_TYPE, T, atl::ADD>::return_type RET_TYPE;
         typedef typename atl::PromoteType<typename LHS::BASE_TYPE, T>::return_type BASE_TYPE;
 
-        inline explicit VectorAddScalar(const VectorExpression<typename LHS::RET_TYPE, LHS>& lhs, const T & rhs) : lhs_m(lhs.Cast()), rhs_m(rhs) {
+        inline explicit VectorAddScalar(const VectorExpression<typename LHS::BASE_TYPE, LHS>& lhs, const T & rhs) : lhs_m(lhs.Cast()), rhs_m(rhs) {
 
 
 
@@ -196,7 +196,7 @@ namespace atl {
         const T& lhs_m;
         const RHS& rhs_m;
 
-        inline explicit VectorScalarAdd(const T& lhs, const VectorExpression<typename RHS::RET_TYPE, RHS> & rhs) : lhs_m(lhs), rhs_m(rhs.Cast()) {
+        inline explicit VectorScalarAdd(const T& lhs, const VectorExpression<typename RHS::BASE_TYPE, RHS> & rhs) : lhs_m(lhs), rhs_m(rhs.Cast()) {
 
 
 
@@ -255,8 +255,8 @@ namespace atl {
     //typename et4ad::promote_trait<typename LHS::RET_TYPE , typename RHS::RET_TYPE >::return_type
 
     template <class LHS, class RHS>
-    inline const VectorAdd< LHS, RHS> operator+(const VectorExpression<typename LHS::RET_TYPE, LHS>& a,
-            const VectorExpression<typename RHS::RET_TYPE, RHS>& b) {
+    inline const VectorAdd< LHS, RHS> operator+(const VectorExpression<typename LHS::BASE_TYPE, LHS>& a,
+            const VectorExpression<typename RHS::BASE_TYPE, RHS>& b) {
         return VectorAdd< LHS, RHS > (a.Cast(), b.Cast());
     }
 

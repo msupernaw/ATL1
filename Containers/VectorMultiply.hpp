@@ -18,7 +18,8 @@ namespace atl {
         typedef typename LHS::RET_TYPE RET_TYPEL;
         typedef typename RHS::RET_TYPE RET_TYPER;
         typedef typename atl::PromoteType<typename LHS::BASE_TYPE, typename RHS::BASE_TYPE>::return_type BASE_TYPE;
-        typedef typename atl::PromoteBinaryOpReturnType<RET_TYPEL, RET_TYPER, atl::MULTIPLY>::return_type RET_TYPE;
+        //        typedef typename atl::PromoteBinaryOpReturnType<RET_TYPEL, RET_TYPER, atl::MULTIPLY>::return_type RET_TYPE;
+        typedef typename atl::PromoteType<typename LHS::BASE_TYPE, typename RHS::BASE_TYPE>::return_type RET_TYPE;
 
         const LHS& lhs_m;
         const RHS& rhs_m;
@@ -72,7 +73,7 @@ namespace atl {
             return lhs_m(i) * rhs_m(i);
         }
 
-        inline void IsAliased(bool& aliased, void* ptr) const{
+        inline void IsAliased(bool& aliased, void* ptr) const {
             lhs_m.IsAliased(aliased, ptr);
             rhs_m.IsAliased(aliased, ptr);
         }
@@ -90,7 +91,7 @@ namespace atl {
     struct VectorMultiplyScalar : VectorExpression<typename atl::PromoteBinaryOpReturnType<typename LHS::RET_TYPE, T, atl::MULTIPLY>::return_type, VectorMultiplyScalar< LHS, T> > {
         const LHS& lhs_m;
         const T& rhs_m;
-
+        //        typedef typename atl::PromoteType<typename LHS::RET_TYPE, T>::return_type RET_TYPE;
         typedef typename atl::PromoteBinaryOpReturnType<typename LHS::RET_TYPE, T, atl::MULTIPLY>::return_type RET_TYPE;
         typedef typename atl::PromoteType<typename LHS::BASE_TYPE, T>::return_type BASE_TYPE;
 
@@ -138,7 +139,7 @@ namespace atl {
             return lhs_m(i) * rhs_m;
         }
 
-        inline void IsAliased(bool& aliased, void* ptr) const{
+        inline void IsAliased(bool& aliased, void* ptr) const {
             lhs_m.IsAliased(aliased, ptr);
         }
 
@@ -160,18 +161,11 @@ namespace atl {
         const RHS& rhs_m;
 
         inline explicit VectorScalarMultiply(const T& lhs, const VectorExpression<typename RHS::RET_TYPE, RHS> & rhs) : lhs_m(lhs), rhs_m(rhs.Cast()) {
-
-
-
         }
 
         inline const size_t Size(const int32_t & dimension) const {
             return rhs_m.Size(dimension);
         }
-
-        //        inline const size_t Dimensions() const {
-        //            return rhs_m.Dimensions();
-        //        }
 
         inline const RET_TYPE operator()(const uint32_t & i) const {
             return lhs_m * rhs_m(i);
@@ -203,7 +197,7 @@ namespace atl {
             return lhs_m * rhs_m(i);
         }
 
-        inline void IsAliased(bool& aliased, void* ptr) const{
+        inline void IsAliased(bool& aliased, void* ptr) const {
             rhs_m.IsAliased(aliased, ptr);
         }
 

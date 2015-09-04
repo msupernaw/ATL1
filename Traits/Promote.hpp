@@ -68,6 +68,7 @@ namespace atl {
 
     template<typename T1, typename T2>
     struct PromoteType {
+        typedef T1 return_type;
     };
 
 
@@ -75,7 +76,7 @@ namespace atl {
 #define DECLARE_PROMOTION(A, B, C) template<> struct PromoteType<A, B> { typedef C return_type;};
 
 
-    DECLARE_PROMOTION(atl::Variable<long double>, atl::Variable<long double>, atl::Variable<long double>);
+    DECLARE_PROMOTION(atl::Variable<long double>, atl::Variable<long double>, atl::Variable<long double>)
     DECLARE_PROMOTION(atl::Variable<long double>, atl::Variable< double>, atl::Variable<long double>);
     DECLARE_PROMOTION(atl::Variable< double>, atl::Variable<long double>, atl::Variable<long double>);
     DECLARE_PROMOTION(atl::Variable<long double>, atl::Variable<float>, atl::Variable<long double>);

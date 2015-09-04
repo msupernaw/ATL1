@@ -32,6 +32,7 @@
 
 namespace atl {
 
+
     template<class T>
     class Matrix : public MatrixExpression<T, Matrix<T> > {
         //Friends
@@ -81,8 +82,20 @@ namespace atl {
             assert(j < jsize);
         }
 
+        inline void Set(size_t i, size_t j, const T& value) {
+            data_m[(i * jsize) + j] = value;
+        }
+
+        inline T& Get(size_t i, size_t j) {
+            return data_m[(i * jsize) + j];
+        }
+
+        inline const T& Get(size_t i, size_t j) const {
+            return data_m[(i * jsize) + j];
+        }
 
     public:
+
 
         typedef T RET_TYPE;
         typedef T BASE_TYPE;
@@ -98,13 +111,17 @@ namespace atl {
             typename std::initializer_list<std::initializer_list<T> >::iterator it;
             typename std::initializer_list<T>::iterator jt;
             data_m.resize(isize * jsize);
-            int index = 0;
+            int iindex = 0;
             for (it = l.begin(); it != l.end(); ++it) {
+                int jindex = 0;
                 for (jt = it->begin(); jt != it->end(); ++jt) {
                     T v = (*jt);
-                    data_m[index] = v;
-                    index++;
+                    //                    data_m[index] = v;
+                    Set(iindex, jindex, v);
+                    jindex++;
+
                 }
+                iindex++;
             }
         }
 
@@ -134,7 +151,8 @@ namespace atl {
 
             for (int i = 0; i < isize; i++) {
                 for (int j = 0; j < jsize; j++) {
-                    data_m[(i * jsize) + j] = expr(i, j);
+                    //                    data_m[(i * jsize) + j] = expr(i, j);
+                    Set(i, j, expr(i, j));
                 }
             }
         }
@@ -152,13 +170,17 @@ namespace atl {
             typename std::initializer_list<std::initializer_list<T> >::iterator it;
             typename std::initializer_list<T>::iterator jt;
             data_m.resize(isize * jsize);
-            int index = 0;
+            int iindex = 0;
             for (it = l.begin(); it != l.end(); ++it) {
+                int jindex = 0;
                 for (jt = it->begin(); jt != it->end(); ++jt) {
                     T v = (*jt);
-                    data_m[index] = v;
-                    index++;
+                    //                    data_m[index] = v;
+                    Set(iindex, jindex, v);
+                    jindex++;
+
                 }
+                iindex++;
             }
             return *this;
         }
@@ -183,7 +205,8 @@ namespace atl {
 
             for (int i = 0; i < isize; i++) {
                 for (int j = 0; j < jsize; j++) {
-                    data_m[(i * jsize) + j] = expr(i, j);
+                    //                    data_m[(i * jsize) + j] = expr(i, j);
+                    Set(i, j, expr(i, j));
                 }
             }
 
@@ -205,7 +228,8 @@ namespace atl {
 
             for (int i = 0; i < isize; i++) {
                 for (int j = 0; j < jsize; j++) {
-                    data_m[(i * jsize) + j] = expr(i, j);
+                    //                    data_m[(i * jsize) + j] = expr(i, j);
+                    Set(i, j, expr(i, j));
                 }
             }
             return *this;
@@ -225,7 +249,8 @@ namespace atl {
 
             for (int i = 0; i < isize; i++) {
                 for (int j = 0; j < jsize; j++) {
-                    data_m[(i * jsize) + j] = expr(i, j);
+                    //                    data_m[(i * jsize) + j] = expr(i, j);
+                    Set(i, j, expr(i, j));
                 }
             }
             return *this;
@@ -245,7 +270,8 @@ namespace atl {
 
             for (int i = 0; i < isize; i++) {
                 for (int j = 0; j < jsize; j++) {
-                    data_m[(i * jsize) + j] = expr(i, j);
+                    //                    data_m[(i * jsize) + j] = expr(i, j);
+                    Set(i, j, expr(i, j));
                 }
             }
 
@@ -266,7 +292,8 @@ namespace atl {
 
             for (int i = 0; i < isize; i++) {
                 for (int j = 0; j < jsize; j++) {
-                    data_m[(i * jsize) + j] = expr(i, j);
+                    //                    data_m[(i * jsize) + j] = expr(i, j);
+                    Set(i, j, expr(i, j));
                 }
             }
             return *this;
@@ -286,7 +313,8 @@ namespace atl {
 
             for (int i = 0; i < isize; i++) {
                 for (int j = 0; j < jsize; j++) {
-                    data_m[(i * jsize) + j] = expr(i, j);
+                    //                    data_m[(i * jsize) + j] = expr(i, j);
+                    Set(i, j, expr(i, j));
                 }
             }
             return *this;
@@ -504,7 +532,7 @@ namespace atl {
             CheckBounds(i, j);
 #endif
 
-            return data_m[(i * jsize) + j];
+            return Get(i, j); //data_m[(i * jsize) + j];
         }
 
         inline T& operator()(size_t i, size_t j) {
@@ -512,7 +540,7 @@ namespace atl {
             CheckBounds(i, j);
 #endif
 
-            return data_m[(i * jsize) + j];
+            return Get(i, j); //data_m[(i * jsize) + j];
         }
 
         /*
@@ -567,6 +595,8 @@ namespace atl {
 
 
     };
+
+    
 
     template<class T, class A>
     T Det(const atl::MatrixExpression< T, A>& m) {
@@ -662,7 +692,7 @@ namespace atl {
         std::stringstream ss;
 
         out.precision(4);
-//        out << std::scientific;
+        //        out << std::scientific;
         for (int i = 0; i < expr.Size(0); i++) {
             out << "[ ";
             for (int j = 0; j < expr.Size(1); j++) {
