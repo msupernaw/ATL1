@@ -16,6 +16,5 @@
 #endif
 
 
-
 #endif	/* ATLDEFS_HPP */
 

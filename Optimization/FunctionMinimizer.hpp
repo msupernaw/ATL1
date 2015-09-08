@@ -413,7 +413,7 @@ namespace atl {
             atl::Variable<REAL_T>::gradient_structure_g.derivative_trace_level = atl::GRADIENT_AND_HESSIAN;
 
 
-            int nops = this->parameters.size();
+            int nops = this->active_parameters.size();
 
             std::valarray<std::valarray<REAL_T> > system(nops);
             std::valarray<REAL_T> wg(nops);
@@ -590,7 +590,7 @@ namespace atl {
             atl::Variable<REAL_T>::gradient_structure_g.derivative_trace_level = atl::GRADIENT_AND_HESSIAN;
 
 
-            int nops = this->parameters.size();
+            int nops = this->active_parameters.size();
 
             std::valarray<std::valarray<REAL_T> > system(nops);
             //            std::valarray<REAL_T> update;

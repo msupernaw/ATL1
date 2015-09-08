@@ -1432,12 +1432,16 @@ namespace atl {
     //typename et4ad::promote_trait<typename LHS::RET_TYPE , typename RHS::RET_TYPE >::return_type
 
     template <class LHS, class RHS>
-    inline const VectorPow< LHS, RHS> operator+(const MatrixExpression<typename LHS::RET_TYPE, LHS>& a,
+    inline const VectorPow< LHS, RHS> pow(const MatrixExpression<typename LHS::RET_TYPE, LHS>& a,
             const MatrixExpression<typename RHS::RET_TYPE, RHS>& b) {
         return VectorPow< LHS, RHS > (a.Cast(), b.Cast());
     }
 
-
+    template <class LHS, class RHS>
+    inline const VectorPow< LHS, RHS> operator^(const MatrixExpression<typename LHS::RET_TYPE, LHS>& a,
+            const MatrixExpression<typename RHS::RET_TYPE, RHS>& b) {
+        return VectorPow< LHS, RHS > (a.Cast(), b.Cast());
+    }
 
 #define ATL_VECTOR_VectorPow_SCALAR(TYPE) \
     template< class LHS>      \
@@ -1445,7 +1449,13 @@ namespace atl {
     pow(const VectorExpression<typename LHS::RET_TYPE, LHS>& a, const TYPE& b) {\
             return VectorPowScalar<LHS,TYPE > (a.Cast(), b);\
         } \
-    
+        \
+ template< class LHS>      \
+        inline const VectorPowScalar<LHS,TYPE> \
+    operator^(const VectorExpression<typename LHS::RET_TYPE, LHS>& a, const TYPE& b) {\
+            return VectorPowScalar<LHS,TYPE > (a.Cast(), b);\
+        } \
+
 
     ATL_VECTOR_VectorPow_SCALAR(short)
     ATL_VECTOR_VectorPow_SCALAR(unsigned short)
@@ -1465,6 +1475,11 @@ namespace atl {
     template< class RHS>      \
         inline const ScalarVectorPow<TYPE,RHS> \
     pow(const TYPE& a, const VectorExpression<typename RHS::RET_TYPE, RHS>& b ) {\
+            return ScalarVectorPow<TYPE,RHS > (a, b.Cast());\
+        } \
+        template< class RHS>      \
+        inline const ScalarVectorPow<TYPE,RHS> \
+    operator^(const TYPE& a, const VectorExpression<typename RHS::RET_TYPE, RHS>& b ) {\
             return ScalarVectorPow<TYPE,RHS > (a, b.Cast());\
         } \
             

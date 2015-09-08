@@ -201,8 +201,8 @@ namespace atl {
         inline REAL_T EvaluateDerivative(uint32_t id) const {
             REAL_T g = expr2_m.GetValue();
             REAL_T f = expr1_m;
-//            REAL_T fx = 0.0;
-//            REAL_T gx = expr2_m.EvaluateDerivative(id);
+            //            REAL_T fx = 0.0;
+            //            REAL_T gx = expr2_m.EvaluateDerivative(id);
             return std::pow(f, g)*(std::log(f)); // * gx + g * fx / f);
         }
 
@@ -241,6 +241,13 @@ namespace atl {
         return atl::Pow<REAL_T, EXPR1, EXPR2 > (expr1.Cast(), expr2.Cast());
     }
 
+    template <class REAL_T, class EXPR1, class EXPR2>
+    inline
+    atl::Pow<REAL_T, EXPR1, EXPR2> operator^(const atl::ExpressionBase<REAL_T, EXPR1>& expr1,
+            const atl::ExpressionBase<REAL_T, EXPR2>& expr2) {
+        return atl::Pow<REAL_T, EXPR1, EXPR2 > (expr1.Cast(), expr2.Cast());
+    }
+
     /**
      * Override for the pow function in namespace std.
      * 
@@ -251,6 +258,13 @@ namespace atl {
     template <class REAL_T, class EXPR>
     inline
     atl::PowConstant< REAL_T, EXPR > pow(const atl::ExpressionBase<REAL_T, EXPR>& expr,
+            const REAL_T& val) {
+        return atl::PowConstant< REAL_T, EXPR > (expr.Cast(), val);
+    }
+
+    template <class REAL_T, class EXPR>
+    inline
+    atl::PowConstant< REAL_T, EXPR > operator^(const atl::ExpressionBase<REAL_T, EXPR>& expr,
             const REAL_T& val) {
         return atl::PowConstant< REAL_T, EXPR > (expr.Cast(), val);
     }
@@ -266,10 +280,16 @@ namespace atl {
     inline
     atl::ConstantPow<REAL_T, EXPR> pow(const REAL_T& val,
             const atl::ExpressionBase<REAL_T, EXPR>& expr) {
-
         return atl::ConstantPow<REAL_T, EXPR > (val, expr.Cast());
     }
 
+    template <class REAL_T, class EXPR>
+    inline
+    atl::ConstantPow<REAL_T, EXPR> operator^(const REAL_T& val,
+            const atl::ExpressionBase<REAL_T, EXPR>& expr) {
+
+        return atl::ConstantPow<REAL_T, EXPR > (val, expr.Cast());
+    }
 
 }
 #ifdef OVERLOAD_STD
