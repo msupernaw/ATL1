@@ -9,7 +9,7 @@
 #define	TRAITS_HPP
 #include "../AutoDiff/AutoDiff.hpp"
 
-
+#define ATL_PROMOTE_BINARY_OPERATIONS
 
 namespace atl {
 
@@ -187,6 +187,7 @@ namespace atl {
 
     
 #ifdef ATL_PROMOTE_BINARY_OPERATIONS
+    
 #define DECLARE_PRIMITIVE_PRIMITIVE_OPERATOR(A,B,PO)    \
 template<> struct PromoteBinaryOpReturnType< A,B,PO >{typedef typename PromoteType< A, B>::return_type return_type;}; \
     

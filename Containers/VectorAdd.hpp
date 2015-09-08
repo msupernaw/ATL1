@@ -7,10 +7,11 @@
 
 #ifndef VECTORADD_HPP
 #define	VECTORADD_HPP
+
 #include "VectorExpressionBase.hpp"
 #include "ArrayTraits.hpp"
 #include "../AutoDiff/Variable.hpp"
-
+#include "ContainerDefs.hpp"
 
 namespace atl {
     //
@@ -132,7 +133,7 @@ namespace atl {
         typedef typename atl::PromoteBinaryOpReturnType<typename LHS::RET_TYPE, T, atl::ADD>::return_type RET_TYPE;
         typedef typename atl::PromoteType<typename LHS::BASE_TYPE, T>::return_type BASE_TYPE;
 
-        inline explicit VectorAddScalar(const VectorExpression<typename LHS::BASE_TYPE, LHS>& lhs, const T & rhs) : lhs_m(lhs.Cast()), rhs_m(rhs) {
+        inline explicit VectorAddScalar(const VectorExpression<typename LHS::RET_TYPE, LHS>& lhs, const T & rhs) : lhs_m(lhs.Cast()), rhs_m(rhs) {
 
 
 
@@ -196,7 +197,7 @@ namespace atl {
         const T& lhs_m;
         const RHS& rhs_m;
 
-        inline explicit VectorScalarAdd(const T& lhs, const VectorExpression<typename RHS::BASE_TYPE, RHS> & rhs) : lhs_m(lhs), rhs_m(rhs.Cast()) {
+        inline explicit VectorScalarAdd(const T& lhs, const VectorExpression<typename RHS::RET_TYPE, RHS> & rhs) : lhs_m(lhs), rhs_m(rhs.Cast()) {
 
 
 

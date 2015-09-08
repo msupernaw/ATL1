@@ -320,7 +320,7 @@ namespace atl {
                 
                 ids.clear();
                 exp.PushIds(ids);
-                int isize = ids.size();
+                size_t isize = ids.size();
                 entry.entries.resize(isize);
                 typename IDSet<atl::VariableInfo<REAL_T>* >::iterator it;
                 typename IDSet<atl::VariableInfo<REAL_T>* >::iterator jt;

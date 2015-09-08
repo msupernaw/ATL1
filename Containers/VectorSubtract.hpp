@@ -18,9 +18,9 @@ namespace atl {
         typedef typename LHS::RET_TYPE RET_TYPEL;
         typedef typename RHS::RET_TYPE RET_TYPER;
 
-//        typedef typename atl::PromoteBinaryOpReturnType<RET_TYPEL, RET_TYPER, atl::SUBTRACT>::return_type RET_TYPE;
+        typedef typename atl::PromoteBinaryOpReturnType<RET_TYPEL, RET_TYPER, atl::SUBTRACT>::return_type RET_TYPE;
         typedef typename atl::PromoteType<typename LHS::BASE_TYPE, typename RHS::BASE_TYPE>::return_type BASE_TYPE;
-typedef typename atl::PromoteType<typename LHS::RET_TYPE, typename RHS::RET_TYPE>::return_type RET_TYPE;
+//typedef typename atl::PromoteType<typename LHS::RET_TYPE, typename RHS::RET_TYPE>::return_type RET_TYPE;
         const LHS& lhs_m;
         const RHS& rhs_m;
 
@@ -155,7 +155,8 @@ typedef typename atl::PromoteType<typename LHS::RET_TYPE, typename RHS::RET_TYPE
 
     template<class T, class RHS>
     struct VectorScalarSubtract : VectorExpression<typename PromoteType<typename RHS::RET_TYPE, T>::return_type, VectorScalarSubtract<T, RHS> > {
-        typedef typename atl::PromoteType<T, typename RHS::RET_TYPE>::return_type RET_TYPE;
+//        typedef typename atl::PromoteType<T, typename RHS::RET_TYPE>::return_type RET_TYPE;
+        typedef typename atl::PromoteBinaryOpReturnType<T, typename RHS::RET_TYPE,atl::SUBTRACT>::return_type RET_TYPE;
         typedef typename atl::PromoteType<T, typename RHS::BASE_TYPE>::return_type BASE_TYPE;
 
         const T& lhs_m;

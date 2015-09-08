@@ -9,6 +9,7 @@
 #define	VECTOREXPRESSIONBASE_HPP
 #include "../Traits/Promote.hpp"
 #include "../AutoDiff/AutoDiff.hpp"
+
 namespace atl {
 
     template< class T, class A>
