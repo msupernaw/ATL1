@@ -1613,7 +1613,7 @@ public:
     
     void ObjectiveFunction(atl::Variable<T>& f) {
         Lpred=Linf*(1.0-atl::exp((-k)*(a-t0)));
-        f=double(nobs)* atl::log(sd) + atl::Sum(0.5 * atl::Square((atl::log(L) - atl::log(Lpred)) / sd));       
+         f=T(nobs)* atl::log(sd) + atl::Sum(0.5 * atl::pow((atl::log(L) - atl::log(Lpred)) / sd,2.0));  
     }
 
     
