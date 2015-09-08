@@ -34,7 +34,7 @@ namespace atl {
             assert(i < c_m.Size(0));
 #endif   
 
-            return ::acos(c_m(i));
+            return std::acos(c_m(i));
 
         }
 
@@ -61,7 +61,7 @@ namespace atl {
          * @return 
          */
         inline const RET_TYPE AtRaw(const uint32_t& i) const {
-            return ::acos(c_m.AtRaw(i));
+            return std::acos(c_m.AtRaw(i));
         }
 
         /**
@@ -111,7 +111,7 @@ namespace atl {
             assert(i < c_m.Size(0));
 #endif   
 
-            return ::asin(c_m(i));
+            return std::asin(c_m(i));
 
         }
 
@@ -138,7 +138,7 @@ namespace atl {
          * @return 
          */
         inline const RET_TYPE AtRaw(const uint32_t& i) const {
-            return ::asin(c_m.AtRaw(i));
+            return std::asin(c_m.AtRaw(i));
         }
 
         /**
@@ -188,7 +188,7 @@ namespace atl {
             assert(i < c_m.Size(0));
 #endif   
 
-            return ::atan(c_m(i));
+            return std::atan(c_m(i));
 
         }
 
@@ -215,7 +215,7 @@ namespace atl {
          * @return 
          */
         inline const RET_TYPE AtRaw(const uint32_t& i) const {
-            return ::atan(c_m.AtRaw(i));
+            return std::atan(c_m.AtRaw(i));
         }
 
         /**
@@ -265,7 +265,7 @@ namespace atl {
             assert(i < c_m.Size(0));
 #endif   
 
-            return ::ceil(c_m(i));
+            return std::ceil(c_m(i));
 
         }
 
@@ -292,7 +292,7 @@ namespace atl {
          * @return 
          */
         inline const RET_TYPE AtRaw(const uint32_t& i) const {
-            return ::ceil(c_m.AtRaw(i));
+            return std::ceil(c_m.AtRaw(i));
         }
 
         /**
@@ -342,7 +342,7 @@ namespace atl {
             assert(i < c_m.Size(0));
 #endif   
 
-            return ::cos(c_m(i));
+            return std::cos(c_m(i));
 
         }
 
@@ -369,7 +369,7 @@ namespace atl {
          * @return 
          */
         inline const RET_TYPE AtRaw(const uint32_t& i) const {
-            return ::cos(c_m.AtRaw(i));
+            return std::cos(c_m.AtRaw(i));
         }
 
         /**
@@ -419,7 +419,7 @@ namespace atl {
             assert(i < c_m.Size(0));
 #endif   
 
-            return ::cosh(c_m(i));
+            return std::cosh(c_m(i));
 
         }
 
@@ -446,7 +446,7 @@ namespace atl {
          * @return 
          */
         inline const RET_TYPE AtRaw(const uint32_t& i) const {
-            return ::cosh(c_m.AtRaw(i));
+            return std::cosh(c_m.AtRaw(i));
         }
 
         /**
@@ -496,7 +496,7 @@ namespace atl {
             assert(i < c_m.Size(0));
 #endif   
 
-            return ::exp(c_m(i));
+            return std::exp(c_m(i));
 
         }
 
@@ -523,7 +523,7 @@ namespace atl {
          * @return 
          */
         inline const RET_TYPE AtRaw(const uint32_t& i) const {
-            return ::exp(c_m.AtRaw(i));
+            return std::exp(c_m.AtRaw(i));
         }
 
         /**
@@ -573,7 +573,7 @@ namespace atl {
             assert(i < c_m.Size(0));
 #endif   
 
-            return ::fabs(c_m(i));
+            return std::fabs(c_m(i));
 
         }
 
@@ -600,7 +600,7 @@ namespace atl {
          * @return 
          */
         inline const RET_TYPE AtRaw(const uint32_t& i) const {
-            return ::fabs(c_m.AtRaw(i));
+            return std::fabs(c_m.AtRaw(i));
         }
 
         /**
@@ -650,7 +650,7 @@ namespace atl {
             assert(i < c_m.Size(0));
 #endif   
 
-            return ::floor(c_m(i));
+            return std::floor(c_m(i));
 
         }
 
@@ -677,7 +677,7 @@ namespace atl {
          * @return 
          */
         inline const RET_TYPE AtRaw(const uint32_t& i) const {
-            return ::floor(c_m.AtRaw(i));
+            return std::floor(c_m.AtRaw(i));
         }
 
         /**
@@ -727,7 +727,7 @@ namespace atl {
             assert(i < c_m.Size(0));
 #endif   
 
-            return ::log(c_m(i));
+            return std::log(c_m(i));
 
         }
 
@@ -754,7 +754,7 @@ namespace atl {
          * @return 
          */
         inline const RET_TYPE AtRaw(const uint32_t& i) const {
-            return ::log(c_m.AtRaw(i));
+            return std::log(c_m.AtRaw(i));
         }
 
         /**
@@ -804,7 +804,7 @@ namespace atl {
             assert(i < c_m.Size(0));
 #endif   
 
-            return ::log10(c_m(i));
+            return std::log10(c_m(i));
 
         }
 
@@ -831,7 +831,7 @@ namespace atl {
          * @return 
          */
         inline const RET_TYPE AtRaw(const uint32_t& i) const {
-            return ::log10(c_m.AtRaw(i));
+            return std::log10(c_m.AtRaw(i));
         }
 
         /**
@@ -881,7 +881,7 @@ namespace atl {
             assert(i < c_m.Size(0));
 #endif   
 
-            return ::sin(c_m(i));
+            return std::sin(c_m(i));
 
         }
 
@@ -908,7 +908,7 @@ namespace atl {
          * @return 
          */
         inline const RET_TYPE AtRaw(const uint32_t& i) const {
-            return ::sin(c_m.AtRaw(i));
+            return std::sin(c_m.AtRaw(i));
         }
 
         /**
@@ -958,7 +958,7 @@ namespace atl {
             assert(i < c_m.Size(0));
 #endif   
 
-            return ::sinh(c_m(i));
+            return std::sinh(c_m(i));
 
         }
 
@@ -985,7 +985,7 @@ namespace atl {
          * @return 
          */
         inline const RET_TYPE AtRaw(const uint32_t& i) const {
-            return ::sinh(c_m.AtRaw(i));
+            return std::sinh(c_m.AtRaw(i));
         }
 
         /**
@@ -1035,7 +1035,7 @@ namespace atl {
             assert(i < c_m.Size(0));
 #endif   
 
-            return ::sqrt(c_m(i));
+            return std::sqrt(c_m(i));
 
         }
 
@@ -1062,7 +1062,7 @@ namespace atl {
          * @return 
          */
         inline const RET_TYPE AtRaw(const uint32_t& i) const {
-            return ::sqrt(c_m.AtRaw(i));
+            return std::sqrt(c_m.AtRaw(i));
         }
 
         /**
@@ -1112,7 +1112,7 @@ namespace atl {
             assert(i < c_m.Size(0));
 #endif   
 
-            return ::tan(c_m(i));
+            return std::tan(c_m(i));
 
         }
 
@@ -1139,7 +1139,7 @@ namespace atl {
          * @return 
          */
         inline const RET_TYPE AtRaw(const uint32_t& i) const {
-            return ::tan(c_m.AtRaw(i));
+            return std::tan(c_m.AtRaw(i));
         }
 
         /**
@@ -1189,7 +1189,7 @@ namespace atl {
             assert(i < c_m.Size(0));
 #endif   
 
-            return ::tanh(c_m(i));
+            return std::tanh(c_m(i));
 
         }
 
@@ -1216,7 +1216,7 @@ namespace atl {
          * @return 
          */
         inline const RET_TYPE AtRaw(const uint32_t& i) const {
-            return ::tanh(c_m.AtRaw(i));
+            return std::tanh(c_m.AtRaw(i));
         }
 
         /**
@@ -1264,7 +1264,7 @@ namespace atl {
         }
 
         inline const RET_TYPE operator()(const uint32_t& i) const {
-            return ::pow(lhs_m(i), rhs_m(i));
+            return std::pow(lhs_m(i), rhs_m(i));
         }
 
         /*
@@ -1284,7 +1284,7 @@ namespace atl {
         }
 
         inline const RET_TYPE AtRaw(const uint32_t& i) const {
-            return ::pow(lhs_m.AtRaw(i), rhs_m.AtRaw(i));
+            return std::pow(lhs_m.AtRaw(i), rhs_m.AtRaw(i));
         }
 
         /**
@@ -1327,7 +1327,7 @@ namespace atl {
         }
 
         inline const RET_TYPE operator()(const uint32_t& i) const {
-            return ::pow(lhs_m(i), rhs_m);
+            return std::pow(lhs_m(i), rhs_m);
         }
 
         /*
@@ -1347,7 +1347,7 @@ namespace atl {
         }
 
         inline const RET_TYPE AtRaw(const uint32_t& i) const {
-            return ::pow(lhs_m.AtRaw(i), rhs_m);
+            return std::pow(lhs_m.AtRaw(i), rhs_m);
         }
 
         /**
@@ -1387,7 +1387,7 @@ namespace atl {
         }
 
         inline const RET_TYPE operator()(const uint32_t& i) const {
-            return ::pow(lhs_m, rhs_m(i));
+            return std::pow(lhs_m, rhs_m(i));
         }
 
         /*
@@ -1407,7 +1407,7 @@ namespace atl {
         }
 
         inline const RET_TYPE AtRaw(const uint32_t& i) const {
-            return ::pow(lhs_m, rhs_m.AtRaw(i));
+            return std::pow(lhs_m, rhs_m.AtRaw(i));
         }
 
         /**
@@ -1505,7 +1505,7 @@ namespace atl {
         }
 
         inline const RET_TYPE operator()(const uint32_t& i) const {
-            return ::atan2(lhs_m(i), rhs_m(i));
+            return std::atan2(lhs_m(i), rhs_m(i));
         }
 
         /*
@@ -1525,7 +1525,7 @@ namespace atl {
         }
 
         inline const RET_TYPE AtRaw(const uint32_t& i) const {
-            return ::atan2(lhs_m.AtRaw(i), rhs_m.AtRaw(i));
+            return std::atan2(lhs_m.AtRaw(i), rhs_m.AtRaw(i));
         }
 
         /**
@@ -1568,7 +1568,7 @@ namespace atl {
         }
 
         inline const RET_TYPE operator()(const uint32_t& i) const {
-            return ::atan2(lhs_m(i), rhs_m);
+            return std::atan2(lhs_m(i), rhs_m);
         }
 
         /*
@@ -1588,7 +1588,7 @@ namespace atl {
         }
 
         inline const RET_TYPE AtRaw(const uint32_t& i) const {
-            return ::atan2(lhs_m.AtRaw(i), rhs_m);
+            return std::atan2(lhs_m.AtRaw(i), rhs_m);
         }
 
         /**
@@ -1628,7 +1628,7 @@ namespace atl {
         }
 
         inline const RET_TYPE operator()(const uint32_t& i) const {
-            return ::atan2(lhs_m, rhs_m(i));
+            return std::atan2(lhs_m, rhs_m(i));
         }
 
         /*
@@ -1648,7 +1648,7 @@ namespace atl {
         }
 
         inline const RET_TYPE AtRaw(const uint32_t& i) const {
-            return ::atan2(lhs_m, rhs_m.AtRaw(i));
+            return std::atan2(lhs_m, rhs_m.AtRaw(i));
         }
 
         /**

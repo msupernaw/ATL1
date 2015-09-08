@@ -116,7 +116,7 @@ namespace atl {
 
                 Routine r = routine;
                 set_defaults();
-                this->active_parameters.clear();
+                this->active_parameters.resize(0);
                 for (int i = 0; i < this->parameters.size(); i++) {
                     this->current_phase = p;
                     if (phases[i] <= p) {
@@ -140,7 +140,7 @@ namespace atl {
 
                 if (this->phase_routines.size() > 0 && this->phase_routines.size() >= p) {
                     routine = this->phase_routines[(p - 1)];
-                }else{
+                } else {
                     routine = LBFGS;
                 }
 
@@ -206,7 +206,7 @@ namespace atl {
             max_iterations = (1000);
             max_line_searches = (1000);
             this->tolerance = 1e-4;
-            
+
 
         }
 
@@ -811,8 +811,9 @@ namespace atl {
             const int idWidth = 8;
             const int nameWidth = 10;
             const int valWidth = 15;
-            std::cout << "Iteration: " << this->iteration << std::endl;
+
             std::cout << "Phase: " << this->current_phase << " of " << this->max_phase << std::endl;
+            std::cout << "Iteration: " << this->iteration << std::endl;
             std::cout << "Convergence Criteria: " << this->tolerance << std::endl;
             std::cout << "Routine: ";
             switch (this->routine) {
@@ -845,7 +846,7 @@ namespace atl {
                 std::cout << std::endl;
 
 
-                int stop = this->parameters.size() - 2;
+                int stop = this->active_parameters.size() - 2;
                 int i;
 
                 for (i = 0; i < stop; i += 2) {
@@ -907,7 +908,7 @@ namespace atl {
                     std::cout << std::endl;
                 }
 
-                for (; i < this->parameters.size(); i++) {
+                for (; i < this->active_parameters.size(); i++) {
                     std::cout << std::left << std::setw(idWidth) << std::setfill(separator) << this->active_parameters[i]->info->id;
                     std::cout << std::left << std::setw(nameWidth) << std::setfill(separator) << this->active_parameters[i]->GetName();
                     std::cout << std::left << std::setw(valWidth) << std::setfill(separator) << this->active_parameters[i]->GetValue();

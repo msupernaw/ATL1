@@ -9,12 +9,12 @@
 #define	TRAITS_HPP
 #include "../AutoDiff/AutoDiff.hpp"
 
-#define ATL_PROMOTE_BINARY_OPERATIONS
+//#define ATL_PROMOTE_BINARY_OPERATIONS
 
 namespace atl {
 
 
-    template<class REAL_T,int group>
+    template<class REAL_T, int group>
     class Variable;
 
     template<typename T>
@@ -181,13 +181,13 @@ namespace atl {
      */
     template<typename T1, typename T2, PromotableOperator PO>
     struct PromoteBinaryOpReturnType {
-                typedef typename atl::PromoteType<T1,T2>::return_type return_type;
+        typedef typename atl::PromoteType<T1, T2>::return_type return_type;
     };
 
 
-    
+
 #ifdef ATL_PROMOTE_BINARY_OPERATIONS
-    
+
 #define DECLARE_PRIMITIVE_PRIMITIVE_OPERATOR(A,B,PO)    \
 template<> struct PromoteBinaryOpReturnType< A,B,PO >{typedef typename PromoteType< A, B>::return_type return_type;}; \
     
@@ -331,7 +331,7 @@ template<typename T1> struct PromoteBinaryOpReturnType<A,T1, PO>{typedef  R<type
     DECLARE_VARIABLE_SCALAR_OPERATOR(long double, MULTIPLY, atl::ConstantMultiply);
     DECLARE_VARIABLE_SCALAR_OPERATOR(double, MULTIPLY, atl::ConstantMultiply);
     DECLARE_VARIABLE_SCALAR_OPERATOR(float, MULTIPLY, atl::ConstantMultiply);
-    
+
     DECLARE_PRIMITIVE_PRIMITIVE_OPERATOR(long double, long double, DIVIDE);
     DECLARE_PRIMITIVE_PRIMITIVE_OPERATOR(long double, double, DIVIDE);
     DECLARE_PRIMITIVE_PRIMITIVE_OPERATOR(double, long double, DIVIDE);
@@ -375,7 +375,16 @@ template<typename T1> struct PromoteBinaryOpReturnType<A,T1, PO>{typedef  R<type
     DECLARE_VARIABLE_SCALAR_OPERATOR(long double, DIVIDE, atl::ConstantDivide);
     DECLARE_VARIABLE_SCALAR_OPERATOR(double, DIVIDE, atl::ConstantDivide);
     DECLARE_VARIABLE_SCALAR_OPERATOR(float, DIVIDE, atl::ConstantDivide);
+
+//    DECLARE_VARIABLE_VARIABLE_OPERATOR(POW, atl::Pow);
+//    DECLARE_SCALAR_VARIABLE_OPERATOR(long double, POW, atl::PowConstant);
+//    DECLARE_SCALAR_VARIABLE_OPERATOR(double, POW, atl::PowConstant);
+//    DECLARE_SCALAR_VARIABLE_OPERATOR(float, POW, atl::PowConstant);
+//    DECLARE_VARIABLE_SCALAR_OPERATOR(long double, POW, atl::ConstantPow);
+//    DECLARE_VARIABLE_SCALAR_OPERATOR(double, POW, atl::ConstantPow);
+//    DECLARE_VARIABLE_SCALAR_OPERATOR(float, POW, atl::ConstantPow);
 #endif
+
     template<typename T>
     struct PromoteUnaryOp {
     };

@@ -1548,7 +1548,169 @@ Id      Name      Value          Gradient       |Id      Name      Value        
 
 \end{myoutput}
 
+\begin{cppsource}
 
+template<class T>
+class VonBertalanffy : public atl::FunctionMinimizer<T> {
+    int nobs = 20;
+    atl::Matrix<T> data = {
+        {2, 1},
+        {2, 3},
+        {2, 4},
+        {2, 4},
+        {3, 3},
+        {3, 4},
+        {3, 5},
+        {4, 6},
+        {4, 9},
+        {6, 10},
+        {9, 14},
+        {10, 13},
+        {11, 16},
+        {11, 17},
+        {15, 18},
+        {19, 19},
+        {21, 20},
+        {24, 21},
+        {30, 20},
+        {35, 21}
+    };
+    
+    atl::Vector<T> a;
+    atl::Vector<T> L;
+    atl::Variable<T> t0;
+    atl::Variable<T> Linf;
+    atl::Variable<T> k;
+    atl::Variable<T> sd;
+    atl::Vector<atl::Variable<T> > Lpred;
+public:
+    \end{cppsource}
+    \begin{cppsource}
+    void Initialize() {
+        
+        a = atl::Column(data,0);
+        std::cout<<a<<"\n";
+        L = atl::Column(data,1);
+        
+        std::cout<<L<<"\n";
+        t0 = 0.0;
+        t0.SetName("t0");
+        this->Register(t0);
+        
+        Linf = 21;
+        Linf.SetName("Linf");
+        this->Register(Linf);
+        
+        k = 0.1;
+        k.SetName("k");
+        this->Register(k);
+        
+        sd.SetName("sd");
+        sd.SetBounds(0.1,10.0);
+        sd = 1.0;
+        this->Register(sd, 2);
+    }
+    
+    void ObjectiveFunction(atl::Variable<T>& f) {
+        Lpred=Linf*(1.0-atl::exp((-k)*(a-t0)));
+        f=double(nobs)* atl::log(sd) + atl::Sum(0.5 * atl::Square((atl::log(L) - atl::log(Lpred)) / sd));       
+    }
+
+    
+};
+
+
+int main(int argc, char** argv) {
+ 
+    VonBertalanffy<double> s;
+    s.Initialize();
+    s.Run();
+}
+\end{cppsource}
+
+\textbf{Output:}
+
+\begin{myoutput}
+Phase: 1 of 2
+Iteration: 0
+Convergence Criteria: 0.0001
+Routine: L-BFGS
+Function Value: 1.24844
+Max Gradient:16.923
+Id      Name      Value          Gradient       |Id      Name      Value          Gradient       
+1       t0        0              -0.889178      |2       Linf      21             0.071395       
+3       k         0.1            16.923         
+
+Phase: 1 of 2
+Iteration: 10
+Convergence Criteria: 0.0001
+Routine: L-BFGS
+Function Value: 1.00705
+Max Gradient:15.0288
+Id      Name      Value          Gradient       |Id      Name      Value          Gradient       
+1       t0        0.505368       0.214999       |2       Linf      21.045         -0.101968      
+3       k         0.0878456      -15.0288       
+
+Phase: 1 of 2
+Iteration: 20
+Convergence Criteria: 0.0001
+Routine: L-BFGS
+Function Value: 0.840932
+Max Gradient:0.041383
+Id      Name      Value          Gradient       |Id      Name      Value          Gradient       
+1       t0        0.976758       0.00873464     |2       Linf      21.095         -0.007477      
+3       k         0.123973       -0.041383      
+
+Phase: 1 of 2
+Iteration: 30
+Convergence Criteria: 0.0001
+Routine: L-BFGS
+Function Value: 0.837156
+Max Gradient:0.00120471
+Id      Name      Value          Gradient       |Id      Name      Value          Gradient       
+1       t0        0.92906        -2.157e-05     |2       Linf      22.1739        -5.0845e-06    
+3       k         0.11317        -0.00120471    
+
+Phase: 1 of 2
+Iteration: 32
+Convergence Criteria: 0.0001
+Routine: L-BFGS
+Function Value: 0.837156
+Max Gradient:5.14737e-06
+Id      Name      Value          Gradient       |Id      Name      Value          Gradient       
+1       t0        0.929196       -4.37591e-07   |2       Linf      22.1727        2.9163e-08     
+3       k         0.113188       5.14737e-06    
+
+Phase: 2 of 2
+Iteration: 0
+Convergence Criteria: 0.0001
+Routine: L-BFGS
+Function Value: 0.837156
+Max Gradient:18.3257
+Id      Name      Value          Gradient       |Id      Name      Value          Gradient       
+1       t0        0.929196       -4.37591e-07   |2       Linf      22.1727        2.9163e-08     
+3       k         0.113188       5.14737e-06    4       sd        1              18.3257        
+
+Phase: 2 of 2
+Iteration: 10
+Convergence Criteria: 0.0001
+Routine: L-BFGS
+Function Value: -14.8033
+Max Gradient:0.000114764
+Id      Name      Value          Gradient       |Id      Name      Value          Gradient       
+1       t0        0.929199       3.63803e-05    |2       Linf      22.1727        2.47461e-06    
+3       k         0.113188       0.000114764    4       sd        0.289336       2.37732e-06    
+
+Phase: 2 of 2
+Iteration: 11
+Convergence Criteria: 0.0001
+Routine: L-BFGS
+Function Value: -14.8033
+Max Gradient:4.31945e-05
+Id      Name      Value          Gradient       |Id      Name      Value          Gradient       
+1       t0        0.929199       4.31945e-05    |2       Linf      22.1727        1.72384e-06    
+3       k         0.113188       2.61195e-06    4       sd        0.289336       8.38737e-09      
+\end{myoutput}  
 
 \section{Probability Distributions}
 \subsection{Probability Densities}
