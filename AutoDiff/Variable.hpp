@@ -118,7 +118,7 @@ namespace atl {
             } else if (val > max_) {
                 return M_PI / 2.0;
             } else {
-                return 2, 0 * M_PI + std::asin(std::max(-1.0, std::min(1.0, (2.0 * (val - min_) / (max_ - min_) - 1.0))));
+                return  2.0 * M_PI + std::asin(std::max(-1.0, std::min(1.0, (2.0 * (val - min_) / (max_ - min_) - 1.0))));
             }
         }
 
@@ -155,7 +155,7 @@ namespace atl {
     template<class REAL_T, //base type
     int group = 0 > //group identifier
     class Variable : public atl::ExpressionBase<REAL_T, Variable<REAL_T, group > > {
-        static TanhParameterTransformation<REAL_T> default_transformation;
+        static SinParameterTransformation<REAL_T> default_transformation;
         IDSet<atl::VariableInfo<REAL_T>* > ids;
         VariableInfo<REAL_T>* mapped_info;
         ParameterTransformation<REAL_T>* transformation;
@@ -656,7 +656,7 @@ namespace atl {
     /* ATTRIBUTE_TLS */ GradientStructure<REAL_T> Variable<REAL_T, group>::gradient_structure_g;
 
     template<typename REAL_T, int group>
-    TanhParameterTransformation<REAL_T> Variable<REAL_T, group>::default_transformation;
+    SinParameterTransformation<REAL_T> Variable<REAL_T, group>::default_transformation;
 
 
     /**

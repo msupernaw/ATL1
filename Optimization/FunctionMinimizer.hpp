@@ -95,6 +95,11 @@ namespace atl {
         virtual void TransitionPhase() {
 
         }
+        
+        
+        int Phase(){
+            return this->current_phase;
+        }
 
         void SetRoutine(Routine r, uint32_t phase) {
             if (phase <= this->phase_routines.size) {
@@ -363,7 +368,7 @@ namespace atl {
             for (this->iteration = 0; this->iteration < this->max_iterations; this->iteration++) {
                 i = this->iteration;
                 for (int j = 0; j < nops; j++) {
-                    wg[j] = active_parameters[j]->GetScaledGradient(active_parameters[j]->GetValue()) * gradient[j];
+                    wg[j] = active_parameters[j]->GetScaledGradient(active_parameters[j]->GetInternalValue()) * gradient[j];
                 }
 
                 //
@@ -1034,6 +1039,7 @@ namespace atl {
 
         void call_objective_function(atl::Variable<REAL_T>& f) {
             atl::Variable<REAL_T>::gradient_structure_g.Reset();
+            f = 0.0;
             this->ObjectiveFunction(f);
         }
 
