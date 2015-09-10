@@ -33,7 +33,7 @@
 #include "../Utilities/flat_set.hpp"
 #endif
 
-#ifdef USE_DLMALLOC
+#ifdef ATL_USE_DLMALLOC
 #include "../third_party/dlmalloc/malloc.h"
 #endif
 #include "Variable.hpp"
