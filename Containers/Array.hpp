@@ -77,6 +77,7 @@ namespace atl {
         //        }
 
     public:
+        typedef typename IntrinsicBaseType<T>::TYPE INTRINSIC_BASE;
         typedef T RET_TYPE;
         typedef T BASE_TYPE;
 
@@ -1940,7 +1941,25 @@ namespace atl {
             length++;
         }
 
+        void SetBounds(INTRINSIC_BASE minb, INTRINSIC_BASE maxb) {
+            std::cout << "warning atl::Array<>::" << __func__ << "not implemented for primitive types";
+        }
+
+
     };
+
+#define MAKE_VARIABLE_ARRAY_TYPE(TYPE)\
+    template<>\
+    void Array<atl::Variable<TYPE> >::SetBounds(TYPE minb, TYPE maxb) {\
+        for (int i = 0; i < this->data_m.size(); i++) {\
+            this->data_m[i].SetBounds(minb, maxb);\
+        }\
+    }\
+
+
+    MAKE_VARIABLE_ARRAY_TYPE(float)
+    MAKE_VARIABLE_ARRAY_TYPE(double)
+    MAKE_VARIABLE_ARRAY_TYPE(long double)
 
     template<class T2, class A>
     std::ostream& operator<<(std::ostream& out, const atl::ArrayExpression< T2, A> &expr) {

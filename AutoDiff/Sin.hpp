@@ -24,7 +24,6 @@ namespace atl {
     class Sin;
 }
 
-#ifdef OVERLOAD_STD
 
 namespace std {
 
@@ -38,7 +37,6 @@ namespace std {
     inline const atl::Sin<REAL_T, EXPR> sin(const atl::ExpressionBase<REAL_T, EXPR>& expr);
 
 }
-#endif
 
 namespace atl {
 
@@ -89,7 +87,6 @@ namespace atl {
     }
 
 }
-#ifdef OVERLOAD_STD
 namespace std {
 
     /**
@@ -103,6 +100,5 @@ namespace std {
         return atl::Sin<REAL_T, EXPR > (expr.Cast());
     }
 }
-#endif
 #endif	/* SIN_HPP */
 

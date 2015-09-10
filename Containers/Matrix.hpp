@@ -32,7 +32,6 @@
 
 namespace atl {
 
-
     template<class T>
     class Matrix : public MatrixExpression<T, Matrix<T> > {
         //Friends
@@ -96,7 +95,7 @@ namespace atl {
 
     public:
 
-
+        typedef typename IntrinsicBaseType<T>::TYPE INTRINSIC_BASE;
         typedef T RET_TYPE;
         typedef T BASE_TYPE;
 
@@ -155,6 +154,16 @@ namespace atl {
                     Set(i, j, expr(i, j));
                 }
             }
+        }
+
+        void Resize(size_t rows, size_t cols) {
+            this->isize = rows;
+            this->jsize = cols;
+            this->data_m.resize(rows * cols);
+        }
+
+        void SetBounds(INTRINSIC_BASE minb, INTRINSIC_BASE maxb) {
+            std::cout << "warning atl::Matrix<>::" << __func__ << "not implemented for primitive types";
         }
 
         Matrix& operator=(const T& val) {
@@ -595,8 +604,20 @@ namespace atl {
 
 
     };
-
     
+    
+    #define MAKE_VARIABLE_MATRIX_TYPE(TYPE)\
+    template<>\
+    void Matrix<atl::Variable<TYPE> >::SetBounds(TYPE minb, TYPE maxb) {\
+        for (int i = 0; i < this->data_m.size(); i++) {\
+            this->data_m[i].SetBounds(minb, maxb);\
+        }\
+    }\
+
+
+    MAKE_VARIABLE_MATRIX_TYPE(float)
+    MAKE_VARIABLE_MATRIX_TYPE(double)
+    MAKE_VARIABLE_MATRIX_TYPE(long double)
 
     template<class T, class A>
     T Det(const atl::MatrixExpression< T, A>& m) {

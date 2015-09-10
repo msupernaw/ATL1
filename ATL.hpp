@@ -8,6 +8,9 @@
 #ifndef ATL_HPP
 #define	ATL_HPP
 
+
+#include "AutoDiff/AutoDiff.hpp"
+
 #include "Containers/Containers.hpp"
 #include "Containers/Array.hpp"
 #include "Containers/ArrayAdd.hpp"
@@ -38,7 +41,6 @@
 #include "Utilities/IO/IOStream.hpp"
 
 
-#include "AutoDiff/AutoDiff.hpp"
 
 #include "Optimization/FunctionMinimizer.hpp"
 

@@ -50,7 +50,7 @@ namespace atl {
 
 
     public:
-
+        typedef typename IntrinsicBaseType<T>::TYPE INTRINSIC_BASE;
         typedef T RET_TYPE;
         typedef T BASE_TYPE;
 
@@ -100,9 +100,19 @@ namespace atl {
 
             for (int i = 0; i < isize; i++) {
                 data_m[i] = expr(i);
-                
+
             }
 
+        }
+
+        void Resize(size_t size) {
+            this->isize = size;
+            this->data_m.resize(size);
+        }
+
+        
+        void SetBounds( INTRINSIC_BASE minb,  INTRINSIC_BASE maxb) {
+            std::cout << "warning atl::Vector<>::" << __func__ << "not implemented for primitive types";
         }
 
         Vector& operator=(const T& val) {
@@ -144,7 +154,7 @@ namespace atl {
             assert(expr.Dimensions() == 1);
 #endif
             isize = expr.Size(0);
-        
+
 
             data_m.resize(isize);
 
@@ -489,7 +499,7 @@ namespace atl {
             return *this;
         }
 
-        inline const size_t Size(const int32_t & dimension) const {
+        inline const size_t Size(const int32_t dimension =0) const {
             switch (dimension) {
                 case 0:
                     return isize;
@@ -564,7 +574,22 @@ namespace atl {
             length++;
         }
 
+
     };
+
+
+#define MAKE_VARIABLE_VECTOR_TYPE(TYPE)\
+    template<>\
+    void Vector<atl::Variable<TYPE> >::SetBounds(TYPE minb, TYPE maxb) {\
+        for (int i = 0; i < this->data_m.size(); i++) {\
+            this->data_m[i].SetBounds(minb, maxb);\
+        }\
+    }\
+
+
+    MAKE_VARIABLE_VECTOR_TYPE(float)
+    MAKE_VARIABLE_VECTOR_TYPE(double)
+    MAKE_VARIABLE_VECTOR_TYPE(long double)
 
     template<typename REAL_T>
     std::ifstream& operator>>(std::ifstream& in, const atl::Vector<REAL_T>& v) {

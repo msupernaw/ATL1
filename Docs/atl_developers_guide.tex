@@ -1491,7 +1491,7 @@ Using this concept we can write one \textit{operator*} that will handle all type
  \end{cppsource}
 This can be particularly useful in cases where one has large amounts of data that is not given in high precision.  While the modeling may require a high degree of precision, it is not necessary to store the user supplied data at this level of precision. Using a float rather than double may suffice and help to reduce the memory requirements of your program.
 \section{Optimization}
-
+\subsection{Function Minimization}
 \begin{cppsource}
 template<class T>
 class Simple : public atl::FunctionMinimizer<T> {

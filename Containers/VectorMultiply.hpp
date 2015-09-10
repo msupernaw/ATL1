@@ -90,6 +90,7 @@ namespace atl {
     struct VectorMultiplyScalar : VectorExpression<typename atl::PromoteBinaryOpReturnType<typename LHS::RET_TYPE, T, atl::MULTIPLY>::return_type, VectorMultiplyScalar< LHS, T> > {
         const LHS& lhs_m;
         const T& rhs_m;
+        //        typedef typename atl::PromoteType<typename LHS::RET_TYPE, T>::return_type RET_TYPE;
         typedef typename atl::PromoteBinaryOpReturnType<typename LHS::RET_TYPE, T, atl::MULTIPLY>::return_type RET_TYPE;
         typedef typename atl::PromoteType<typename LHS::BASE_TYPE, T>::return_type BASE_TYPE;
 
@@ -151,6 +152,7 @@ namespace atl {
 
     template<class T, class RHS>
     struct VectorScalarMultiply : VectorExpression<typename atl::PromoteBinaryOpReturnType<T, typename RHS::RET_TYPE, atl::MULTIPLY>::return_type, VectorScalarMultiply<T, RHS> > {
+        //        typedef typename atl::PromoteType<T, typename RHS::RET_TYPE>::return_type RET_TYPE;
         typedef typename atl::PromoteBinaryOpReturnType<T, typename RHS::RET_TYPE, atl::MULTIPLY>::return_type RET_TYPE;
         typedef typename atl::PromoteType<T, typename RHS::BASE_TYPE>::return_type BASE_TYPE;
 
@@ -205,7 +207,6 @@ namespace atl {
 
     };
     //
-    //typename et4ad::promote_trait<typename LHS::RET_TYPE , typename RHS::RET_TYPE >::return_type
 
     template <class LHS, class RHS>
     inline const VectorMultiply< LHS, RHS> operator*(const VectorExpression<typename LHS::RET_TYPE, LHS>& a,
@@ -216,7 +217,7 @@ namespace atl {
 
 
 #define ATL_VECTOR_MULTIPLY_SCALAR(TYPE) \
-    template< class LHS>      \
+    template<class LHS>      \
         inline const VectorMultiplyScalar<LHS,TYPE> \
     operator*(const VectorExpression<typename LHS::RET_TYPE, LHS>& a, const TYPE& b) {\
             return VectorMultiplyScalar<LHS,TYPE > (a.Cast(), b);\
@@ -239,8 +240,8 @@ namespace atl {
 
 #define ATL_MULTIPLY_SCALAR_VECTOR(TYPE) \
     template< class RHS>      \
-        inline const VectorScalarMultiply<TYPE,RHS> \
-    operator*(const TYPE& a, const VectorExpression<typename RHS::RET_TYPE, RHS>& b ) {\
+        inline const VectorScalarMultiply<TYPE, RHS> \
+    operator*(const TYPE& a,const VectorExpression<typename RHS::RET_TYPE, RHS>& b ) {\
             return VectorScalarMultiply<TYPE,RHS > (a, b.Cast());\
         } \
             

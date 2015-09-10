@@ -152,7 +152,7 @@ namespace atl {
     };
 
     template<class T, class RHS>
-    struct VectorScalarSubtract : VectorExpression<typename PromoteType<typename RHS::RET_TYPE, T>::return_type, VectorScalarSubtract<T, RHS> > {
+    struct VectorScalarSubtract : VectorExpression<typename atl::PromoteBinaryOpReturnType<T, typename RHS::RET_TYPE, atl::SUBTRACT>::return_type, VectorScalarSubtract<T, RHS> > {
         typedef typename atl::PromoteBinaryOpReturnType<T, typename RHS::RET_TYPE,atl::SUBTRACT>::return_type RET_TYPE;
         typedef typename atl::PromoteType<T, typename RHS::BASE_TYPE>::return_type BASE_TYPE;
 

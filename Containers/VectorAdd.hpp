@@ -256,8 +256,8 @@ namespace atl {
     //typename et4ad::promote_trait<typename LHS::RET_TYPE , typename RHS::RET_TYPE >::return_type
 
     template <class LHS, class RHS>
-    inline const VectorAdd< LHS, RHS> operator+(const VectorExpression<typename LHS::BASE_TYPE, LHS>& a,
-            const VectorExpression<typename RHS::BASE_TYPE, RHS>& b) {
+    inline const VectorAdd< LHS, RHS> operator+(const VectorExpression<typename LHS::RET_TYPE, LHS>& a,
+            const VectorExpression<typename RHS::RET_TYPE, RHS>& b) {
         return VectorAdd< LHS, RHS > (a.Cast(), b.Cast());
     }
 

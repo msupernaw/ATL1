@@ -21,7 +21,7 @@ namespace atl {
     class Log;
 
 }
-#ifdef OVERLOAD_STD
+
 namespace std {
 
     /**
@@ -33,7 +33,6 @@ namespace std {
     template<class REAL_T, class EXPR>
     inline const atl::Log<REAL_T, EXPR> log(const atl::ExpressionBase<REAL_T, EXPR>& expr);
 }
-#endif
 
 namespace atl {
 
@@ -84,7 +83,6 @@ namespace atl {
         return atl::Log<REAL_T, EXPR > (expr.Cast());
     }
 }
-#ifdef OVERLOAD_STD
 
 namespace std {
 
@@ -101,7 +99,6 @@ namespace std {
     }
 
 }
-#endif
 
 #endif	/* LOG_HPP */
 

@@ -23,7 +23,6 @@ namespace atl {
     ;
 }
 
-#ifdef OVERLOAD_STD
 namespace std {
 
     /**
@@ -63,7 +62,7 @@ namespace std {
             const atl::ExpressionBase<REAL_T, EXPR>& expr);
 
 }
-#endif
+
 namespace atl {
 
     /**
@@ -292,7 +291,6 @@ namespace atl {
     }
 
 }
-#ifdef OVERLOAD_STD
 namespace std {
 
     /**
@@ -339,6 +337,5 @@ namespace std {
     }
 
 }
-#endif
 #endif	/* POW_HPP */
 

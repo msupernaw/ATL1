@@ -479,6 +479,20 @@ typedef A TYPE;   \
     DECLARE_INTRINSIC(double, true);
     DECLARE_INTRINSIC(float, true);
 
+    
+    template<typename T1>
+    struct IntrinsicBaseType {
+        typedef T1 TYPE;
+    };
+    
+#define DECLARE_INTRINSIC_BASE(A, B) template<> struct IntrinsicBaseType<A> { \
+typedef B TYPE;   \
+}; \
+
+    DECLARE_INTRINSIC_BASE(atl::Variable<float>, float)
+    DECLARE_INTRINSIC_BASE(atl::Variable<double>, double)
+    DECLARE_INTRINSIC_BASE(atl::Variable<long double>, long double)
+    
 }
 
 

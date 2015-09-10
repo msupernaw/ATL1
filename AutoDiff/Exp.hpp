@@ -19,7 +19,6 @@ namespace atl {
     template <class REAL_T, class EXPR>
     class Exp;
 }
-#ifdef OVERLOAD_STD
 namespace std {
 
     /**
@@ -31,7 +30,6 @@ namespace std {
     template<class REAL_T, class EXPR>
     inline const atl::Exp<REAL_T, EXPR> exp(const atl::ExpressionBase<REAL_T, EXPR>& expr);
 }
-#endif
 namespace atl {
 
     /**
@@ -85,7 +83,6 @@ namespace atl {
         return atl::Exp<REAL_T, EXPR > (expr.Cast());
     }
 }
-#ifdef OVERLOAD_STD
 namespace std {
 
     /**
@@ -100,6 +97,5 @@ namespace std {
         return atl::Exp<REAL_T, EXPR > (expr.Cast());
     }
 }
-#endif
 #endif	/* EXP_HPP */
 

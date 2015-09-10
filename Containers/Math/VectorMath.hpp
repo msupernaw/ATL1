@@ -473,13 +473,13 @@ namespace atl {
     }
 
     template<class C>
-    struct VectorExp : atl::VectorExpression<typename C::RET_TYPE, VectorExp<C> > {
+    struct VectorExp : atl::VectorExpression<typename C::BASE_TYPE, VectorExp<C> > {
         const C& c_m;
-        typedef typename C::RET_TYPE RET_TYPE;
+        typedef typename C::BASE_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
         inline explicit VectorExp(const atl::VectorExpression<typename C::RET_TYPE, C>& c) : c_m(c.Cast()) {
-
+            
         }
 
         inline const size_t Size(const int32_t & dimension) const {
@@ -704,9 +704,9 @@ namespace atl {
     }
 
     template<class C>
-    struct VectorLog : atl::VectorExpression<typename C::RET_TYPE, VectorLog<C> > {
+    struct VectorLog : atl::VectorExpression<typename C::BASE_TYPE, VectorLog<C> > {
         const C& c_m;
-        typedef typename C::RET_TYPE RET_TYPE;
+        typedef typename C::BASE_TYPE RET_TYPE;
         typedef typename C::BASE_TYPE BASE_TYPE;
 
         inline explicit VectorLog(const atl::VectorExpression<typename C::RET_TYPE, C>& c) : c_m(c.Cast()) {
@@ -1243,9 +1243,9 @@ namespace atl {
     }
 
     template< class LHS, class RHS>
-    struct VectorPow : VectorExpression<typename atl::PromoteType<typename LHS::RET_TYPE, typename RHS::RET_TYPE >::return_type, VectorPow<LHS, RHS> > {
-        typedef typename LHS::RET_TYPE RET_TYPEL;
-        typedef typename RHS::RET_TYPE RET_TYPER;
+    struct VectorPow : VectorExpression<typename atl::PromoteType<typename LHS::BASE_TYPE, typename RHS::BASE_TYPE >::return_type, VectorPow<LHS, RHS> > {
+        typedef typename LHS::BASE_TYPE RET_TYPEL;
+        typedef typename RHS::BASE_TYPE RET_TYPER;
 
         typedef typename atl::PromoteType<RET_TYPEL, RET_TYPER>::return_type RET_TYPE;
         typedef typename atl::PromoteType<typename LHS::BASE_TYPE, typename RHS::BASE_TYPE>::return_type BASE_TYPE;
@@ -1309,11 +1309,11 @@ namespace atl {
     //
 
     template< class LHS, class T >
-    struct VectorPowScalar : VectorExpression<typename PromoteType<typename LHS::RET_TYPE, T>::return_type, VectorPowScalar< LHS, T> > {
+    struct VectorPowScalar : VectorExpression<typename PromoteType<typename LHS::BASE_TYPE, T>::return_type, VectorPowScalar< LHS, T> > {
         const LHS& lhs_m;
         const T& rhs_m;
 
-        typedef typename atl::PromoteType<typename LHS::RET_TYPE, T>::return_type RET_TYPE;
+        typedef typename atl::PromoteType<typename LHS::BASE_TYPE, T>::return_type RET_TYPE;
         typedef typename atl::PromoteType<typename LHS::BASE_TYPE, T>::return_type BASE_TYPE;
 
         inline explicit VectorPowScalar(const VectorExpression<typename LHS::RET_TYPE, LHS>& lhs, const T & rhs) : lhs_m(lhs.Cast()), rhs_m(rhs) {
@@ -1369,8 +1369,8 @@ namespace atl {
     };
 
     template<class T, class RHS>
-    struct ScalarVectorPow : VectorExpression<typename PromoteType<typename RHS::RET_TYPE, T>::return_type, ScalarVectorPow<T, RHS> > {
-        typedef typename atl::PromoteType<T, typename RHS::RET_TYPE>::return_type RET_TYPE;
+    struct ScalarVectorPow : VectorExpression<typename PromoteType<typename RHS::BASE_TYPE, T>::return_type, ScalarVectorPow<T, RHS> > {
+        typedef typename atl::PromoteType<T, typename RHS::BASE_TYPE>::return_type RET_TYPE;
         typedef typename atl::PromoteType<T, typename RHS::BASE_TYPE>::return_type BASE_TYPE;
 
         const T& lhs_m;
@@ -1432,14 +1432,14 @@ namespace atl {
     //typename et4ad::promote_trait<typename LHS::RET_TYPE , typename RHS::RET_TYPE >::return_type
 
     template <class LHS, class RHS>
-    inline const VectorPow< LHS, RHS> pow(const MatrixExpression<typename LHS::RET_TYPE, LHS>& a,
-            const MatrixExpression<typename RHS::RET_TYPE, RHS>& b) {
+    inline const VectorPow< LHS, RHS> pow(const VectorExpression<typename LHS::RET_TYPE, LHS>& a,
+            const VectorExpression<typename RHS::RET_TYPE, RHS>& b) {
         return VectorPow< LHS, RHS > (a.Cast(), b.Cast());
     }
 
     template <class LHS, class RHS>
-    inline const VectorPow< LHS, RHS> operator^(const MatrixExpression<typename LHS::RET_TYPE, LHS>& a,
-            const MatrixExpression<typename RHS::RET_TYPE, RHS>& b) {
+    inline const VectorPow< LHS, RHS> operator^(const VectorExpression<typename LHS::RET_TYPE, LHS>& a,
+            const VectorExpression<typename RHS::RET_TYPE, RHS>& b) {
         return VectorPow< LHS, RHS > (a.Cast(), b.Cast());
     }
 
@@ -1688,7 +1688,7 @@ namespace atl {
     //typename et4ad::promote_trait<typename LHS::RET_TYPE , typename RHS::RET_TYPE >::return_type
 
     template <class LHS, class RHS>
-    inline const VectorATan2< LHS, RHS> operator+(const MatrixExpression<typename LHS::RET_TYPE, LHS>& a,
+    inline const VectorATan2< LHS, RHS> atan2(const VectorExpression<typename LHS::RET_TYPE, LHS>& a,
             const MatrixExpression<typename RHS::RET_TYPE, RHS>& b) {
         return VectorATan2< LHS, RHS > (a.Cast(), b.Cast());
     }
