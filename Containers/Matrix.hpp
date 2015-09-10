@@ -95,6 +95,12 @@ namespace atl {
 
     public:
 
+
+        typedef typename std::vector<T>::iterator iterator;
+        typedef typename std::vector<T>::reverse_iterator reverse_iterator;
+        typedef typename std::vector<T>::const_iterator const_iterator;
+        typedef typename std::vector<T>::const_reverse_iterator const_reverse_iterator;
+
         typedef typename IntrinsicBaseType<T>::TYPE INTRINSIC_BASE;
         typedef T RET_TYPE;
         typedef T BASE_TYPE;
@@ -602,11 +608,42 @@ namespace atl {
             length++;
         }
 
+        iterator begin() {
+            return this->data_m.begin();
+        }
+
+        iterator end() {
+            return this->data_m.end();
+        }
+
+        const_iterator begin() const {
+            return this->data_m.begin();
+        }
+
+        const_iterator end()const {
+            return this->data_m.end();
+        }
+
+        iterator rbegin() {
+            return this->data_m.rbegin();
+        }
+
+        iterator rend() {
+            return this->data_m.rend();
+        }
+
+        const_iterator rbegin() const {
+            return this->data_m.rbegin();
+        }
+
+        const_iterator rend()const {
+            return this->data_m.rend();
+        }
 
     };
-    
-    
-    #define MAKE_VARIABLE_MATRIX_TYPE(TYPE)\
+
+
+#define MAKE_VARIABLE_MATRIX_TYPE(TYPE)\
     template<>\
     void Matrix<atl::Variable<TYPE> >::SetBounds(TYPE minb, TYPE maxb) {\
         for (int i = 0; i < this->data_m.size(); i++) {\

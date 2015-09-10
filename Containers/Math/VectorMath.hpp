@@ -479,7 +479,7 @@ namespace atl {
         typedef typename C::BASE_TYPE BASE_TYPE;
 
         inline explicit VectorExp(const atl::VectorExpression<typename C::RET_TYPE, C>& c) : c_m(c.Cast()) {
-            
+
         }
 
         inline const size_t Size(const int32_t & dimension) const {
@@ -1702,6 +1702,7 @@ namespace atl {
             return VectorATan2Scalar<LHS,TYPE > (a.Cast(), b);\
         } \
     
+
     ATL_VECTOR_VectorATan2_SCALAR(short)
     ATL_VECTOR_VectorATan2_SCALAR(unsigned short)
     ATL_VECTOR_VectorATan2_SCALAR(int)
@@ -1737,6 +1738,33 @@ namespace atl {
     ATL_VectorATan2_SCALAR_VECTOR(atl::Variable<long double>)
 
 
+
+
+    template<class T>
+    const T Max(const atl::Vector<T>& v) {
+        T max =  std::numeric_limits<typename atl::IntrinsicBaseType<T>::TYPE>::min();
+
+        for (int i = 0; i < v.Size(); i++) {
+            if (v(i) > max) {
+                max = v(i);
+            }
+        }
+        return max;
+
+    }
+
+    template<class T>
+    const T Min(const atl::Vector<T>& v) {
+        T min = std::numeric_limits<typename atl::IntrinsicBaseType<T>::TYPE>::max();
+
+        for (int i = 0; i < v.Size(); i++) {
+            if (v(i) < min) {
+                min = v(i);
+            }
+        }
+        return min;
+
+    }
 
 
 

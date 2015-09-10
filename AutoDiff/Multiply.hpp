@@ -114,12 +114,12 @@ namespace atl {
 
             REAL_T fxy = lhs_m.EvaluateDerivative(a, b);
             REAL_T g = rhs_m;
-            REAL_T f = lhs_m.GetValue();
-            REAL_T fx = lhs_m.EvaluateDerivative(a);
-            REAL_T gy = 0;
-            REAL_T fy = lhs_m.EvaluateDerivative(b);
-            REAL_T gx = 0;
-            REAL_T gxy = 0;
+//            REAL_T f = lhs_m.GetValue();
+//            REAL_T fx = lhs_m.EvaluateDerivative(a);
+//            REAL_T gy = 0;
+//            REAL_T fy = lhs_m.EvaluateDerivative(b);
+//            REAL_T gx = 0;
+//            REAL_T gxy = 0;
 
             return fxy * g;
         }

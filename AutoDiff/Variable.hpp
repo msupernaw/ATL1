@@ -188,7 +188,7 @@ namespace atl {
         bounded_m(false),
         min_boundary_m(std::numeric_limits<REAL_T>::min()),
         max_boundary_m(std::numeric_limits<REAL_T>::max()),
-         transformation(&default_transformation){
+        transformation(&default_transformation) {
             info->vvalue = (val);
             mapped_info = (this->info);
         }
@@ -291,33 +291,40 @@ namespace atl {
         }
 
         inline Variable<REAL_T>& operator=(const REAL_T & value) {
-            
+
             this->SetValue(value);
             return *this;
         }
 
         inline Variable<REAL_T>& operator=(const Variable<REAL_T> & other) {
             if (Variable<REAL_T>::gradient_structure_g.recording) {
-                 Adjoint<REAL_T>& entry = Variable<REAL_T>::gradient_structure_g.gradient_stack[Variable<REAL_T>::gradient_structure_g.NextIndex()];
+                Adjoint<REAL_T>& entry = Variable<REAL_T>::gradient_structure_g.gradient_stack[Variable<REAL_T>::gradient_structure_g.NextIndex()];
                 entry.w = info;
                 entry.entries.push_back(AdjointDerivative<REAL_T>((other.info), 1.0));
-                entry.second_order_partials.resize(1,1.0);
-                
-                
+                entry.second_order_partials.resize(1, 0.0);
+
+
             }
             this->SetValue(other.GetValue());
             return *this;
         }
 
-        
+//        operator REAL_T() {
+//            return GetValue();
+//        }
+//
+//        operator REAL_T()const {
+//            return GetValue();
+//        }
+
         template<class A>
         inline Variable& operator=(const ExpressionBase<REAL_T, A>& exp) {
             if (Variable<REAL_T>::gradient_structure_g.recording) {
-                
+
                 Adjoint<REAL_T>& entry = Variable<REAL_T>::gradient_structure_g.gradient_stack[Variable<REAL_T>::gradient_structure_g.NextIndex()];
 
                 entry.w = info;
-                
+
                 ids.clear();
                 exp.PushIds(ids);
                 size_t isize = ids.size();
@@ -348,9 +355,9 @@ namespace atl {
         }
 
         inline Variable operator-() {
-            return -1.0*(*this);
+            return -1.0 * (*this);
         }
-        
+
         inline Variable& operator+=(const REAL_T & val) {
             *this = *this+val;
             return *this;
@@ -650,8 +657,8 @@ namespace atl {
 
     template<typename REAL_T, int group>
     LogitParameterTransformation<REAL_T> Variable<REAL_T, group>::default_transformation;
-   
-    
+
+
     /**
      * Experimental code for forward mode AD. Uses the Transitionally Accumulated 
      * Gradients method (TAG) from ET4AD. 

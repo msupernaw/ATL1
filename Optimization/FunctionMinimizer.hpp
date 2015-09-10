@@ -105,13 +105,19 @@ namespace atl {
             }
         }
 
-        void Register(atl::Variable<REAL_T>& var, uint32_t phase = 1) {
+        void Register(atl::Variable<REAL_T>& var, uint32_t phase = 1, std::string name = "") {
             this->parameters.push_back(&var);
             this->phases.push_back(phase);
             if (max_phase < phase) {
                 max_phase = phase;
             }
+            
+            if (name != std::string("")) {
+                var.SetName(name);
+            }
         }
+        
+        
 
         void Register(atl::Matrix<atl::Variable<REAL_T> >&m, uint32_t phase = 1, std::string name = "") {
             if (max_phase < phase) {
