@@ -155,7 +155,7 @@ namespace atl {
     template<class REAL_T, //base type
     int group = 0 > //group identifier
     class Variable : public atl::ExpressionBase<REAL_T, Variable<REAL_T, group > > {
-        static LogitParameterTransformation<REAL_T> default_transformation;
+        static TanhParameterTransformation<REAL_T> default_transformation;
         IDSet<atl::VariableInfo<REAL_T>* > ids;
         VariableInfo<REAL_T>* mapped_info;
         ParameterTransformation<REAL_T>* transformation;
@@ -656,7 +656,7 @@ namespace atl {
     /* ATTRIBUTE_TLS */ GradientStructure<REAL_T> Variable<REAL_T, group>::gradient_structure_g;
 
     template<typename REAL_T, int group>
-    LogitParameterTransformation<REAL_T> Variable<REAL_T, group>::default_transformation;
+    TanhParameterTransformation<REAL_T> Variable<REAL_T, group>::default_transformation;
 
 
     /**

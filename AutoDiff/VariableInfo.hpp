@@ -9,21 +9,12 @@
 #define	DERIVATIVEPOINTER_HPP
 #include <atomic>
 #include <mutex>
-
-#ifdef USE_TBB
-#include "third_party/tbb42_20140601oss/include/tbb/concurrent_vector.h"
-#else
 #include <stack>
-#endif
 
-//#include "third_party/clfmalloc.h"
-//#include "../third_party/dlmalloc/malloc.h"
-//#include <map>
+
 #include "../Utilities/flat_map.hpp"
-//#include <unordered_map>
-#ifdef USE_BOOST
-#include <boost/container/flat_map.hpp>
-#endif
+
+
 namespace atl {
 
     /*!
@@ -46,9 +37,8 @@ namespace atl {
             mutex_g.lock();
             uint32_t ret;
             if (!available.empty()> 0) {
-                ret = available.top();//[available_size--];
+                ret = available.top();
                 available.pop();
-                //                ret = available_size--;
 
             } else {
                 ret = ++_id;
@@ -97,20 +87,13 @@ namespace atl {
     public:
         static std::mutex mutex_g;
         std::atomic<uint32_t> count;
-#ifdef USE_TBB
-        static tbb::concurrent_vector<VariableInfo<REAL_T>* > freed;
-#else
+
         static std::mutex vinfo_mutex_g;
         static std::vector<VariableInfo<REAL_T>* > freed;
-#endif
         REAL_T dvalue;
         REAL_T vvalue;
-#ifdef USE_BOOST
-        typedef boost::container::flat_map<VariableInfo<REAL_T>*, REAL_T> HessianInfo;
-#else
+
         typedef flat_map<VariableInfo<REAL_T>*, REAL_T> HessianInfo;
-#endif
-        //        typedef std::map<VariableInfo<REAL_T>*, REAL_T> HessianInfo;
         HessianInfo hessian_row;
         typedef typename HessianInfo::iterator row_iterator;
         uint32_t id;
@@ -135,13 +118,9 @@ namespace atl {
         inline void Release() {
             count--;
             if ((count) == 0) {
-#ifndef USE_TBB
                 VariableInfo<REAL_T>::vinfo_mutex_g.lock();
-#endif
                 freed.push_back(this);
-#ifndef USE_TBB
                 VariableInfo<REAL_T>::vinfo_mutex_g.unlock();
-#endif
             }
         }
 
@@ -163,17 +142,13 @@ namespace atl {
         }
     };
 
-#ifdef USE_TBB
-    template<typename REAL_T>
-    tbb::concurrent_vector<VariableInfo<REAL_T>* > VariableInfo<REAL_T>::freed;
-#else
+
     template<typename REAL_T>
     std::vector<VariableInfo<REAL_T>* > VariableInfo<REAL_T>::freed;
 
     template<typename REAL_T>
     std::mutex VariableInfo<REAL_T>::vinfo_mutex_g;
 
-#endif
     template<typename REAL_T>
     std::mutex VariableInfo<REAL_T>::mutex_g;
     
