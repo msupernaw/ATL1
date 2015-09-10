@@ -1394,9 +1394,9 @@ namespace atl {
                             std::cout << left(sp.str(), 10) << " | ";
 
                             if (this->active_parameters[j]->bounded_m) {
-                                std::cout << io::CYAN << left(this->active_parameters[j]->GetName(), 16) << io::DEFAULT << " | ";
+                                std::cout << io::BLUE << left(this->active_parameters[j]->GetName(), 16) << io::DEFAULT << " | ";
                             } else {
-                                std::cout << left(this->active_parameters[j]->GetName(), 10) << " | ";
+                                std::cout << left(this->active_parameters[j]->GetName(), 16) << " | ";
                             }
                             if (this->print_internal) {
                                 std::cout << prd(this->active_parameters[j]->GetInternalValue(), 3, 10) << " | ";
