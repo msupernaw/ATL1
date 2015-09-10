@@ -32,7 +32,10 @@
 #include "../Utilities/flat_map.hpp"
 #include "../Utilities/flat_set.hpp"
 #endif
+
+#ifdef USE_DLMALLOC
 #include "../third_party/dlmalloc/malloc.h"
+#endif
 #include "Variable.hpp"
 
 #warning add jacobian matrix calculations
