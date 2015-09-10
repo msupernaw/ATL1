@@ -14,7 +14,7 @@
 #include "VectorMultiply.hpp"
 #include "VectorDivide.hpp"
 #include "Matrix.hpp"
-#include "ConcurrentOperators.hpp"
+//#include "ConcurrentOperators.hpp"
 #include <thread>
 #include <vector>
 #include "../Traits/Type.hpp"
