@@ -1,0 +1,60 @@
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.2}{Template Metaprogramming}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{Expression Templates}{section.2}% 3
+\BOOKMARK [1][-]{section.3}{Automatic Differentiation}{}% 4
+\BOOKMARK [2][-]{subsection.3.1}{Forward Mode}{section.3}% 5
+\BOOKMARK [2][-]{subsection.3.2}{Reverse Mode}{section.3}% 6
+\BOOKMARK [2][-]{subsection.3.3}{Reverse Mode with Hessian Extension}{section.3}% 7
+\BOOKMARK [2][-]{subsection.3.4}{Examples}{section.3}% 8
+\BOOKMARK [3][-]{subsubsection.3.4.1}{Computing Derivatives}{subsection.3.4}% 9
+\BOOKMARK [3][-]{subsubsection.3.4.2}{Controlling The GradientStructure}{subsection.3.4}% 10
+\BOOKMARK [3][-]{subsubsection.3.4.3}{Using GradientStructure's Other Than The Default}{subsection.3.4}% 11
+\BOOKMARK [3][-]{subsubsection.3.4.4}{Adjoint Code/Entries}{subsection.3.4}% 12
+\BOOKMARK [3][-]{subsubsection.3.4.5}{Implementing Newton's Method}{subsection.3.4}% 13
+\BOOKMARK [1][-]{section.4}{Containers}{}% 14
+\BOOKMARK [2][-]{subsection.4.1}{Vectors}{section.4}% 15
+\BOOKMARK [2][-]{subsection.4.2}{Matrices}{section.4}% 16
+\BOOKMARK [2][-]{subsection.4.3}{Arrays}{section.4}% 17
+\BOOKMARK [2][-]{subsection.4.4}{Type Promotion}{section.4}% 18
+\BOOKMARK [1][-]{section.5}{Optimization}{}% 19
+\BOOKMARK [1][-]{section.6}{Probability Distributions}{}% 20
+\BOOKMARK [2][-]{subsection.6.1}{Probability Densities}{section.6}% 21
+\BOOKMARK [2][-]{subsection.6.2}{Cumulative Probabilities}{section.6}% 22
+\BOOKMARK [2][-]{subsection.6.3}{Inverse Cumulative Probabilities}{section.6}% 23
+\BOOKMARK [2][-]{subsection.6.4}{Random Numbers}{section.6}% 24
+\BOOKMARK [2][-]{subsection.6.5}{Distribution Objects}{section.6}% 25
+\BOOKMARK [2][-]{subsection.6.6}{Available Distributions}{section.6}% 26
+\BOOKMARK [3][-]{subsubsection.6.6.1}{Beta}{subsection.6.6}% 27
+\BOOKMARK [3][-]{subsubsection.6.6.2}{Binomial}{subsection.6.6}% 28
+\BOOKMARK [3][-]{subsubsection.6.6.3}{Cauchy}{subsection.6.6}% 29
+\BOOKMARK [3][-]{subsubsection.6.6.4}{Chi-Square}{subsection.6.6}% 30
+\BOOKMARK [3][-]{subsubsection.6.6.5}{Exponential}{subsection.6.6}% 31
+\BOOKMARK [3][-]{subsubsection.6.6.6}{F}{subsection.6.6}% 32
+\BOOKMARK [3][-]{subsubsection.6.6.7}{Gamma}{subsection.6.6}% 33
+\BOOKMARK [3][-]{subsubsection.6.6.8}{Geometric}{subsection.6.6}% 34
+\BOOKMARK [3][-]{subsubsection.6.6.9}{Hypergeometric}{subsection.6.6}% 35
+\BOOKMARK [3][-]{subsubsection.6.6.10}{Logistic}{subsection.6.6}% 36
+\BOOKMARK [3][-]{subsubsection.6.6.11}{Log Normal}{subsection.6.6}% 37
+\BOOKMARK [3][-]{subsubsection.6.6.12}{Negative Binomial}{subsection.6.6}% 38
+\BOOKMARK [3][-]{subsubsection.6.6.13}{Normal}{subsection.6.6}% 39
+\BOOKMARK [3][-]{subsubsection.6.6.14}{Poisson}{subsection.6.6}% 40
+\BOOKMARK [3][-]{subsubsection.6.6.15}{Student's t}{subsection.6.6}% 41
+\BOOKMARK [3][-]{subsubsection.6.6.16}{Weibull}{subsection.6.6}% 42
+\BOOKMARK [1][-]{section.7}{Descriptive Statistics}{}% 43
+\BOOKMARK [2][-]{subsection.7.1}{Function Minimization}{section.7}% 44
+\BOOKMARK [1][-]{section.8}{Concurrency}{}% 45
+\BOOKMARK [2][-]{subsection.8.1}{Concurrency For Containers}{section.8}% 46
+\BOOKMARK [2][-]{subsection.8.2}{Concurrency AD Types}{section.8}% 47
+\BOOKMARK [3][-]{subsubsection.8.2.1}{Handling Threads With Shared Dependency}{subsection.8.2}% 48
+\BOOKMARK [1][-]{section.9}{Graphics}{}% 49
+\BOOKMARK [2][-]{subsection.9.1}{Line Plots}{section.9}% 50
+\BOOKMARK [2][-]{subsection.9.2}{Scatter Plots}{section.9}% 51
+\BOOKMARK [2][-]{subsection.9.3}{Pie Charts, Bar Plots, and Histograms}{section.9}% 52
+\BOOKMARK [2][-]{subsection.9.4}{Vector Fields}{section.9}% 53
+\BOOKMARK [2][-]{subsection.9.5}{Surfaces and Volumes}{section.9}% 54
+\BOOKMARK [1][-]{section.10}{Debugging ATL Code}{}% 55
+\BOOKMARK [1][-]{section.11}{Future Work}{}% 56
+\BOOKMARK [2][-]{subsection.11.1}{Random Effects Modeling}{section.11}% 57
+\BOOKMARK [2][-]{subsection.11.2}{MPI}{section.11}% 58
+\BOOKMARK [1][-]{section.12}{References}{}% 59
+\BOOKMARK [1][-]{section.13}{Appendices}{}% 60

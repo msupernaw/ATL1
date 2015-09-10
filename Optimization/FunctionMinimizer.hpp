@@ -1154,7 +1154,7 @@ namespace atl {
             REAL_T maxEl = std::fabs(A[i][i]);
             int maxRow = i;
             for (int k = i + 1; k < n; k++) {
-                if (std:fabs(A[k][i]) > maxEl) {
+                if (std::fabs(A[k][i]) > maxEl) {
                     maxEl = std::fabs(A[k][i]);
                     maxRow = k;
                 }

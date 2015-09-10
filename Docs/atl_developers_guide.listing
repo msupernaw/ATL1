@@ -1,0 +1,79 @@
+Phase: 1 of 2
+Iteration: 0
+Convergence Criteria: 0.0001
+Routine: L-BFGS
+Function Value: 1.24844
+Max Gradient:16.923
+Id      Name      Value          Gradient       |Id      Name      Value          Gradient
+1       t0        0              -0.889178      |2       Linf      21             0.071395
+3       k         0.1            16.923
+
+Phase: 1 of 2
+Iteration: 10
+Convergence Criteria: 0.0001
+Routine: L-BFGS
+Function Value: 1.00705
+Max Gradient:15.0288
+Id      Name      Value          Gradient       |Id      Name      Value          Gradient
+1       t0        0.505368       0.214999       |2       Linf      21.045         -0.101968
+3       k         0.0878456      -15.0288
+
+Phase: 1 of 2
+Iteration: 20
+Convergence Criteria: 0.0001
+Routine: L-BFGS
+Function Value: 0.840932
+Max Gradient:0.041383
+Id      Name      Value          Gradient       |Id      Name      Value          Gradient
+1       t0        0.976758       0.00873464     |2       Linf      21.095         -0.007477
+3       k         0.123973       -0.041383
+
+Phase: 1 of 2
+Iteration: 30
+Convergence Criteria: 0.0001
+Routine: L-BFGS
+Function Value: 0.837156
+Max Gradient:0.00120471
+Id      Name      Value          Gradient       |Id      Name      Value          Gradient
+1       t0        0.92906        -2.157e-05     |2       Linf      22.1739        -5.0845e-06
+3       k         0.11317        -0.00120471
+
+Phase: 1 of 2
+Iteration: 32
+Convergence Criteria: 0.0001
+Routine: L-BFGS
+Function Value: 0.837156
+Max Gradient:5.14737e-06
+Id      Name      Value          Gradient       |Id      Name      Value          Gradient
+1       t0        0.929196       -4.37591e-07   |2       Linf      22.1727        2.9163e-08
+3       k         0.113188       5.14737e-06
+
+Phase: 2 of 2
+Iteration: 0
+Convergence Criteria: 0.0001
+Routine: L-BFGS
+Function Value: 0.837156
+Max Gradient:18.3257
+Id      Name      Value          Gradient       |Id      Name      Value          Gradient
+1       t0        0.929196       -4.37591e-07   |2       Linf      22.1727        2.9163e-08
+3       k         0.113188       5.14737e-06    4       sd        1              18.3257
+
+Phase: 2 of 2
+Iteration: 10
+Convergence Criteria: 0.0001
+Routine: L-BFGS
+Function Value: -14.8033
+Max Gradient:0.000114764
+Id      Name      Value          Gradient       |Id      Name      Value          Gradient
+1       t0        0.929199       3.63803e-05    |2       Linf      22.1727        2.47461e-06
+3       k         0.113188       0.000114764    4       sd        0.289336       2.37732e-06
+
+Phase: 2 of 2
+Iteration: 11
+Convergence Criteria: 0.0001
+Routine: L-BFGS
+Function Value: -14.8033
+Max Gradient:4.31945e-05
+Id      Name      Value          Gradient       |Id      Name      Value          Gradient
+1       t0        0.929199       4.31945e-05    |2       Linf      22.1727        1.72384e-06
+3       k         0.113188       2.61195e-06    4       sd        0.289336       8.38737e-09
