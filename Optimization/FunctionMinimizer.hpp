@@ -95,9 +95,8 @@ namespace atl {
         virtual void TransitionPhase() {
 
         }
-        
-        
-        int Phase(){
+
+        int Phase() {
             return this->current_phase;
         }
 
@@ -438,6 +437,55 @@ namespace atl {
 
             }
             return true;
+        }
+
+        bool steepest_descent(REAL_T tolerance = 1e-4) {
+            atl::Variable<REAL_T>::SetRecording(true);
+            atl::Variable<REAL_T>::gradient_structure_g.Reset();
+            atl::Variable<REAL_T>::gradient_structure_g.derivative_trace_level = atl::GRADIENT;
+
+            int nops = this->active_parameters.size();
+
+            this->x.resize(nops);
+            this->best.resize(nops);
+            this->gradient.resize(nops);
+
+            std::valarray<REAL_T> wg(nops);
+            std::valarray<REAL_T> nwg(nops);
+            std::valarray<REAL_T> ng(nops);
+
+            //initial evaluation
+            atl::Variable<REAL_T> fx(0.0);
+            this->call_objective_function(fx);
+            this->function_value = fx.GetValue();
+
+            this->get_gradient();
+
+            step = 1.0; //0.0001;
+            REAL_T relative_tolerance;
+            REAL_T norm_g;
+
+
+            int i;
+            for (this->iteration = 0; this->iteration < this->max_iterations; this->iteration++) {
+                i = this->iteration;
+                for (int j = 0; j < nops; j++) {
+                    wg[j] = active_parameters[j]->GetScaledGradient(active_parameters[j]->GetInternalValue()) * gradient[j];
+                }
+
+                //
+                if (this->verbose) {
+                    if ((i % this->iprint) == 0) {
+                        this->Print2(fx, this->gradient, this->active_parameters);
+                    }
+                }
+
+
+
+
+
+            }
+
         }
 
         bool bfgs(REAL_T tolerance = 1e-4) {
@@ -1400,7 +1448,7 @@ namespace atl {
                             std::cout << left(sp.str(), 10) << " | ";
 
                             if (this->active_parameters[j]->bounded_m) {
-                                std::cout << io::BLUE << left(this->active_parameters[j]->GetName(), 16) << io::DEFAULT << " | ";
+                                std::cout << io::BOLD << left(this->active_parameters[j]->GetName(), 16) << io::DEFAULT << " | ";
                             } else {
                                 std::cout << left(this->active_parameters[j]->GetName(), 16) << " | ";
                             }
@@ -1484,22 +1532,23 @@ namespace atl {
                 //                        }
 
                 std::cout << io::BOLD << "Phase: " << this->current_phase << " ";
-                double percent = 100 * (number_good / (double) this->active_parameters.size());
-                //                        double p = 100 * (number_good / (double) this->active_parameters_m.size());
+                double percent = (number_good / (double) this->active_parameters.size());
                 std::cout << io::BOLD << "|";
-                for (double i = 0; i < (percent - 1)*.9; i++) {
+
+                int endg = ((percent)*97);
+                for (double i = 0; i < endg; i++) {
                     std::cout << io::GREEN << "=";
                 }
                 if (percent > 1)
                     std::cout << io::GREEN << "=";
-                for (int i = 0; i < (90 - percent); i++) {
+                for (int i = 0; i < 97 - endg; i++) {
                     std::cout << io::RED << "=";
                 }
                 std::cout << io::DEFAULT;
                 std::cout << io::BOLD << "|" << io::DEFAULT;
                 std::cout.precision(prec);
 
-                std::cout << "[" << (int) (percent) << "%]\n";
+                std::cout << "[" << std::setw(4) << std::left << (int) (percent)*100 << "%]\n";
                 std::cout << std::endl;
                 std::cout << std::fixed;
             } else {

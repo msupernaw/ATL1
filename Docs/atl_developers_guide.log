@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  8 SEP 2015 16:06
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  14 SEP 2015 08:34
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1570,7 +1570,7 @@ Overfull \hbox (3.79303pt too wide) in paragraph at lines 4--6
 
 
 (./atl_developers_guide.listing) [37] [38]
-Overfull \vbox (159.78459pt too high) has occurred while \output is active []
+Overfull \vbox (204.28459pt too high) has occurred while \output is active []
 
 
 [39] [40]
@@ -1579,21 +1579,21 @@ Package catoptions Warning: Undefined options (family,option,value):
 (catoptions)                fontenc.sty,T1,
 (catoptions)                Default action already taken in each case .
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1772.
-Package atveryend Info: Executing hook `AfterLastShipout' on input line 1772.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1774.
+Package atveryend Info: Executing hook `AfterLastShipout' on input line 1774.
 (./atl_developers_guide.xwm) (./atl_developers_guide.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1772.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1772.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1774.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1774.
 
 Package rerunfilecheck Info: File `atl_developers_guide.out' has not changed.
-(rerunfilecheck)             Checksum: 8651B7E7E3A3A220279289A9CBA578B2;4007.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1772.
+(rerunfilecheck)             Checksum: 943C7E4147BDE7DAE11084AC3A9F071C;4226.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1774.
  ) 
 Here is how much of TeX's memory you used:
- 46834 strings out of 493117
- 1071852 string characters out of 6135433
- 1453265 words of memory out of 5000000
- 48276 multiletter control sequences out of 15000+600000
+ 46840 strings out of 493117
+ 1071962 string characters out of 6135433
+ 1453268 words of memory out of 5000000
+ 48279 multiletter control sequences out of 15000+600000
  30795 words of font info for 60 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  74i,14n,97p,10441b,1402s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1625,10 +1625,10 @@ super/sfti1200.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/cm-su
 per/sfti1728.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/cm-supe
 r/sftt0800.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/cm-super/
 sftt1000.pfb>
-Output written on atl_developers_guide.pdf (40 pages, 520663 bytes).
+Output written on atl_developers_guide.pdf (40 pages, 521396 bytes).
 PDF statistics:
- 2120 PDF objects out of 2487 (max. 8388607)
- 2031 compressed objects within 21 object streams
- 1295 named destinations out of 1440 (max. 500000)
- 493 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 2143 PDF objects out of 2487 (max. 8388607)
+ 2054 compressed objects within 21 object streams
+ 1298 named destinations out of 1440 (max. 500000)
+ 517 words of extra memory for PDF output out of 10000 (max. 10000000)
 

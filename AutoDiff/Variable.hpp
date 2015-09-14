@@ -23,6 +23,8 @@
 #include "Divide.hpp"
 
 
+#ifdef ATL_USE_THREAD_LOCAL_STORAGE
+
 #if defined (__GNUC__)
 #define THREAD_LOCAL_STORAGE __thread
 #elif defined (_MSC_VER)
@@ -31,7 +33,7 @@
 #error "Define a thread local storage qualifier for your compiler/platform!"
 #endif
 
-
+#endif
 
 
 namespace atl {
