@@ -120,7 +120,7 @@ namespace atl {
             } else if (val > max_) {
                 return M_PI / 2.0;
             } else {
-                return  2.0 * M_PI + std::asin(std::max(-1.0, std::min(1.0, (2.0 * (val - min_) / (max_ - min_) - 1.0))));
+                return 2.0 * M_PI + std::asin(std::max(-1.0, std::min(1.0, (2.0 * (val - min_) / (max_ - min_) - 1.0))));
             }
         }
 
@@ -198,6 +198,17 @@ namespace atl {
         Variable(const Variable& val) : info(val.info), min_boundary_m(val.min_boundary_m), max_boundary_m(val.max_boundary_m), bounded_m(val.bounded_m), transformation(&default_transformation) {
             info->count++;
             mapped_info = (val.mapped_info);
+        }
+
+        Variable(Variable&& val) : info(val.info), min_boundary_m(val.min_boundary_m), max_boundary_m(val.max_boundary_m), bounded_m(val.bounded_m), transformation(val.transformation) {
+            //            info->count++;
+            mapped_info = (val.mapped_info);
+            val.info->Release();
+            val.min_boundary_m = std::numeric_limits<REAL_T>::min();
+            val.max_boundary_m = std::numeric_limits<REAL_T>::max();
+            val.bounded_m = false;
+            val.transformation = &default_transformation;
+            val.mapped_info = NULL;
         }
 
         template<typename A>
@@ -311,13 +322,32 @@ namespace atl {
             return *this;
         }
 
-//        operator REAL_T() {
-//            return GetValue();
-//        }
-//
-//        operator REAL_T()const {
-//            return GetValue();
-//        }
+        Variable<REAL_T>& operator=(Variable&& val) {
+
+            info = (val.info);
+            min_boundary_m = (val.min_boundary_m);
+            max_boundary_m = (val.max_boundary_m);
+            bounded_m = (val.bounded_m);
+            transformation = (val.transformation);
+            //                        info->count++;
+            mapped_info = (val.mapped_info);
+            val.info->Release();
+            val.min_boundary_m = std::numeric_limits<REAL_T>::min();
+            val.max_boundary_m = std::numeric_limits<REAL_T>::max();
+            val.bounded_m = false;
+            val.transformation = &default_transformation;
+            val.mapped_info = NULL;
+            return *this;
+        }
+
+
+        //        operator REAL_T() {
+        //            return GetValue();
+        //        }
+        //
+        //        operator REAL_T()const {
+        //            return GetValue();
+        //        }
 
         template<class A>
         inline Variable& operator=(const ExpressionBase<REAL_T, A>& exp) {
