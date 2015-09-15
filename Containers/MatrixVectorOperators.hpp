@@ -332,6 +332,10 @@ namespace atl {
 #endif
 
         }
+        
+        
+        
+        
 
         inline const size_t Dimensions() const {
             return lhs_m.Dimensions() > rhs_m.Dimensions() ? lhs_m.Dimensions() : rhs_m.Dimensions();

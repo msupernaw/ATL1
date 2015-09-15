@@ -8,7 +8,7 @@
 #ifndef ET4AD_VARIABLE_HPP
 #define	ET4AD_VARIABLE_HPP
 
-#include <math.h>
+#define _USE_MATH_DEFINES
 #include <cmath>
 #include <stack>
 #include <vector>
