@@ -211,7 +211,7 @@ namespace atl {
                 max_boundary_m(other.max_boundary_m), 
                 bounded_m(other.bounded_m), 
                 transformation(other.transformation) {
-            //            info->count++;
+                        info->count++;
             mapped_info = (other.mapped_info);
 //            other.info->Release();
             other.min_boundary_m = std::numeric_limits<REAL_T>::min();
@@ -339,7 +339,7 @@ namespace atl {
             max_boundary_m = (other.max_boundary_m);
             bounded_m = (other.bounded_m);
             transformation = (other.transformation);
-            //                        info->count++;
+                                    info->count++;
             mapped_info = (other.mapped_info);
 //            other.info->Release();
             other.min_boundary_m = std::numeric_limits<REAL_T>::min();
