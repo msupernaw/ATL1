@@ -81,15 +81,7 @@ namespace atl {
 
     };
 
-    template<class REAL_T>
-    bool operator>(const std::complex<REAL_T>& a, const std::complex<REAL_T>& b) {
-        return a.real() > b.real();
-    }
 
-    template<class REAL_T>
-    bool operator<(const std::complex<REAL_T>& a, const std::complex<REAL_T>& b) {
-        return a.real() < b.real();
-    }
 
     /**
      * Sine transformation for a variable.

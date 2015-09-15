@@ -30,4 +30,10 @@
 #  define ATL_QNXNTO
 #endif
 
+#if defined(ATL_WIN32) || defined(ATL_WIN64)
+#  define ATL_WINDOWS
+#endif
+
+
+
 #endif
