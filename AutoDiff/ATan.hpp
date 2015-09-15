@@ -75,7 +75,7 @@ namespace atl {
     private:
         const EXPR& expr_m;
         REAL_T value_m;
-    } __attribute__((packed));
+    };
 
     template<class REAL_T, class EXPR>
     inline const atl::ATan<REAL_T, EXPR> atan(const atl::ExpressionBase<REAL_T, EXPR>& a) {

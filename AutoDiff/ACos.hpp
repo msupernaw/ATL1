@@ -81,7 +81,7 @@ namespace atl {
 
     private:
         const EXPR& expr_m;
-    } __attribute__((packed));
+    };
 
     template<class REAL_T, class EXPR>
     inline const atl::ACos<REAL_T, EXPR> acos(const atl::ExpressionBase<REAL_T, EXPR>& expr) {

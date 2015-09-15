@@ -58,7 +58,7 @@ namespace atl {
         const LHS& lhs_m;
         const RHS& rhs_m;
         REAL_T value_m;
-    } __attribute__((packed));
+    };
 
     /**
      * Operator for addition of two expression templates.
@@ -109,7 +109,7 @@ namespace atl {
         const LHS& lhs_m;
         REAL_T rhs_m;
         //        const REAL_T value_m;
-    } __attribute__((packed));
+    };
 
     /**
      * Operator for adding a expression templates to a constant .
@@ -160,7 +160,7 @@ namespace atl {
         REAL_T lhs_m;
         const RHS& rhs_m;
         REAL_T value_m;
-    } __attribute__((packed));
+    };
 
     /**
      * Operator for adding a constant value to a expression templates.

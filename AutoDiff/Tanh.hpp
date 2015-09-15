@@ -80,7 +80,7 @@ namespace atl {
 
     private:
         const EXPR& expr_m;
-    } __attribute__((packed));
+    };
 
     /**
      * Override for the tanh function in namespace std.

@@ -76,7 +76,7 @@ namespace atl {
 
     private:
         const EXPR& expr_m;
-    } __attribute__((packed));
+    };
 
     template<class REAL_T, class EXPR>
     inline const atl::Sqrt<REAL_T, EXPR> sqrt(const atl::ExpressionBase<REAL_T, EXPR>& expr) {

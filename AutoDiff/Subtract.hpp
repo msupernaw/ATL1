@@ -144,7 +144,7 @@ namespace atl {
         const REAL_T lhs_m;
         const RHS& rhs_m;
         const REAL_T value_m;
-    } __attribute__((packed));
+    } ;
 
     /**
      * Operator for subtracting  a expression templates from a constant.

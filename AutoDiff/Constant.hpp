@@ -47,7 +47,7 @@ namespace atl {
 
     private:
         REAL_T value_m;
-    } __attribute__((packed));
+    };
 
 
 

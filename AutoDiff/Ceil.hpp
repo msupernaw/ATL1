@@ -73,7 +73,7 @@ namespace atl {
 
     private:
         const EXPR& expr_m;
-    } __attribute__((packed));
+    };
 
     template<class REAL_T, class EXPR>
     inline const atl::Ceil<REAL_T, EXPR> ceil(const atl::ExpressionBase<REAL_T, EXPR>& expr) {

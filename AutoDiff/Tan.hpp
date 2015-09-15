@@ -80,7 +80,7 @@ namespace atl {
 
     private:
         const EXPR& expr_m;
-    } __attribute__((packed));
+    } ;
 
     template<class REAL_T, class EXPR>
     inline const atl::Tan<REAL_T, EXPR> tan(const atl::ExpressionBase<REAL_T, EXPR>& expr) {

@@ -75,7 +75,7 @@ namespace atl {
 
     private:
 
-    } __attribute__((packed));
+    };
 
     template<class REAL_T, class EXPR>
     inline const atl::Exp<REAL_T, EXPR> exp(const atl::ExpressionBase<REAL_T, EXPR>& expr) {

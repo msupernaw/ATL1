@@ -81,7 +81,7 @@ namespace atl {
 
     private:
         const EXPR& expr_m;
-    } __attribute__((packed));
+    };
 
     template<class REAL_T, class EXPR>
     inline const atl::Log10<REAL_T, EXPR> log10(const atl::ExpressionBase<REAL_T, EXPR>& expr) {

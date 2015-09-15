@@ -130,7 +130,7 @@ namespace atl {
         const EXPR2& expr2_m;
         REAL_T value1_m;
         REAL_T value2_m;
-    } __attribute__((packed));
+    };
 
     /**
      * Expression template for computing the two argument inverse tangent,
@@ -181,7 +181,7 @@ namespace atl {
         const EXPR1& expr1_m;
         const REAL_T& expr2_m;
         REAL_T value1_m;
-    } __attribute__((packed));
+    } ;
 
     /**
      * Expression template for computing the two argument inverse tangent,
@@ -229,7 +229,7 @@ namespace atl {
 
         const REAL_T& expr1_m;
         const EXPR2& expr2_m;
-    } __attribute__((packed));
+    };
 
 }
 

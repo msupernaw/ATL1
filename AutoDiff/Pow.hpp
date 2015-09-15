@@ -118,7 +118,7 @@ namespace atl {
 
         const EXPR1& expr1_m;
         const EXPR2& expr2_m;
-    } __attribute__((packed));
+    };
 
     /**
      *Expression template for computing the power of a expression template,
@@ -171,7 +171,7 @@ namespace atl {
 
         const EXPR1& expr1_m;
         const REAL_T& expr2_m;
-    } __attribute__((packed));
+    };
 
     /**
      *Expression template for computing the power of a expression template,
@@ -224,7 +224,7 @@ namespace atl {
 
         const REAL_T& expr1_m;
         const EXPR2& expr2_m;
-    } __attribute__((packed));
+    };
 
     /**
      * Override for the pow function in namespace std.

@@ -162,6 +162,21 @@ namespace atl {
             }
         }
 
+        
+        /**
+         * Returns an n x n identity Matrix;
+         * 
+         * @param rows
+         * @param cols
+         */
+        static const atl::Matrix<T> Identity(size_t n){
+            Matrix<T> id(n, n);
+            for(int i = 0; i < n; i++){
+                id(i,i) = static_cast<T>(1.0);
+            }
+            return id;          
+        }
+        
         void Resize(size_t rows, size_t cols) {
             this->isize = rows;
             this->jsize = cols;

@@ -13,7 +13,7 @@ namespace atl {
 
         enum Routine {
             LBFGS = 0,
-            BFGS,
+            //            BFGS,
             NEWTON,
             NEWTON_CG
         };
@@ -104,7 +104,7 @@ namespace atl {
             if (phase <= this->phase_routines.size) {
                 this->phase_routines[(phase - 1)] = r;
             } else {
-                this->phase_routines.resize(phase, LBFGS);
+                this->phase_routines.resize(phase, routine);
                 this->phase_routines[(phase - 1)] = r;
             }
         }
@@ -217,6 +217,102 @@ namespace atl {
             }
         }
 
+        void InitArgs(int argc, char** argv) {
+
+            for (int i = 0; i < argc; i++) {
+                std::string arg(argv[i]);
+                if (arg == std::string("-tol")) {
+                    REAL_T t = util::StringToNumber<REAL_T>(std::string(argv[i + 1]));
+                    this->tolerance = t;
+                }
+
+                if (arg == std::string("-tolerance")) {
+                    REAL_T t = util::StringToNumber<REAL_T>(std::string(argv[i + 1]));
+                    this->tolerance = t;
+                }
+
+                if (arg == std::string("-verbose")) {
+                    int t = util::StringToNumber<int>(std::string(argv[i + 1]));
+                    this->verbose = t;
+                }
+                if (arg == std::string("-min_verbose")) {
+                    this->min_verbose = true;
+                }
+
+                if (arg == std::string("-iprint")) {
+                    int t = util::StringToNumber<int>(std::string(argv[i + 1]));
+                    this->iprint = t;
+                }
+
+                if (arg == std::string("-show_internal")) {
+                    this->print_internal = true;
+                }
+
+                if (arg == std::string("-max_iteration")) {
+                    int t = util::StringToNumber<int>(std::string(argv[i + 1]));
+                    this->max_iterations = t;
+                }
+
+                if (arg == std::string("-max_line_search")) {
+                    int t = util::StringToNumber<int>(std::string(argv[i + 1]));
+                    this->max_line_searches = t;
+                }
+
+                if (arg == std::string("-max_history")) {
+                    int t = util::StringToNumber<int>(std::string(argv[i + 1]));
+                    this->max_history = t;
+                }
+
+                if (arg == std::string("-stack_size")) {
+                    int t = util::StringToNumber<int>(std::string(argv[i + 1]));
+                    atl::Variable<REAL_T>::gradient_structure_g.SetSize(t);
+                }
+
+                if (arg == std::string("-newton")) {
+                    this->routine = NEWTON;
+                }
+
+                if (arg == std::string("-newton_cg")) {
+                    this->routine = NEWTON_CG;
+                }
+
+
+                if (arg == std::string("-lbfgs")) {
+                    this->routine = LBFGS;
+                }
+
+                //
+                //                if (arg == std::string("-collect_every")) {
+                //                    this->collect_every = util::StringToNumber<int>(std::string(argv[i + 1]));
+                //                }
+
+                if (arg == std::string("-hessian_file")) {
+
+                }
+
+                if (arg == std::string("-gradient_file")) {
+
+                }
+
+                if (arg == std::string("-pararameter_file")) {
+
+                }
+
+                if (arg == std::string("-report_file")) {
+
+                }
+
+                if (arg == std::string("-h")) {
+                    //                    Help();
+                }
+
+                if (arg == std::string("-help")) {
+                    //                    Help();
+                }
+            }
+
+        }
+
         void Run() {
             for (int p = 1; p <= this->max_phase; p++) {
 
@@ -306,13 +402,42 @@ namespace atl {
         void SetPhaseRoutines(std::vector<Routine> phase_routines) {
             this->phase_routines = phase_routines;
         }
+
+        void WriteDerivativeInfo(const std::string& path) {
+            std::ofstream out;
+            out.open(path.c_str());
+            atl::Variable<REAL_T>::gradient_structure_g.Reset();
+            atl::Variable<REAL_T>::gradient_structure_g.derivative_trace_level = atl::GRADIENT_AND_HESSIAN;
+            atl::Variable<REAL_T> f = 0.0;
+            this->ObjectiveFunction(f);
+
+            //            atl::Variable<REAL_T>::gradient_structure_g.HessianAndGradientAccumulate();
+            this->get_gradient_and_hessian();
+            out << "Max gradient Component: " << this->maxgc << "\n\n";
+            out << "Gradient:\n";
+            for (int i = 0; i < this->active_parameters.size(); i++) {
+                out << gradient[i] << " ";
+            }
+
+            out << "\n\nHessian:\n";
+            for (int i = 0; i < this->active_parameters.size(); i++) {
+                for (int j = 0; j < this->active_parameters.size(); j++) {
+                    out << hessian[i][j] << " ";
+                }
+                out << "\n";
+            }
+
+
+        }
+
+
     private:
 
         void set_defaults() {
             max_iterations = (1000);
             max_line_searches = (1000);
             this->tolerance = 1e-4;
-
+            this->phase_routines.resize(this->max_phase, this->routine);
 
         }
 
@@ -570,9 +695,132 @@ namespace atl {
 
             int nops = this->active_parameters.size();
 
+            std::valarray<REAL_T> wg(nops);
+            std::valarray<REAL_T> twg(nops);
+            std::valarray<REAL_T> update(nops);
+
+            this->x.resize(nops);
+            this->best.resize(nops);
+            this->gradient.resize(nops);
+            this->hessian.resize(nops, std::valarray<REAL_T>(nops));
+            this->identity.resize(nops, std::valarray<REAL_T>(nops));
+            std::valarray<std::valarray<REAL_T> > system(nops);
+
+            for (int j = 0; j < nops; j++) {
+                system[j] = std::valarray<REAL_T>(nops + 1);
+                for (int k = 0; k < nops; k++) {
+                    if (j == k) {
+                        identity[j][j] = 1.0;
+                    } else {
+                        identity[j][j] = 0;
+                    }
+                }
+            }
+
+
+            for (int i = 0; i < nops; i++) {
+
+                if (this->active_parameters[i]->IsBounded()) {
+                    this->x[i] = this->active_parameters[i]->GetInternalValue();
+                } else {
+                    this->x[i] = this->active_parameters[i]->GetValue();
+                }
+                this->gradient[i] = 0;
+                for (int j = 0; j < nops; j++) {
+                    this->hessian[i][j] = 0;
+                }
+            }
+
+            atl::Variable<REAL_T> fx(0.0);
+            this->call_objective_function(fx);
+            this->get_gradient_and_hessian();
+            this->function_value = fx.GetValue();
+
+
+
+            int i;
+            for (this->iteration = 0; this->iteration < this->max_iterations; this->iteration++) {
+                i = this->iteration;
+
+
+                fx = 0.0;
+            this->call_objective_function(fx);
+            this->get_gradient_and_hessian();
+            this->function_value = fx.GetValue();
+
+                //
+                if (this->verbose) {
+                    if ((i % this->iprint) == 0) {
+                        this->Print2(fx, this->gradient, this->active_parameters);
+                    }
+                }
+
+                for (int j = 0; j < nops; j++) {
+                    wg[j] = active_parameters[j]->GetScaledGradient(active_parameters[j]->GetValue()) * gradient[j];
+                    twg[j] = wg[j];
+                }
+
+                for (int j = 0; j < nops; j++) {
+                    update[j] = x[j];
+                    for (int k = 0; k < nops; k++) {
+
+                        system[j][k] = hessian[j][k];
+                    }
+                    system[j][nops] = twg[j];
+                }
+                this->gauss(system, update);
+
+
+                //                //try standard newton update with hessian, else use estimated h.
+                //                if (!this->cholesky_solve(hessian, twg, update)) {
+                //                    twg = wg;
+                //                    for (int j = 0; j < nops; j++) {
+                //                        update[j] = x[j];
+                //                        for (int k = 0; k < nops; k++) {
+                //                            if (j == k) {
+                //                                identity[j][j] = 1;
+                //                            } else {
+                //                                identity[j][j] = 0;
+                //                            }
+                //                            system[j][k] = identity[j][k];
+                //                        }
+                //                        system[j][nops] = twg[j];
+                //                    }
+                //                    this->gauss(system, update);
+                //                }
+
+                if (!this->line_search(update, wg, i)) {
+                    std::cout << "max line searches...." << std::endl;
+                    return false;
+                }
+
+
+                if (maxgc < tolerance) {
+                    std::cout << "Successful Convergence.\n";
+                    this->Print2(fx, this->gradient, this->active_parameters);
+                    std::cout << "Successful Convergence." << std::endl;
+                    return true;
+                }
+
+
+            }
+            std::cout << "Max iterations.\n";
+            return false;
+
+
+        }
+
+        bool newton_old(REAL_T tolerance = 1e-4) {
+            atl::Variable<REAL_T>::SetRecording(true);
+            atl::Variable<REAL_T>::gradient_structure_g.Reset();
+            atl::Variable<REAL_T>::gradient_structure_g.derivative_trace_level = atl::GRADIENT_AND_HESSIAN;
+
+
+            int nops = this->active_parameters.size();
+
             std::valarray<std::valarray<REAL_T> > system(nops);
             std::valarray<REAL_T> wg(nops);
-
+            std::valarray<REAL_T> twg(nops);
             REAL_T old_fval;
             REAL_T old_old_fval;
             REAL_T eta;
@@ -608,7 +856,8 @@ namespace atl {
             this->call_objective_function(fx);
             this->get_gradient_and_hessian();
             this->function_value = fx.GetValue();
-
+            update = x;
+            //            if(!this->search_)
 
 
             //Historical evaluations
@@ -652,7 +901,17 @@ namespace atl {
 
                 for (int j = 0; j < nops; j++) {
                     wg[j] = active_parameters[j]->GetScaledGradient(active_parameters[j]->GetValue()) * gradient[j];
+                    twg[j] = wg[j];
                 }
+
+                //                 if (iteration == 0) {
+                //                    if (!search_positive_definite_hessian(update, wg, hessian)) {
+                //                        std::cout << "Could not find first positive definite hessian...moving on!\n";
+                //                    }else{
+                //                        std::cout << "First positive definite hessian found...\n";
+                //                    }
+                //
+                //                }
 
                 if (i > 0 && max_history > 0) {
 
@@ -670,7 +929,7 @@ namespace atl {
 
 
                 //try standard newton update with hessian, else use estimated h.
-                if (!this->cholesky_solve(hessian, wg, update)) {
+                if (!this->cholesky_solve(hessian, twg, update)) {
 
                     z = wg;
                     if (i > 0 && max_history > 0) {
@@ -693,6 +952,7 @@ namespace atl {
                         }
                         update = z;
                     } else {
+
                         //                    //                    std::cout<<"not pd!!!\n";
                         for (int j = 0; j < nops; j++) {
                             //                        update[j] = 0;
@@ -710,7 +970,28 @@ namespace atl {
                         this->gauss(system, update);
                     }
                 } else {
-                    std::cout << "was pd!!!\n";
+
+                    z = wg;
+                    if (i > 0 && max_history > 0) {
+                        size_t h = std::min<size_t > (i, max_history);
+                        size_t end = (i - 1) % h;
+                        for (size_t j = 0; j < h; ++j) {
+                            const size_t k = (end - j + h) % h;
+                            p[k] = 1.0 / Dot(Column(dxs, k), Column(dgs, k));
+
+                            a[k] = p[k] * Dot(Column(dxs, k), z);
+                            z -= a[k] * Column(dgs, k);
+                        }
+                        // Scaling of initial Hessian (identity matrix)
+                        z *= Dot(Column(dxs, end), Column(dgs, end)) / Dot(Column(dgs, end), Column(dgs, end));
+
+                        for (size_t j = 0; j < h; ++j) {
+                            const size_t k = (end + j + 1) % h;
+                            const REAL_T b = p[k] * Dot(Column(dgs, k), z);
+                            z += Column(dxs, k) * (a[k] - b);
+                        }
+                    }
+                    update = x;
                 }
 
                 for (size_t j = 0; j < nops; j++) {
@@ -774,7 +1055,6 @@ namespace atl {
             }
 
 
-
             std::valarray<REAL_T> b(nops);
             std::valarray<REAL_T> pk(nops);
             std::valarray<REAL_T> update(nops);
@@ -807,6 +1087,8 @@ namespace atl {
                 for (int j = 0; j < nops; j++) {
                     wg[j] = active_parameters[j]->GetScaledGradient(active_parameters[j]->GetValue()) * gradient[j];
                 }
+
+
 
                 maggrad = norm(wg);
                 eta = std::min(static_cast<REAL_T> (.5), std::sqrt(maggrad));
@@ -963,6 +1245,93 @@ namespace atl {
 
         }
 
+        bool search_positive_definite_hessian(std::valarray<REAL_T>& z, std::valarray<REAL_T>& wg, std::valarray<std::valarray<REAL_T> >& h) {
+            REAL_T descent = 0;
+
+            int nops = this->active_parameters.size();
+            std::valarray<REAL_T> nwg(nops);
+            std::valarray<REAL_T> ng(nops);
+
+            for (size_t j = 0; j < nops; j++) {
+                descent += z[j] * wg[j];
+            }//end for
+
+            REAL_T norm_g = this->norm(gradient);
+            REAL_T relative_tolerance = this->tolerance * std::max<REAL_T > (REAL_T(1.0), norm_g);
+
+            descent *= REAL_T(-1.0); // * Dot(z, g);
+            if (descent > REAL_T(-0.0000000001) * relative_tolerance /* tolerance relative_tolerance*/) {
+                z = wg;
+                //                this->max_iterations -= i;
+                //                i = 0;
+                descent = -1.0 * Dot(z, wg);
+            }//end if
+
+            step = 1.0;
+
+
+            bool down = false;
+
+            int ls;
+
+
+            //            std::valarray<std::valarray<REAL_T> > h
+            //            h.resize(nops, std::valarray<REAL_T>(nops));
+            //            .resize(nops, std::valarray<REAL_T>(nops));
+            //line_search:
+            atl::Variable<REAL_T>::SetRecording(false);
+            for (int j = 0; j < active_parameters.size(); j++) {
+                best[j] = active_parameters[j]->GetValue();
+            }
+
+            atl::Variable<REAL_T> fx;
+            for (ls = 0; ls < this->max_line_searches; ++ls) {
+
+
+
+                // Tentative solution, gradient and loss
+                std::valarray<REAL_T> nx = x - step * z;
+
+                for (size_t j = 0; j < nops; j++) {
+                    active_parameters[j]->UpdateValue(nx[j]);
+                }
+
+                this->call_objective_function(fx);
+
+                if (fx.GetValue() <= this->function_value + tolerance * REAL_T(0.000001) * (1.0 / norm_g) * step * descent) { // First Wolfe condition
+
+                    atl::Variable<REAL_T>::SetRecording(true);
+                    this->call_objective_function(fx);
+                    this->get_gradient_and_hessian(ng, h);
+
+                    if (down || (-1.0 * Dot(z, nwg) >= 0.9 * descent)) { // Second Wolfe condition
+                        x = nx;
+
+                        if (!this->cholesky_solve(h, ng, nx)) {
+                            gradient = ng;
+                            this->function_value = fx.GetValue();
+                            return true;
+                        } else {
+                            goto OUT_OF;
+                        }
+                    } else {
+OUT_OF:
+                        atl::Variable<REAL_T>::SetRecording(false);
+                        step *= 10.0;
+                    }
+                } else {
+                    step /= 10.0;
+                    down = true;
+                }
+            }
+            for (size_t j = 0; j < nops; j++) {
+                active_parameters[j]->SetValue(best[j]);
+            }
+
+            return false;
+
+        }
+
         void print22() {
             const char separator = ' ';
             const int idWidth = 8;
@@ -1085,16 +1454,38 @@ namespace atl {
 
     private:
 
+        size_t GetMilliCount() {
+            //            std::chrono::time_point now = std::chrono::system_clock::now();
+            auto duration = std::chrono::system_clock::now().time_since_epoch();
+            auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
+            return millis;
+        }
+
         void call_objective_function(atl::Variable<REAL_T>& f) {
             atl::Variable<REAL_T>::gradient_structure_g.Reset();
             f = 0.0;
+            //            this->ObjectiveFunction(f);
+            this->function_calls++;
+            if (!atl::Variable<REAL_T>::IsRecording()) {
+                this->unrecorded_calls++;
+            }
+            clock_t start = GetMilliCount();
             this->ObjectiveFunction(f);
+            clock_t end = GetMilliCount();
+            //            this->function_result_m = atl::ADNumber<T > (f);
+
+            sum_time_in_user_function += (end - start);
+            average_time_in_user_function = sum_time_in_user_function / function_calls;
         }
 
         void get_gradient() {
+
             this->maxgc = 100000;
+            this->gradient_calls++;
+            size_t start = this->GetMilliCount();
 
             atl::Variable<REAL_T>::gradient_structure_g.Accumulate();
+
             for (int i = 0; i < this->active_parameters.size(); i++) {
 
                 this->gradient[i] = this->active_parameters[i]->info->dvalue;
@@ -1104,6 +1495,10 @@ namespace atl {
                     maxgc = std::fabs(this->gradient[i]);
                 }
             }
+
+            size_t end = this->GetMilliCount();
+            this->sum_time_in_grad_calc += (end - start);
+            this->average_time_in_grad_calc = sum_time_in_grad_calc / this->gradient_calls;
         }
 
         void get_gradient(std::valarray<REAL_T>& g) {
@@ -1124,14 +1519,32 @@ namespace atl {
             this->maxgc = 100000;
             atl::Variable<REAL_T>::gradient_structure_g.HessianAndGradientAccumulate();
             for (int i = 0; i < this->active_parameters.size(); i++) {
-                gradient[i] = this->active_parameters[i]->info->dvalue;
+                this->gradient[i] = this->active_parameters[i]->info->dvalue;
+                if (i == 0) {
+                    maxgc = std::fabs(this->gradient[i]);
+                } else if (std::fabs(this->gradient[i]) > maxgc) {
+                    maxgc = std::fabs(this->gradient[i]);
+                }
+                for (int j = 0; j < this->active_parameters.size(); j++) {
+                    hessian[i][j] = this->active_parameters[i]->info->hessian_row[this->active_parameters[j]->info];
+                }
+            }
+
+        }
+
+        void get_gradient_and_hessian(std::valarray<REAL_T>& g, std::valarray<std::valarray<REAL_T> >& h) {
+
+            this->maxgc = 100000;
+            atl::Variable<REAL_T>::gradient_structure_g.HessianAndGradientAccumulate();
+            for (int i = 0; i < this->active_parameters.size(); i++) {
+                g[i] = this->active_parameters[i]->info->dvalue;
                 if (i == 0) {
                     maxgc = std::fabs(gradient[i]);
                 } else if (std::fabs(gradient[i]) > maxgc) {
                     maxgc = std::fabs(gradient[i]);
                 }
                 for (int j = 0; j < this->active_parameters.size(); j++) {
-                    hessian[i][j] = this->active_parameters[i]->info->hessian_row[this->active_parameters[j]->info];
+                    h[i][j] = this->active_parameters[i]->info->hessian_row[this->active_parameters[j]->info];
                 }
             }
 
@@ -1383,20 +1796,34 @@ namespace atl {
 
 
             std::cout << io::BOLD << message << io::DEFAULT << std::endl;
+            switch (this->routine) {
+                case LBFGS:
+                    std::cout << "Routine: LBFGS\n";
+                    break;
+                case NEWTON:
+                    std::cout << "Routine: Newton\n";
+                    break;
+                case NEWTON_CG:
+                    std::cout << "Routine: Newton Conjugate Gradient\n";
+                    break;
+                default:
+                    std::cout << "Routine: Unknown\n";
+
+            }
             std::cout << "Phase: " << io::BOLD << this->current_phase
                     << io::DEFAULT << " of " << io::BOLD << this->max_phase
                     << io::DEFAULT << "\n";
             std::cout << "Iteration: " << io::BOLD
                     << this->iteration << io::DEFAULT << std::endl;
-            //            std::cout << "Function Calls: "
-            //                    << io::BOLD << this->function_calls_m << io::DEFAULT << " (" << this->unrecorded_calls_m << " unrecorded line searches)" << std::endl;
-            //            std::cout << "Average Time in Objective Function: "
-            //                    << io::BOLD
-            //                    << static_cast<long> (this->average_time_in_user_function_m)
-            //                    << " ms\n" << io::DEFAULT;
-            //            std::cout << "Average Time Calculating Gradients: " << io::BOLD
-            //                    << static_cast<long> (this->average_time_in_grad_calc_m)
-            //                    << " ms\n" << io::DEFAULT;
+            std::cout << "Function Calls: "
+                    << io::BOLD << this->function_calls << io::DEFAULT << " (" << this->unrecorded_calls << " unrecorded line searches)" << std::endl;
+            std::cout << "Average Time in Objective Function: "
+                    << io::BOLD
+                    << static_cast<long> (this->average_time_in_user_function)
+                    << " ms\n" << io::DEFAULT;
+            std::cout << "Average Time Calculating Gradients: " << io::BOLD
+                    << static_cast<long> (this->average_time_in_grad_calc)
+                    << " ms\n" << io::DEFAULT;
             int prec = std::cout.precision();
             std::cout.precision(50);
             std::cout << "Function Value = " << io::BOLD << ret.GetValue()
@@ -1404,9 +1831,9 @@ namespace atl {
             std::cout.precision(prec);
             std::cout << "Active Parameters: " << io::BOLD << parameters.size()
                     << io::DEFAULT << std::endl;
-            //            std::cout << std::scientific;
-            //            std::cout << "Tolerance: " << io::BOLD << this->GetTolerance() << io::DEFAULT
-            //                    << std::endl;
+            std::cout << std::scientific;
+            std::cout << "Tolerance: " << io::BOLD << this->tolerance << io::DEFAULT
+                    << std::endl;
             //            std::cout << "Expression Size: " << BOLD << ret.ExpressionSize() << DEFAULT
             //                    << std::endl;
             std::cout << "Maximum Gradient Component Magnitude: " << io::BOLD
