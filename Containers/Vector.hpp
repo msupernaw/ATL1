@@ -55,7 +55,7 @@ namespace atl {
         typedef typename std::vector<T>::reverse_iterator reverse_iterator;
         typedef typename std::vector<T>::const_iterator const_iterator;
         typedef typename std::vector<T>::const_reverse_iterator const_reverse_iterator;
-        
+
 
         typedef typename IntrinsicBaseType<T>::TYPE INTRINSIC_BASE;
         typedef T RET_TYPE;
@@ -126,6 +126,10 @@ namespace atl {
                 data_m[i] = val;
             }
             return *this;
+        }
+
+        inline Vector operator-() {
+            return static_cast<T> (-1.0) * (*this);
         }
 
         Vector& operator=(const std::initializer_list<T>& l) {
@@ -580,8 +584,7 @@ namespace atl {
             length++;
         }
 
-
-          iterator begin() {
+        iterator begin() {
             return this->data_m.begin();
         }
 
@@ -612,8 +615,8 @@ namespace atl {
         const_iterator rend()const {
             return this->data_m.rend();
         }
-        
-        
+
+
     };
 
 

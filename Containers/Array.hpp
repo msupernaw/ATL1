@@ -693,6 +693,10 @@ namespace atl {
             return *this;
         }
 
+        inline Array operator-() {
+            return static_cast<T> (-1.0) * (*this);
+        }
+
         Array& operator=(const Array &other) {
             isize = other.isize;
             jsize = other.jsize;

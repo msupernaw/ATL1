@@ -162,21 +162,21 @@ namespace atl {
             }
         }
 
-        
         /**
-         * Returns an n x n identity Matrix;
+         * Returns an n x n identity Matrix or a Matrix
+         * with value v on the diagonal.
          * 
          * @param rows
          * @param cols
          */
-        static const atl::Matrix<T> Identity(size_t n){
+        static const atl::Matrix<T> Identity(size_t n, T v = 1.0) {
             Matrix<T> id(n, n);
-            for(int i = 0; i < n; i++){
-                id(i,i) = static_cast<T>(1.0);
+            for (int i = 0; i < n; i++) {
+                id(i, i) = v;
             }
-            return id;          
+            return id;
         }
-        
+
         void Resize(size_t rows, size_t cols) {
             this->isize = rows;
             this->jsize = cols;
@@ -192,6 +192,10 @@ namespace atl {
                 data_m[i] = val;
             }
             return *this;
+        }
+
+        inline Matrix operator-() {
+            return static_cast<T>(-1.0) * (*this);
         }
 
         Matrix& operator=(const std::initializer_list<std::initializer_list<T> >& l) {
