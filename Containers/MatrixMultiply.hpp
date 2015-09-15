@@ -65,7 +65,7 @@ namespace atl {
         }
 
         inline const RET_TYPE operator()(size_t i, size_t j) const {
-#warning matrix operation needs review.
+//#warning matrix operation needs review.
             RET_TYPE ret = 0.0;// = lhs_m(i, 0) * rhs_m(0, j);
 
 

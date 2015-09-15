@@ -58,14 +58,14 @@ namespace atl {
             return Cast().GetValue();
         }
         //
-//
-//        operator REAL_T() {
-//            return Cast().GetValue();
-//        }
-//
-//        operator REAL_T()const {
-//            return Cast().GetValue();
-//        }
+
+        operator REAL_T() {
+            return Cast().GetValue();
+        }
+
+        operator REAL_T()const {
+            return Cast().GetValue();
+        }
 
       
 
