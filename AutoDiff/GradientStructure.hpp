@@ -340,7 +340,7 @@ namespace atl {
     public:
         DerivativeTraceLevel derivative_trace_level;
         std::vector<Adjoint<REAL_T> > gradient_stack;
-        std::atomic<uint32_t> stack_current;
+        std::atomic<size_t> stack_current;
         bool recording;
 
         bool gradient_computed;
@@ -379,7 +379,7 @@ namespace atl {
          * 
          * @return 
          */
-        inline uint32_t NextIndex() {
+        inline size_t NextIndex() {
             return stack_current.fetch_add(1, std::memory_order_relaxed);
         }
         
