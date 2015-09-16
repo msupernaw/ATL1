@@ -244,24 +244,38 @@ namespace atl {
 
     template<typename REAL_T>
     class AdjointDerivative {
-        typedef std::vector<std::vector<REAL_T > > Mat;
-        Mat hessian;
+//        typedef std::vector<std::vector<REAL_T > > Mat;
+//        Mat hessian;
     public:
         VariableInfo<REAL_T>* dependent;
         REAL_T forward;
         REAL_T forward2;
-        bool separable;
+        //        bool separable;
 
         AdjointDerivative() : dependent(NULL), forward(0.0), forward2(0.0) {
         }
 
-        AdjointDerivative(const AdjointDerivative<REAL_T>& o) : dependent(std::move(o.dependent)), forward(std::move(o.forward)), forward2(std::move(o.forward2)) {
+        AdjointDerivative(const AdjointDerivative<REAL_T>& o)
+        : dependent(std::move(o.dependent)),
+        forward(std::move(o.forward)),
+        forward2(std::move(o.forward2)) {
+
 
         }
 
-        //        AdjointDerivative(AdjointDerivative<REAL_T>&& o) : dependent(std::move(o.dependent)), forward(std::move(o.forward)) {
-        //
-        //        }
+        AdjointDerivative(AdjointDerivative<REAL_T>&& o) : dependent(std::move(o.dependent)), forward(std::move(o.forward)) {
+            o.forward = 0.0;
+            o.forward2 = 0.0;
+            o.dependent = NULL;
+        }
+        
+
+        AdjointDerivative& operator=(const AdjointDerivative<REAL_T>& other) {
+            this->dependent = other.dependent;
+            forward = other.forward;
+            forward2 = other.forward2;
+            return *this;
+        }
 
         AdjointDerivative(VariableInfo<REAL_T>* d, REAL_T f) :
         dependent(d), forward(f), forward2(1) {
@@ -388,8 +402,8 @@ namespace atl {
 
         inline Adjoint<REAL_T>& NextEntry() {
 #ifdef ATL_ENABLE_BOUNDS_CHECKING
-            if(this->stack_current >= this->max_stack_size){
-                std::cout<<"Current stack index exceeds gradient stack limits.\n"<<std::flush;
+            if ((this->stack_current + 1) >= this->max_stack_size) {
+                std::cout << "Current stack index exceeds gradient stack limits.\n" << std::flush;
                 exit(0);
             }
 #endif
@@ -405,7 +419,7 @@ namespace atl {
 
             if (recording) {
 
-                REAL_T w;
+                REAL_T w = 0.0;
                 this->gradient_stack[stack_current - 1].w->dvalue = 1.0;
 #pragma unroll
                 for (int i = (stack_current - 1); i >= 0; i--) {

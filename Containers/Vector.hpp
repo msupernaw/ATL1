@@ -230,9 +230,9 @@ namespace atl {
 
             isize = expr.Size(0);
 
-#ifdef ATL_ENABLE_BOUNDS_CHECKING
-            assert(expr.Size(1) == 1);
-#endif
+//#ifdef ATL_ENABLE_BOUNDS_CHECKING
+//            assert(expr.Size(0) == 1);
+//#endif
 
 
             data_m.resize(isize);

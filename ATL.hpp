@@ -31,6 +31,7 @@
 #include "Containers/MatrixDivide.hpp"
 #include "Containers/MatrixMultiply.hpp"
 #include "Containers/Math/MatrixMath.hpp"
+#include "Containers/MatrixTranspose.hpp"
 //#include "Containers/ConcurrentOperators.hpp"
 
 

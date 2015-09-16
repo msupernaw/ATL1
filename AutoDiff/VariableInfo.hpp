@@ -98,7 +98,7 @@ namespace atl {
         typedef typename HessianInfo::iterator row_iterator;
         uint32_t id;
 
-        VariableInfo() : dvalue(0.0), count(1), id(VariableIdGenerator::instance()->next()) {
+        VariableInfo() : vvalue(0.0),dvalue(0.0), count(1), id(VariableIdGenerator::instance()->next()) {
             
         }
 

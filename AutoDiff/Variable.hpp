@@ -81,8 +81,6 @@ namespace atl {
 
     };
 
-
-
     /**
      * Sine transformation for a variable.
      */
@@ -122,7 +120,7 @@ namespace atl {
 
         virtual REAL_T Internal2External(REAL_T val, REAL_T min_, REAL_T max_) const {
             //            return ((std::sin(val) + 1.0) / 2.0)*(max - min) + min;
-            return std::max(min_, std::min(max_, ((std::sin(val) + static_cast<REAL_T>(1.0)) / static_cast<REAL_T>(2.0))*(max_ - min_) + min_));
+            return std::max(min_, std::min(max_, ((std::sin(val) + static_cast<REAL_T> (1.0)) / static_cast<REAL_T> (2.0))*(max_ - min_) + min_));
         }
 
         virtual REAL_T DerivativeInternal2External(REAL_T val, REAL_T min_, REAL_T max_)const {
@@ -191,25 +189,25 @@ namespace atl {
             mapped_info = (this->info);
         }
 
-        Variable(const Variable& other) 
-        : info(other.info), 
-                min_boundary_m(other.min_boundary_m), 
-                max_boundary_m(other.max_boundary_m), 
-                bounded_m(other.bounded_m),
-                transformation(&default_transformation) {
+        Variable(const Variable& other)
+        : info(other.info),
+        min_boundary_m(other.min_boundary_m),
+        max_boundary_m(other.max_boundary_m),
+        bounded_m(other.bounded_m),
+        transformation(&default_transformation) {
             info->count++;
             mapped_info = (other.mapped_info);
         }
 
-        Variable(Variable&& other) 
-        : info(other.info), 
-                min_boundary_m(other.min_boundary_m), 
-                max_boundary_m(other.max_boundary_m), 
-                bounded_m(other.bounded_m), 
-                transformation(other.transformation) {
-//                        info->count++;
+        Variable(Variable&& other)
+        : info(other.info),
+        min_boundary_m(other.min_boundary_m),
+        max_boundary_m(other.max_boundary_m),
+        bounded_m(other.bounded_m),
+        transformation(other.transformation) {
+            //                        info->count++;
             mapped_info = (other.mapped_info);
-//            other.info->Release();
+            //            other.info->Release();
             other.info = new atl::VariableInfo<REAL_T>();
             other.min_boundary_m = std::numeric_limits<REAL_T>::min();
             other.max_boundary_m = std::numeric_limits<REAL_T>::max();
@@ -229,7 +227,7 @@ namespace atl {
             if (Variable<REAL_T>::gradient_structure_g.recording) {
 
                 Adjoint<REAL_T>& entry = Variable<REAL_T>::gradient_structure_g.gradient_stack[Variable<REAL_T>::gradient_structure_g.NextIndex()];
-
+                new(&entry)Adjoint<REAL_T>();
                 entry.w = info;
 
                 ids.clear();
@@ -279,7 +277,7 @@ namespace atl {
             if (gs.recording) {
 
                 Adjoint<REAL_T>& entry = gs.gradient_stack[gs.NextIndex()];
-
+                new(&entry)Adjoint<REAL_T>();
                 entry.w = info;
 
                 ids.clear();
@@ -336,7 +334,7 @@ namespace atl {
             max_boundary_m = (other.max_boundary_m);
             bounded_m = (other.bounded_m);
             transformation = (other.transformation);
-//                                    info->count++;
+            //                                    info->count++;
             mapped_info = (other.mapped_info);
             other.info = new atl::VariableInfo<REAL_T>();
             other.min_boundary_m = std::numeric_limits<REAL_T>::min();
@@ -347,14 +345,13 @@ namespace atl {
             return *this;
         }
 
+        operator REAL_T() {
+            return GetValue();
+        }
 
-                operator REAL_T() {
-                    return GetValue();
-                }
-        
-                operator REAL_T()const {
-                    return GetValue();
-                }
+        operator REAL_T()const {
+            return GetValue();
+        }
 
         template<class A>
         inline Variable& operator=(const ExpressionBase<REAL_T, A>& exp) {
@@ -362,11 +359,14 @@ namespace atl {
 
                 Adjoint<REAL_T>& entry = Variable<REAL_T>::gradient_structure_g.gradient_stack[Variable<REAL_T>::gradient_structure_g.NextIndex()];
 
+                new(&entry)Adjoint<REAL_T>();
+
                 entry.w = info;
 
                 ids.clear();
                 exp.PushIds(ids);
-                size_t isize = ids.size();
+                size_t isize = 0;
+                isize = ids.size();
                 entry.entries.resize(isize);
                 typename IDSet<atl::VariableInfo<REAL_T>* >::iterator it;
                 typename IDSet<atl::VariableInfo<REAL_T>* >::iterator jt;

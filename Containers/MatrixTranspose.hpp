@@ -47,7 +47,7 @@ namespace atl {
          *Returns the first valid index for this matrix given dimension d. 
          */
         inline const size_t IndexMin(uint32_t d) const {
-            return std::max(lhs_m.IndexMin(d), rhs_m.IndexMin(d));
+            return m_m.IndexMin(d);
         }
 
         /*
@@ -55,7 +55,7 @@ namespace atl {
          *Returns the last valid index for this matrix given dimension d. 
          */
         inline const size_t IndexMax(uint32_t d) const {
-            return std::min(lhs_m.IndexMax(d), rhs_m.IndexMax(d));
+            return m_m.IndexMax(d);
         }
 
         /**
@@ -65,7 +65,7 @@ namespace atl {
          * @return 
          */
         inline const RET_TYPE AtRaw(const uint32_t& i, const uint32_t & j) const {
-            return lhs_m.AtRaw(i, j) + rhs_m.AtRaw(i, j);
+            return m_m.AtRaw(j, i);
         }
 
         /**
@@ -75,8 +75,7 @@ namespace atl {
          * @param ptr
          */
         inline void IsAliased(bool& aliased, void* ptr) const{
-            lhs_m.IsAliased(aliased, ptr);
-            rhs_m.IsAliased(aliased, ptr);
+            m_m.IsAliased(aliased, ptr);
         }
 
 

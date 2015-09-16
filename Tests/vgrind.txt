@@ -1,0 +1,385 @@
+running...
+
+
+Test Problem:
+Parameters:
+Variable a = 0.03434
+Variable b = 0.03423
+f = a + b
+
+evaluating...computing exact hessian...done!
+estimating hessian...done
+Gradient Test Passed.
+Hessian Test Passed.
+
+
+Test Problem:
+Parameters:
+Variable a = 0.03434
+Variable b = 0.03423
+f = a + 3.1459
+
+evaluating...computing exact hessian...done!
+estimating hessian...done
+Gradient Test Passed.
+Hessian Test Passed.
+
+
+Test Problem:
+Parameters:
+Variable a = 0.03434
+Variable b = 0.03423
+f = 3.1459 + b
+
+evaluating...computing exact hessian...done!
+estimating hessian...done
+Gradient Test Passed.
+Hessian Test Passed.
+
+
+Test Problem:
+Parameters:
+Variable a = 0.03434
+Variable b = 0.03423
+f = a - b
+
+evaluating...computing exact hessian...done!
+estimating hessian...done
+Gradient Test Passed.
+Hessian Test Passed.
+
+
+Test Problem:
+Parameters:
+Variable a = 0.03434
+Variable b = 0.03423
+f = a - 3.1459
+
+evaluating...computing exact hessian...done!
+estimating hessian...done
+Gradient Test Passed.
+Hessian Test Passed.
+
+
+Test Problem:
+Parameters:
+Variable a = 0.03434
+Variable b = 0.03423
+f = 3.1459 - b
+
+evaluating...computing exact hessian...done!
+estimating hessian...done
+Gradient Test Passed.
+Hessian Test Passed.
+
+
+Test Problem:
+Parameters:
+Variable a = 0.03434
+Variable b = 0.03423
+f = a * b
+
+evaluating...computing exact hessian...done!
+estimating hessian...done
+Gradient Test Passed.
+Hessian Test Passed.
+
+
+Test Problem:
+Parameters:
+Variable a = 0.03434
+Variable b = 0.03423
+f = a * 3.1459
+
+evaluating...computing exact hessian...done!
+estimating hessian...done
+Gradient Test Passed.
+Hessian Test Passed.
+
+
+Test Problem:
+Parameters:
+Variable a = 0.03434
+Variable b = 0.03423
+f = 3.1459 * b
+
+evaluating...computing exact hessian...done!
+estimating hessian...done
+Gradient Test Passed.
+Hessian Test Passed.
+
+
+Test Problem:
+Parameters:
+Variable a = 0.03434
+Variable b = 0.03423
+f = a / b
+
+evaluating...computing exact hessian...done!
+estimating hessian...done
+Gradient Test Passed.
+Hessian Test Passed.
+
+
+Test Problem:
+Parameters:
+Variable a = 0.03434
+Variable b = 0.03423
+f = a / 3.1459
+
+evaluating...computing exact hessian...done!
+estimating hessian...done
+Gradient Test Passed.
+Hessian Test Passed.
+
+
+Test Problem:
+Parameters:
+Variable a = 0.03434
+Variable b = 0.03423
+f = 3.1459 / b
+
+evaluating...computing exact hessian...done!
+estimating hessian...done
+Gradient Test Passed.
+Hessian Test Passed.
+
+
+Test Problem:
+Parameters:
+Variable a = 0.03434
+Variable b = 0.03423
+f = atl::cos((a * b))
+
+evaluating...computing exact hessian...done!
+estimating hessian...done
+Gradient Test Passed.
+Hessian Test Passed.
+
+
+Test Problem:
+Parameters:
+Variable a = 0.03434
+Variable b = 0.03423
+f = atl::acos((a * b))
+
+evaluating...computing exact hessian...done!
+estimating hessian...done
+Gradient Test Passed.
+Hessian Test Passed.
+
+
+Test Problem:
+Parameters:
+Variable a = 0.03434
+Variable b = 0.03423
+f = atl::sin((a * b))
+
+evaluating...computing exact hessian...done!
+estimating hessian...done
+Gradient Test Passed.
+Hessian Test Passed.
+
+
+Test Problem:
+Parameters:
+Variable a = 0.03434
+Variable b = 0.03423
+f = atl::asin((a * b))
+
+evaluating...computing exact hessian...done!
+estimating hessian...done
+Gradient Test Passed.
+Hessian Test Passed.
+
+
+Test Problem:
+Parameters:
+Variable a = 0.03434
+Variable b = 0.03423
+f = atl::tan((a * b))
+
+evaluating...computing exact hessian...done!
+estimating hessian...done
+Gradient Test Passed.
+Hessian Test Passed.
+
+
+Test Problem:
+Parameters:
+Variable a = 0.03434
+Variable b = 0.03423
+f = atl::atan((a * b))
+
+evaluating...computing exact hessian...done!
+estimating hessian...done
+Gradient Test Passed.
+Hessian Test Passed.
+
+
+Test Problem:
+Parameters:
+Variable a = 0.03434
+Variable b = 0.03423
+f = atl::cosh((a * b))
+
+evaluating...computing exact hessian...done!
+estimating hessian...done
+Gradient Test Passed.
+Hessian Test Passed.
+
+
+Test Problem:
+Parameters:
+Variable a = 0.03434
+Variable b = 0.03423
+f = atl::sinh((a * b))
+
+evaluating...computing exact hessian...done!
+estimating hessian...done
+Gradient Test Passed.
+Hessian Test Passed.
+
+
+Test Problem:
+Parameters:
+Variable a = 0.03434
+Variable b = 0.03423
+f = atl::tanh((a * b))
+
+evaluating...computing exact hessian...done!
+estimating hessian...done
+Gradient Test Passed.
+Hessian Test Passed.
+
+
+Test Problem:
+Parameters:
+Variable a = 0.03434
+Variable b = 0.03423
+f = atl::exp((a * b))
+
+evaluating...computing exact hessian...done!
+estimating hessian...done
+Gradient Test Passed.
+Hessian Test Passed.
+
+
+Test Problem:
+Parameters:
+Variable a = 0.03434
+Variable b = 0.03423
+f = atl::log((a * b))
+
+evaluating...computing exact hessian...done!
+estimating hessian...done
+Gradient Test Passed.
+Hessian Test Passed.
+
+
+Test Problem:
+Parameters:
+Variable a = 0.03434
+Variable b = 0.03423
+f = atl::log10((a * b))
+
+evaluating...computing exact hessian...done!
+estimating hessian...done
+Gradient Test Passed.
+Hessian Test Passed.
+
+
+Test Problem:
+Parameters:
+Variable a = 0.03434
+Variable b = 0.03423
+f = atl::fabs((a * b))
+
+evaluating...computing exact hessian...done!
+estimating hessian...done
+Gradient Test Passed.
+Hessian Test Passed.
+
+
+Test Problem:
+Parameters:
+Variable a = 0.03434
+Variable b = 0.03423
+f = atl::sqrt((a * b))
+
+evaluating...computing exact hessian...done!
+estimating hessian...done
+Gradient Test Passed.
+Hessian Test Passed.
+
+
+Test Problem:
+Parameters:
+Variable a = 0.03434
+Variable b = 0.03423
+f = atl::pow((a * b),(a * b))
+
+evaluating...computing exact hessian...done!
+estimating hessian...done
+Gradient Test Passed.
+Hessian Test Passed.
+
+
+Test Problem:
+Parameters:
+Variable a = 0.03434
+Variable b = 0.03423
+f = atl::ceil((a * b))
+
+evaluating...computing exact hessian...done!
+estimating hessian...done
+Gradient Test Passed.
+Hessian Test Passed.
+
+
+Test Problem:
+Parameters:
+Variable a = 0.03434
+Variable b = 0.03423
+f = atl::floor((a * b))
+
+evaluating...computing exact hessian...done!
+estimating hessian...done
+Gradient Test Passed.
+Hessian Test Passed.
+
+
+Test Problem:
+Parameters:
+Variable a = 0.03434
+Variable b = 0.03423
+Variable v[10]
+
+f = (a / b); 
+for (int i = 0; i < nobs; i++) {
+    for (int j = 0; j < nobs; j++) {
+         f += atl::log(v[j] * v[i] * atl::tanh(a / b * v[j] * v[i]) * atl::tanh(a / b) * v[j] * v[i] * atl::tanh(a / b));
+     }
+}
+
+evaluating...computing exact hessian...done!
+estimating hessian...done
+Gradient Test Passed.
+Hessian Test Passed.
+
+
+Test Problem:
+Parameters:
+Variable a = 0.03434
+Variable b = 0.03423
+Variable v[50]
+
+f = (a / b); 
+for (int i = 0; i < nobs; i++) {
+    for (int j = 0; j < nobs; j++) {
+         f += atl::log(v[j] * v[i] * atl::tanh(a / b * v[j] * v[i]) * atl::tanh(a / b) * v[j] * v[i] * atl::tanh(a / b));
+     }
+}
+
+evaluating...computing exact hessian...done!
+estimating hessian...

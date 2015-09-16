@@ -17,11 +17,11 @@ Hessian  Test Passed.
 Function value: 0.06857
 Gradient mse = 2.80675e-20, Error Range{-1.67534e-10 - -1.67534e-10}
 Hessian mse = 0, Error Range{0 - 0}
-Time to evaluate objective function: 0.000020 sec
+Time to evaluate objective function: 0.000024 sec
 Time to compute exact gradient and Hessian: 0.000004 sec
-Time to estimate gradient: 0.000003 sec
-Time to estimate Hessian: 0.000015 sec
-Speed up = 3.570742
+Time to estimate gradient: 0.000002 sec
+Time to estimate Hessian: 0.000014 sec
+Speed up = 3.482130
 
 estimated gradient:
 1.000000 1.000000 
@@ -57,11 +57,11 @@ Hessian  Test Passed.
 Function value: 3.180240
 Gradient mse = 0.000000, Error Range{-0.000000 - 0.000000}
 Hessian mse = 0.000000, Error Range{0.000000 - 0.000000}
-Time to evaluate objective function: 0.000001 sec
+Time to evaluate objective function: 0.000002 sec
 Time to compute exact gradient and Hessian: 0.000000 sec
 Time to estimate gradient: 0.000002 sec
-Time to estimate Hessian: 0.000007 sec
-Speed up = 19.449351
+Time to estimate Hessian: 0.000009 sec
+Speed up = 23.053571
 
 estimated gradient:
 1.000000 0.000000 
@@ -97,11 +97,11 @@ Hessian  Test Passed.
 Function value: 3.180130
 Gradient mse = 0.000000, Error Range{0.000000 - 0.000000}
 Hessian mse = 0.000000, Error Range{0.000000 - 0.000000}
-Time to evaluate objective function: 0.000001 sec
+Time to evaluate objective function: 0.000002 sec
 Time to compute exact gradient and Hessian: 0.000000 sec
-Time to estimate gradient: 0.000002 sec
-Time to estimate Hessian: 0.000007 sec
-Speed up = 21.915663
+Time to estimate gradient: 0.000001 sec
+Time to estimate Hessian: 0.000008 sec
+Speed up = 32.838710
 
 estimated gradient:
 0.000000 1.000000 
@@ -139,9 +139,9 @@ Gradient mse = 0.000000, Error Range{-0.000000 - 0.000000}
 Hessian mse = 0.000000, Error Range{0.000000 - 0.000000}
 Time to evaluate objective function: 0.000002 sec
 Time to compute exact gradient and Hessian: 0.000000 sec
-Time to estimate gradient: 0.000002 sec
-Time to estimate Hessian: 0.000008 sec
-Speed up = 18.650685
+Time to estimate gradient: 0.000001 sec
+Time to estimate Hessian: 0.000009 sec
+Speed up = 24.560773
 
 estimated gradient:
 1.000000 -1.000000 
@@ -179,9 +179,9 @@ Gradient mse = 0.000000, Error Range{-0.000000 - 0.000000}
 Hessian mse = 0.000000, Error Range{0.000000 - 0.000000}
 Time to evaluate objective function: 0.000001 sec
 Time to compute exact gradient and Hessian: 0.000000 sec
-Time to estimate gradient: 0.000002 sec
-Time to estimate Hessian: 0.000007 sec
-Speed up = 16.525301
+Time to estimate gradient: 0.000001 sec
+Time to estimate Hessian: 0.000008 sec
+Speed up = 30.632000
 
 estimated gradient:
 1.000000 0.000000 
@@ -219,9 +219,9 @@ Gradient mse = 0.000000, Error Range{-0.000000 - 0.000000}
 Hessian mse = 0.000000, Error Range{0.000000 - 0.000000}
 Time to evaluate objective function: 0.000005 sec
 Time to compute exact gradient and Hessian: 0.000000 sec
-Time to estimate gradient: 0.000002 sec
-Time to estimate Hessian: 0.000007 sec
-Speed up = 19.760000
+Time to estimate gradient: 0.000001 sec
+Time to estimate Hessian: 0.000008 sec
+Speed up = 27.647273
 
 estimated gradient:
 0.000000 -1.000000 
@@ -259,9 +259,9 @@ Gradient mse = 0.000000, Error Range{-0.000000 - 0.000000}
 Hessian mse = 0.000000, Error Range{-0.000000 - 0.000000}
 Time to evaluate objective function: 0.000002 sec
 Time to compute exact gradient and Hessian: 0.000001 sec
-Time to estimate gradient: 0.000002 sec
-Time to estimate Hessian: 0.000008 sec
-Speed up = 12.717252
+Time to estimate gradient: 0.000001 sec
+Time to estimate Hessian: 0.000009 sec
+Speed up = 16.786389
 
 estimated gradient:
 0.034230 0.034340 
@@ -299,9 +299,9 @@ Gradient mse = 0.000000, Error Range{-0.000000 - 0.000000}
 Hessian mse = 0.000000, Error Range{0.000000 - 0.000000}
 Time to evaluate objective function: 0.000001 sec
 Time to compute exact gradient and Hessian: 0.000000 sec
-Time to estimate gradient: 0.000002 sec
-Time to estimate Hessian: 0.000006 sec
-Speed up = 19.153392
+Time to estimate gradient: 0.000001 sec
+Time to estimate Hessian: 0.000008 sec
+Speed up = 39.294416
 
 estimated gradient:
 3.145900 0.000000 
@@ -340,8 +340,8 @@ Hessian mse = 0.000000, Error Range{0.000000 - 0.000000}
 Time to evaluate objective function: 0.000001 sec
 Time to compute exact gradient and Hessian: 0.000000 sec
 Time to estimate gradient: 0.000001 sec
-Time to estimate Hessian: 0.000005 sec
-Speed up = 18.050847
+Time to estimate Hessian: 0.000008 sec
+Speed up = 34.081448
 
 estimated gradient:
 0.000000 3.145900 
@@ -377,11 +377,11 @@ Hessian  Test Passed.
 Function value: 1.003214
 Gradient mse = 0.000000, Error Range{-0.000000 - 0.000000}
 Hessian mse = 0.000000, Error Range{-0.000000 - 0.000000}
-Time to evaluate objective function: 0.000005 sec
+Time to evaluate objective function: 0.000006 sec
 Time to compute exact gradient and Hessian: 0.000001 sec
 Time to estimate gradient: 0.000001 sec
-Time to estimate Hessian: 0.000006 sec
-Speed up = 11.223199
+Time to estimate Hessian: 0.000012 sec
+Speed up = 19.300664
 
 estimated gradient:
 29.214140 -29.308021 
@@ -420,8 +420,8 @@ Hessian mse = 0.000000, Error Range{0.000000 - 0.000000}
 Time to evaluate objective function: 0.000001 sec
 Time to compute exact gradient and Hessian: 0.000000 sec
 Time to estimate gradient: 0.000001 sec
-Time to estimate Hessian: 0.000006 sec
-Speed up = 19.910345
+Time to estimate Hessian: 0.000008 sec
+Speed up = 27.746429
 
 estimated gradient:
 0.317874 0.000000 
@@ -460,8 +460,8 @@ Hessian mse = 0.000000, Error Range{0.000000 - 0.000000}
 Time to evaluate objective function: 0.000001 sec
 Time to compute exact gradient and Hessian: 0.000000 sec
 Time to estimate gradient: 0.000001 sec
-Time to estimate Hessian: 0.000005 sec
-Speed up = 15.227920
+Time to estimate Hessian: 0.000008 sec
+Speed up = 21.476323
 
 estimated gradient:
 0.000000 -2684.918549 
@@ -498,10 +498,10 @@ Function value: 0.999999
 Gradient mse = 0.000000, Error Range{-0.000000 - 0.000000}
 Hessian mse = 0.000000, Error Range{-0.000000 - 0.000000}
 Time to evaluate objective function: 0.000010 sec
-Time to compute exact gradient and Hessian: 0.000001 sec
-Time to estimate gradient: 0.000002 sec
+Time to compute exact gradient and Hessian: 0.000000 sec
+Time to estimate gradient: 0.000001 sec
 Time to estimate Hessian: 0.000009 sec
-Speed up = 15.531469
+Speed up = 19.620253
 
 estimated gradient:
 -0.000040 -0.000040 
@@ -537,11 +537,11 @@ Hessian  Test Passed.
 Function value: 1.569621
 Gradient mse = 0.000000, Error Range{0.000000 - 0.000000}
 Hessian mse = 0.000000, Error Range{0.000000 - 0.000000}
-Time to evaluate objective function: 0.000012 sec
-Time to compute exact gradient and Hessian: 0.000001 sec
-Time to estimate gradient: 0.000002 sec
-Time to estimate Hessian: 0.000007 sec
-Speed up = 13.227704
+Time to evaluate objective function: 0.000013 sec
+Time to compute exact gradient and Hessian: 0.000000 sec
+Time to estimate gradient: 0.000001 sec
+Time to estimate Hessian: 0.000009 sec
+Speed up = 18.279835
 
 estimated gradient:
 -0.034230 -0.034340 
@@ -577,11 +577,11 @@ Hessian  Test Passed.
 Function value: 0.001175
 Gradient mse = 0.000000, Error Range{-0.000000 - 0.000000}
 Hessian mse = 0.000000, Error Range{-0.000000 - 0.000000}
-Time to evaluate objective function: 0.000002 sec
+Time to evaluate objective function: 0.000003 sec
 Time to compute exact gradient and Hessian: 0.000000 sec
-Time to estimate gradient: 0.000002 sec
-Time to estimate Hessian: 0.000007 sec
-Speed up = 14.308511
+Time to estimate gradient: 0.000001 sec
+Time to estimate Hessian: 0.000009 sec
+Speed up = 19.122449
 
 estimated gradient:
 0.034230 0.034340 
@@ -617,11 +617,11 @@ Hessian  Test Passed.
 Function value: 0.001175
 Gradient mse = 0.000000, Error Range{-0.000000 - 0.000000}
 Hessian mse = 0.000000, Error Range{-0.000000 - -0.000000}
-Time to evaluate objective function: 0.000004 sec
+Time to evaluate objective function: 0.000005 sec
 Time to compute exact gradient and Hessian: 0.000000 sec
-Time to estimate gradient: 0.000002 sec
+Time to estimate gradient: 0.000001 sec
 Time to estimate Hessian: 0.000007 sec
-Speed up = 16.046798
+Speed up = 18.314496
 
 estimated gradient:
 0.034230 0.034340 
@@ -657,11 +657,11 @@ Hessian  Test Passed.
 Function value: 0.001175
 Gradient mse = 0.000000, Error Range{-0.000000 - 0.000000}
 Hessian mse = 0.000000, Error Range{-0.000000 - 0.000000}
-Time to evaluate objective function: 0.000005 sec
+Time to evaluate objective function: 0.000004 sec
 Time to compute exact gradient and Hessian: 0.000000 sec
-Time to estimate gradient: 0.000002 sec
-Time to estimate Hessian: 0.000007 sec
-Speed up = 15.094298
+Time to estimate gradient: 0.000001 sec
+Time to estimate Hessian: 0.000008 sec
+Speed up = 20.588670
 
 estimated gradient:
 0.034230 0.034340 
@@ -699,9 +699,9 @@ Gradient mse = 0.000000, Error Range{-0.000000 - -0.000000}
 Hessian mse = 0.000000, Error Range{-0.000000 - 0.000000}
 Time to evaluate objective function: 0.000004 sec
 Time to compute exact gradient and Hessian: 0.000000 sec
-Time to estimate gradient: 0.000002 sec
+Time to estimate gradient: 0.000001 sec
 Time to estimate Hessian: 0.000007 sec
-Speed up = 16.916667
+Speed up = 21.665689
 
 estimated gradient:
 0.034230 0.034340 
@@ -737,11 +737,11 @@ Hessian  Test Passed.
 Function value: 1.000001
 Gradient mse = 0.000000, Error Range{-0.000000 - 0.000000}
 Hessian mse = 0.000000, Error Range{-0.000000 - -0.000000}
-Time to evaluate objective function: 0.000005 sec
-Time to compute exact gradient and Hessian: 0.000000 sec
-Time to estimate gradient: 0.000001 sec
-Time to estimate Hessian: 0.000007 sec
-Speed up = 15.463134
+Time to evaluate objective function: 0.000356 sec
+Time to compute exact gradient and Hessian: 0.000001 sec
+Time to estimate gradient: 0.000002 sec
+Time to estimate Hessian: 0.000018 sec
+Speed up = 23.438573
 
 estimated gradient:
 0.000040 0.000040 
@@ -780,8 +780,8 @@ Hessian mse = 0.000000, Error Range{-0.000000 - 0.000000}
 Time to evaluate objective function: 0.000002 sec
 Time to compute exact gradient and Hessian: 0.000000 sec
 Time to estimate gradient: 0.000001 sec
-Time to estimate Hessian: 0.000007 sec
-Speed up = 15.530752
+Time to estimate Hessian: 0.000008 sec
+Speed up = 20.775061
 
 estimated gradient:
 0.034230 0.034340 
@@ -817,11 +817,11 @@ Hessian  Test Passed.
 Function value: 0.001175
 Gradient mse = 0.000000, Error Range{-0.000000 - -0.000000}
 Hessian mse = 0.000000, Error Range{-0.000000 - 0.000000}
-Time to evaluate objective function: 0.000004 sec
-Time to compute exact gradient and Hessian: 0.000000 sec
-Time to estimate gradient: 0.000002 sec
-Time to estimate Hessian: 0.000007 sec
-Speed up = 15.725301
+Time to evaluate objective function: 0.000187 sec
+Time to compute exact gradient and Hessian: 0.000001 sec
+Time to estimate gradient: 0.000001 sec
+Time to estimate Hessian: 0.000009 sec
+Speed up = 15.173267
 
 estimated gradient:
 0.034230 0.034340 
@@ -857,11 +857,11 @@ Hessian  Test Passed.
 Function value: 1.001176
 Gradient mse = 0.000000, Error Range{0.000000 - 0.000000}
 Hessian mse = 0.000000, Error Range{-0.000000 - -0.000000}
-Time to evaluate objective function: 0.000004 sec
+Time to evaluate objective function: 0.000005 sec
 Time to compute exact gradient and Hessian: 0.000000 sec
-Time to estimate gradient: 0.000002 sec
-Time to estimate Hessian: 0.000006 sec
-Speed up = 13.921171
+Time to estimate gradient: 0.000001 sec
+Time to estimate Hessian: 0.000008 sec
+Speed up = 18.835294
 
 estimated gradient:
 0.034270 0.034380 
@@ -897,11 +897,11 @@ Hessian  Test Passed.
 Function value: -6.746097
 Gradient mse = 0.000000, Error Range{-0.000000 - 0.000000}
 Hessian mse = 0.000000, Error Range{-0.000000 - 0.000000}
-Time to evaluate objective function: 0.000004 sec
+Time to evaluate objective function: 0.000005 sec
 Time to compute exact gradient and Hessian: 0.000000 sec
-Time to estimate gradient: 0.000002 sec
-Time to estimate Hessian: 0.000006 sec
-Speed up = 12.753036
+Time to estimate gradient: 0.000001 sec
+Time to estimate Hessian: 0.000008 sec
+Speed up = 17.781395
 
 estimated gradient:
 29.120559 29.214140 
@@ -939,9 +939,9 @@ Gradient mse = 0.000000, Error Range{-0.000000 - 0.000000}
 Hessian mse = 0.000000, Error Range{0.000000 - 0.000000}
 Time to evaluate objective function: 0.000004 sec
 Time to compute exact gradient and Hessian: 0.000000 sec
-Time to estimate gradient: 0.000002 sec
-Time to estimate Hessian: 0.000006 sec
-Speed up = 13.690987
+Time to estimate gradient: 0.000001 sec
+Time to estimate Hessian: 0.000008 sec
+Speed up = 18.556627
 
 estimated gradient:
 12.646898 12.687540 
@@ -980,8 +980,8 @@ Hessian mse = 0.000000, Error Range{-0.000000 - 0.000000}
 Time to evaluate objective function: 0.000002 sec
 Time to compute exact gradient and Hessian: 0.000000 sec
 Time to estimate gradient: 0.000001 sec
-Time to estimate Hessian: 0.000006 sec
-Speed up = 14.470167
+Time to estimate Hessian: 0.000007 sec
+Speed up = 17.844125
 
 estimated gradient:
 0.034230 0.034340 
@@ -1019,9 +1019,9 @@ Gradient mse = 0.000000, Error Range{0.000000 - 0.000000}
 Hessian mse = 0.000000, Error Range{-0.000000 - 0.000000}
 Time to evaluate objective function: 0.000002 sec
 Time to compute exact gradient and Hessian: 0.000000 sec
-Time to estimate gradient: 0.000001 sec
-Time to estimate Hessian: 0.000006 sec
-Speed up = 14.672093
+Time to estimate gradient: 0.000009 sec
+Time to estimate Hessian: 0.000008 sec
+Speed up = 18.459459
 
 estimated gradient:
 0.499199 0.500803 
@@ -1059,9 +1059,9 @@ Gradient mse = 0.000000, Error Range{-0.000000 - -0.000000}
 Hessian mse = 0.000000, Error Range{-0.000000 - 0.000000}
 Time to evaluate objective function: 0.000003 sec
 Time to compute exact gradient and Hessian: 0.000000 sec
-Time to estimate gradient: 0.000002 sec
-Time to estimate Hessian: 0.000009 sec
-Speed up = 20.327014
+Time to estimate gradient: 0.000001 sec
+Time to estimate Hessian: 0.000007 sec
+Speed up = 20.820000
 
 estimated gradient:
 -0.195135 -0.195762 
@@ -1097,11 +1097,11 @@ Hessian  Test Passed.
 Function value: 1.000000
 Gradient mse = 0.000000, Error Range{0.000000 - 0.000000}
 Hessian mse = 0.000000, Error Range{0.000000 - 0.000000}
-Time to evaluate objective function: 0.000004 sec
+Time to evaluate objective function: 0.000003 sec
 Time to compute exact gradient and Hessian: 0.000000 sec
 Time to estimate gradient: 0.000001 sec
 Time to estimate Hessian: 0.000006 sec
-Speed up = 13.360360
+Speed up = 22.642308
 
 estimated gradient:
 0.000000 0.000000 
@@ -1137,11 +1137,11 @@ Hessian  Test Passed.
 Function value: 0.000000
 Gradient mse = 0.000000, Error Range{0.000000 - 0.000000}
 Hessian mse = 0.000000, Error Range{0.000000 - 0.000000}
-Time to evaluate objective function: 0.000004 sec
+Time to evaluate objective function: 0.000003 sec
 Time to compute exact gradient and Hessian: 0.000000 sec
-Time to estimate gradient: 0.000002 sec
+Time to estimate gradient: 0.000001 sec
 Time to estimate Hessian: 0.000006 sec
-Speed up = 16.983871
+Speed up = 29.446154
 
 estimated gradient:
 0.000000 0.000000 
@@ -1184,11 +1184,11 @@ Hessian  Test Passed.
 Function value: -80.052110
 Gradient mse = 0.000000, Error Range{-0.000011 - -0.000000}
 Hessian mse = 0.000000, Error Range{-0.000004 - 0.000010}
-Time to evaluate objective function: 0.001146 sec
-Time to compute exact gradient and Hessian: 0.000098 sec
-Time to estimate gradient: 0.000411 sec
-Time to estimate Hessian: 0.003459 sec
-Speed up = 35.288381
+Time to evaluate objective function: 0.000827 sec
+Time to compute exact gradient and Hessian: 0.000081 sec
+Time to estimate gradient: 0.000409 sec
+Time to estimate Hessian: 0.005079 sec
+Speed up = 62.612399
 
 estimated gradient:
 4829.275942 -4844.795075 50.973576 50.973577 50.973577 50.973577 50.973577 50.973576 50.973577 50.973577 50.973579 50.973579 
@@ -1261,11 +1261,11 @@ Hessian  Test Passed.
 Function value: -2025.379878
 Gradient mse = 0.000000, Error Range{-0.004227 - 0.000158}
 Hessian mse = 0.000000, Error Range{-0.007023 - 0.003109}
-Time to evaluate objective function: 0.020179 sec
-Time to compute exact gradient and Hessian: 0.002468 sec
-Time to estimate gradient: 0.039611 sec
-Time to estimate Hessian: 0.318937 sec
-Speed up = 129.241428
+Time to evaluate objective function: 0.020049 sec
+Time to compute exact gradient and Hessian: 0.002386 sec
+Time to estimate gradient: 0.039266 sec
+Time to estimate Hessian: 0.537064 sec
+Speed up = 225.057778
 
 estimated gradient:
 120030.758887 -120416.480183 254.867814 254.867825 254.867825 254.867803 254.867803 254.867803 254.867837 254.867859 254.867859 254.867859 254.867859 254.867859 254.867814 254.867723 254.867723 254.867723 254.867723 254.867723 254.867723 254.867723 254.867723 254.867723 254.867723 254.867723 254.867723 254.867723 254.867723 254.867723 254.867734 254.867734 254.867734 254.867734 254.867723 254.867723 254.867723 254.867723 254.867723 254.867723 254.867723 254.867723 254.867723 254.867723 254.867723 254.867723 254.867723 254.867723 254.867723 254.867723 254.867723 254.867723 
