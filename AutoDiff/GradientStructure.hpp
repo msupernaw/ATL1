@@ -339,33 +339,34 @@ namespace atl {
     class GradientStructure {
     public:
         DerivativeTraceLevel derivative_trace_level;
-//        std::vector<Adjoint<REAL_T> > gradient_stack;
+        //        std::vector<Adjoint<REAL_T> > gradient_stack;
         Adjoint<REAL_T>* gradient_stack;
         std::atomic<size_t> stack_current;
         bool recording;
+        size_t max_stack_size;
 
         bool gradient_computed;
 
         GradientStructure(uint32_t size = 10000000) : recording(true), stack_current(0), gradient_computed(false), derivative_trace_level(GRADIENT_AND_HESSIAN) {
-//            gradient_stack.reserve(size);
+            //            gradient_stack.reserve(size);
             gradient_stack = (Adjoint<REAL_T>*)malloc(size);
+            max_stack_size = size;
         }
 
-        
         /**
          * Sets the size of the stack.
          * @param size
          */
         void SetSize(size_t size) {
-//            gradient_stack.reserve(size);
+            //            gradient_stack.reserve(size);
         }
 
         virtual ~GradientStructure() {
             //in case mutex.lock() in VariableInfo fails.
-//            try {
-//                this->Reset();
-//            } catch (...) {
-//            }
+            //            try {
+            //                this->Reset();
+            //            } catch (...) {
+            //            }
         }
 
         inline const uint32_t GetStartIndex(uint32_t count) {
@@ -384,8 +385,14 @@ namespace atl {
         inline size_t NextIndex() {
             return stack_current.fetch_add(1, std::memory_order_relaxed);
         }
-        
-        inline Adjoint<REAL_T>& NextEntry(){
+
+        inline Adjoint<REAL_T>& NextEntry() {
+#ifdef ENABLE_BOUNDS_CHECKING
+            if(this->stack_current >= this->max_stack_size){
+                std::cout<<"Current stack index exceeds gradient stack limits.\n"<<std::flush;
+                exit(0);
+            }
+#endif
             return this->gradient_stack[this->NextIndex()];
         }
 
@@ -490,29 +497,29 @@ namespace atl {
             }
         }
 
-//        /**
-//         * Creates and adds an entry into this gradient stack for a variable(the dependent)
-//         * from a gradient vector, Hessian matrix with respect to to a list of variables.  
-//         * @param var
-//         * @param gradient
-//         * @param hessian
-//         */
-//        void AddAdjointEntry(const atl::Variable<REAL_T>& var,
-//                const std::vector<atl::VariableInfo<REAL_T> >& variables,
-//                const std::vector<double>& gradient,
-//                const std::vector<const std::vector<double> >& hessian) {
-//            Adjoint<REAL_T>& adjoint = this->gradient_stack[this->NextIndex()];
-//            adjoint.w = var.info;
-//            adjoint.entries.resize(variables.size());
-//            adjoint.second_order_partials.resize(variables.size()*variables.size());
-//            for (int i = 0; i < variables.size(); i++) {
-//                adjoint.entries[i] = (std::move(AdjointDerivative<REAL_T>(variables[i].info, gradient[i])));
-//                for (int j = 0; j < variables.size(); j++) {
-//
-//                }
-//            }
-//
-//        }
+        //        /**
+        //         * Creates and adds an entry into this gradient stack for a variable(the dependent)
+        //         * from a gradient vector, Hessian matrix with respect to to a list of variables.  
+        //         * @param var
+        //         * @param gradient
+        //         * @param hessian
+        //         */
+        //        void AddAdjointEntry(const atl::Variable<REAL_T>& var,
+        //                const std::vector<atl::VariableInfo<REAL_T> >& variables,
+        //                const std::vector<double>& gradient,
+        //                const std::vector<const std::vector<double> >& hessian) {
+        //            Adjoint<REAL_T>& adjoint = this->gradient_stack[this->NextIndex()];
+        //            adjoint.w = var.info;
+        //            adjoint.entries.resize(variables.size());
+        //            adjoint.second_order_partials.resize(variables.size()*variables.size());
+        //            for (int i = 0; i < variables.size(); i++) {
+        //                adjoint.entries[i] = (std::move(AdjointDerivative<REAL_T>(variables[i].info, gradient[i])));
+        //                for (int j = 0; j < variables.size(); j++) {
+        //
+        //                }
+        //            }
+        //
+        //        }
 
         /**
          * Resets this stack and makes it available for a new recording.
@@ -524,11 +531,11 @@ namespace atl {
 
 
             if (this->recording) {
-                #pragma unroll
+#pragma unroll
                 for (int i = (stack_current - 1); i >= 0; i--) {
                     this->gradient_stack[i].Reset();
                 }
-                if (empty_trash){
+                if (empty_trash) {
                     VariableInfo<REAL_T>::FreeAll();
                 }
                 stack_current = 0;
