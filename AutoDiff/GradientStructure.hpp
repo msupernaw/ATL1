@@ -339,14 +339,16 @@ namespace atl {
     class GradientStructure {
     public:
         DerivativeTraceLevel derivative_trace_level;
-        std::vector<Adjoint<REAL_T> > gradient_stack;
+//        std::vector<Adjoint<REAL_T> > gradient_stack;
+        Adjoint<REAL_T>* gradient_stack;
         std::atomic<size_t> stack_current;
         bool recording;
 
         bool gradient_computed;
 
         GradientStructure(uint32_t size = 10000000) : recording(true), stack_current(0), gradient_computed(false), derivative_trace_level(GRADIENT_AND_HESSIAN) {
-            gradient_stack.reserve(size);
+//            gradient_stack.reserve(size);
+            gradient_stack = (Adjoint<REAL_T>*)malloc(size);
         }
 
         
@@ -355,7 +357,7 @@ namespace atl {
          * @param size
          */
         void SetSize(size_t size) {
-            gradient_stack.reserve(size);
+//            gradient_stack.reserve(size);
         }
 
         virtual ~GradientStructure() {
