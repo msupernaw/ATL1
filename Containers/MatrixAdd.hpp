@@ -28,7 +28,7 @@ namespace atl {
         inline explicit MatrixAdd(const LHS& lhs, const RHS & rhs) : lhs_m(lhs.Cast()), rhs_m(rhs.Cast()) {
 
 
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             for (int i = 0; i < 7; i++) {
                 assert(lhs_m.Size(i) == rhs_m.Size(i));
             }

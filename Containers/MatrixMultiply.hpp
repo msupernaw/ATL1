@@ -39,7 +39,7 @@ namespace atl {
             lrows = lhs_m.Size(0);
             lcols = lhs_m.Size(1);
             end = (((lcols - 1UL) & size_t(-2)) + 1UL);
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             //                        for (int i = 0; i < 2; i++) {
             //                            assert(lhs_m.Size(i) == rhs_m.Size(i));
             //                        }

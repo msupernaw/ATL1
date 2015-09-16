@@ -160,7 +160,7 @@ namespace atl {
 
         template<class T2, class A>
         Vector& operator=(const VectorExpression<T2, A> &expr) {
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(expr.Dimensions() == 1);
 #endif
             isize = expr.Size(0);
@@ -176,7 +176,7 @@ namespace atl {
 
         template<class T2, class A>
         Vector& operator=(const VectorArrayExpression<T2, A> &expr) {
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(expr.Dimensions() == 1);
 #endif
             isize = expr.Size(0);
@@ -192,7 +192,7 @@ namespace atl {
 
         template<class T2, class A>
         Vector& operator=(const ArrayExpression<T2, A> &expr) {
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(expr.Dimensions() == 1);
 #endif
             isize = expr.Size(0);
@@ -211,7 +211,7 @@ namespace atl {
 
             isize = expr.Size(0);
 
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(expr.Size(1) == 1);
 #endif
 
@@ -230,7 +230,7 @@ namespace atl {
 
             isize = expr.Size(0);
 
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(expr.Size(1) == 1);
 #endif
 
@@ -249,7 +249,7 @@ namespace atl {
 
             isize = expr.Size(0);
 
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(expr.Size(1) == 1);
 #endif
 
@@ -271,7 +271,7 @@ namespace atl {
         }
 
         inline Vector& operator+=(const Vector &other) {
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(isize == other.isize);
 #endif   
             for (int i = 0; i < data_m.size(); i++) {
@@ -282,7 +282,7 @@ namespace atl {
 
         template<class T2, class A>
         inline Vector& operator+=(const VectorExpression<T2, A> &expr) {
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(isize == expr.Size(0));
 #endif   
             for (int i = 0; i < data_m.size(); i++) {
@@ -331,7 +331,7 @@ namespace atl {
         }
 
         inline Vector& operator-=(const Vector &other) {
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(isize == other.Size(0));
 #endif   
             for (int i = 0; i < data_m.size(); i++) {
@@ -344,7 +344,7 @@ namespace atl {
 
         template<class T2, class A>
         inline Vector& operator-=(const VectorExpression<T2, A> &expr) {
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(isize == expr.Size(0));
 #endif   
             for (int i = 0; i < data_m.size(); i++) {
@@ -393,7 +393,7 @@ namespace atl {
         }
 
         inline Vector& operator*=(const Vector &other) {
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(isize == other.Size(0));
 #endif   
             for (int i = 0; i < data_m.size(); i++) {
@@ -406,7 +406,7 @@ namespace atl {
 
         template<class T2, class A>
         inline Vector& operator*=(const VectorExpression<T2, A> &expr) {
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(isize == expr.Size(0));
 #endif   
             for (int i = 0; i < data_m.size(); i++) {
@@ -455,7 +455,7 @@ namespace atl {
         }
 
         inline Vector& operator/=(const Vector &other) {
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(isize == other.Size(0));
 #endif   
             for (int i = 0; i < data_m.size(); i++) {
@@ -468,7 +468,7 @@ namespace atl {
 
         template<class T2, class A>
         inline Vector& operator/=(const VectorExpression<T2, A> &expr) {
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(isize == expr.Size(0));
 #endif   
             for (int i = 0; i < data_m.size(); i++) {
@@ -535,14 +535,14 @@ namespace atl {
         }
 
         inline const T& operator()(const uint32_t & i) const {
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             CheckBounds(i);
 #endif
             return data_m[i];
         }
 
         inline T& operator()(const uint32_t & i) {
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             CheckBounds(i);
 #endif
             return data_m[i];

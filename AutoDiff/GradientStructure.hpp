@@ -387,7 +387,7 @@ namespace atl {
         }
 
         inline Adjoint<REAL_T>& NextEntry() {
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             if(this->stack_current >= this->max_stack_size){
                 std::cout<<"Current stack index exceeds gradient stack limits.\n"<<std::flush;
                 exit(0);

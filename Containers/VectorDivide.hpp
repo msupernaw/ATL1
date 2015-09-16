@@ -28,7 +28,7 @@ namespace atl {
             rhs.ExpressionLength(length);
 
 
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             for (int i = 0; i < 7; i++) {
                 assert(lhs_m.Size(i) == rhs_m.Size(i));
             }

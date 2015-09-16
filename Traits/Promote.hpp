@@ -14,7 +14,7 @@
 namespace atl {
 
 
-    template<class REAL_T, int group>
+    template<typename REAL_T, int group>
     class Variable;
 
     template<typename T>

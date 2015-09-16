@@ -1,7 +1,7 @@
 #ifndef VECTORMATH_HPP
 #define VECTORMATH_HPP
 
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
 #include <assert.h>
 #endif
 
@@ -30,7 +30,7 @@ namespace atl {
         }
 
         inline const RET_TYPE operator()(size_t i) const {
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(i < c_m.Size(0));
 #endif   
 
@@ -107,7 +107,7 @@ namespace atl {
         }
 
         inline const RET_TYPE operator()(size_t i) const {
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(i < c_m.Size(0));
 #endif   
 
@@ -184,7 +184,7 @@ namespace atl {
         }
 
         inline const RET_TYPE operator()(size_t i) const {
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(i < c_m.Size(0));
 #endif   
 
@@ -261,7 +261,7 @@ namespace atl {
         }
 
         inline const RET_TYPE operator()(size_t i) const {
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(i < c_m.Size(0));
 #endif   
 
@@ -338,7 +338,7 @@ namespace atl {
         }
 
         inline const RET_TYPE operator()(size_t i) const {
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(i < c_m.Size(0));
 #endif   
 
@@ -415,7 +415,7 @@ namespace atl {
         }
 
         inline const RET_TYPE operator()(size_t i) const {
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(i < c_m.Size(0));
 #endif   
 
@@ -492,7 +492,7 @@ namespace atl {
         }
 
         inline const RET_TYPE operator()(size_t i) const {
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(i < c_m.Size(0));
 #endif   
 
@@ -569,7 +569,7 @@ namespace atl {
         }
 
         inline const RET_TYPE operator()(size_t i) const {
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(i < c_m.Size(0));
 #endif   
 
@@ -646,7 +646,7 @@ namespace atl {
         }
 
         inline const RET_TYPE operator()(size_t i) const {
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(i < c_m.Size(0));
 #endif   
 
@@ -723,7 +723,7 @@ namespace atl {
         }
 
         inline const RET_TYPE operator()(size_t i) const {
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(i < c_m.Size(0));
 #endif   
 
@@ -800,7 +800,7 @@ namespace atl {
         }
 
         inline const RET_TYPE operator()(size_t i) const {
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(i < c_m.Size(0));
 #endif   
 
@@ -877,7 +877,7 @@ namespace atl {
         }
 
         inline const RET_TYPE operator()(size_t i) const {
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(i < c_m.Size(0));
 #endif   
 
@@ -954,7 +954,7 @@ namespace atl {
         }
 
         inline const RET_TYPE operator()(size_t i) const {
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(i < c_m.Size(0));
 #endif   
 
@@ -1031,7 +1031,7 @@ namespace atl {
         }
 
         inline const RET_TYPE operator()(size_t i) const {
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(i < c_m.Size(0));
 #endif   
 
@@ -1108,7 +1108,7 @@ namespace atl {
         }
 
         inline const RET_TYPE operator()(size_t i) const {
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(i < c_m.Size(0));
 #endif   
 
@@ -1185,7 +1185,7 @@ namespace atl {
         }
 
         inline const RET_TYPE operator()(size_t i) const {
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(i < c_m.Size(0));
 #endif   
 

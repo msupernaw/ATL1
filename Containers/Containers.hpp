@@ -14,7 +14,7 @@
 #include "VectorMultiply.hpp"
 #include "VectorDivide.hpp"
 #include "Matrix.hpp"
-//#include "ConcurrentOperators.hpp"
+#include "ConcurrentOperators.hpp"
 #include <thread>
 #include <vector>
 #include "../Traits/Type.hpp"
@@ -43,7 +43,7 @@ namespace atl {
         }
 
         inline const RET_TYPE operator()(size_t i) const {
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(i < m_m.Size(1));
 #endif   
 
@@ -123,7 +123,7 @@ namespace atl {
         }
 
         inline const RET_TYPE operator()(size_t i) const {
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(i < m_m.Size(0));
 #endif   
 

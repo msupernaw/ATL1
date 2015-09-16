@@ -8,7 +8,7 @@
 #ifndef CONCURRENTOPERATORS_HPP
 #define	CONCURRENTOPERATORS_HPP
 
-#warning need to add friend relationships to matrix, vector, and array classes
+//#warning need to add friend relationships to matrix, vector, and array classes
 #include "ArrayExpressionBase.hpp"
 #include "Array.hpp"
 #include "Matrix.hpp"
@@ -194,7 +194,7 @@ namespace atl {
 
     template<class T, class T2, class RHS>
     void ConcurrentOpTimesEqualsThread(Matrix<T>& v, const MatrixExpression<T2, RHS>& expr, int start, int end) {
-#warning function needs review
+//#warning function needs review
         for (int i = start; i < end; i++) {
             for (int j = 0; j < v.jsize; j++) {
                 v.data_m[(i * v.jsize) + j] = (expr * v)(i, j);

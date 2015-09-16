@@ -251,7 +251,7 @@ namespace atl {
         template<class T2, class A>
         Matrix& operator=(const VectorArrayExpression<T2, A> &expr) {
 
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(expr.Dimensions() < 2);
 #endif
 
@@ -272,7 +272,7 @@ namespace atl {
         template<class T2, class A>
         Matrix& operator=(const ArrayExpression<T2, A> &expr) {
 
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(expr.Dimensions() < 2);
 #endif
 
@@ -293,7 +293,7 @@ namespace atl {
         template<class T2, class A>
         Matrix& operator=(const VectorExpression<T2, A> &expr) {
 
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(expr.Dimensions() < 2);
 #endif
 
@@ -315,7 +315,7 @@ namespace atl {
         template<class T2, class A>
         Matrix& operator=(const MatrixVectorExpression<T2, A> &expr) {
 
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(expr.Dimensions() < 2);
 #endif
 
@@ -336,7 +336,7 @@ namespace atl {
         template<class T2, class A>
         Matrix& operator=(const MatrixArrayExpression<T2, A> &expr) {
 
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(expr.Dimensions() < 2);
 #endif
 
@@ -562,7 +562,7 @@ namespace atl {
         }
 
         inline const T& operator()(size_t i, size_t j) const {
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             CheckBounds(i, j);
 #endif
 
@@ -570,7 +570,7 @@ namespace atl {
         }
 
         inline T& operator()(size_t i, size_t j) {
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             CheckBounds(i, j);
 #endif
 

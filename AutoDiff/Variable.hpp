@@ -122,7 +122,7 @@ namespace atl {
 
         virtual REAL_T Internal2External(REAL_T val, REAL_T min_, REAL_T max_) const {
             //            return ((std::sin(val) + 1.0) / 2.0)*(max - min) + min;
-            return std::max(min_, std::min(max_, ((std::sin(val) + 1.0) / 2.0)*(max_ - min_) + min_));
+            return std::max(min_, std::min(max_, ((std::sin(val) + static_cast<REAL_T>(1.0)) / static_cast<REAL_T>(2.0))*(max_ - min_) + min_));
         }
 
         virtual REAL_T DerivativeInternal2External(REAL_T val, REAL_T min_, REAL_T max_)const {
@@ -150,7 +150,7 @@ namespace atl {
         }
     };
 
-    template<class REAL_T, //base type
+    template<typename REAL_T, //base type
     int group = 0 > //group identifier
     class Variable : public atl::ExpressionBase<REAL_T, Variable<REAL_T, group > > {
         static SinParameterTransformation<REAL_T> default_transformation;

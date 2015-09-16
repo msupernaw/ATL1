@@ -48,7 +48,7 @@ namespace atl {
         inline explicit VectorArrayAdd(const LHS& lhs, const RHS & rhs) : lhs_m(lhs.Cast()), rhs_m(rhs.Cast()) {
 
 
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             //            for (int i = 0; i < 7; i++) {
             assert(lhs_m.Dimensions() == rhs_m.Dimensions());
             assert(lhs_m.Size(0) == rhs_m.Size(0));
@@ -87,7 +87,7 @@ namespace atl {
         inline explicit VectorArraySubtract(const LHS& lhs, const RHS & rhs) : lhs_m(lhs.Cast()), rhs_m(rhs.Cast()) {
 
 
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
 
             assert(lhs_m.Dimensions() == rhs_m.Dimensions());
             assert(lhs_m.Size(0) == rhs_m.Size(0));
@@ -126,7 +126,7 @@ namespace atl {
         inline explicit VectorArrayMultiply(const LHS& lhs, const RHS & rhs) : lhs_m(lhs.Cast()), rhs_m(rhs.Cast()) {
 
 
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             //            for (int i = 0; i < 7; i++) {
             //                assert(lhs_m.Size(i) == rhs_m.Size(i));
             //            }
@@ -164,7 +164,7 @@ namespace atl {
         inline explicit VectorArrayDivide(const LHS& lhs, const RHS & rhs) : lhs_m(lhs.Cast()), rhs_m(rhs.Cast()) {
 
 
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             //            for (int i = 0; i < 7; i++) {
             //                assert(lhs_m.Size(i) == rhs_m.Size(i));
             //            }

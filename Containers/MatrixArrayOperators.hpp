@@ -52,7 +52,7 @@ namespace atl {
         inline explicit MatrixArrayAdd(const LHS& lhs, const RHS & rhs) : lhs_m(lhs.Cast()), rhs_m(rhs.Cast()) {
 
 
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             for (int i = 0; i < 7; i++) {
                 assert(lhs_m.Size(i) == rhs_m.Size(i));
             }
@@ -91,7 +91,7 @@ namespace atl {
         inline explicit MatrixArraySubtract(const LHS& lhs, const RHS & rhs) : lhs_m(lhs.Cast()), rhs_m(rhs.Cast()) {
 
 
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             for (int i = 0; i < 7; i++) {
                 assert(lhs_m.Size(i) == rhs_m.Size(i));
             }
@@ -135,7 +135,7 @@ namespace atl {
             lrows = lhs_m.Size(0);
             lcols = lhs_m.Size(1);
             end = (((lcols - 1UL) & size_t(-2)) + 1UL);
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             //                        for (int i = 0; i < 2; i++) {
             //                            assert(lhs_m.Size(i) == rhs_m.Size(i));
             //                        }
@@ -161,7 +161,7 @@ namespace atl {
         }
 
         inline const RET_TYPE operator()(size_t i, size_t j) const {
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(i < lhs_m.Size(0));
             assert(j < lhs_m.Size(1));
 #endif   
@@ -295,7 +295,7 @@ compute:
         inline explicit MatrixArrayDivide(const LHS& lhs, const RHS & rhs) : lhs_m(lhs.Cast()), rhs_m(rhs.Cast()) {
 
 
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             for (int i = 0; i < 2; i++) {
                 assert(lhs_m.Size(i) == rhs_m.Size(i));
             }

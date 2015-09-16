@@ -33,7 +33,7 @@ namespace atl {
         }
 
         inline const RET_TYPE operator()(size_t i, size_t j) const {
-#ifdef ENABLE_BOUNDS_CHECKING
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(i < m_m.Size(1));
             assert(j < m_m.Size(0));
 #endif   

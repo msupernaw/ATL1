@@ -12,7 +12,7 @@
 //#define ATL_HAS_SSE 1
 
 #ifdef ATL_DEBUG
-#define ENABLE_BOUNDS_CHECKING
+#define ATL_ENABLE_BOUNDS_CHECKING
 #endif
 
 
