@@ -1,5 +1,5 @@
 #ifndef STREAMEDDATAFILE_HPP
-#define STREAMEDDATAFILE
+#define STREAMEDDATAFILE_HPP
 #include <iostream>
 #include <sstream>
 #include <limits>
