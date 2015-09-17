@@ -654,8 +654,8 @@ namespace atl {
     const VectorMatrixMultiplyVector<LHS, RHS> operator*(const atl::MatrixVectorExpression< typename LHS::RET_TYPE, LHS>& lhs, const atl::VectorExpression< typename RHS::RET_TYPE, RHS> &rhs) {
         return VectorMatrixMultiplyVector<LHS, RHS>(lhs.Cast(), rhs.Cast());
     }
-    
-     template< class LHS, class RHS>
+
+    template< class LHS, class RHS>
     struct VectorMatrixDivideVector : MatrixVectorExpression<typename atl::PromoteType< typename LHS::RET_TYPE, typename RHS::RET_TYPE >::return_type, VectorMatrixDivideVector<LHS, RHS> > {
         typedef typename LHS::RET_TYPE RET_TYPEL;
         typedef typename RHS::RET_TYPE RET_TYPER;
@@ -690,9 +690,13 @@ namespace atl {
     const VectorMatrixDivideVector<LHS, RHS> operator/(const atl::MatrixVectorExpression< typename LHS::RET_TYPE, LHS>& lhs, const atl::VectorExpression< typename RHS::RET_TYPE, RHS> &rhs) {
         return VectorMatrixDivideVector<LHS, RHS>(lhs.Cast(), rhs.Cast());
     }
-    //
+
+    template< class LHS, class RHS>
+    struct ATLIllegalOperation : MatrixVectorExpression<typename atl::PromoteType< typename LHS::RET_TYPE, typename RHS::RET_TYPE >::return_type, ATLIllegalOperation <LHS, RHS> > {
+    };
+
     //    template< class LHS, class RHS>
-    //    struct VectorMatrixVectorSubtract : MatrixVectorExpression<typename atl::PromoteType< typename LHS::RET_TYPE, typename RHS::RET_TYPE >::return_type, VectorMatrixVectorSubtract<LHS, RHS> > {
+    //    struct VectorMatrixMatrixAdd : MatrixVectorExpression<typename atl::PromoteType< typename LHS::RET_TYPE, typename RHS::RET_TYPE >::return_type, VectorMatrixMatrixAdd <LHS, RHS> > {
     //        typedef typename LHS::RET_TYPE RET_TYPEL;
     //        typedef typename RHS::RET_TYPE RET_TYPER;
     //
@@ -702,7 +706,7 @@ namespace atl {
     //        const LHS& lhs_m;
     //        const RHS& rhs_m;
     //
-    //        inline explicit VectorMatrixVectorSubtract(const LHS& lhs, const RHS &rhs)
+    //        inline explicit VectorMatrixMatrixAdd(const LHS& lhs, const RHS &rhs)
     //        : lhs_m(lhs.Cast()), rhs_m(rhs.Cast()) {
     //
     //        }
@@ -716,19 +720,21 @@ namespace atl {
     //        }
     //
     //        inline const RET_TYPE operator()(const uint32_t& i, const uint32_t & j) const {
-    //            RET_TYPE ret = lhs_m(i) - rhs_m(i, j);
+    //            RET_TYPE ret = lhs_m(i, j) + rhs_m(i, j);
     //            return ret;
     //        }
     //
     //    };
     //
-    //    template<class LHS, class RHS>
-    //    const VectorMatrixVectorSubtract<LHS, RHS> operator-(const atl::VectorExpression< typename LHS::RET_TYPE, LHS>& lhs, const atl::MatrixVectorExpression< typename RHS::RET_TYPE, RHS> &rhs) {
-    //        return VectorMatrixVectorSubtract<LHS, RHS>(lhs.Cast(), rhs.Cast());
-    //    }
-    //    
+
+    template<class LHS, class RHS>
+    const ATLIllegalOperation <LHS, RHS> operator+(const atl::MatrixExpression< typename LHS::RET_TYPE, LHS>& lhs, const atl::MatrixVectorExpression< typename RHS::RET_TYPE, RHS> &rhs) {
+        std::cout << "Illegal operation: " << __func__ << "(const atl::MatrixExpression< typename LHS::RET_TYPE, LHS>& lhs, const atl::MatrixVectorExpression< typename RHS::RET_TYPE, RHS> &rhs)" << std::endl;
+        exit(0);
+    }
+    //
     //    template< class LHS, class RHS>
-    //    struct VectorMatrixVectorMultiply : MatrixVectorExpression<typename atl::PromoteType< typename LHS::RET_TYPE, typename RHS::RET_TYPE >::return_type, VectorMatrixVectorMultiply<LHS, RHS> > {
+    //    struct VectorMatrixMatrixSubtract : MatrixVectorExpression<typename atl::PromoteType< typename LHS::RET_TYPE, typename RHS::RET_TYPE >::return_type, VectorMatrixMatrixSubtract <LHS, RHS> > {
     //        typedef typename LHS::RET_TYPE RET_TYPEL;
     //        typedef typename RHS::RET_TYPE RET_TYPER;
     //
@@ -738,7 +744,7 @@ namespace atl {
     //        const LHS& lhs_m;
     //        const RHS& rhs_m;
     //
-    //        inline explicit VectorMatrixVectorMultiply(const LHS& lhs, const RHS &rhs)
+    //        inline explicit VectorMatrixMatrixSubtract(const LHS& lhs, const RHS &rhs)
     //        : lhs_m(lhs.Cast()), rhs_m(rhs.Cast()) {
     //
     //        }
@@ -752,19 +758,21 @@ namespace atl {
     //        }
     //
     //        inline const RET_TYPE operator()(const uint32_t& i, const uint32_t & j) const {
-    //            RET_TYPE ret = lhs_m(i) * rhs_m(i, j);
+    //            RET_TYPE ret = lhs_m(i, j) - rhs_m(i, j);
     //            return ret;
     //        }
     //
     //    };
     //
-    //    template<class LHS, class RHS>
-    //    const VectorMatrixVectorMultiply<LHS, RHS> operator*(const atl::VectorExpression< typename LHS::RET_TYPE, LHS>& lhs, const atl::MatrixVectorExpression< typename RHS::RET_TYPE, RHS> &rhs) {
-    //        return VectorMatrixVectorMultiply<LHS, RHS>(lhs.Cast(), rhs.Cast());
-    //    }
-    //    
+
+    template<class LHS, class RHS>
+    const ATLIllegalOperation <LHS, RHS> operator-(const atl::MatrixExpression< typename LHS::RET_TYPE, LHS>& lhs, const atl::MatrixVectorExpression< typename RHS::RET_TYPE, RHS> &rhs) {
+        std::cout << "Illegal operation: " << __func__ << "(const atl::MatrixExpression< typename LHS::RET_TYPE, LHS>& lhs, const atl::MatrixVectorExpression< typename RHS::RET_TYPE, RHS> &rhs)" << std::endl;
+        exit(0);
+    }
+    //
     //    template< class LHS, class RHS>
-    //    struct VectorMatrixVectorDivide : MatrixVectorExpression<typename atl::PromoteType< typename LHS::RET_TYPE, typename RHS::RET_TYPE >::return_type, VectorMatrixVectorDivide<LHS, RHS> > {
+    //    struct VectorMatrixMatrixMultiply : MatrixVectorExpression<typename atl::PromoteType< typename LHS::RET_TYPE, typename RHS::RET_TYPE >::return_type, VectorMatrixMatrixMultiply <LHS, RHS> > {
     //        typedef typename LHS::RET_TYPE RET_TYPEL;
     //        typedef typename RHS::RET_TYPE RET_TYPER;
     //
@@ -774,7 +782,7 @@ namespace atl {
     //        const LHS& lhs_m;
     //        const RHS& rhs_m;
     //
-    //        inline explicit VectorMatrixVectorDivide(const LHS& lhs, const RHS &rhs)
+    //        inline explicit VectorMatrixMatrixMultiply(const LHS& lhs, const RHS &rhs)
     //        : lhs_m(lhs.Cast()), rhs_m(rhs.Cast()) {
     //
     //        }
@@ -788,17 +796,214 @@ namespace atl {
     //        }
     //
     //        inline const RET_TYPE operator()(const uint32_t& i, const uint32_t & j) const {
-    //            RET_TYPE ret = lhs_m(i) / rhs_m(i, j);
+    //            RET_TYPE ret = static_cast<RET_TYPE> (0.0);
+    //            for (int k = 0; k < rhs_m.Size(0); k++) {
+    //                ret += rhs_m(i, k) * lhs_m(i, k);
+    //            }
     //            return ret;
     //        }
     //
     //    };
     //
-    //    template<class LHS, class RHS>
-    //    const VectorMatrixVectorDivide<LHS, RHS> operator/(const atl::VectorExpression< typename LHS::RET_TYPE, LHS>& lhs, const atl::MatrixVectorExpression< typename RHS::RET_TYPE, RHS> &rhs) {
-    //        return VectorMatrixVectorDivide<LHS, RHS>(lhs.Cast(), rhs.Cast());
-    //    }
-    //     
+
+    template<class LHS, class RHS>
+    const ATLIllegalOperation <LHS, RHS> operator*(const atl::MatrixExpression< typename LHS::RET_TYPE, LHS>& lhs, const atl::MatrixVectorExpression< typename RHS::RET_TYPE, RHS> &rhs) {
+        std::cout << "Illegal operation: " << __func__ << "(const atl::MatrixExpression< typename LHS::RET_TYPE, LHS>& lhs, const atl::MatrixVectorExpression< typename RHS::RET_TYPE, RHS> &rhs)" << std::endl;
+        exit(0);
+    }
+    //
+    //    template< class LHS, class RHS>
+    //    struct VectorMatrixMatrixDivide : MatrixVectorExpression<typename atl::PromoteType< typename LHS::RET_TYPE, typename RHS::RET_TYPE >::return_type, VectorMatrixMatrixDivide <LHS, RHS> > {
+    //        typedef typename LHS::RET_TYPE RET_TYPEL;
+    //        typedef typename RHS::RET_TYPE RET_TYPER;
+    //
+    //        typedef typename atl::PromoteType<typename LHS::BASE_TYPE, typename RHS::BASE_TYPE >::return_type BASE_TYPE;
+    //        typedef typename atl::PromoteType<RET_TYPEL, RET_TYPER>::return_type RET_TYPE;
+    //
+    //        const LHS& lhs_m;
+    //        const RHS& rhs_m;
+    //
+    //        inline explicit VectorMatrixMatrixDivide(const LHS& lhs, const RHS &rhs)
+    //        : lhs_m(lhs.Cast()), rhs_m(rhs.Cast()) {
+    //
+    //        }
+    //
+    //        inline const size_t Dimensions() const {
+    //            return lhs_m.Dimensions() < rhs_m.Dimensions() ? lhs_m.Dimensions() : rhs_m.Dimensions();
+    //        }
+    //
+    //        inline const size_t Size(const int32_t & dimension) const {
+    //            return lhs_m.Size(dimension) < rhs_m.Size(dimension) ? lhs_m.Size(dimension) : rhs_m.Size(dimension);
+    //        }
+    //
+    //        inline const RET_TYPE operator()(const uint32_t& i, const uint32_t & j) const {
+    //            RET_TYPE ret = lhs_m(i, j) / rhs_m(i, j);
+    //            return ret;
+    //        }
+    //
+    //    };
+    //
+
+    template<class LHS, class RHS>
+    const ATLIllegalOperation <LHS, RHS> operator/(const atl::MatrixExpression< typename LHS::RET_TYPE, LHS>& lhs, const atl::MatrixVectorExpression< typename RHS::RET_TYPE, RHS> &rhs) {
+        std::cout << "Illegal operation: " << __func__ << "(const atl::MatrixExpression< typename LHS::RET_TYPE, LHS>& lhs, const atl::MatrixVectorExpression< typename RHS::RET_TYPE, RHS> &rhs)" << std::endl;
+        exit(0);
+    }
+    //
+    //    template< class LHS, class RHS>
+    //    struct VectorMatrixAddMatrix : MatrixVectorExpression<typename atl::PromoteType< typename LHS::RET_TYPE, typename RHS::RET_TYPE >::return_type, VectorMatrixAddMatrix <LHS, RHS> > {
+    //        typedef typename LHS::RET_TYPE RET_TYPEL;
+    //        typedef typename RHS::RET_TYPE RET_TYPER;
+    //
+    //        typedef typename atl::PromoteType<typename LHS::BASE_TYPE, typename RHS::BASE_TYPE >::return_type BASE_TYPE;
+    //        typedef typename atl::PromoteType<RET_TYPEL, RET_TYPER>::return_type RET_TYPE;
+    //
+    //        const LHS& lhs_m;
+    //        const RHS& rhs_m;
+    //
+    //        inline explicit VectorMatrixAddMatrix(const LHS& lhs, const RHS &rhs)
+    //        : lhs_m(lhs.Cast()), rhs_m(rhs.Cast()) {
+    //
+    //        }
+    //
+    //        inline const size_t Dimensions() const {
+    //            return lhs_m.Dimensions() < rhs_m.Dimensions() ? lhs_m.Dimensions() : rhs_m.Dimensions();
+    //        }
+    //
+    //        inline const size_t Size(const int32_t & dimension) const {
+    //            return lhs_m.Size(dimension) < rhs_m.Size(dimension) ? lhs_m.Size(dimension) : rhs_m.Size(dimension);
+    //        }
+    //
+    //        inline const RET_TYPE operator()(const uint32_t& i, const uint32_t & j) const {
+    //            RET_TYPE ret = lhs_m(i, j) + rhs_m(i, j);
+    //            return ret;
+    //        }
+    //
+    //    };
+    //
+
+    template<class LHS, class RHS>
+    const ATLIllegalOperation <LHS, RHS> operator+(const atl::MatrixVectorExpression< typename LHS::RET_TYPE, LHS>& lhs, const atl::MatrixExpression< typename RHS::RET_TYPE, RHS> &rhs) {
+        std::cout << "Illegal operation: " << __func__ << "(const atl::MatrixVectorExpression< typename LHS::RET_TYPE, LHS>& lhs, const atl::MatrixExpression< typename RHS::RET_TYPE, RHS> &rhs)" << std::endl;
+        exit(0);
+    }
+    //
+    //    template< class LHS, class RHS>
+    //    struct VectorMatrixSubtractMatrix : MatrixVectorExpression<typename atl::PromoteType< typename LHS::RET_TYPE, typename RHS::RET_TYPE >::return_type, VectorMatrixSubtractMatrix <LHS, RHS> > {
+    //        typedef typename LHS::RET_TYPE RET_TYPEL;
+    //        typedef typename RHS::RET_TYPE RET_TYPER;
+    //
+    //        typedef typename atl::PromoteType<typename LHS::BASE_TYPE, typename RHS::BASE_TYPE >::return_type BASE_TYPE;
+    //        typedef typename atl::PromoteType<RET_TYPEL, RET_TYPER>::return_type RET_TYPE;
+    //
+    //        const LHS& lhs_m;
+    //        const RHS& rhs_m;
+    //
+    //        inline explicit VectorMatrixSubtractMatrix(const LHS& lhs, const RHS &rhs)
+    //        : lhs_m(lhs.Cast()), rhs_m(rhs.Cast()) {
+    //
+    //        }
+    //
+    //        inline const size_t Dimensions() const {
+    //            return lhs_m.Dimensions() < rhs_m.Dimensions() ? lhs_m.Dimensions() : rhs_m.Dimensions();
+    //        }
+    //
+    //        inline const size_t Size(const int32_t & dimension) const {
+    //            return lhs_m.Size(dimension) < rhs_m.Size(dimension) ? lhs_m.Size(dimension) : rhs_m.Size(dimension);
+    //        }
+    //
+    //        inline const RET_TYPE operator()(const uint32_t& i, const uint32_t & j) const {
+    //            RET_TYPE ret = lhs_m(i, j) - rhs_m(i, j);
+    //            return ret;
+    //        }
+    //
+    //    };
+    //
+
+    template<class LHS, class RHS>
+    const ATLIllegalOperation <LHS, RHS> operator-(const atl::MatrixVectorExpression< typename LHS::RET_TYPE, LHS>& lhs, const atl::MatrixExpression< typename RHS::RET_TYPE, RHS> &rhs) {
+        std::cout << "Illegal operation: " << __func__ << "(const atl::MatrixVectorExpression< typename LHS::RET_TYPE, LHS>& lhs, const atl::MatrixExpression< typename RHS::RET_TYPE, RHS> &rhs)" << std::endl;
+        exit(0);
+    }
+    //
+    //    template< class LHS, class RHS>
+    //    struct VectorMatrixMultiplyMatrix : MatrixVectorExpression<typename atl::PromoteType< typename LHS::RET_TYPE, typename RHS::RET_TYPE >::return_type, VectorMatrixMultiplyMatrix <LHS, RHS> > {
+    //        typedef typename LHS::RET_TYPE RET_TYPEL;
+    //        typedef typename RHS::RET_TYPE RET_TYPER;
+    //
+    //        typedef typename atl::PromoteType<typename LHS::BASE_TYPE, typename RHS::BASE_TYPE >::return_type BASE_TYPE;
+    //        typedef typename atl::PromoteType<RET_TYPEL, RET_TYPER>::return_type RET_TYPE;
+    //
+    //        const LHS& lhs_m;
+    //        const RHS& rhs_m;
+    //
+    //        inline explicit VectorMatrixMultiplyMatrix(const LHS& lhs, const RHS &rhs)
+    //        : lhs_m(lhs.Cast()), rhs_m(rhs.Cast()) {
+    //
+    //        }
+    //
+    //        inline const size_t Dimensions() const {
+    //            return lhs_m.Dimensions() < rhs_m.Dimensions() ? lhs_m.Dimensions() : rhs_m.Dimensions();
+    //        }
+    //
+    //        inline const size_t Size(const int32_t & dimension) const {
+    //            return lhs_m.Size(dimension) < rhs_m.Size(dimension) ? lhs_m.Size(dimension) : rhs_m.Size(dimension);
+    //        }
+    //
+    //        inline const RET_TYPE operator()(const uint32_t& i, const uint32_t & j) const {
+    //            RET_TYPE ret = static_cast<RET_TYPE> (0.0);
+    //            for (int k = 0; k < rhs_m.Size(0); k++) {
+    //                ret += rhs_m(i, k) * lhs_m(i, k);
+    //            }
+    //            return ret;
+    //        }
+    //
+    //    };
+    //
+
+    template<class LHS, class RHS>
+    const ATLIllegalOperation <LHS, RHS> operator*(const atl::MatrixVectorExpression< typename LHS::RET_TYPE, LHS>& lhs, const atl::MatrixExpression< typename RHS::RET_TYPE, RHS> &rhs) {
+        std::cout << "Illegal operation: " << __func__ << "(const atl::MatrixVectorExpression< typename LHS::RET_TYPE, LHS>& lhs, const atl::MatrixExpression< typename RHS::RET_TYPE, RHS> &rhs)" << std::endl;
+        exit(0);
+    }
+    //
+    //    template< class LHS, class RHS>
+    //    struct VectorMatrixDivideMatrix : MatrixVectorExpression<typename atl::PromoteType< typename LHS::RET_TYPE, typename RHS::RET_TYPE >::return_type, VectorMatrixDivideMatrix <LHS, RHS> > {
+    //        typedef typename LHS::RET_TYPE RET_TYPEL;
+    //        typedef typename RHS::RET_TYPE RET_TYPER;
+    //
+    //        typedef typename atl::PromoteType<typename LHS::BASE_TYPE, typename RHS::BASE_TYPE >::return_type BASE_TYPE;
+    //        typedef typename atl::PromoteType<RET_TYPEL, RET_TYPER>::return_type RET_TYPE;
+    //
+    //        const LHS& lhs_m;
+    //        const RHS& rhs_m;
+    //
+    //        inline explicit VectorMatrixDivideMatrix(const LHS& lhs, const RHS &rhs)
+    //        : lhs_m(lhs.Cast()), rhs_m(rhs.Cast()) {
+    //
+    //        }
+    //
+    //        inline const size_t Dimensions() const {
+    //            return lhs_m.Dimensions() < rhs_m.Dimensions() ? lhs_m.Dimensions() : rhs_m.Dimensions();
+    //        }
+    //
+    //        inline const size_t Size(const int32_t & dimension) const {
+    //            return lhs_m.Size(dimension) < rhs_m.Size(dimension) ? lhs_m.Size(dimension) : rhs_m.Size(dimension);
+    //        }
+    //
+    //        inline const RET_TYPE operator()(const uint32_t& i, const uint32_t & j) const {
+    //            RET_TYPE ret = lhs_m(i, j) / rhs_m(i, j);
+    //            return ret;
+    //        }
+    //
+    //    };
+    //
+
+    template<class LHS, class RHS>
+    const ATLIllegalOperation <LHS, RHS> operator/(const atl::MatrixVectorExpression< typename LHS::RET_TYPE, LHS>& lhs, const atl::MatrixExpression< typename RHS::RET_TYPE, RHS> &rhs) {
+        std::cout << "Illegal operation: " << __func__ << "(const atl::MatrixVectorExpression< typename LHS::RET_TYPE, LHS>& lhs, const atl::MatrixExpression< typename RHS::RET_TYPE, RHS> &rhs)" << std::endl;
+        exit(0);
+    }
 
     template< class T, class RHS>
     struct VectorMatrixScalarAdd : MatrixVectorExpression<typename atl::PromoteType< T, typename RHS::RET_TYPE >::return_type, VectorMatrixScalarAdd<T, RHS> > {
