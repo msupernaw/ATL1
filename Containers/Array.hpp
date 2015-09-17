@@ -687,6 +687,13 @@ namespace atl {
         }
 
         void Resize(size_t i, size_t j =1, size_t k=1, size_t l=1, size_t m=1, size_t n=1, size_t o=1){
+            this->isize = i;
+            this->jsize = j;
+            this->ksize = k;
+            this->lsize = l;
+            this->msize = m;
+            this->nsize = n;
+            this->osize = o;
             data_m.resize((i * j * k * l * m * n * o), T(0));
         }
         
