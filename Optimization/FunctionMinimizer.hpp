@@ -5,6 +5,7 @@
 #include <valarray>
 #include <vector>
 #include <cmath>
+#include "../Utilities/StringUtil.hpp"
 namespace atl {
 
     template<typename REAL_T>
