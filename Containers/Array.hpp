@@ -686,6 +686,11 @@ namespace atl {
             }
         }
 
+        void Resize(size_t i, size_t j =1, size_t k=1, size_t l=1, size_t m=1, size_t n=1, size_t o=1){
+            data_m.resize((i * j * k * l * m * n * o), T(0));
+        }
+        
+        
         Array& operator=(const T& val) {
             for (int i = 0; i < data_m.size(); i++) {
                 data_m[i] = val;
