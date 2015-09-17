@@ -12,7 +12,7 @@
 #include "ArrayExpressionBase.hpp"
 
 namespace atl {
-
+#ifdef ATL_CONTAINER_EXPERIMENTAL
     template< class T, class A>
     struct VectorArrayExpression {
         typedef T RET_TYPE;
@@ -236,7 +236,7 @@ namespace atl {
             const VectorExpression<typename RHS::RET_TYPE, RHS>& b) {
         return VectorArrayDivide< LHS, RHS > (a.Cast(), b.Cast());
     }
-
+#endif
 }
 
 

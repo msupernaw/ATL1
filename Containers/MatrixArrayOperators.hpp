@@ -12,7 +12,7 @@
 #include "../Traits/Promote.hpp"
 
 namespace atl {
-
+#ifdef ATL_CONTAINER_EXPERIMENTAL
     template< class T, class A>
     struct MatrixArrayExpression {
         typedef T RET_TYPE;
@@ -388,7 +388,7 @@ compute:
 
         return out;
     }
-
+#endif
 }
 
 #endif	/* MATRIXARRAYOPERATORS_HPP */
