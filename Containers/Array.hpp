@@ -600,7 +600,7 @@ namespace atl {
                 data_m[i] = expr(i);
             }
         }
-
+#ifdef ATL_CONTAINER_EXPERIMENTAL
         template<class T2, class A>
         Array(const VectorArrayExpression<T2, A> &expr)
         : isize(0),
@@ -618,7 +618,7 @@ namespace atl {
                 data_m[i] = expr(i);
             }
         }
-
+#endif
         template<class T2, class A>
         Array(const MatrixExpression<T2, A> &expr)
         : isize(0),
@@ -664,6 +664,7 @@ namespace atl {
                 }
             }
         }
+#ifdef ATL_CONTAINER_EXPERIMENTAL
 
         template<class T2, class A>
         Array(const MatrixArrayExpression<T2, A> &expr)
@@ -685,7 +686,7 @@ namespace atl {
                 }
             }
         }
-
+#endif
         void Resize(size_t i, size_t j =1, size_t k=1, size_t l=1, size_t m=1, size_t n=1, size_t o=1){
             this->isize = i;
             this->jsize = j;
@@ -1081,7 +1082,9 @@ namespace atl {
             }
             return *this;
         }
-
+        
+#ifdef ATL_CONTAINER_EXPERIMENTAL
+        
         template<class T2, class A>
         Array& operator=(const VectorArrayExpression<T2, A> &expr) {
             dims_m = expr.Dimensions();
@@ -1100,7 +1103,8 @@ namespace atl {
             }
             return *this;
         }
-
+#endif
+        
         template<class T2, class A>
         Array& operator=(const MatrixExpression<T2, A> &expr) {
             dims_m = expr.Dimensions();
@@ -1146,6 +1150,7 @@ namespace atl {
             }
             return *this;
         }
+#ifdef ATL_CONTAINER_EXPERIMENTAL
 
         template<class T2, class A>
         Array& operator=(const MatrixArrayExpression<T2, A> &expr) {
@@ -1167,7 +1172,7 @@ namespace atl {
             }
             return *this;
         }
-
+#endif
         inline Array& operator+=(const T & val) {
             for (int i = 0; i < data_m.size(); i++) {
                 data_m[i] += val;
@@ -1305,31 +1310,33 @@ namespace atl {
             *this = *this+expr;
             return *this;
         }
+#ifdef ATL_CONTAINER_EXPERIMENTAL
 
         template<class T2, class A>
         Array& operator+=(const VectorArrayExpression<T2, A> &expr) {
             *this = *this+expr;
             return *this;
         }
-
+#endif
         template<class T2, class A>
         Array& operator+=(const MatrixExpression<T2, A> &expr) {
             *this = *this+expr;
             return *this;
         }
 
+
         template<class T2, class A>
         Array& operator+=(const MatrixVectorExpression<T2, A> &expr) {
             *this = *this+Array<T2>(expr);
             return *this;
         }
-
+#ifdef ATL_CONTAINER_EXPERIMENTAL
         template<class T2, class A>
         Array& operator+=(const MatrixArrayExpression<T2, A> &expr) {
             *this = *this+expr;
             return *this;
         }
-
+#endif
         inline Array& operator-=(const T & val) {
             for (int i = 0; i < data_m.size(); i++) {
                 data_m[i] -= val;
@@ -1466,13 +1473,13 @@ namespace atl {
             *this = *this-expr;
             return *this;
         }
-
+#ifdef ATL_CONTAINER_EXPERIMENTAL
         template<class T2, class A>
         Array& operator-=(const VectorArrayExpression<T2, A> &expr) {
             *this = *this-expr;
             return *this;
         }
-
+#endif
         template<class T2, class A>
         Array& operator-=(const MatrixExpression<T2, A> &expr) {
             *this = *this-expr;
@@ -1485,12 +1492,13 @@ namespace atl {
             return *this;
         }
 
+        #ifdef ATL_CONTAINER_EXPERIMENTAL
         template<class T2, class A>
         Array& operator-=(const MatrixArrayExpression<T2, A> &expr) {
             *this = *this-expr;
             return *this;
         }
-
+#endif
         inline Array& operator*=(const T & val) {
             for (int i = 0; i < data_m.size(); i++) {
                 data_m[i] *= val;
@@ -1628,13 +1636,13 @@ namespace atl {
             *this = *this*expr;
             return *this;
         }
-
+#ifdef ATL_CONTAINER_EXPERIMENTAL
         template<class T2, class A>
         Array& operator*=(const VectorArrayExpression<T2, A> &expr) {
             *this = *this*expr;
             return *this;
         }
-
+#endif
         template<class T2, class A>
         Array& operator*=(const MatrixExpression<T2, A> &expr) {
             *this = *this*expr;
@@ -1647,13 +1655,13 @@ namespace atl {
             ;
             return *this;
         }
-
+#ifdef ATL_CONTAINER_EXPERIMENTAL
         template<class T2, class A>
         Array& operator*=(const MatrixArrayExpression<T2, A> &expr) {
             *this = *this*expr;
             return *this;
         }
-
+#endif
         inline Array& operator/=(const T & val) {
             for (int i = 0; i < data_m.size(); i++) {
                 data_m[i] /= val;
@@ -1790,13 +1798,13 @@ namespace atl {
             *this = *this / expr;
             return *this;
         }
-
+#ifdef ATL_CONTAINER_EXPERIMENTAL
         template<class T2, class A>
         Array& operator/=(const VectorArrayExpression<T2, A> &expr) {
             *this = *this / expr;
             return *this;
         }
-
+#endif
         template<class T2, class A>
         Array& operator/=(const MatrixExpression<T2, A> &expr) {
             *this = *this / expr;
@@ -1808,13 +1816,13 @@ namespace atl {
             *this = *this / Array<T2>(expr);
             return *this;
         }
-
+#ifdef ATL_CONTAINER_EXPERIMENTAL
         template<class T2, class A>
         Array& operator/=(const MatrixArrayExpression<T2, A> &expr) {
             *this = *this / expr;
             return *this;
         }
-
+#endif
         inline const size_t Size(const int32_t & dimension) const {
             switch (dimension) {
                 case 0:
