@@ -39,7 +39,7 @@
 #include "SpecialFunctions/Functions.hpp"
 #include "Statistics/Descriptive.hpp"
 #include "Utilities/IO/Console.hpp"
-#include "Utilities/IO/IOStream.hpp"
+#include "Utilities/IO/StreamedDataFile.hpp"
 
 
 
