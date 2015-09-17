@@ -358,9 +358,7 @@ namespace atl {
             if (Variable<REAL_T>::gradient_structure_g.recording) {
 
                 Adjoint<REAL_T>& entry = Variable<REAL_T>::gradient_structure_g.gradient_stack[Variable<REAL_T>::gradient_structure_g.NextIndex()];
-
                 new(&entry)Adjoint<REAL_T>();
-
                 entry.w = info;
 
                 ids.clear();

@@ -244,8 +244,8 @@ namespace atl {
 
     template<typename REAL_T>
     class AdjointDerivative {
-//        typedef std::vector<std::vector<REAL_T > > Mat;
-//        Mat hessian;
+        //        typedef std::vector<std::vector<REAL_T > > Mat;
+        //        Mat hessian;
     public:
         VariableInfo<REAL_T>* dependent;
         REAL_T forward;
@@ -268,7 +268,6 @@ namespace atl {
             o.forward2 = 0.0;
             o.dependent = NULL;
         }
-        
 
         AdjointDerivative& operator=(const AdjointDerivative<REAL_T>& other) {
             this->dependent = other.dependent;
@@ -358,6 +357,7 @@ namespace atl {
         std::atomic<size_t> stack_current;
         bool recording;
         size_t max_stack_size;
+        size_t max_initialized_size;
 
         bool gradient_computed;
 
@@ -365,6 +365,7 @@ namespace atl {
             //            gradient_stack.reserve(size);
             gradient_stack = (Adjoint<REAL_T>*)malloc(size);
             max_stack_size = size;
+            max_initialized_size = 0;
         }
 
         /**
@@ -376,11 +377,14 @@ namespace atl {
         }
 
         virtual ~GradientStructure() {
-            //in case mutex.lock() in VariableInfo fails.
-            //            try {
-            //                this->Reset();
-            //            } catch (...) {
+            if (this->stack_current != 0) {
+                this->Reset();
+            }
+            for (int i = 0; i < max_initialized_size; i++) {
+                (&gradient_stack[i])->~Adjoint<REAL_T>();
+            }
             //            }
+            free(this->gradient_stack);
         }
 
         inline const uint32_t GetStartIndex(uint32_t count) {
@@ -542,7 +546,9 @@ namespace atl {
          */
         inline void Reset(bool empty_trash = true) {
 
-
+            if (max_initialized_size < stack_current) {
+                max_initialized_size = stack_current;
+            }
 
             if (this->recording) {
 #pragma unroll
