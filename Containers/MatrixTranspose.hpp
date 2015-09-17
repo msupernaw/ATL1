@@ -87,7 +87,7 @@ namespace atl {
     };
 
     template<class M>
-    inline const MatrixTranspose<M> Transpose(const M& m) {
+    inline const MatrixTranspose<M> Transpose(const atl::MatrixExpression<typename M::RET_TYPE,M>& m) {
         return MatrixTranspose<M>(m);
     }
 }

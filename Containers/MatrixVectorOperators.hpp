@@ -1405,6 +1405,9 @@ namespace atl {
     MAKE_VM_DIVIDE_SCALAR(long)
     MAKE_VM_DIVIDE_SCALAR(short)
 
+    
+    
+    
     template<class T2, class A>
     std::ostream& operator<<(std::ostream& out, const atl::MatrixVectorExpression< T2, A> &expr) {
 

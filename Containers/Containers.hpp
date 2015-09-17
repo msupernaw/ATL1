@@ -465,6 +465,11 @@ namespace atl {
     //        }
     //        return ret;
     //    }
+    
+    template<class T>
+    const atl::Matrix<typename T::RET_TYPE> Transpose(const atl::VectorExpression<typename T::RET_TYPE, T>& v ){
+        return atl::Matrix<typename T::RET_TYPE>(v);
+    }
 }
 
 #endif	/* CONTAINERS_HPP */

@@ -112,6 +112,44 @@ namespace atl {
 
         }
 
+         template<class T2, class A>
+        Vector(const MatrixExpression<T2, A> &expr) {
+
+            isize = expr.Size(0);
+
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
+            assert(expr.Size(1) == 1);
+#endif
+
+
+            data_m.resize(isize);
+
+            for (int i = 0; i < isize; i++) {
+                data_m[i] = expr(i, 0);
+            }
+
+      
+        }
+
+        template<class T2, class A>
+        Vector(const MatrixVectorExpression<T2, A> &expr) {
+
+            isize = expr.Size(0);
+
+//#ifdef ATL_ENABLE_BOUNDS_CHECKING
+//            assert(expr.Size(0) == 1);
+//#endif
+
+
+            data_m.resize(isize);
+
+            for (int i = 0; i < isize; i++) {
+                data_m[i] = expr(i, 0);
+            }
+
+        }
+        
+        
         void Resize(size_t size) {
             this->isize = size;
             this->data_m.resize(size);
