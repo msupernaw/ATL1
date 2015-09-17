@@ -474,7 +474,7 @@ namespace atl {
     const VectorMatrixVectorSubtract<LHS, RHS> operator-(const atl::VectorExpression< typename LHS::RET_TYPE, LHS>& lhs, const atl::MatrixVectorExpression< typename RHS::RET_TYPE, RHS> &rhs) {
         return VectorMatrixVectorSubtract<LHS, RHS>(lhs.Cast(), rhs.Cast());
     }
-    
+
     template< class LHS, class RHS>
     struct VectorMatrixVectorMultiply : MatrixVectorExpression<typename atl::PromoteType< typename LHS::RET_TYPE, typename RHS::RET_TYPE >::return_type, VectorMatrixVectorMultiply<LHS, RHS> > {
         typedef typename LHS::RET_TYPE RET_TYPEL;
@@ -510,7 +510,7 @@ namespace atl {
     const VectorMatrixVectorMultiply<LHS, RHS> operator*(const atl::VectorExpression< typename LHS::RET_TYPE, LHS>& lhs, const atl::MatrixVectorExpression< typename RHS::RET_TYPE, RHS> &rhs) {
         return VectorMatrixVectorMultiply<LHS, RHS>(lhs.Cast(), rhs.Cast());
     }
-    
+
     template< class LHS, class RHS>
     struct VectorMatrixVectorDivide : MatrixVectorExpression<typename atl::PromoteType< typename LHS::RET_TYPE, typename RHS::RET_TYPE >::return_type, VectorMatrixVectorDivide<LHS, RHS> > {
         typedef typename LHS::RET_TYPE RET_TYPEL;
@@ -546,10 +546,8 @@ namespace atl {
     const VectorMatrixVectorDivide<LHS, RHS> operator/(const atl::VectorExpression< typename LHS::RET_TYPE, LHS>& lhs, const atl::MatrixVectorExpression< typename RHS::RET_TYPE, RHS> &rhs) {
         return VectorMatrixVectorDivide<LHS, RHS>(lhs.Cast(), rhs.Cast());
     }
-    
 
-   
-   template< class LHS, class RHS>
+    template< class LHS, class RHS>
     struct VectorMatrixAddVector : MatrixVectorExpression<typename atl::PromoteType< typename LHS::RET_TYPE, typename RHS::RET_TYPE >::return_type, VectorMatrixAddVector<LHS, RHS> > {
         typedef typename LHS::RET_TYPE RET_TYPEL;
         typedef typename RHS::RET_TYPE RET_TYPER;
@@ -574,7 +572,7 @@ namespace atl {
         }
 
         inline const RET_TYPE operator()(const uint32_t& i, const uint32_t & j) const {
-            RET_TYPE ret = lhs_m(i,j) + rhs_m(i);
+            RET_TYPE ret = lhs_m(i, j) + rhs_m(i);
             return ret;
         }
 
@@ -584,117 +582,224 @@ namespace atl {
     const VectorMatrixAddVector<LHS, RHS> operator+(const atl::MatrixVectorExpression< typename LHS::RET_TYPE, LHS>& lhs, const atl::VectorExpression< typename RHS::RET_TYPE, RHS> &rhs) {
         return VectorMatrixAddVector<LHS, RHS>(lhs.Cast(), rhs.Cast());
     }
-//
-//    template< class LHS, class RHS>
-//    struct VectorMatrixVectorSubtract : MatrixVectorExpression<typename atl::PromoteType< typename LHS::RET_TYPE, typename RHS::RET_TYPE >::return_type, VectorMatrixVectorSubtract<LHS, RHS> > {
-//        typedef typename LHS::RET_TYPE RET_TYPEL;
-//        typedef typename RHS::RET_TYPE RET_TYPER;
-//
-//        typedef typename atl::PromoteType<typename LHS::BASE_TYPE, typename RHS::BASE_TYPE >::return_type BASE_TYPE;
-//        typedef typename atl::PromoteType<RET_TYPEL, RET_TYPER>::return_type RET_TYPE;
-//
-//        const LHS& lhs_m;
-//        const RHS& rhs_m;
-//
-//        inline explicit VectorMatrixVectorSubtract(const LHS& lhs, const RHS &rhs)
-//        : lhs_m(lhs.Cast()), rhs_m(rhs.Cast()) {
-//
-//        }
-//
-//        inline const size_t Dimensions() const {
-//            return lhs_m.Dimensions() < rhs_m.Dimensions() ? lhs_m.Dimensions() : rhs_m.Dimensions();
-//        }
-//
-//        inline const size_t Size(const int32_t & dimension) const {
-//            return lhs_m.Size(dimension) < rhs_m.Size(dimension) ? lhs_m.Size(dimension) : rhs_m.Size(dimension);
-//        }
-//
-//        inline const RET_TYPE operator()(const uint32_t& i, const uint32_t & j) const {
-//            RET_TYPE ret = lhs_m(i) - rhs_m(i, j);
-//            return ret;
-//        }
-//
-//    };
-//
-//    template<class LHS, class RHS>
-//    const VectorMatrixVectorSubtract<LHS, RHS> operator-(const atl::VectorExpression< typename LHS::RET_TYPE, LHS>& lhs, const atl::MatrixVectorExpression< typename RHS::RET_TYPE, RHS> &rhs) {
-//        return VectorMatrixVectorSubtract<LHS, RHS>(lhs.Cast(), rhs.Cast());
-//    }
-//    
-//    template< class LHS, class RHS>
-//    struct VectorMatrixVectorMultiply : MatrixVectorExpression<typename atl::PromoteType< typename LHS::RET_TYPE, typename RHS::RET_TYPE >::return_type, VectorMatrixVectorMultiply<LHS, RHS> > {
-//        typedef typename LHS::RET_TYPE RET_TYPEL;
-//        typedef typename RHS::RET_TYPE RET_TYPER;
-//
-//        typedef typename atl::PromoteType<typename LHS::BASE_TYPE, typename RHS::BASE_TYPE >::return_type BASE_TYPE;
-//        typedef typename atl::PromoteType<RET_TYPEL, RET_TYPER>::return_type RET_TYPE;
-//
-//        const LHS& lhs_m;
-//        const RHS& rhs_m;
-//
-//        inline explicit VectorMatrixVectorMultiply(const LHS& lhs, const RHS &rhs)
-//        : lhs_m(lhs.Cast()), rhs_m(rhs.Cast()) {
-//
-//        }
-//
-//        inline const size_t Dimensions() const {
-//            return lhs_m.Dimensions() < rhs_m.Dimensions() ? lhs_m.Dimensions() : rhs_m.Dimensions();
-//        }
-//
-//        inline const size_t Size(const int32_t & dimension) const {
-//            return lhs_m.Size(dimension) < rhs_m.Size(dimension) ? lhs_m.Size(dimension) : rhs_m.Size(dimension);
-//        }
-//
-//        inline const RET_TYPE operator()(const uint32_t& i, const uint32_t & j) const {
-//            RET_TYPE ret = lhs_m(i) * rhs_m(i, j);
-//            return ret;
-//        }
-//
-//    };
-//
-//    template<class LHS, class RHS>
-//    const VectorMatrixVectorMultiply<LHS, RHS> operator*(const atl::VectorExpression< typename LHS::RET_TYPE, LHS>& lhs, const atl::MatrixVectorExpression< typename RHS::RET_TYPE, RHS> &rhs) {
-//        return VectorMatrixVectorMultiply<LHS, RHS>(lhs.Cast(), rhs.Cast());
-//    }
-//    
-//    template< class LHS, class RHS>
-//    struct VectorMatrixVectorDivide : MatrixVectorExpression<typename atl::PromoteType< typename LHS::RET_TYPE, typename RHS::RET_TYPE >::return_type, VectorMatrixVectorDivide<LHS, RHS> > {
-//        typedef typename LHS::RET_TYPE RET_TYPEL;
-//        typedef typename RHS::RET_TYPE RET_TYPER;
-//
-//        typedef typename atl::PromoteType<typename LHS::BASE_TYPE, typename RHS::BASE_TYPE >::return_type BASE_TYPE;
-//        typedef typename atl::PromoteType<RET_TYPEL, RET_TYPER>::return_type RET_TYPE;
-//
-//        const LHS& lhs_m;
-//        const RHS& rhs_m;
-//
-//        inline explicit VectorMatrixVectorDivide(const LHS& lhs, const RHS &rhs)
-//        : lhs_m(lhs.Cast()), rhs_m(rhs.Cast()) {
-//
-//        }
-//
-//        inline const size_t Dimensions() const {
-//            return lhs_m.Dimensions() < rhs_m.Dimensions() ? lhs_m.Dimensions() : rhs_m.Dimensions();
-//        }
-//
-//        inline const size_t Size(const int32_t & dimension) const {
-//            return lhs_m.Size(dimension) < rhs_m.Size(dimension) ? lhs_m.Size(dimension) : rhs_m.Size(dimension);
-//        }
-//
-//        inline const RET_TYPE operator()(const uint32_t& i, const uint32_t & j) const {
-//            RET_TYPE ret = lhs_m(i) / rhs_m(i, j);
-//            return ret;
-//        }
-//
-//    };
-//
-//    template<class LHS, class RHS>
-//    const VectorMatrixVectorDivide<LHS, RHS> operator/(const atl::VectorExpression< typename LHS::RET_TYPE, LHS>& lhs, const atl::MatrixVectorExpression< typename RHS::RET_TYPE, RHS> &rhs) {
-//        return VectorMatrixVectorDivide<LHS, RHS>(lhs.Cast(), rhs.Cast());
-//    }
-//     
-   
+
+    template< class LHS, class RHS>
+    struct VectorMatrixSubtractVector : MatrixVectorExpression<typename atl::PromoteType< typename LHS::RET_TYPE, typename RHS::RET_TYPE >::return_type, VectorMatrixSubtractVector<LHS, RHS> > {
+        typedef typename LHS::RET_TYPE RET_TYPEL;
+        typedef typename RHS::RET_TYPE RET_TYPER;
+
+        typedef typename atl::PromoteType<typename LHS::BASE_TYPE, typename RHS::BASE_TYPE >::return_type BASE_TYPE;
+        typedef typename atl::PromoteType<RET_TYPEL, RET_TYPER>::return_type RET_TYPE;
+
+        const LHS& lhs_m;
+        const RHS& rhs_m;
+
+        inline explicit VectorMatrixSubtractVector(const LHS& lhs, const RHS &rhs)
+        : lhs_m(lhs.Cast()), rhs_m(rhs.Cast()) {
+
+        }
+
+        inline const size_t Dimensions() const {
+            return lhs_m.Dimensions() < rhs_m.Dimensions() ? lhs_m.Dimensions() : rhs_m.Dimensions();
+        }
+
+        inline const size_t Size(const int32_t & dimension) const {
+            return lhs_m.Size(dimension) < rhs_m.Size(dimension) ? lhs_m.Size(dimension) : rhs_m.Size(dimension);
+        }
+
+        inline const RET_TYPE operator()(const uint32_t& i, const uint32_t & j) const {
+            RET_TYPE ret = lhs_m(i, j) - rhs_m(i);
+            return ret;
+        }
+
+    };
+
+    template<class LHS, class RHS>
+    const VectorMatrixSubtractVector<LHS, RHS> operator-(const atl::MatrixVectorExpression< typename LHS::RET_TYPE, LHS>& lhs, const atl::VectorExpression< typename RHS::RET_TYPE, RHS> &rhs) {
+        return VectorMatrixSubtractVector<LHS, RHS>(lhs.Cast(), rhs.Cast());
+    }
+
+    template< class LHS, class RHS>
+    struct VectorMatrixMultiplyVector : MatrixVectorExpression<typename atl::PromoteType< typename LHS::RET_TYPE, typename RHS::RET_TYPE >::return_type, VectorMatrixMultiplyVector<LHS, RHS> > {
+        typedef typename LHS::RET_TYPE RET_TYPEL;
+        typedef typename RHS::RET_TYPE RET_TYPER;
+
+        typedef typename atl::PromoteType<typename LHS::BASE_TYPE, typename RHS::BASE_TYPE >::return_type BASE_TYPE;
+        typedef typename atl::PromoteType<RET_TYPEL, RET_TYPER>::return_type RET_TYPE;
+
+        const LHS& lhs_m;
+        const RHS& rhs_m;
+
+        inline explicit VectorMatrixMultiplyVector(const LHS& lhs, const RHS &rhs)
+        : lhs_m(lhs.Cast()), rhs_m(rhs.Cast()) {
+
+        }
+
+        inline const size_t Dimensions() const {
+            return lhs_m.Dimensions() < rhs_m.Dimensions() ? lhs_m.Dimensions() : rhs_m.Dimensions();
+        }
+
+        inline const size_t Size(const int32_t & dimension) const {
+            return lhs_m.Size(dimension) < rhs_m.Size(dimension) ? lhs_m.Size(dimension) : rhs_m.Size(dimension);
+        }
+
+        inline const RET_TYPE operator()(const uint32_t& i, const uint32_t & j) const {
+            RET_TYPE ret = lhs_m(i, j) * rhs_m(i);
+            return ret;
+        }
+
+    };
+
+    template<class LHS, class RHS>
+    const VectorMatrixMultiplyVector<LHS, RHS> operator*(const atl::MatrixVectorExpression< typename LHS::RET_TYPE, LHS>& lhs, const atl::VectorExpression< typename RHS::RET_TYPE, RHS> &rhs) {
+        return VectorMatrixMultiplyVector<LHS, RHS>(lhs.Cast(), rhs.Cast());
+    }
     
+     template< class LHS, class RHS>
+    struct VectorMatrixDivideVector : MatrixVectorExpression<typename atl::PromoteType< typename LHS::RET_TYPE, typename RHS::RET_TYPE >::return_type, VectorMatrixDivideVector<LHS, RHS> > {
+        typedef typename LHS::RET_TYPE RET_TYPEL;
+        typedef typename RHS::RET_TYPE RET_TYPER;
+
+        typedef typename atl::PromoteType<typename LHS::BASE_TYPE, typename RHS::BASE_TYPE >::return_type BASE_TYPE;
+        typedef typename atl::PromoteType<RET_TYPEL, RET_TYPER>::return_type RET_TYPE;
+
+        const LHS& lhs_m;
+        const RHS& rhs_m;
+
+        inline explicit VectorMatrixDivideVector(const LHS& lhs, const RHS &rhs)
+        : lhs_m(lhs.Cast()), rhs_m(rhs.Cast()) {
+
+        }
+
+        inline const size_t Dimensions() const {
+            return lhs_m.Dimensions() < rhs_m.Dimensions() ? lhs_m.Dimensions() : rhs_m.Dimensions();
+        }
+
+        inline const size_t Size(const int32_t & dimension) const {
+            return lhs_m.Size(dimension) < rhs_m.Size(dimension) ? lhs_m.Size(dimension) : rhs_m.Size(dimension);
+        }
+
+        inline const RET_TYPE operator()(const uint32_t& i, const uint32_t & j) const {
+            RET_TYPE ret = lhs_m(i, j) / rhs_m(i);
+            return ret;
+        }
+
+    };
+
+    template<class LHS, class RHS>
+    const VectorMatrixDivideVector<LHS, RHS> operator/(const atl::MatrixVectorExpression< typename LHS::RET_TYPE, LHS>& lhs, const atl::VectorExpression< typename RHS::RET_TYPE, RHS> &rhs) {
+        return VectorMatrixDivideVector<LHS, RHS>(lhs.Cast(), rhs.Cast());
+    }
+    //
+    //    template< class LHS, class RHS>
+    //    struct VectorMatrixVectorSubtract : MatrixVectorExpression<typename atl::PromoteType< typename LHS::RET_TYPE, typename RHS::RET_TYPE >::return_type, VectorMatrixVectorSubtract<LHS, RHS> > {
+    //        typedef typename LHS::RET_TYPE RET_TYPEL;
+    //        typedef typename RHS::RET_TYPE RET_TYPER;
+    //
+    //        typedef typename atl::PromoteType<typename LHS::BASE_TYPE, typename RHS::BASE_TYPE >::return_type BASE_TYPE;
+    //        typedef typename atl::PromoteType<RET_TYPEL, RET_TYPER>::return_type RET_TYPE;
+    //
+    //        const LHS& lhs_m;
+    //        const RHS& rhs_m;
+    //
+    //        inline explicit VectorMatrixVectorSubtract(const LHS& lhs, const RHS &rhs)
+    //        : lhs_m(lhs.Cast()), rhs_m(rhs.Cast()) {
+    //
+    //        }
+    //
+    //        inline const size_t Dimensions() const {
+    //            return lhs_m.Dimensions() < rhs_m.Dimensions() ? lhs_m.Dimensions() : rhs_m.Dimensions();
+    //        }
+    //
+    //        inline const size_t Size(const int32_t & dimension) const {
+    //            return lhs_m.Size(dimension) < rhs_m.Size(dimension) ? lhs_m.Size(dimension) : rhs_m.Size(dimension);
+    //        }
+    //
+    //        inline const RET_TYPE operator()(const uint32_t& i, const uint32_t & j) const {
+    //            RET_TYPE ret = lhs_m(i) - rhs_m(i, j);
+    //            return ret;
+    //        }
+    //
+    //    };
+    //
+    //    template<class LHS, class RHS>
+    //    const VectorMatrixVectorSubtract<LHS, RHS> operator-(const atl::VectorExpression< typename LHS::RET_TYPE, LHS>& lhs, const atl::MatrixVectorExpression< typename RHS::RET_TYPE, RHS> &rhs) {
+    //        return VectorMatrixVectorSubtract<LHS, RHS>(lhs.Cast(), rhs.Cast());
+    //    }
+    //    
+    //    template< class LHS, class RHS>
+    //    struct VectorMatrixVectorMultiply : MatrixVectorExpression<typename atl::PromoteType< typename LHS::RET_TYPE, typename RHS::RET_TYPE >::return_type, VectorMatrixVectorMultiply<LHS, RHS> > {
+    //        typedef typename LHS::RET_TYPE RET_TYPEL;
+    //        typedef typename RHS::RET_TYPE RET_TYPER;
+    //
+    //        typedef typename atl::PromoteType<typename LHS::BASE_TYPE, typename RHS::BASE_TYPE >::return_type BASE_TYPE;
+    //        typedef typename atl::PromoteType<RET_TYPEL, RET_TYPER>::return_type RET_TYPE;
+    //
+    //        const LHS& lhs_m;
+    //        const RHS& rhs_m;
+    //
+    //        inline explicit VectorMatrixVectorMultiply(const LHS& lhs, const RHS &rhs)
+    //        : lhs_m(lhs.Cast()), rhs_m(rhs.Cast()) {
+    //
+    //        }
+    //
+    //        inline const size_t Dimensions() const {
+    //            return lhs_m.Dimensions() < rhs_m.Dimensions() ? lhs_m.Dimensions() : rhs_m.Dimensions();
+    //        }
+    //
+    //        inline const size_t Size(const int32_t & dimension) const {
+    //            return lhs_m.Size(dimension) < rhs_m.Size(dimension) ? lhs_m.Size(dimension) : rhs_m.Size(dimension);
+    //        }
+    //
+    //        inline const RET_TYPE operator()(const uint32_t& i, const uint32_t & j) const {
+    //            RET_TYPE ret = lhs_m(i) * rhs_m(i, j);
+    //            return ret;
+    //        }
+    //
+    //    };
+    //
+    //    template<class LHS, class RHS>
+    //    const VectorMatrixVectorMultiply<LHS, RHS> operator*(const atl::VectorExpression< typename LHS::RET_TYPE, LHS>& lhs, const atl::MatrixVectorExpression< typename RHS::RET_TYPE, RHS> &rhs) {
+    //        return VectorMatrixVectorMultiply<LHS, RHS>(lhs.Cast(), rhs.Cast());
+    //    }
+    //    
+    //    template< class LHS, class RHS>
+    //    struct VectorMatrixVectorDivide : MatrixVectorExpression<typename atl::PromoteType< typename LHS::RET_TYPE, typename RHS::RET_TYPE >::return_type, VectorMatrixVectorDivide<LHS, RHS> > {
+    //        typedef typename LHS::RET_TYPE RET_TYPEL;
+    //        typedef typename RHS::RET_TYPE RET_TYPER;
+    //
+    //        typedef typename atl::PromoteType<typename LHS::BASE_TYPE, typename RHS::BASE_TYPE >::return_type BASE_TYPE;
+    //        typedef typename atl::PromoteType<RET_TYPEL, RET_TYPER>::return_type RET_TYPE;
+    //
+    //        const LHS& lhs_m;
+    //        const RHS& rhs_m;
+    //
+    //        inline explicit VectorMatrixVectorDivide(const LHS& lhs, const RHS &rhs)
+    //        : lhs_m(lhs.Cast()), rhs_m(rhs.Cast()) {
+    //
+    //        }
+    //
+    //        inline const size_t Dimensions() const {
+    //            return lhs_m.Dimensions() < rhs_m.Dimensions() ? lhs_m.Dimensions() : rhs_m.Dimensions();
+    //        }
+    //
+    //        inline const size_t Size(const int32_t & dimension) const {
+    //            return lhs_m.Size(dimension) < rhs_m.Size(dimension) ? lhs_m.Size(dimension) : rhs_m.Size(dimension);
+    //        }
+    //
+    //        inline const RET_TYPE operator()(const uint32_t& i, const uint32_t & j) const {
+    //            RET_TYPE ret = lhs_m(i) / rhs_m(i, j);
+    //            return ret;
+    //        }
+    //
+    //    };
+    //
+    //    template<class LHS, class RHS>
+    //    const VectorMatrixVectorDivide<LHS, RHS> operator/(const atl::VectorExpression< typename LHS::RET_TYPE, LHS>& lhs, const atl::MatrixVectorExpression< typename RHS::RET_TYPE, RHS> &rhs) {
+    //        return VectorMatrixVectorDivide<LHS, RHS>(lhs.Cast(), rhs.Cast());
+    //    }
+    //     
+
     template< class T, class RHS>
     struct VectorMatrixScalarAdd : MatrixVectorExpression<typename atl::PromoteType< T, typename RHS::RET_TYPE >::return_type, VectorMatrixScalarAdd<T, RHS> > {
         typedef T RET_TYPEL;
@@ -1082,6 +1187,7 @@ namespace atl {
         return VectorMatrixDivideScalar<LHS, TYPE>(lhs.Cast(), rhs); \
     } \
 
+
     MAKE_VM_DIVIDE_SCALAR(atl::Variable<long double>)
     MAKE_VM_DIVIDE_SCALAR(atl::Variable<double>)
     MAKE_VM_DIVIDE_SCALAR(atl::Variable<float>)
@@ -1092,7 +1198,7 @@ namespace atl {
     MAKE_VM_DIVIDE_SCALAR(int)
     MAKE_VM_DIVIDE_SCALAR(uint64_t)
     MAKE_VM_DIVIDE_SCALAR(long)
-    MAKE_VM_DIVIDE_SCALAR(short)    
+    MAKE_VM_DIVIDE_SCALAR(short)
 
     template<class T2, class A>
     std::ostream& operator<<(std::ostream& out, const atl::MatrixVectorExpression< T2, A> &expr) {
