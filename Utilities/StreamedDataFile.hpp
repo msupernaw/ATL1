@@ -6,6 +6,8 @@
 #include <fstream>
 
 
+namespace atl{
+
 class StreamedDataFile {
     std::ifstream input;
     
@@ -238,6 +240,7 @@ private:
     
 };
 
+}
 
 
 #endif
