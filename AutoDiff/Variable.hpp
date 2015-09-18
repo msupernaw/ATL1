@@ -109,14 +109,15 @@ namespace atl {
     public:
 
         virtual REAL_T External2Internal(REAL_T val, REAL_T min_, REAL_T max_) const {
-                        if (val < min_) {
-                            return -M_PI / 2.0;
-                        } else if (val > max_) {
-                            return M_PI / 2.0;
-                        } else {
-                            return 2.0 * M_PI + std::asin(std::max(-1.0, std::min(1.0, (2.0 * (val - min_) / (max_ - min_) - 1.0))));
-                        }
-//
+//                        if (val < min_) {
+//                            return -M_PI / 2.0;
+//                        } else if (val > max_) {
+//                            return M_PI / 2.0;
+//                        } else {
+//                            return 2.0 * M_PI + std::asin(std::max(-1.0, std::min(1.0, (2.0 * (val - min_) / (max_ - min_) - 1.0))));
+//                        }
+            return  std::asin((2.0*val)/(max_-min_)-min_/(max_-min_)-max_/(max_-min_));
+////
 //            REAL_T piby2 = 2. * std::atan(1.);
 //            REAL_T distnn = 8. * sqrt(std::numeric_limits<REAL_T>::epsilon());
 //            REAL_T vlimhi = piby2 - distnn;
@@ -142,9 +143,10 @@ namespace atl {
         }
 
         virtual REAL_T Internal2External(REAL_T val, REAL_T min_, REAL_T max_) const {
+         
             //            return ((std::sin(val) + 1.0) / 2.0)*(max - min) + min;
-                        return std::max(min_, std::min(max_, ((std::sin(val) + static_cast<REAL_T> (1.0)) / static_cast<REAL_T> (2.0))*(max_ - min_) + min_));
-//            return min_ + 0.5 * (max_ - min_)*(std::sin(val) + 1.);
+//                        return std::max(min_, std::min(max_, ((std::sin(val) + static_cast<REAL_T> (1.0)) / static_cast<REAL_T> (2.0))*(max_ - min_) + min_));
+            return min_ + 0.5 * (max_ - min_)*(std::sin(val) + 1.);
         }
 
         virtual REAL_T DerivativeInternal2External(REAL_T val, REAL_T min_, REAL_T max_)const {

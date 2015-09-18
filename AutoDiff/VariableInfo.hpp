@@ -11,6 +11,11 @@
 #include <mutex>
 #include <stack>
 
+#include "../Utilities/Platform.hpp"
+
+#ifndef ATL_WINDOWS
+#include "third_party/clfmalloc.h"
+#endif
 
 #include "../Utilities/flat_map.hpp"
 

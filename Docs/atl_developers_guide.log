@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  14 SEP 2015 08:34
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  18 SEP 2015 17:53
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1160,7 +1160,12 @@ Library (tcolorbox): 'tcblistings.code.tex' version '3.04'
 (/usr/local/texlive/2014/texmf-dist/tex/latex/tcolorbox/tcblistingscore.code.te
 x
 Library (tcolorbox): 'tcblistingscore.code.tex' version '3.04'
-)) (./atl_developers_guide.aux)
+))
+
+LaTeX Warning: Unused global option(s):
+    [a4letter].
+
+(./atl_developers_guide.aux)
 \openout1 = `atl_developers_guide.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 121.
@@ -1184,16 +1189,16 @@ LaTeX Font Info:    ... okay on input line 121.
 *geometry* detected driver: pdftex
 *geometry* verbose mode - [ preamble ] result:
 * driver: pdftex
-* paper: a4paper
+* paper: <default>
 * layout: <same size as paper>
 * layoutoffset:(h,v)=(0.0pt,0.0pt)
 * modes: 
-* h-part:(L,W,R)=(48.0pt, 503.50787pt, 46.0pt)
-* v-part:(T,H,B)=(30.0pt, 785.04684pt, 30.0pt)
-* \paperwidth=597.50787pt
-* \paperheight=845.04684pt
-* \textwidth=503.50787pt
-* \textheight=785.04684pt
+* h-part:(L,W,R)=(48.0pt, 520.295pt, 46.0pt)
+* v-part:(T,H,B)=(30.0pt, 734.96999pt, 30.0pt)
+* \paperwidth=614.295pt
+* \paperheight=794.96999pt
+* \textwidth=520.295pt
+* \textheight=734.96999pt
 * \oddsidemargin=-24.26999pt
 * \evensidemargin=-24.26999pt
 * \topmargin=-79.26999pt
@@ -1201,7 +1206,7 @@ LaTeX Font Info:    ... okay on input line 121.
 * \headsep=25.0pt
 * \topskip=12.0pt
 * \footskip=30.0pt
-* \marginparwidth=35.0pt
+* \marginparwidth=44.0pt
 * \marginparsep=10.0pt
 * \columnsep=10.0pt
 * \skip\footins=10.8pt plus 4.0pt minus 2.0pt
@@ -1310,14 +1315,14 @@ File: lstlang1.sty 2014/03/04 1.5c listings language file
 (./atl_developers_guide.listing) [5]
 \openout5 = `atl_developers_guide.listing'.
 
- (./atl_developers_guide.listing)
+ (./atl_developers_guide.listing) [6]
 \openout5 = `atl_developers_guide.listing'.
 
 
-(./atl_developers_guide.listing) [6]
+(./atl_developers_guide.listing) [7]
 \openout5 = `atl_developers_guide.listing'.
 
- (./atl_developers_guide.listing) [7]
+ (./atl_developers_guide.listing) [8]
 \openout5 = `atl_developers_guide.listing'.
 
 
@@ -1331,7 +1336,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 375--380
 
  []
 
-[8]
+[9]
 Underfull \hbox (badness 10000) in paragraph at lines 391--445
 
  []
@@ -1366,7 +1371,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 391--445
 
  []
 
-[9] [10]
+[10] [11]
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
 put line 447.
 
@@ -1387,10 +1392,10 @@ Underfull \hbox (badness 10000) in paragraph at lines 502--503
 
 LaTeX Font Warning: Command \small invalid in math mode on input line 509.
 
-[11] [12]
+[12] [13]
 \openout5 = `atl_developers_guide.listing'.
 
- (./atl_developers_guide.listing) [13]
+ (./atl_developers_guide.listing) [14]
 \openout5 = `atl_developers_guide.listing'.
 
  (./atl_developers_guide.listing)
@@ -1407,67 +1412,66 @@ Underfull \hbox (badness 10000) in paragraph at lines 19--20
  []
 
 
-Overfull \hbox (72.76099pt too wide) in paragraph at lines 20--21
+Overfull \hbox (55.97386pt too wide) in paragraph at lines 20--21
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
 ][][][][][][][][] 
  []
 
-) [14]
+) [15]
 \openout5 = `atl_developers_guide.listing'.
 
  (./atl_developers_guide.listing)
 \openout5 = `atl_developers_guide.listing'.
 
  (./atl_developers_guide.listing)
-[15]
+[16]
 \openout5 = `atl_developers_guide.listing'.
 
- (./atl_developers_guide.listing) [16] [17]
+ (./atl_developers_guide.listing) [17] [18]
 \openout5 = `atl_developers_guide.listing'.
 
- (./atl_developers_guide.listing) [18]
-\openout5 = `atl_developers_guide.listing'.
-
- (./atl_developers_guide.listing)
+ (./atl_developers_guide.listing) [19]
 \openout5 = `atl_developers_guide.listing'.
 
  (./atl_developers_guide.listing)
-[19]
 \openout5 = `atl_developers_guide.listing'.
 
- (./atl_developers_guide.listing) [20]
+ (./atl_developers_guide.listing)
+[20]
 \openout5 = `atl_developers_guide.listing'.
 
- (./atl_developers_guide.listing
-Overfull \hbox (6.0921pt too wide) in paragraph at lines 4--5
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-)
-\openout5 = `atl_developers_guide.listing'.
-
- (./atl_developers_guide.listing) [21] [22]
+ (./atl_developers_guide.listing) [21]
 \openout5 = `atl_developers_guide.listing'.
 
  (./atl_developers_guide.listing)
 \openout5 = `atl_developers_guide.listing'.
 
 
-(./atl_developers_guide.listing)
-Underfull \hbox (badness 10000) in paragraph at lines 1024--1038
+(./atl_developers_guide.listing) [22]
+Overfull \vbox (30.72086pt too high) has occurred while \output is active []
 
- []
 
 [23]
 \openout5 = `atl_developers_guide.listing'.
 
+ (./atl_developers_guide.listing)
+\openout5 = `atl_developers_guide.listing'.
+
+ (./atl_developers_guide.listing)
+Underfull \hbox (badness 10000) in paragraph at lines 1024--1038
+
+ []
+
+[24]
+\openout5 = `atl_developers_guide.listing'.
+
  (./atl_developers_guide.listing
-Overfull \hbox (26.78165pt too wide) in paragraph at lines 40--41
+Overfull \hbox (9.99452pt too wide) in paragraph at lines 40--41
 [][][][][][][][][][][][][][][][][][][][][][][] 
  []
 
 
-Overfull \hbox (26.78165pt too wide) in paragraph at lines 50--51
+Overfull \hbox (9.99452pt too wide) in paragraph at lines 50--51
 [][][][][][][][][][][][][][][][][][][][][][][] 
  []
 
@@ -1476,15 +1480,15 @@ Underfull \hbox (badness 10000) in paragraph at lines 1039--1099
 
  []
 
-[24]
-Overfull \vbox (21.44402pt too high) has occurred while \output is active []
-
-
 [25]
+Overfull \vbox (71.52087pt too high) has occurred while \output is active []
+
+
+[26]
 \openout5 = `atl_developers_guide.listing'.
 
  (./atl_developers_guide.listing
-Overfull \hbox (17.58606pt too wide) in paragraph at lines 35--36
+Overfull \hbox (0.79893pt too wide) in paragraph at lines 35--36
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
  []
 
@@ -1492,42 +1496,22 @@ Overfull \hbox (17.58606pt too wide) in paragraph at lines 35--36
 \openout5 = `atl_developers_guide.listing'.
 
  (./atl_developers_guide.listing
-Overfull \hbox (17.58606pt too wide) in paragraph at lines 7--8
+Overfull \hbox (0.79893pt too wide) in paragraph at lines 7--8
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
  []
 
-) [26] [27]
+) [27]
+Overfull \vbox (3.52084pt too high) has occurred while \output is active []
+
+
+[28] [29]
 \openout5 = `atl_developers_guide.listing'.
 
- (./atl_developers_guide.listing) [28] [29]
+ (./atl_developers_guide.listing) [30] [31]
 \openout5 = `atl_developers_guide.listing'.
 
 
 (./atl_developers_guide.listing)
-Overfull \hbox (13.88658pt too wide) in paragraph at lines 1301--1302
-\T1/cmr/m/n/12 ing on ex-pres-sion tem-plates. That said, com-pil-ing with $\OM
-S/cmsy/m/n/12 ^^@\OML/cmm/m/it/12 DPROMOTE[]BINARY[]OPERATORS$
- []
-
-\openout5 = `atl_developers_guide.listing'.
-
-(./atl_developers_guide.listing
-Overfull \hbox (3.79303pt too wide) in paragraph at lines 4--6
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
-][][] 
- []
-
-) [30]
-\openout5 = `atl_developers_guide.listing'.
-
- (./atl_developers_guide.listing)
-\openout5 = `atl_developers_guide.listing'.
-
- (./atl_developers_guide.listing)
-[31]
-\openout5 = `atl_developers_guide.listing'.
-
- (./atl_developers_guide.listing)
 \openout5 = `atl_developers_guide.listing'.
 
  (./atl_developers_guide.listing) [32]
@@ -1544,7 +1528,14 @@ Overfull \hbox (3.79303pt too wide) in paragraph at lines 4--6
 (./atl_developers_guide.listing)
 \openout5 = `atl_developers_guide.listing'.
 
- (./atl_developers_guide.listing)
+ (./atl_developers_guide.listing) [34]
+\openout5 = `atl_developers_guide.listing'.
+
+
+(./atl_developers_guide.listing)
+\openout5 = `atl_developers_guide.listing'.
+
+ (./atl_developers_guide.listing) [35]
 \openout5 = `atl_developers_guide.listing'.
 
 
@@ -1552,13 +1543,6 @@ Overfull \hbox (3.79303pt too wide) in paragraph at lines 4--6
 \openout5 = `atl_developers_guide.listing'.
 
  (./atl_developers_guide.listing)
-\openout5 = `atl_developers_guide.listing'.
-
-
-(./atl_developers_guide.listing) [34]
-\openout5 = `atl_developers_guide.listing'.
-
- (./atl_developers_guide.listing) [35]
 \openout5 = `atl_developers_guide.listing'.
 
 
@@ -1569,11 +1553,29 @@ Overfull \hbox (3.79303pt too wide) in paragraph at lines 4--6
 \openout5 = `atl_developers_guide.listing'.
 
 
-(./atl_developers_guide.listing) [37] [38]
-Overfull \vbox (204.28459pt too high) has occurred while \output is active []
+(./atl_developers_guide.listing)
+\openout5 = `atl_developers_guide.listing'.
+
+ (./atl_developers_guide.listing) [37]
+\openout5 = `atl_developers_guide.listing'.
 
 
-[39] [40]
+(./atl_developers_guide.listing)
+\openout5 = `atl_developers_guide.listing'.
+
+ (./atl_developers_guide.listing) [38] [39]
+\openout5 = `atl_developers_guide.listing'.
+
+
+(./atl_developers_guide.listing) [40]
+Overfull \vbox (33.22052pt too high) has occurred while \output is active []
+
+
+[41] [42]
+Overfull \vbox (254.36145pt too high) has occurred while \output is active []
+
+
+[43] [44]
 
 Package catoptions Warning: Undefined options (family,option,value): 
 (catoptions)                fontenc.sty,T1,
@@ -1581,19 +1583,27 @@ Package catoptions Warning: Undefined options (family,option,value):
 
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1774.
 Package atveryend Info: Executing hook `AfterLastShipout' on input line 1774.
-(./atl_developers_guide.xwm) (./atl_developers_guide.aux)
+(./atl_developers_guide.xwm)
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+(./atl_developers_guide.aux)
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1774.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1774.
 
 Package rerunfilecheck Info: File `atl_developers_guide.out' has not changed.
 (rerunfilecheck)             Checksum: 943C7E4147BDE7DAE11084AC3A9F071C;4226.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1774.
  ) 
 Here is how much of TeX's memory you used:
- 46840 strings out of 493117
- 1071962 string characters out of 6135433
- 1453268 words of memory out of 5000000
- 48279 multiletter control sequences out of 15000+600000
+ 46847 strings out of 493117
+ 1072031 string characters out of 6135433
+ 1453217 words of memory out of 5000000
+ 48282 multiletter control sequences out of 15000+600000
  30795 words of font info for 60 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  74i,14n,97p,10441b,1402s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1625,10 +1635,10 @@ super/sfti1200.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/cm-su
 per/sfti1728.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/cm-supe
 r/sftt0800.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/cm-super/
 sftt1000.pfb>
-Output written on atl_developers_guide.pdf (40 pages, 521396 bytes).
+Output written on atl_developers_guide.pdf (44 pages, 523179 bytes).
 PDF statistics:
- 2143 PDF objects out of 2487 (max. 8388607)
- 2054 compressed objects within 21 object streams
- 1298 named destinations out of 1440 (max. 500000)
+ 2160 PDF objects out of 2487 (max. 8388607)
+ 2067 compressed objects within 21 object streams
+ 1302 named destinations out of 1440 (max. 500000)
  517 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -1,63 +1,63 @@
 \contentsline {section}{\numberline {1}Introduction}{4}{section.1}
 \contentsline {section}{\numberline {2}Template Metaprogramming}{4}{section.2}
 \contentsline {subsection}{\numberline {2.1}Expression Templates}{5}{subsection.2.1}
-\contentsline {section}{\numberline {3}Automatic Differentiation}{8}{section.3}
-\contentsline {subsection}{\numberline {3.1}Forward Mode}{9}{subsection.3.1}
-\contentsline {subsection}{\numberline {3.2}Reverse Mode}{11}{subsection.3.2}
-\contentsline {subsection}{\numberline {3.3}Reverse Mode with Hessian Extension}{12}{subsection.3.3}
-\contentsline {subsection}{\numberline {3.4}Examples}{13}{subsection.3.4}
-\contentsline {subsubsection}{\numberline {3.4.1}Computing Derivatives}{13}{subsubsection.3.4.1}
-\contentsline {subsubsection}{\numberline {3.4.2}Controlling The \textit {GradientStructure}}{15}{subsubsection.3.4.2}
-\contentsline {subsubsection}{\numberline {3.4.3}Using \textit {GradientStructure}'s Other Than The Default}{19}{subsubsection.3.4.3}
-\contentsline {subsubsection}{\numberline {3.4.4}Adjoint Code/Entries}{21}{subsubsection.3.4.4}
-\contentsline {subsubsection}{\numberline {3.4.5}Implementing Newton's Method}{23}{subsubsection.3.4.5}
-\contentsline {section}{\numberline {4}Containers}{30}{section.4}
-\contentsline {subsection}{\numberline {4.1}Vectors}{31}{subsection.4.1}
-\contentsline {subsection}{\numberline {4.2}Matrices}{31}{subsection.4.2}
-\contentsline {subsection}{\numberline {4.3}Arrays}{32}{subsection.4.3}
-\contentsline {subsection}{\numberline {4.4}Type Promotion}{33}{subsection.4.4}
-\contentsline {section}{\numberline {5}Optimization}{35}{section.5}
-\contentsline {subsection}{\numberline {5.1}Function Minimization}{35}{subsection.5.1}
-\contentsline {section}{\numberline {6}Probability Distributions}{39}{section.6}
-\contentsline {subsection}{\numberline {6.1}Probability Densities}{39}{subsection.6.1}
-\contentsline {subsection}{\numberline {6.2}Cumulative Probabilities}{39}{subsection.6.2}
-\contentsline {subsection}{\numberline {6.3}Inverse Cumulative Probabilities}{39}{subsection.6.3}
-\contentsline {subsection}{\numberline {6.4}Random Numbers}{39}{subsection.6.4}
-\contentsline {subsection}{\numberline {6.5}Distribution Objects}{39}{subsection.6.5}
-\contentsline {subsection}{\numberline {6.6}Available Distributions}{39}{subsection.6.6}
-\contentsline {subsubsection}{\numberline {6.6.1}Beta}{39}{subsubsection.6.6.1}
-\contentsline {subsubsection}{\numberline {6.6.2}Binomial}{39}{subsubsection.6.6.2}
-\contentsline {subsubsection}{\numberline {6.6.3}Cauchy}{39}{subsubsection.6.6.3}
-\contentsline {subsubsection}{\numberline {6.6.4}Chi-Square}{39}{subsubsection.6.6.4}
-\contentsline {subsubsection}{\numberline {6.6.5}Exponential}{39}{subsubsection.6.6.5}
-\contentsline {subsubsection}{\numberline {6.6.6}F}{39}{subsubsection.6.6.6}
-\contentsline {subsubsection}{\numberline {6.6.7}Gamma}{39}{subsubsection.6.6.7}
-\contentsline {subsubsection}{\numberline {6.6.8}Geometric}{39}{subsubsection.6.6.8}
-\contentsline {subsubsection}{\numberline {6.6.9}Hypergeometric}{39}{subsubsection.6.6.9}
-\contentsline {subsubsection}{\numberline {6.6.10}Logistic}{39}{subsubsection.6.6.10}
-\contentsline {subsubsection}{\numberline {6.6.11}Log Normal}{39}{subsubsection.6.6.11}
-\contentsline {subsubsection}{\numberline {6.6.12}Negative Binomial}{39}{subsubsection.6.6.12}
-\contentsline {subsubsection}{\numberline {6.6.13}Normal}{39}{subsubsection.6.6.13}
-\contentsline {subsubsection}{\numberline {6.6.14}Poisson}{39}{subsubsection.6.6.14}
-\contentsline {subsubsection}{\numberline {6.6.15}Student's t}{39}{subsubsection.6.6.15}
-\contentsline {subsubsection}{\numberline {6.6.16}Weibull}{39}{subsubsection.6.6.16}
-\contentsline {section}{\numberline {7}Descriptive Statistics}{39}{section.7}
-\contentsline {subsection}{\numberline {7.1}Function Minimization}{39}{subsection.7.1}
-\contentsline {section}{\numberline {8}Concurrency}{39}{section.8}
-\contentsline {subsection}{\numberline {8.1}Concurrency For Containers}{39}{subsection.8.1}
-\contentsline {subsection}{\numberline {8.2}Concurrency AD Types}{39}{subsection.8.2}
-\contentsline {subsubsection}{\numberline {8.2.1}Multithreading}{39}{subsubsection.8.2.1}
-\contentsline {subsubsection}{\numberline {8.2.2}Using your GPU}{39}{subsubsection.8.2.2}
-\contentsline {subsubsection}{\numberline {8.2.3}Handling Threads With Shared Dependency}{39}{subsubsection.8.2.3}
-\contentsline {section}{\numberline {9}Graphics}{39}{section.9}
-\contentsline {subsection}{\numberline {9.1}Line Plots}{39}{subsection.9.1}
-\contentsline {subsection}{\numberline {9.2}Scatter Plots}{39}{subsection.9.2}
-\contentsline {subsection}{\numberline {9.3}Pie Charts, Bar Plots, and Histograms}{39}{subsection.9.3}
-\contentsline {subsection}{\numberline {9.4}Vector Fields}{39}{subsection.9.4}
-\contentsline {subsection}{\numberline {9.5}Surfaces and Volumes}{39}{subsection.9.5}
-\contentsline {section}{\numberline {10}Debugging ATL Code}{39}{section.10}
-\contentsline {section}{\numberline {11}Future Work}{40}{section.11}
-\contentsline {subsection}{\numberline {11.1}Random Effects Modeling}{40}{subsection.11.1}
-\contentsline {subsection}{\numberline {11.2}MPI}{40}{subsection.11.2}
-\contentsline {section}{\numberline {12}References}{40}{section.12}
-\contentsline {section}{\numberline {13}Appendices}{40}{section.13}
+\contentsline {section}{\numberline {3}Automatic Differentiation}{9}{section.3}
+\contentsline {subsection}{\numberline {3.1}Forward Mode}{10}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Reverse Mode}{12}{subsection.3.2}
+\contentsline {subsection}{\numberline {3.3}Reverse Mode with Hessian Extension}{13}{subsection.3.3}
+\contentsline {subsection}{\numberline {3.4}Examples}{14}{subsection.3.4}
+\contentsline {subsubsection}{\numberline {3.4.1}Computing Derivatives}{14}{subsubsection.3.4.1}
+\contentsline {subsubsection}{\numberline {3.4.2}Controlling The \textit {GradientStructure}}{16}{subsubsection.3.4.2}
+\contentsline {subsubsection}{\numberline {3.4.3}Using \textit {GradientStructure}'s Other Than The Default}{20}{subsubsection.3.4.3}
+\contentsline {subsubsection}{\numberline {3.4.4}Adjoint Code/Entries}{22}{subsubsection.3.4.4}
+\contentsline {subsubsection}{\numberline {3.4.5}Implementing Newton's Method}{24}{subsubsection.3.4.5}
+\contentsline {section}{\numberline {4}Containers}{32}{section.4}
+\contentsline {subsection}{\numberline {4.1}Vectors}{33}{subsection.4.1}
+\contentsline {subsection}{\numberline {4.2}Matrices}{33}{subsection.4.2}
+\contentsline {subsection}{\numberline {4.3}Arrays}{34}{subsection.4.3}
+\contentsline {subsection}{\numberline {4.4}Type Promotion}{36}{subsection.4.4}
+\contentsline {section}{\numberline {5}Optimization}{37}{section.5}
+\contentsline {subsection}{\numberline {5.1}Function Minimization}{37}{subsection.5.1}
+\contentsline {section}{\numberline {6}Probability Distributions}{43}{section.6}
+\contentsline {subsection}{\numberline {6.1}Probability Densities}{43}{subsection.6.1}
+\contentsline {subsection}{\numberline {6.2}Cumulative Probabilities}{43}{subsection.6.2}
+\contentsline {subsection}{\numberline {6.3}Inverse Cumulative Probabilities}{43}{subsection.6.3}
+\contentsline {subsection}{\numberline {6.4}Random Numbers}{43}{subsection.6.4}
+\contentsline {subsection}{\numberline {6.5}Distribution Objects}{43}{subsection.6.5}
+\contentsline {subsection}{\numberline {6.6}Available Distributions}{43}{subsection.6.6}
+\contentsline {subsubsection}{\numberline {6.6.1}Beta}{43}{subsubsection.6.6.1}
+\contentsline {subsubsection}{\numberline {6.6.2}Binomial}{43}{subsubsection.6.6.2}
+\contentsline {subsubsection}{\numberline {6.6.3}Cauchy}{43}{subsubsection.6.6.3}
+\contentsline {subsubsection}{\numberline {6.6.4}Chi-Square}{43}{subsubsection.6.6.4}
+\contentsline {subsubsection}{\numberline {6.6.5}Exponential}{43}{subsubsection.6.6.5}
+\contentsline {subsubsection}{\numberline {6.6.6}F}{43}{subsubsection.6.6.6}
+\contentsline {subsubsection}{\numberline {6.6.7}Gamma}{43}{subsubsection.6.6.7}
+\contentsline {subsubsection}{\numberline {6.6.8}Geometric}{43}{subsubsection.6.6.8}
+\contentsline {subsubsection}{\numberline {6.6.9}Hypergeometric}{43}{subsubsection.6.6.9}
+\contentsline {subsubsection}{\numberline {6.6.10}Logistic}{43}{subsubsection.6.6.10}
+\contentsline {subsubsection}{\numberline {6.6.11}Log Normal}{43}{subsubsection.6.6.11}
+\contentsline {subsubsection}{\numberline {6.6.12}Negative Binomial}{43}{subsubsection.6.6.12}
+\contentsline {subsubsection}{\numberline {6.6.13}Normal}{43}{subsubsection.6.6.13}
+\contentsline {subsubsection}{\numberline {6.6.14}Poisson}{43}{subsubsection.6.6.14}
+\contentsline {subsubsection}{\numberline {6.6.15}Student's t}{43}{subsubsection.6.6.15}
+\contentsline {subsubsection}{\numberline {6.6.16}Weibull}{43}{subsubsection.6.6.16}
+\contentsline {section}{\numberline {7}Descriptive Statistics}{43}{section.7}
+\contentsline {subsection}{\numberline {7.1}Function Minimization}{43}{subsection.7.1}
+\contentsline {section}{\numberline {8}Concurrency}{43}{section.8}
+\contentsline {subsection}{\numberline {8.1}Concurrency For Containers}{43}{subsection.8.1}
+\contentsline {subsection}{\numberline {8.2}Concurrency AD Types}{43}{subsection.8.2}
+\contentsline {subsubsection}{\numberline {8.2.1}Multithreading}{43}{subsubsection.8.2.1}
+\contentsline {subsubsection}{\numberline {8.2.2}Using your GPU}{43}{subsubsection.8.2.2}
+\contentsline {subsubsection}{\numberline {8.2.3}Handling Threads With Shared Dependency}{43}{subsubsection.8.2.3}
+\contentsline {section}{\numberline {9}Graphics}{43}{section.9}
+\contentsline {subsection}{\numberline {9.1}Line Plots}{43}{subsection.9.1}
+\contentsline {subsection}{\numberline {9.2}Scatter Plots}{43}{subsection.9.2}
+\contentsline {subsection}{\numberline {9.3}Pie Charts, Bar Plots, and Histograms}{43}{subsection.9.3}
+\contentsline {subsection}{\numberline {9.4}Vector Fields}{43}{subsection.9.4}
+\contentsline {subsection}{\numberline {9.5}Surfaces and Volumes}{43}{subsection.9.5}
+\contentsline {section}{\numberline {10}Debugging ATL Code}{43}{section.10}
+\contentsline {section}{\numberline {11}Future Work}{44}{section.11}
+\contentsline {subsection}{\numberline {11.1}Random Effects Modeling}{44}{subsection.11.1}
+\contentsline {subsection}{\numberline {11.2}MPI}{44}{subsection.11.2}
+\contentsline {section}{\numberline {12}References}{44}{section.12}
+\contentsline {section}{\numberline {13}Appendices}{44}{section.13}

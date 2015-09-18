@@ -569,8 +569,8 @@ gradient_structure(&atl::Variable<REAL_T>::gradient_structure_g)*/ {
                 }
 
             }
-            
-            std::cout<<"Max iterations!";
+
+            std::cout << "Max iterations!";
             return true;
         }
 
@@ -1894,6 +1894,7 @@ OUT_OF:
                             } else {
                                 std::cout << prd(this->active_parameters[j]->GetValue(), 3, 10) << " | ";
                             }
+
                             if (std::fabs(gradient[j])<this->tolerance) {
                                 number_good++;
                                 std::cout << io::GREEN << prd(gradient[j], 3, 10) << io::DEFAULT << io::BOLD << " | " << io::DEFAULT;
@@ -1983,11 +1984,12 @@ OUT_OF:
                 }
                 std::cout << io::DEFAULT;
                 std::cout << io::BOLD << "|" << io::DEFAULT;
-                std::cout.precision(prec);
 
-                std::cout << "[" << std::setw(4) << std::left << (int) (percent)*100 << "%]\n";
+                std::cout.precision(1);
+                std::cout << "[" << std::setw(5) << std::left << (percent)*100 << "%]\n";
                 std::cout << std::endl;
                 std::cout << std::fixed;
+                std::cout.precision(prec);
             } else {
                 std::cout << "\n\n";
             }

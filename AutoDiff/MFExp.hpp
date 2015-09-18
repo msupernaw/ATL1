@@ -94,6 +94,11 @@ namespace atl {
 
     };
 
+    template<class REAL_T, class EXPR>
+    inline const atl::MFExp<REAL_T, EXPR> mfexp(const atl::ExpressionBase<REAL_T, EXPR>& expr) {
+
+        return atl::MFExp<REAL_T, EXPR > (expr.Cast());
+    }
 }
 
 namespace std {
