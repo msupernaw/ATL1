@@ -76,8 +76,15 @@ namespace atl {
         print_internal(false),
         maxgc(std::numeric_limits<REAL_T>::min()),
         max_history(1000),
-        unrecorded_calls(0)/*,
-        gradient_structure(&atl::Variable<REAL_T>::gradient_structure_g)*/ {
+        unrecorded_calls(0),
+        function_calls(0),
+        gradient_calls(0),
+        average_time_in_user_function(0),
+        sum_time_in_user_function(0),
+        sum_time_in_grad_calc(0),
+        average_time_in_grad_calc(0)
+        /*,
+gradient_structure(&atl::Variable<REAL_T>::gradient_structure_g)*/ {
 
         }
 
@@ -745,9 +752,9 @@ namespace atl {
 
 
                 fx = 0.0;
-            this->call_objective_function(fx);
-            this->get_gradient_and_hessian();
-            this->function_value = fx.GetValue();
+                this->call_objective_function(fx);
+                this->get_gradient_and_hessian();
+                this->function_value = fx.GetValue();
 
                 //
                 if (this->verbose) {

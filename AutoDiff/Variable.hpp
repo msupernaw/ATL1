@@ -109,18 +109,42 @@ namespace atl {
     public:
 
         virtual REAL_T External2Internal(REAL_T val, REAL_T min_, REAL_T max_) const {
-            if (val < min_) {
-                return -M_PI / 2.0;
-            } else if (val > max_) {
-                return M_PI / 2.0;
-            } else {
-                return 2.0 * M_PI + std::asin(std::max(-1.0, std::min(1.0, (2.0 * (val - min_) / (max_ - min_) - 1.0))));
-            }
+                        if (val < min_) {
+                            return -M_PI / 2.0;
+                        } else if (val > max_) {
+                            return M_PI / 2.0;
+                        } else {
+                            return 2.0 * M_PI + std::asin(std::max(-1.0, std::min(1.0, (2.0 * (val - min_) / (max_ - min_) - 1.0))));
+                        }
+//
+//            REAL_T piby2 = 2. * std::atan(1.);
+//            REAL_T distnn = 8. * sqrt(std::numeric_limits<REAL_T>::epsilon());
+//            REAL_T vlimhi = piby2 - distnn;
+//            REAL_T vlimlo = -piby2 + distnn;
+//
+//            REAL_T yy = 2. * (val - min_) / (max_ - min_) - 1.;
+//            REAL_T yy2 = yy*yy;
+//            if (yy2 > (1. - std::numeric_limits<REAL_T>::epsilon())) {
+//                if (yy < 0.) {
+//                    // Lower limit
+//                    //       std::cout<<"SinParameterTransformation warning: is at its Lower allowed limit. "<<Value<<std::endl;
+//                    return vlimlo;
+//                } else {
+//                    // Upper limit
+//                    //       std::cout<<"SinParameterTransformation warning: is at its Upper allowed limit."<<std::endl;
+//                    return vlimhi;
+//                }
+//
+//            } else {
+//                return std::asin(yy);
+//            }
+
         }
 
         virtual REAL_T Internal2External(REAL_T val, REAL_T min_, REAL_T max_) const {
             //            return ((std::sin(val) + 1.0) / 2.0)*(max - min) + min;
-            return std::max(min_, std::min(max_, ((std::sin(val) + static_cast<REAL_T> (1.0)) / static_cast<REAL_T> (2.0))*(max_ - min_) + min_));
+                        return std::max(min_, std::min(max_, ((std::sin(val) + static_cast<REAL_T> (1.0)) / static_cast<REAL_T> (2.0))*(max_ - min_) + min_));
+//            return min_ + 0.5 * (max_ - min_)*(std::sin(val) + 1.);
         }
 
         virtual REAL_T DerivativeInternal2External(REAL_T val, REAL_T min_, REAL_T max_)const {
@@ -327,23 +351,23 @@ namespace atl {
             return *this;
         }
 
-        Variable<REAL_T>& operator=(Variable&& other) {
-
-            info = (other.info);
-            min_boundary_m = (other.min_boundary_m);
-            max_boundary_m = (other.max_boundary_m);
-            bounded_m = (other.bounded_m);
-            transformation = (other.transformation);
-            //                                    info->count++;
-            mapped_info = (other.mapped_info);
-            other.info = new atl::VariableInfo<REAL_T>();
-            other.min_boundary_m = std::numeric_limits<REAL_T>::min();
-            other.max_boundary_m = std::numeric_limits<REAL_T>::max();
-            other.bounded_m = false;
-            other.transformation = &default_transformation;
-            other.mapped_info = NULL;
-            return *this;
-        }
+//        Variable<REAL_T>& operator=(Variable&& other) {
+//
+//            info = (other.info);
+//            min_boundary_m = (other.min_boundary_m);
+//            max_boundary_m = (other.max_boundary_m);
+//            bounded_m = (other.bounded_m);
+//            transformation = (other.transformation);
+//            //                                    info->count++;
+//            mapped_info = (other.mapped_info);
+//            other.info = new atl::VariableInfo<REAL_T>();
+//            other.min_boundary_m = std::numeric_limits<REAL_T>::min();
+//            other.max_boundary_m = std::numeric_limits<REAL_T>::max();
+//            other.bounded_m = false;
+//            other.transformation = &default_transformation;
+//            other.mapped_info = NULL;
+//            return *this;
+//        }
 
         operator REAL_T() {
             return GetValue();

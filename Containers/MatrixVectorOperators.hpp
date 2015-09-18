@@ -32,6 +32,15 @@ namespace atl {
             return Cast().operator()(i, j);
         }
 
+        inline void IsAliased(bool& aliased, void* ptr) const {
+            Cast().IsAliased(aliased, ptr);
+        }
+
+        inline void ExpressionLength(uint32_t& length)const {
+            Cast().ExpressionLength(length);
+        }
+
+
     };
 
     template< class LHS, class RHS>
@@ -67,7 +76,16 @@ namespace atl {
             return lhs_m(i, j) + rhs_m(i);
         }
 
+        inline void IsAliased(bool& aliased, void* ptr) const {
+            lhs_m.IsAliased(aliased, ptr);
+            rhs_m.IsAliased(aliased, ptr);
+        }
 
+        inline void ExpressionLength(uint32_t& length)const {
+            length++;
+            lhs_m.ExpressionLength(length);
+            rhs_m.ExpressionLength(length);
+        }
 
 
     };
@@ -106,6 +124,17 @@ namespace atl {
             return lhs_m(i) + rhs_m(i, j);
         }
 
+        inline void IsAliased(bool& aliased, void* ptr) const {
+            lhs_m.IsAliased(aliased, ptr);
+            rhs_m.IsAliased(aliased, ptr);
+        }
+
+        inline void ExpressionLength(uint32_t& length)const {
+            length++;
+            lhs_m.ExpressionLength(length);
+            rhs_m.ExpressionLength(length);
+        }
+
     };
 
     template< class LHS, class RHS>
@@ -142,6 +171,16 @@ namespace atl {
             return lhs_m(i, j) - rhs_m(i);
         }
 
+        inline void IsAliased(bool& aliased, void* ptr) const {
+            lhs_m.IsAliased(aliased, ptr);
+            rhs_m.IsAliased(aliased, ptr);
+        }
+
+        inline void ExpressionLength(uint32_t& length)const {
+            length++;
+            lhs_m.ExpressionLength(length);
+            rhs_m.ExpressionLength(length);
+        }
 
 
 
@@ -180,6 +219,18 @@ namespace atl {
         inline const RET_TYPE operator()(const uint32_t& i, const uint32_t & j) const {
             return lhs_m(i) - rhs_m(i, j);
         }
+
+        inline void IsAliased(bool& aliased, void* ptr) const {
+            lhs_m.IsAliased(aliased, ptr);
+            rhs_m.IsAliased(aliased, ptr);
+        }
+
+        inline void ExpressionLength(uint32_t& length)const {
+            length++;
+            lhs_m.ExpressionLength(length);
+            rhs_m.ExpressionLength(length);
+        }
+
 
     };
 
@@ -228,7 +279,16 @@ namespace atl {
             return ret;
         }
 
+        inline void IsAliased(bool& aliased, void* ptr) const {
+            lhs_m.IsAliased(aliased, ptr);
+            rhs_m.IsAliased(aliased, ptr);
+        }
 
+        inline void ExpressionLength(uint32_t& length)const {
+            length++;
+            lhs_m.ExpressionLength(length);
+            rhs_m.ExpressionLength(length);
+        }
 
 
     };
@@ -278,6 +338,17 @@ namespace atl {
             return ret;
         }
 
+        inline void IsAliased(bool& aliased, void* ptr) const {
+            lhs_m.IsAliased(aliased, ptr);
+            rhs_m.IsAliased(aliased, ptr);
+        }
+
+        inline void ExpressionLength(uint32_t& length)const {
+            length++;
+            lhs_m.ExpressionLength(length);
+            rhs_m.ExpressionLength(length);
+        }
+
     };
 
     template< class LHS, class RHS>
@@ -314,6 +385,16 @@ namespace atl {
             return lhs_m(i, j) / rhs_m(i);
         }
 
+        inline void IsAliased(bool& aliased, void* ptr) const {
+            lhs_m.IsAliased(aliased, ptr);
+            rhs_m.IsAliased(aliased, ptr);
+        }
+
+        inline void ExpressionLength(uint32_t& length)const {
+            length++;
+            lhs_m.ExpressionLength(length);
+            rhs_m.ExpressionLength(length);
+        }
 
 
 
@@ -352,6 +433,18 @@ namespace atl {
         inline const RET_TYPE operator()(const uint32_t& i, const uint32_t & j) const {
             return lhs_m(i) / rhs_m(i, j);
         }
+
+        inline void IsAliased(bool& aliased, void* ptr) const {
+            lhs_m.IsAliased(aliased, ptr);
+            rhs_m.IsAliased(aliased, ptr);
+        }
+
+        inline void ExpressionLength(uint32_t& length)const {
+            length++;
+            lhs_m.ExpressionLength(length);
+            rhs_m.ExpressionLength(length);
+        }
+
 
     };
 
@@ -468,6 +561,18 @@ namespace atl {
             return ret;
         }
 
+        inline void IsAliased(bool& aliased, void* ptr) const {
+            lhs_m.IsAliased(aliased, ptr);
+            rhs_m.IsAliased(aliased, ptr);
+        }
+
+        inline void ExpressionLength(uint32_t& length)const {
+            length++;
+            lhs_m.ExpressionLength(length);
+            rhs_m.ExpressionLength(length);
+        }
+
+
     };
 
     template<class LHS, class RHS>
@@ -502,6 +607,17 @@ namespace atl {
         inline const RET_TYPE operator()(const uint32_t& i, const uint32_t & j) const {
             RET_TYPE ret = lhs_m(i) * rhs_m(i, j);
             return ret;
+        }
+
+        inline void IsAliased(bool& aliased, void* ptr) const {
+            lhs_m.IsAliased(aliased, ptr);
+            rhs_m.IsAliased(aliased, ptr);
+        }
+
+        inline void ExpressionLength(uint32_t& length)const {
+            length++;
+            lhs_m.ExpressionLength(length);
+            rhs_m.ExpressionLength(length);
         }
 
     };
@@ -540,6 +656,17 @@ namespace atl {
             return ret;
         }
 
+        inline void IsAliased(bool& aliased, void* ptr) const {
+            lhs_m.IsAliased(aliased, ptr);
+            rhs_m.IsAliased(aliased, ptr);
+        }
+
+        inline void ExpressionLength(uint32_t& length)const {
+            length++;
+            lhs_m.ExpressionLength(length);
+            rhs_m.ExpressionLength(length);
+        }
+
     };
 
     template<class LHS, class RHS>
@@ -574,6 +701,17 @@ namespace atl {
         inline const RET_TYPE operator()(const uint32_t& i, const uint32_t & j) const {
             RET_TYPE ret = lhs_m(i, j) + rhs_m(i);
             return ret;
+        }
+
+        inline void IsAliased(bool& aliased, void* ptr) const {
+            lhs_m.IsAliased(aliased, ptr);
+            rhs_m.IsAliased(aliased, ptr);
+        }
+
+        inline void ExpressionLength(uint32_t& length)const {
+            length++;
+            lhs_m.ExpressionLength(length);
+            rhs_m.ExpressionLength(length);
         }
 
     };
@@ -612,6 +750,17 @@ namespace atl {
             return ret;
         }
 
+        inline void IsAliased(bool& aliased, void* ptr) const {
+            lhs_m.IsAliased(aliased, ptr);
+            rhs_m.IsAliased(aliased, ptr);
+        }
+
+        inline void ExpressionLength(uint32_t& length)const {
+            length++;
+            lhs_m.ExpressionLength(length);
+            rhs_m.ExpressionLength(length);
+        }
+
     };
 
     template<class LHS, class RHS>
@@ -648,6 +797,17 @@ namespace atl {
             return ret;
         }
 
+        inline void IsAliased(bool& aliased, void* ptr) const {
+            lhs_m.IsAliased(aliased, ptr);
+            rhs_m.IsAliased(aliased, ptr);
+        }
+
+        inline void ExpressionLength(uint32_t& length)const {
+            length++;
+            lhs_m.ExpressionLength(length);
+            rhs_m.ExpressionLength(length);
+        }
+
     };
 
     template<class LHS, class RHS>
@@ -682,6 +842,17 @@ namespace atl {
         inline const RET_TYPE operator()(const uint32_t& i, const uint32_t & j) const {
             RET_TYPE ret = lhs_m(i, j) / rhs_m(i);
             return ret;
+        }
+
+        inline void IsAliased(bool& aliased, void* ptr) const {
+            lhs_m.IsAliased(aliased, ptr);
+            rhs_m.IsAliased(aliased, ptr);
+        }
+
+        inline void ExpressionLength(uint32_t& length)const {
+            length++;
+            lhs_m.ExpressionLength(length);
+            rhs_m.ExpressionLength(length);
         }
 
     };
@@ -1034,6 +1205,16 @@ namespace atl {
             return ret;
         }
 
+        inline void IsAliased(bool& aliased, void* ptr) const {
+            rhs_m.IsAliased(aliased, ptr);
+        }
+
+        inline void ExpressionLength(uint32_t& length)const {
+            length++;
+            rhs_m.ExpressionLength(length);
+        }
+
+
     };
 
 #define MAKE_SCALAR_VM_PLUS(TYPE) \
@@ -1083,6 +1264,16 @@ namespace atl {
             RET_TYPE ret = lhs_m - rhs_m(i, j);
             return ret;
         }
+
+        inline void IsAliased(bool& aliased, void* ptr) const {
+            rhs_m.IsAliased(aliased, ptr);
+        }
+
+        inline void ExpressionLength(uint32_t& length)const {
+            length++;
+            rhs_m.ExpressionLength(length);
+        }
+
 
     };
 
@@ -1134,6 +1325,16 @@ namespace atl {
             return ret;
         }
 
+        inline void IsAliased(bool& aliased, void* ptr) const {
+            rhs_m.IsAliased(aliased, ptr);
+        }
+
+        inline void ExpressionLength(uint32_t& length)const {
+            length++;
+            rhs_m.ExpressionLength(length);
+        }
+
+
     };
 
 #define MAKE_VM_SCALAR_MULTIPLY(TYPE) \
@@ -1183,6 +1384,16 @@ namespace atl {
             RET_TYPE ret = lhs_m / rhs_m(i, j);
             return ret;
         }
+
+        inline void IsAliased(bool& aliased, void* ptr) const {
+            rhs_m.IsAliased(aliased, ptr);
+        }
+
+        inline void ExpressionLength(uint32_t& length)const {
+            length++;
+            rhs_m.ExpressionLength(length);
+        }
+
 
     };
 
@@ -1234,6 +1445,16 @@ namespace atl {
             return ret;
         }
 
+        inline void IsAliased(bool& aliased, void* ptr) const {
+            lhs_m.IsAliased(aliased, ptr);
+        }
+
+        inline void ExpressionLength(uint32_t& length)const {
+            length++;
+            lhs_m.ExpressionLength(length);
+        }
+
+
     };
 
 #define MAKE_VM_ADD_SCALAR(TYPE) \
@@ -1282,6 +1503,15 @@ namespace atl {
         inline const RET_TYPE operator()(const uint32_t& i, const uint32_t & j) const {
             RET_TYPE ret = lhs_m(i, j) - rhs_m;
             return ret;
+        }
+
+        inline void IsAliased(bool& aliased, void* ptr) const {
+            lhs_m.IsAliased(aliased, ptr);
+        }
+
+        inline void ExpressionLength(uint32_t& length)const {
+            length++;
+            lhs_m.ExpressionLength(length);
         }
 
     };
@@ -1334,6 +1564,15 @@ namespace atl {
             return ret;
         }
 
+        inline void IsAliased(bool& aliased, void* ptr) const {
+            lhs_m.IsAliased(aliased, ptr);
+        }
+
+        inline void ExpressionLength(uint32_t& length)const {
+            length++;
+            lhs_m.ExpressionLength(length);
+        }
+
     };
 
 #define MAKE_VM_MULTIPLY_SCALAR(TYPE) \
@@ -1384,6 +1623,15 @@ namespace atl {
             return ret;
         }
 
+        inline void IsAliased(bool& aliased, void* ptr) const {
+            lhs_m.IsAliased(aliased, ptr);
+        }
+
+        inline void ExpressionLength(uint32_t& length)const {
+            length++;
+            lhs_m.ExpressionLength(length);
+        }
+
     };
 
 #define MAKE_VM_DIVIDE_SCALAR(TYPE) \
@@ -1405,9 +1653,9 @@ namespace atl {
     MAKE_VM_DIVIDE_SCALAR(long)
     MAKE_VM_DIVIDE_SCALAR(short)
 
-    
-    
-    
+
+
+
     template<class T2, class A>
     std::ostream& operator<<(std::ostream& out, const atl::MatrixVectorExpression< T2, A> &expr) {
 
