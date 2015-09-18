@@ -17,11 +17,11 @@ Hessian  Test Passed.
 Function value: 0.06857
 Gradient mse = 2.80675e-20, Error Range{-1.67534e-10 - -1.67534e-10}
 Hessian mse = 0, Error Range{0 - 0}
-Time to evaluate objective function: 0.010985 sec
-Time to compute exact gradient and Hessian: 0.005139 sec
-Time to estimate gradient: 0.005594 sec
-Time to estimate Hessian: 0.033496 sec
-Speed up = 6.518006
+Time to evaluate objective function: 0.044816 sec
+Time to compute exact gradient and Hessian: 0.017462 sec
+Time to estimate gradient: 0.009346 sec
+Time to estimate Hessian: 0.057198 sec
+Speed up = 3.275508
 
 estimated gradient:
 1.000000 1.000000 

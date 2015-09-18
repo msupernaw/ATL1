@@ -33,9 +33,6 @@
 #include "../Utilities/flat_set.hpp"
 #endif
 
-#ifdef ATL_USE_DLMALLOC
-#include "../third_party/dlmalloc/malloc.h"
-#endif
 #include "Variable.hpp"
 
 //#warning add jacobian matrix calculations
@@ -263,11 +260,11 @@ namespace atl {
 
         }
 
-        AdjointDerivative(AdjointDerivative<REAL_T>&& o) : dependent(std::move(o.dependent)), forward(std::move(o.forward)) {
-            o.forward = 0.0;
-            o.forward2 = 0.0;
-            o.dependent = NULL;
-        }
+//        AdjointDerivative(AdjointDerivative<REAL_T>&& o) : dependent(std::move(o.dependent)), forward(std::move(o.forward)) {
+//            o.forward = 0.0;
+//            o.forward2 = 0.0;
+//            o.dependent = NULL;
+//        }
 
         AdjointDerivative& operator=(const AdjointDerivative<REAL_T>& other) {
             this->dependent = other.dependent;
@@ -290,34 +287,26 @@ namespace atl {
 
     template<typename REAL_T>
     struct Adjoint {
-        //        typedef std::vector<std::pair<VariableInfo<REAL_T>*, std::vector<std::pair<VariableInfo<REAL_T>*, REAL_T> > > > HessianInfo;
-        //        typedef std::map<VariableInfo<REAL_T>*, std::map<VariableInfo<REAL_T>, std::vector<REAL_T> > > HessianInfo2;
         VariableInfo<REAL_T>* w; //function or dependent variable.
-        int pad1;
         std::vector<AdjointDerivative<REAL_T> > entries;
-        //experimental, try to preserve the Hogan method and maintain a list of VariableInfo pointers.....may by slow
-        flat_map<VariableInfo<REAL_T>*, std::vector<REAL_T> > entries2;
         typedef typename flat_map<VariableInfo<REAL_T>*, std::vector<REAL_T> >::iterator entry2_iterator;
-        int pad2;
         //mixed second order partials used for
         //the exact hessian calculations.
 
         IDSet<VariableInfo<REAL_T>* > ids;
-        //        HessianInfo hessian_info;
         std::vector<REAL_T> second_order_partials;
 
         Adjoint() : w(NULL) {
             entries.reserve(4);
-            //            hessian_info.reserve(10);
         }
 
         Adjoint(const Adjoint<REAL_T>& other) : w(other.w), entries((other.entries)) {
 
         }
 
-        //        Adjoint(Adjoint<REAL_T>&& other) : w(other.w), entries(std::move(other.entries)) {
-        //
-        //        }
+//                Adjoint(Adjoint<REAL_T>&& other) : w(other.w), entries(std::move(other.entries)) {
+//        
+//                }
 
         inline void Reset() {
             w->dvalue = 0;
@@ -329,6 +318,7 @@ namespace atl {
                 if (NULL != entries[i].dependent) {
                     entries[i].dependent->dvalue = 0;
                     entries[i].dependent->hessian_row.reset();
+//                    std::cout<<"count "<<entries[i].dependent->count<<"\n";
                 }
             }
             entries.resize(0);
@@ -352,8 +342,8 @@ namespace atl {
     class GradientStructure {
     public:
         DerivativeTraceLevel derivative_trace_level;
-        //        std::vector<Adjoint<REAL_T> > gradient_stack;
-        Adjoint<REAL_T>* gradient_stack;
+                std::vector<Adjoint<REAL_T> > gradient_stack;
+//        Adjoint<REAL_T>* gradient_stack;
         std::atomic<size_t> stack_current;
         bool recording;
         size_t max_stack_size;
@@ -361,9 +351,9 @@ namespace atl {
 
         bool gradient_computed;
 
-        GradientStructure(uint32_t size = 10000000) : recording(true), stack_current(0), gradient_computed(false), derivative_trace_level(GRADIENT_AND_HESSIAN) {
-            //            gradient_stack.reserve(size);
-            gradient_stack = (Adjoint<REAL_T>*)malloc(size);
+        GradientStructure(uint32_t size = 100000) : recording(true), stack_current(0), gradient_computed(false), derivative_trace_level(GRADIENT_AND_HESSIAN) {
+                        gradient_stack.resize(size);
+//            gradient_stack = (Adjoint<REAL_T>*)malloc(size);
             max_stack_size = size;
             max_initialized_size = 0;
         }
@@ -377,14 +367,14 @@ namespace atl {
         }
 
         virtual ~GradientStructure() {
-            if (this->stack_current != 0) {
-                this->Reset();
-            }
-            for (int i = 0; i < max_initialized_size; i++) {
-                (&gradient_stack[i])->~Adjoint<REAL_T>();
-            }
-            //            }
-            free(this->gradient_stack);
+//            if (this->stack_current != 0) {
+//                this->Reset();
+//            }
+//            for (int i = 0; i < max_initialized_size; i++) {
+//                (&gradient_stack[i])->~Adjoint<REAL_T>();
+//            }
+//            //            }
+//            free(this->gradient_stack);
         }
 
         inline const uint32_t GetStartIndex(uint32_t count) {

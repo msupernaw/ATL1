@@ -29,9 +29,9 @@ namespace atl {
 #endif
         std::atomic<uint32_t> available_size;
         static std::mutex mutex_g;
-
+       
     public:
-        static VariableIdGenerator * instance();
+        static  std::shared_ptr<VariableIdGenerator> instance();
 
         const uint32_t next() {
             mutex_g.lock();
@@ -61,7 +61,7 @@ namespace atl {
             return _id;
         }
 
-    private:
+//    private:
 
         VariableIdGenerator() : _id(0), available_size(0) {
         }
@@ -70,13 +70,13 @@ namespace atl {
     };
 
     std::mutex VariableIdGenerator::mutex_g;
-    static VariableIdGenerator* only_copy;
+    static std::shared_ptr<VariableIdGenerator> only_copy;
 
-    inline VariableIdGenerator *
+    inline  std::shared_ptr<VariableIdGenerator>
     VariableIdGenerator::instance() {
 
         if (!only_copy) {
-            only_copy = new VariableIdGenerator();
+            only_copy = std::make_shared<VariableIdGenerator>();
         }
 
         return only_copy;
@@ -125,7 +125,6 @@ namespace atl {
         }
 
         static void FreeAll() {
-
             for (int i = 0; i < freed.size(); i++) {
                 VariableIdGenerator::instance()->release(freed[i]->id);
                 delete freed[i];

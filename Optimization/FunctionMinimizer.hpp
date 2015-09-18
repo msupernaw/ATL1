@@ -569,6 +569,8 @@ gradient_structure(&atl::Variable<REAL_T>::gradient_structure_g)*/ {
                 }
 
             }
+            
+            std::cout<<"Max iterations!";
             return true;
         }
 

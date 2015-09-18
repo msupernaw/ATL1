@@ -223,22 +223,22 @@ namespace atl {
             mapped_info = (other.mapped_info);
         }
 
-        Variable(Variable&& other)
-        : info(other.info),
-        min_boundary_m(other.min_boundary_m),
-        max_boundary_m(other.max_boundary_m),
-        bounded_m(other.bounded_m),
-        transformation(other.transformation) {
-            //                        info->count++;
-            mapped_info = (other.mapped_info);
-            //            other.info->Release();
-            other.info = new atl::VariableInfo<REAL_T>();
-            other.min_boundary_m = std::numeric_limits<REAL_T>::min();
-            other.max_boundary_m = std::numeric_limits<REAL_T>::max();
-            other.bounded_m = false;
-            other.transformation = &default_transformation;
-            other.mapped_info = NULL;
-        }
+//        Variable(Variable&& other)
+//        : info(other.info),
+//        min_boundary_m(other.min_boundary_m),
+//        max_boundary_m(other.max_boundary_m),
+//        bounded_m(other.bounded_m),
+//        transformation(other.transformation) {
+//            //                        info->count++;
+//            mapped_info = (other.mapped_info);
+//            //            other.info->Release();
+//            other.info = new atl::VariableInfo<REAL_T>();
+//            other.min_boundary_m = std::numeric_limits<REAL_T>::min();
+//            other.max_boundary_m = std::numeric_limits<REAL_T>::max();
+//            other.bounded_m = false;
+//            other.transformation = &default_transformation;
+//            other.mapped_info = NULL;
+//        }
 
         template<typename A>
         Variable(const ExpressionBase<REAL_T, A>& exp) :
@@ -251,7 +251,7 @@ namespace atl {
             if (Variable<REAL_T>::gradient_structure_g.recording) {
 
                 Adjoint<REAL_T>& entry = Variable<REAL_T>::gradient_structure_g.gradient_stack[Variable<REAL_T>::gradient_structure_g.NextIndex()];
-                new(&entry)Adjoint<REAL_T>();
+//                new(&entry)Adjoint<REAL_T>();
                 entry.w = info;
 
                 ids.clear();
@@ -301,7 +301,7 @@ namespace atl {
             if (gs.recording) {
 
                 Adjoint<REAL_T>& entry = gs.gradient_stack[gs.NextIndex()];
-                new(&entry)Adjoint<REAL_T>();
+               // new(&entry)Adjoint<REAL_T>();
                 entry.w = info;
 
                 ids.clear();
@@ -382,7 +382,7 @@ namespace atl {
             if (Variable<REAL_T>::gradient_structure_g.recording) {
 
                 Adjoint<REAL_T>& entry = Variable<REAL_T>::gradient_structure_g.gradient_stack[Variable<REAL_T>::gradient_structure_g.NextIndex()];
-                new(&entry)Adjoint<REAL_T>();
+//                new(&entry)Adjoint<REAL_T>();
                 entry.w = info;
 
                 ids.clear();
