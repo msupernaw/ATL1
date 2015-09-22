@@ -1714,7 +1714,7 @@ do_exact:
                 std::ofstream out;
                 out.open("autodiff_tests.txt");
                 out << "This test compares the computed gradient and Hessian matrices against\n"
-                        "those computed using the differnces method.\n\n";
+                        "those computed using the differences method.\n\n";
 
                 out << "Test Tolerance: " << atl::tests::auto_diff::AutoDiffTest<double>::GetTolerance() << "\n\n";
 

@@ -145,11 +145,12 @@ namespace atl {
         }
 
         inline REAL_T EvaluateDerivative(uint32_t id) const {
-            REAL_T g = expr2_m;
-            REAL_T f = expr1_m.GetValue();
-            REAL_T fx = expr1_m.EvaluateDerivative(id);
-            REAL_T gx = 0.0;;
-            return std::pow(f, g)*(std::log(f) * gx + g * fx / f);
+//            REAL_T g = expr2_m;
+//            REAL_T f = expr1_m.GetValue();
+//            REAL_T fx = expr1_m.EvaluateDerivative(id);
+//            REAL_T gx = 0.0;;
+//            return std::pow(f, g)*(std::log(f) * gx + g * fx / f);
+            return expr2_m*expr1_m.GetValue()*expr1_m.EvaluateDerivative(id);
         }
 
         inline REAL_T EvaluateDerivative(uint32_t a, uint32_t b) const {
