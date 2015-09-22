@@ -351,7 +351,7 @@ namespace atl {
 
         bool gradient_computed;
 
-        GradientStructure(uint32_t size = 100000) : recording(true), stack_current(0), gradient_computed(false), derivative_trace_level(GRADIENT_AND_HESSIAN) {
+        GradientStructure(uint32_t size = 1000000) : recording(true), stack_current(0), gradient_computed(false), derivative_trace_level(GRADIENT_AND_HESSIAN) {
                         gradient_stack.resize(size);
 //            gradient_stack = (Adjoint<REAL_T>*)malloc(size);
             max_stack_size = size;

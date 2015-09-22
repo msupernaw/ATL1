@@ -22,6 +22,7 @@
 
 #include "MatrixExpressionBase.hpp"
 #include "Array.hpp"
+#include "Vector.hpp"
 #include "VectorExpressionBase.hpp"
 #include "ArrayExpressionBase.hpp"
 #include "MatrixArrayOperators.hpp"
@@ -30,7 +31,289 @@
 #include "MatrixVectorOperators.hpp"
 #include "ArrayTraits.hpp"
 
+
 namespace atl {
+
+    template<class T>
+    class MatrixRowVector : public VectorExpression<T, MatrixRowVector<T> > {
+    protected:
+        size_t isize;
+        size_t jsize;
+        size_t row;
+        std::vector<T>* data_m;
+
+        void CheckBounds(const uint32_t& i) const {
+
+            assert(i < isize);
+
+        }
+
+
+    public:
+
+
+
+        typedef typename IntrinsicBaseType<T>::TYPE INTRINSIC_BASE;
+        typedef T RET_TYPE;
+        typedef T BASE_TYPE;
+
+        /**
+         * Default constructor.
+         * Constructs a 1d Vector.
+         * @param i
+         */
+        MatrixRowVector(std::vector<T>* data, size_t i, size_t j, size_t r)
+        :
+        data_m(data),isize(i), jsize(j), row(r) {
+
+        }
+//        
+        MatrixRowVector(const MatrixRowVector<T>& other)
+        :
+         data_m(other.data_m),isize(other.isize), jsize(other.jsize), row(other.row) {
+
+        }
+        
+        
+
+        void SetBounds(INTRINSIC_BASE minb, INTRINSIC_BASE maxb) {
+            std::cout << "warning atl::Vector<>::" << __func__ << "not implemented for primitive types";
+        }
+
+        const MatrixRowVector& operator=(const T& val) const{
+            for (int j = 0; j < jsize; j++) {
+                data_m->at((row * jsize) + j) = val;
+            }
+            return *this;
+        }
+
+        inline MatrixRowVector operator-() {
+            return static_cast<T> (-1.0) * (*this);
+        }
+
+        template<class T2, class A>
+        const MatrixRowVector& operator=(const VectorExpression<T2, A> &expr)const  {
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
+            assert(expr.Dimensions() == 1);
+            assert(expr.Size(0) == jsize);
+#endif
+
+
+            for (int j = 0; j < jsize; j++) {
+                data_m->at((row * jsize) + j) = expr(j);
+            }
+            return *this;
+        }
+
+        inline MatrixRowVector& operator+=(const T& val) {
+            for (int j = 0; j < jsize; j++) {
+                data_m->at((row * jsize) + j) += val;
+            }
+            return *this;
+        }
+
+        //        inline MatrixRowVector& operator+=(const Vector &other) {
+        //#ifdef ATL_ENABLE_BOUNDS_CHECKING
+        //            assert(other.Size(0) == jsize);
+        //#endif
+        //
+        //            for (int j = 0; j < jsize; j++) {
+        //                data_m[(row * jsize) + j] += other(j);
+        //            }
+        //            return *this;
+        //        }
+
+        template<class T2, class A>
+        inline MatrixRowVector& operator+=(const VectorExpression<T2, A> &expr) {
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
+            assert(jsize == expr.Size(0));
+#endif   
+            for (int j = 0; j < jsize; j++) {
+                *data_m[(row * jsize) + j] += expr(j);
+            }
+
+            return *this;
+
+        }
+
+        inline MatrixRowVector& operator-=(const T& val) {
+            for (int j = 0; j < jsize; j++) {
+                data_m->at((row * jsize) + j) -= val;
+            }
+
+            return *this;
+        }
+        //
+        //        inline MatrixRowVector& operator-=(const Vector &other) {
+        //#ifdef ATL_ENABLE_BOUNDS_CHECKING
+        //            assert(isize == other.Size(0));
+        //#endif   
+        //            for (int j = 0; j < jsize; j++) {
+        //                data_m[(row * jsize) + j] -= other(j);
+        //            }
+        //
+        //            return *this;
+        //
+        //        }
+
+        template<class T2, class A>
+        inline MatrixRowVector& operator-=(const VectorExpression<T2, A> &expr) {
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
+            assert(isize == expr.Size(0));
+#endif   
+            for (int j = 0; j < jsize; j++) {
+                data_m->at((row * jsize) + j) -= expr(j);
+            }
+
+            return *this;
+
+        }
+
+        inline MatrixRowVector& operator*=(const T& val) {
+            for (int j = 0; j < jsize; j++) {
+                data_m->at((row * jsize) + j) *= val;
+            }
+
+            return *this;
+        }
+        //
+        //        inline MatrixRowVector& operator*=(const Vector &other) {
+        //#ifdef ATL_ENABLE_BOUNDS_CHECKING
+        //            assert(isize == other.Size(0));
+        //#endif   
+        //            for (int j = 0; j < jsize; j++) {
+        //                data_m[(row * jsize) + j] *= other(j);
+        //            }
+        //
+        //            return *this;
+        //
+        //        }
+        //
+        //        template<class T2, class A>
+        //        inline MatrixRowVector& operator*=(const VectorExpression<T2, A> &expr) {
+        //#ifdef ATL_ENABLE_BOUNDS_CHECKING
+        //            assert(isize == expr.Size(0));
+        //#endif   
+        //            for (int j = 0; j < jsize; j++) {
+        //                data_m[(row * jsize) + j] *= expr(j);
+        //            }
+        //
+        //            return *this;
+        //
+        //        }
+
+        inline MatrixRowVector& operator/=(const T& val) {
+            for (int j = 0; j < jsize; j++) {
+                data_m->at((row * jsize) + j) /= val;
+            }
+
+            return *this;
+        }
+
+        //        inline MatrixRowVector& operator/=(const Vector &other) {
+        //#ifdef ATL_ENABLE_BOUNDS_CHECKING
+        //            assert(isize == other.Size(0));
+        //#endif   
+        //            for (int j = 0; j < jsize; j++) {
+        //                *data_m[(row * jsize) + j] /= other(j);
+        //            }
+        //
+        //            return *this;
+        //
+        //        }
+
+        template<class T2, class A>
+        inline MatrixRowVector& operator/=(const VectorExpression<T2, A> &expr) {
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
+            assert(isize == expr.Size(0));
+#endif   
+            for (int j = 0; j < jsize; j++) {
+                data_m->at((row * jsize) + j) /= expr(j);
+            }
+
+            return *this;
+
+        }
+
+        inline const size_t Size(const int32_t dimension = 0) const {
+            switch (dimension) {
+                case 0:
+                    return jsize;
+                default:
+                    return 0;
+
+            }
+        }
+
+        inline MatrixRowVector& operator++() {
+            *this = *this+static_cast<T> (1.0);
+            return *this;
+        }
+
+        inline const MatrixRowVector operator++(int i) {
+            MatrixRowVector temp = *this;
+            *this = static_cast<T> (1.0)+ (*this);
+            return temp;
+        }
+
+        inline const size_t Dimensions() const {
+            return 1;
+        }
+
+        inline const T& operator()(const uint32_t & i) const {
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
+            CheckBounds(i);
+#endif
+            return data_m->at((row * jsize) + i);
+        }
+
+        inline T& operator()(const uint32_t & i) {
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
+            CheckBounds(i);
+#endif
+           
+            return data_m->at((row * jsize) + i);
+        }
+
+        /*
+         *
+         *Returns the first valid index for this vector. 
+         */
+        inline const size_t IndexMin() const {
+            return 0;
+        }
+
+        /*
+         *
+         *Returns the last valid index for this vector. 
+         */
+        inline const size_t IndexMax() const {
+            return this->isize - 1;
+        }
+
+        inline void IsAliased(bool& aliased, void* ptr) const {
+            if ((void*) & this->data_m == ptr) {
+                aliased = true;
+            }
+        }
+
+        /**
+         * Get a value based on the raw index for the underlying 
+         * data. valid index is 0 - (length -1).
+         * @param i
+         * @return 
+         */
+        inline const RET_TYPE AtRaw(const uint32_t & i) const {
+            return this->data_m->at((row * jsize) + i);
+        }
+
+        inline void ExpressionLength(uint32_t& length)const {
+            length++;
+        }
+
+
+
+    };
 
     template<class T>
     class Matrix : public MatrixExpression<T, Matrix<T> > {
@@ -622,6 +905,15 @@ namespace atl {
             }
         }
 
+        inline const MatrixRowVector<T> operator()(size_t i) const {
+            return MatrixRowVector<T>(&this->data_m, this->isize, this->jsize, i);
+        }
+
+        inline const MatrixRowVector<T> operator()(size_t i) {
+            return MatrixRowVector<T>(&this->data_m, this->isize, this->jsize, i);
+        }
+        //        
+
         inline const T& operator()(size_t i, size_t j) const {
 #ifdef ATL_ENABLE_BOUNDS_CHECKING
             CheckBounds(i, j);
@@ -829,7 +1121,7 @@ namespace atl {
         int dims = expr.Dimensions();
         std::stringstream ss;
 
-        out.precision(4);
+        out.precision(6);
         //        out << std::scientific;
         for (int i = 0; i < expr.Size(0); i++) {
             out << "[ ";

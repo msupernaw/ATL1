@@ -21,7 +21,7 @@
 
 namespace atl {
 
-    template<class T, class M>
+    template<class T,  class M>
     struct MatrixRow : atl::VectorExpression< T, MatrixRow<T, M> > {
         const M& m_m;
         size_t row_m;
