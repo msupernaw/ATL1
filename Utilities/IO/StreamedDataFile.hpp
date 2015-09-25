@@ -4,7 +4,7 @@
 #include <sstream>
 #include <limits>
 #include <fstream>
-
+#include "../StringUtil.hpp"
 #include "../../AutoDiff/Variable.hpp"
 #include "../../Containers/Matrix.hpp"
 #include "../../Containers/Vector.hpp"
@@ -244,11 +244,13 @@ namespace atl {
         void operator>>(std::string& v) {
             for (;;) {
 
+                
+                
                 input >> v;
 
                 if (input.eof() || input.bad()) {
                     break;
-                } else if (input.fail()) {
+                } else if (input.fail() || util::StartsWith(v,"#")) {
                     input.clear(); // unset failbit
                     input.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // skip bad input
                 } else {

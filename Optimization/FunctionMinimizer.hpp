@@ -19,6 +19,7 @@ namespace atl {
             NEWTON_CG
         };
     protected:
+        std::map<atl::Variable<REAL_T>*, uint32_t> phase_info;
         std::vector<atl::Variable<REAL_T>* > parameters;
         std::vector<atl::Variable<REAL_T>* > active_parameters;
     private:
@@ -109,6 +110,16 @@ gradient_structure(&atl::Variable<REAL_T>::gradient_structure_g)*/ {
             return this->current_phase;
         }
         
+        int GetActivePhase(const atl::Variable<REAL_T>& v){
+            typedef typename std::map<atl::Variable<REAL_T>*, uint32_t>::const_iterator piter;
+            piter pi;
+            pi = this->phase_info.find((atl::Variable<REAL_T>*)&v);
+            if(pi != this->phase_info.end()){
+                return pi->second;
+            }
+            return 0;
+        }
+        
         bool LastPhase() {
             return this->current_phase==this->max_phase;
         }
@@ -125,6 +136,7 @@ gradient_structure(&atl::Variable<REAL_T>::gradient_structure_g)*/ {
         void Register(atl::Variable<REAL_T>& var, uint32_t phase = 1, std::string name = "") {
             this->parameters.push_back(&var);
             this->phases.push_back(phase);
+            this->phase_info[&var] = phase;
             if (max_phase < phase) {
                 max_phase = phase;
             }
@@ -143,6 +155,7 @@ gradient_structure(&atl::Variable<REAL_T>::gradient_structure_g)*/ {
                     for (int j = 0; j < m.Size(1); j++) {
                         this->parameters.push_back(&m(i, j));
                         this->phases.push_back(phase);
+                        this->phase_info[&m(i, j)] = phase;
                     }
                 }
             } else {
@@ -152,6 +165,7 @@ gradient_structure(&atl::Variable<REAL_T>::gradient_structure_g)*/ {
                         ss << name << "(" << i << "," << j << ")";
                         m(i, j).SetName(ss.str());
                         this->parameters.push_back(&m(i, j));
+                        this->phase_info[&m(i, j)] = phase;
                         this->phases.push_back(phase);
                         ss.str("");
                     }
@@ -168,6 +182,7 @@ gradient_structure(&atl::Variable<REAL_T>::gradient_structure_g)*/ {
 
                     this->parameters.push_back(&m(i));
                     this->phases.push_back(phase);
+                    this->phase_info[&m(i)] = phase;
 
                 }
             } else {
@@ -177,6 +192,7 @@ gradient_structure(&atl::Variable<REAL_T>::gradient_structure_g)*/ {
                     m(i).SetName(ss.str());
                     this->parameters.push_back(&m(i));
                     this->phases.push_back(phase);
+                    this->phase_info[&m(i)] = phase;
                     ss.str("");
 
                 }
