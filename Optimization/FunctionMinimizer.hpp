@@ -48,7 +48,8 @@ namespace atl {
         bool print_internal;
         uint32_t iprint;
         REAL_T maxgc;
-
+        bool has_bail_out;
+        int bail_out_phase;
         size_t max_history;
         uint32_t unrecorded_calls;
 
@@ -73,6 +74,7 @@ namespace atl {
         tolerance(1e-4),
         max_phase(1),
         verbose(true),
+        has_bail_out(false),
         min_verbose(false),
         iprint(10),
         print_internal(false),
@@ -109,19 +111,19 @@ gradient_structure(&atl::Variable<REAL_T>::gradient_structure_g)*/ {
         int Phase() {
             return this->current_phase;
         }
-        
-        int GetActivePhase(const atl::Variable<REAL_T>& v){
+
+        int GetActivePhase(const atl::Variable<REAL_T>& v) {
             typedef typename std::map<atl::Variable<REAL_T>*, uint32_t>::const_iterator piter;
             piter pi;
-            pi = this->phase_info.find((atl::Variable<REAL_T>*)&v);
-            if(pi != this->phase_info.end()){
+            pi = this->phase_info.find((atl::Variable<REAL_T>*) & v);
+            if (pi != this->phase_info.end()) {
                 return pi->second;
             }
             return 0;
         }
-        
+
         bool LastPhase() {
-            return this->current_phase==this->max_phase;
+            return this->current_phase == this->max_phase;
         }
 
         void SetRoutine(Routine r, uint32_t phase) {
@@ -286,6 +288,12 @@ gradient_structure(&atl::Variable<REAL_T>::gradient_structure_g)*/ {
                     int t = util::StringToNumber<int>(std::string(argv[i + 1]));
                     this->max_line_searches = t;
                 }
+                
+                if (arg == std::string("-bail_out")) {
+                    int t = util::StringToNumber<int>(std::string(argv[i + 1]));
+                    this->bail_out_phase = t;
+                    has_bail_out = true;
+                }
 
                 if (arg == std::string("-max_history")) {
                     int t = util::StringToNumber<int>(std::string(argv[i + 1]));
@@ -344,6 +352,9 @@ gradient_structure(&atl::Variable<REAL_T>::gradient_structure_g)*/ {
 
         void Run() {
             for (int p = 1; p <= this->max_phase; p++) {
+                if(this->has_bail_out && p == this->bail_out_phase){
+                    return;
+                }
 
                 Routine r = routine;
                 set_defaults();
