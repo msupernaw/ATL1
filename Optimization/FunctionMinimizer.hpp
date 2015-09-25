@@ -1231,7 +1231,7 @@ gradient_structure(&atl::Variable<REAL_T>::gradient_structure_g)*/ {
                 descent = -1.0 * Dot(z, wg);
             }//end if
 
-            step = 1.0;
+//            step = 1.0;
 
 
             bool down = false;

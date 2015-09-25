@@ -443,13 +443,13 @@ namespace atl {
         }
 
         inline Variable& operator-=(const Variable & other) {
-            *this = *this+other;
+            *this = *this-other;
             return *this;
         }
 
         template<class A>
         inline Variable& operator-=(const ExpressionBase<REAL_T, A>& exp) {
-            *this = *this+exp;
+            *this = *this-exp;
             return *this;
         }
 
