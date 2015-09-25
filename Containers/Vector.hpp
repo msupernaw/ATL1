@@ -112,7 +112,7 @@ namespace atl {
 
         }
 
-         template<class T2, class A>
+        template<class T2, class A>
         Vector(const MatrixExpression<T2, A> &expr) {
 
             isize = expr.Size(0);
@@ -128,7 +128,7 @@ namespace atl {
                 data_m[i] = expr(i, 0);
             }
 
-      
+
         }
 
         template<class T2, class A>
@@ -136,9 +136,9 @@ namespace atl {
 
             isize = expr.Size(0);
 
-//#ifdef ATL_ENABLE_BOUNDS_CHECKING
-//            assert(expr.Size(0) == 1);
-//#endif
+            //#ifdef ATL_ENABLE_BOUNDS_CHECKING
+            //            assert(expr.Size(0) == 1);
+            //#endif
 
 
             data_m.resize(isize);
@@ -148,8 +148,7 @@ namespace atl {
             }
 
         }
-        
-        
+
         void Resize(size_t size) {
             this->isize = size;
             this->data_m.resize(size);
@@ -212,6 +211,7 @@ namespace atl {
             return *this;
         }
 #ifdef ATL_CONTAINER_EXPERIMENTAL
+
         template<class T2, class A>
         Vector& operator=(const VectorArrayExpression<T2, A> &expr) {
 #ifdef ATL_ENABLE_BOUNDS_CHECKING
@@ -228,7 +228,7 @@ namespace atl {
             return *this;
         }
 #endif
-        
+
         template<class T2, class A>
         Vector& operator=(const ArrayExpression<T2, A> &expr) {
 #ifdef ATL_ENABLE_BOUNDS_CHECKING
@@ -269,9 +269,9 @@ namespace atl {
 
             isize = expr.Size(0);
 
-//#ifdef ATL_ENABLE_BOUNDS_CHECKING
-//            assert(expr.Size(0) == 1);
-//#endif
+            //#ifdef ATL_ENABLE_BOUNDS_CHECKING
+            //            assert(expr.Size(0) == 1);
+            //#endif
 
 
             data_m.resize(isize);
@@ -283,6 +283,7 @@ namespace atl {
             return *this;
         }
 #ifdef ATL_CONTAINER_EXPERIMENTAL
+
         template<class T2, class A>
         Vector& operator=(const MatrixArrayExpression<T2, A> &expr) {
 
@@ -302,10 +303,12 @@ namespace atl {
             return *this;
         }
 #endif
+
         inline Vector& operator+=(const T& val) {
-            for (int i = 0; i < data_m.size(); i++) {
-                data_m[i] += val;
-            }
+            //            for (int i = 0; i < data_m.size(); i++) {
+            //                data_m[i] += val;
+            //            }
+            *this = *this+val;
             return *this;
         }
 
@@ -313,9 +316,10 @@ namespace atl {
 #ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(isize == other.isize);
 #endif   
-            for (int i = 0; i < data_m.size(); i++) {
-                data_m[i] += other.data_m[i];
-            }
+            //            for (int i = 0; i < data_m.size(); i++) {
+            //                data_m[i] += other.data_m[i];
+            //            }
+            *this = *this+other;
             return *this;
         }
 
@@ -324,20 +328,22 @@ namespace atl {
 #ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(isize == expr.Size(0));
 #endif   
-            for (int i = 0; i < data_m.size(); i++) {
-                data_m[i] += expr(i);
-            }
-
+            //            for (int i = 0; i < data_m.size(); i++) {
+            //                data_m[i] += expr(i);
+            //            }
+            *this = *this+expr;
             return *this;
 
         }
 #ifdef ATL_CONTAINER_EXPERIMENTAL
+
         template<class T2, class A>
         Vector& operator+=(const VectorArrayExpression<T2, A> &expr) {
             *this = *this+expr;
             return *this;
         }
 #endif
+
         template<class T2, class A>
         Vector& operator+=(const ArrayExpression<T2, A> &expr) {
             *this = *this+expr;
@@ -356,16 +362,20 @@ namespace atl {
             return *this;
         }
 #ifdef ATL_CONTAINER_EXPERIMENTAL
+
         template<class T2, class A>
         Vector& operator+=(const MatrixArrayExpression<T2, A> &expr) {
             *this = *this+expr;
             return *this;
         }
 #endif
+
         inline Vector& operator-=(const T& val) {
-            for (int i = 0; i < data_m.size(); i++) {
-                data_m[i] -= val;
-            }
+            //            for (int i = 0; i < data_m.size(); i++) {
+            //                data_m[i] -= val;
+            //            }
+            //            std::cout<<"here";
+            *this = *this-val;
             return *this;
         }
 
@@ -373,10 +383,10 @@ namespace atl {
 #ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(isize == other.Size(0));
 #endif   
-            for (int i = 0; i < data_m.size(); i++) {
-                data_m[i] -= other.data_m[i];
-            }
-
+            //            for (int i = 0; i < data_m.size(); i++) {
+            //                data_m[i] -= other.data_m[i];
+            //            }
+            *this = *this-other;
             return *this;
 
         }
@@ -386,20 +396,22 @@ namespace atl {
 #ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(isize == expr.Size(0));
 #endif   
-            for (int i = 0; i < data_m.size(); i++) {
-                data_m[i] -= expr(i);
-            }
-
+            //            for (int i = 0; i < data_m.size(); i++) {
+            //                data_m[i] -= expr(i);
+            //            }
+            *this = *this-expr;
             return *this;
 
         }
 #ifdef ATL_CONTAINER_EXPERIMENTAL
+
         template<class T2, class A>
         Vector& operator-=(const VectorArrayExpression<T2, A> &expr) {
             *this = *this-expr;
             return *this;
         }
 #endif
+
         template<class T2, class A>
         Vector& operator-=(const ArrayExpression<T2, A> &expr) {
             *this = *this-expr;
@@ -418,16 +430,19 @@ namespace atl {
             return *this;
         }
 #ifdef ATL_CONTAINER_EXPERIMENTAL
+
         template<class T2, class A>
         Vector& operator-=(const MatrixArrayExpression<T2, A> &expr) {
             *this = *this-expr;
             return *this;
         }
 #endif
+
         inline Vector& operator*=(const T& val) {
-            for (int i = 0; i < data_m.size(); i++) {
-                data_m[i] *= val;
-            }
+            //            for (int i = 0; i < data_m.size(); i++) {
+            //                data_m[i] *= val;
+            //            }
+            *this = *this*val;
             return *this;
         }
 
@@ -435,10 +450,10 @@ namespace atl {
 #ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(isize == other.Size(0));
 #endif   
-            for (int i = 0; i < data_m.size(); i++) {
-                data_m[i] *= other.data_m[i];
-            }
-
+            //            for (int i = 0; i < data_m.size(); i++) {
+            //                data_m[i] *= other.data_m[i];
+            //            }
+            *this = *this*other;
             return *this;
 
         }
@@ -448,20 +463,22 @@ namespace atl {
 #ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(isize == expr.Size(0));
 #endif   
-            for (int i = 0; i < data_m.size(); i++) {
-                data_m[i] *= expr(i);
-            }
-
+            //            for (int i = 0; i < data_m.size(); i++) {
+            //                data_m[i] *= expr(i);
+            //            }
+            *this = *this*expr;
             return *this;
 
         }
 #ifdef ATL_CONTAINER_EXPERIMENTAL
+
         template<class T2, class A>
         Vector& operator*=(const VectorArrayExpression<T2, A> &expr) {
             *this = *this*expr;
             return *this;
         }
 #endif
+
         template<class T2, class A>
         Vector& operator*=(const ArrayExpression<T2, A> &expr) {
             *this = *this*expr;
@@ -480,16 +497,19 @@ namespace atl {
             return *this;
         }
 #ifdef ATL_CONTAINER_EXPERIMENTAL
+
         template<class T2, class A>
         Vector& operator*=(const MatrixArrayExpression<T2, A> &expr) {
             *this = *this*expr;
             return *this;
         }
 #endif
+
         inline Vector& operator/=(const T& val) {
-            for (int i = 0; i < data_m.size(); i++) {
-                data_m[i] /= val;
-            }
+            //            for (int i = 0; i < data_m.size(); i++) {
+            //                data_m[i] /= val;
+            //            }
+            *this = *this / val;
             return *this;
         }
 
@@ -497,10 +517,10 @@ namespace atl {
 #ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(isize == other.Size(0));
 #endif   
-            for (int i = 0; i < data_m.size(); i++) {
-                data_m[i] /= other.data_m[i];
-            }
-
+            //            for (int i = 0; i < data_m.size(); i++) {
+            //                data_m[i] /= other.data_m[i];
+            //            }
+            *this = *this / other;
             return *this;
 
         }
@@ -510,20 +530,23 @@ namespace atl {
 #ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(isize == expr.Size(0));
 #endif   
-            for (int i = 0; i < data_m.size(); i++) {
-                data_m[i] /= expr(i);
-            }
+            //            for (int i = 0; i < data_m.size(); i++) {
+            //                data_m[i] /= expr(i);
+            //            }
 
+            *this = *this / expr;
             return *this;
 
         }
 #ifdef ATL_CONTAINER_EXPERIMENTAL
+
         template<class T2, class A>
         Vector& operator/=(const VectorArrayExpression<T2, A> &expr) {
             *this = *this / expr;
             return *this;
         }
 #endif
+
         template<class T2, class A>
         Vector& operator/=(const ArrayExpression<T2, A> &expr) {
             *this = *this / expr;
@@ -542,12 +565,14 @@ namespace atl {
             return *this;
         }
 #ifdef ATL_CONTAINER_EXPERIMENTAL
+
         template<class T2, class A>
         Vector& operator/=(const MatrixArrayExpression<T2, A> &expr) {
             *this = *this / expr;
             return *this;
         }
 #endif
+
         inline const size_t Size(const int32_t dimension = 0) const {
             switch (dimension) {
                 case 0:

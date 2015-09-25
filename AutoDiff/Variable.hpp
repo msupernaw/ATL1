@@ -116,29 +116,29 @@ namespace atl {
 //                        } else {
 //                            return 2.0 * M_PI + std::asin(std::max(-1.0, std::min(1.0, (2.0 * (val - min_) / (max_ - min_) - 1.0))));
 //                        }
-            return  std::asin((2.0*val)/(max_-min_)-min_/(max_-min_)-max_/(max_-min_));
+//            return  std::asin((2.0*val)/(max_-min_)-min_/(max_-min_)-max_/(max_-min_));
 ////
-//            REAL_T piby2 = 2. * std::atan(1.);
-//            REAL_T distnn = 8. * sqrt(std::numeric_limits<REAL_T>::epsilon());
-//            REAL_T vlimhi = piby2 - distnn;
-//            REAL_T vlimlo = -piby2 + distnn;
-//
-//            REAL_T yy = 2. * (val - min_) / (max_ - min_) - 1.;
-//            REAL_T yy2 = yy*yy;
-//            if (yy2 > (1. - std::numeric_limits<REAL_T>::epsilon())) {
-//                if (yy < 0.) {
-//                    // Lower limit
-//                    //       std::cout<<"SinParameterTransformation warning: is at its Lower allowed limit. "<<Value<<std::endl;
-//                    return vlimlo;
-//                } else {
-//                    // Upper limit
-//                    //       std::cout<<"SinParameterTransformation warning: is at its Upper allowed limit."<<std::endl;
-//                    return vlimhi;
-//                }
-//
-//            } else {
-//                return std::asin(yy);
-//            }
+            REAL_T piby2 = 2. * std::atan(1.);
+            REAL_T distnn = 8. * sqrt(std::numeric_limits<REAL_T>::epsilon());
+            REAL_T vlimhi = piby2 - distnn;
+            REAL_T vlimlo = -piby2 + distnn;
+
+            REAL_T yy = 2. * (val - min_) / (max_ - min_) - 1.;
+            REAL_T yy2 = yy*yy;
+            if (yy2 > (1. - std::numeric_limits<REAL_T>::epsilon())) {
+                if (yy < 0.) {
+                    // Lower limit
+                    //       std::cout<<"SinParameterTransformation warning: is at its Lower allowed limit. "<<Value<<std::endl;
+                    return vlimlo;
+                } else {
+                    // Upper limit
+                    //       std::cout<<"SinParameterTransformation warning: is at its Upper allowed limit."<<std::endl;
+                    return vlimhi;
+                }
+
+            } else {
+                return std::asin(yy);
+            }
 
         }
 
@@ -371,13 +371,13 @@ namespace atl {
 //            return *this;
 //        }
 
-        operator REAL_T() {
-            return GetValue();
-        }
-
-        operator REAL_T()const {
-            return GetValue();
-        }
+//        operator REAL_T() {
+//            return this->GetValue();
+//        }
+//
+//        operator REAL_T()const {
+//            return this->GetValue();
+//        }
 
         template<class A>
         inline Variable& operator=(const ExpressionBase<REAL_T, A>& exp) {

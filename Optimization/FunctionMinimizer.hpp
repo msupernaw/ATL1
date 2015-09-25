@@ -68,7 +68,8 @@ namespace atl {
         routine(LBFGS),
         step(1.0),
         max_iterations(1000),
-        max_line_searches(5000),
+        max_line_searches(1000),
+        tolerance(1e-4),
         max_phase(1),
         verbose(true),
         min_verbose(false),
@@ -106,6 +107,10 @@ gradient_structure(&atl::Variable<REAL_T>::gradient_structure_g)*/ {
 
         int Phase() {
             return this->current_phase;
+        }
+        
+        bool LastPhase() {
+            return this->current_phase==this->max_phase;
         }
 
         void SetRoutine(Routine r, uint32_t phase) {
@@ -256,12 +261,12 @@ gradient_structure(&atl::Variable<REAL_T>::gradient_structure_g)*/ {
                     this->print_internal = true;
                 }
 
-                if (arg == std::string("-max_iteration")) {
+                if (arg == std::string("-max_iterations")) {
                     int t = util::StringToNumber<int>(std::string(argv[i + 1]));
                     this->max_iterations = t;
                 }
 
-                if (arg == std::string("-max_line_search")) {
+                if (arg == std::string("-max_line_searches")) {
                     int t = util::StringToNumber<int>(std::string(argv[i + 1]));
                     this->max_line_searches = t;
                 }
@@ -442,9 +447,9 @@ gradient_structure(&atl::Variable<REAL_T>::gradient_structure_g)*/ {
     private:
 
         void set_defaults() {
-            max_iterations = (1000);
-            max_line_searches = (1000);
-            this->tolerance = 1e-4;
+            //            max_iterations = (1000);
+            //            max_line_searches = (1000);
+            //            this->tolerance = 1e-4;
             this->phase_routines.resize(this->max_phase, this->routine);
 
         }
@@ -564,7 +569,7 @@ gradient_structure(&atl::Variable<REAL_T>::gradient_structure_g)*/ {
                 }//end for
 
                 if (!this->line_search(z, wg, i)) {
-                    std::cout << "Max line serches.";
+                    std::cout << io::BOLD << "Max line serches (" << this->max_line_searches << ")." << io::DEFAULT;
                     return false;
                 }
 

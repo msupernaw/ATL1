@@ -202,7 +202,7 @@ namespace atl {
         //
         //        }
 
-        inline MatrixRowVector& operator/=(const T& val) {
+        inline const MatrixRowVector& operator/=(const T& val) const {
             for (int j = 0; j < jsize; j++) {
                 data_m->at((row * jsize) + j) /= val;
             }

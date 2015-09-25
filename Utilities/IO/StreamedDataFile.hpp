@@ -240,11 +240,27 @@ namespace atl {
                 }
             }
         }
+
+        void operator>>(std::string& v) {
+            for (;;) {
+
+                input >> v;
+
+                if (input.eof() || input.bad()) {
+                    break;
+                } else if (input.fail()) {
+                    input.clear(); // unset failbit
+                    input.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // skip bad input
+                } else {
+                    break;
+                }
+            }
+        }
+
     private:
 
     };
 
-    
     template<typename T>
     StreamedDataFile& operator>>(StreamedDataFile& in, atl::Variable<T>& v) {
         T data = 0.0;
@@ -252,7 +268,7 @@ namespace atl {
         v = data;
         return in;
     }
-    
+
     template<typename T>
     StreamedDataFile& operator>>(StreamedDataFile& in, atl::Vector<T>& v) {
         for (int i = 0; i < v.Size(0); i++) {
@@ -265,7 +281,7 @@ namespace atl {
     StreamedDataFile& operator>>(StreamedDataFile& in, atl::Matrix<T>& m) {
         for (int i = 0; i < m.Size(0); i++) {
             for (int j = 0; j < m.Size(1); j++) {
-                in >> m(i,j);
+                in >> m(i, j);
             }
         }
         return in;
