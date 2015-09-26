@@ -503,7 +503,7 @@ namespace atl {
 
         inline const Variable operator--(int i) {
             Variable temp = *this;
-            *this = static_cast<REAL_T> (1.0) - (*this);
+            *this = (*this) - static_cast<REAL_T> (1.0);
             return temp;
         }
 
