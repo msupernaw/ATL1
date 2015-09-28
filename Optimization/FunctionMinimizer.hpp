@@ -350,12 +350,12 @@ gradient_structure(&atl::Variable<REAL_T>::gradient_structure_g)*/ {
 
         }
 
-        const atl::Vector<T> GetGradient() {
-            atl::Variable<T>::SetRecording(true);
-            atl::Variable<T> f;
+        const atl::Vector<REAL_T> GetGradient() {
+            atl::Variable<REAL_T>::SetRecording(true);
+            atl::Variable<REAL_T> f;
             this->call_objective_function(f);
             this->get_gradient();
-            atl::Vector<T> grad(this->active_parameters.size());;
+            atl::Vector<REAL_T> grad(this->active_parameters.size());;
 
             for (int i = 0; i < this->active_parameters.size(); i++) {
                 grad(i) = this->gradient[i];
@@ -363,12 +363,12 @@ gradient_structure(&atl::Variable<REAL_T>::gradient_structure_g)*/ {
             return grad;
         }
         
-        const atl::Matrix<T> GetHessian() {
-            atl::Variable<T>::SetRecording(true);
-            atl::Variable<T> f;
+        const atl::Matrix<REAL_T> GetHessian() {
+            atl::Variable<REAL_T>::SetRecording(true);
+            atl::Variable<REAL_T> f;
             this->call_objective_function(f);
             this->get_gradient_and_hessian();
-            atl::Matrix<T> hess(this->active_parameters.size(), this->active_parameters.size());
+            atl::Matrix<REAL_T> hess(this->active_parameters.size(), this->active_parameters.size());
 
             for (int i = 0; i < this->active_parameters.size(); i++) {
                 for (int j = 0; j < this->active_parameters.size(); j++) {
