@@ -1,0 +1,5 @@
+#ifndef ATL_LINESEARCH_HPP
+#define ATL_LINESEARCH_HPP
+
+
+#endif

@@ -288,7 +288,7 @@ gradient_structure(&atl::Variable<REAL_T>::gradient_structure_g)*/ {
                     int t = util::StringToNumber<int>(std::string(argv[i + 1]));
                     this->max_line_searches = t;
                 }
-                
+
                 if (arg == std::string("-bail_out")) {
                     int t = util::StringToNumber<int>(std::string(argv[i + 1]));
                     this->bail_out_phase = t;
@@ -350,9 +350,37 @@ gradient_structure(&atl::Variable<REAL_T>::gradient_structure_g)*/ {
 
         }
 
+        const atl::Vector<T> GetGradient() {
+            atl::Variable<T>::SetRecording(true);
+            atl::Variable<T> f;
+            this->call_objective_function(f);
+            this->get_gradient();
+            atl::Vector<T> grad(this->active_parameters.size());;
+
+            for (int i = 0; i < this->active_parameters.size(); i++) {
+                grad(i) = this->gradient[i];
+            }
+            return grad;
+        }
+        
+        const atl::Matrix<T> GetHessian() {
+            atl::Variable<T>::SetRecording(true);
+            atl::Variable<T> f;
+            this->call_objective_function(f);
+            this->get_gradient_and_hessian();
+            atl::Matrix<T> hess(this->active_parameters.size(), this->active_parameters.size());
+
+            for (int i = 0; i < this->active_parameters.size(); i++) {
+                for (int j = 0; j < this->active_parameters.size(); j++) {
+                    hess(i,j) = this->hessian[i][j];
+                }
+            }
+            return hess;
+        }
+
         void Run() {
             for (int p = 1; p <= this->max_phase; p++) {
-                if(this->has_bail_out && p == this->bail_out_phase){
+                if (this->has_bail_out && p == this->bail_out_phase) {
                     return;
                 }
 
