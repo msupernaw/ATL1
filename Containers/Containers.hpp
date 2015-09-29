@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   Containers.hpp
  * Author: matthewsupernaw
  *
@@ -192,7 +192,7 @@ namespace atl {
 
         for (size_t i = 0; i < size; i++) {
             for (size_t j = 0; j < size; j++) {
-                ret(i,j) = lhs(i)*rhs(j);
+                ret(i, j) = lhs(i) * rhs(j);
             }
         }
 
@@ -289,7 +289,7 @@ namespace atl {
 
     template<class T2, class A>
     inline const typename A::BASE_TYPE Norm2(const VectorExpression<T2, A> &expr, bool concurrent = false) {
-        typename A::BASE_TYPE ret; // = TT(0.0);
+        typename A::BASE_TYPE ret = (0.0);
 
 
         if (concurrent) {
@@ -319,15 +319,18 @@ namespace atl {
         } else {
 
             size_t s = expr.Size(0);
-            size_t end = (((s - 1UL) & size_t(-2)) + 1UL);
-            ret = expr(0) * expr(0);
-            for (size_t i = 1UL; i < end; i += 2UL) {
-                ret += expr(i) * expr(i) + expr(i + 1) * expr(i + 1);
+            for (size_t i = 0; i < s; i++) {
+                ret += expr(i) * expr(i);
             }
-
-            if (end < s) {
-                ret += expr(end) * expr(end);
-            }
+            //            size_t end = (((s - 1UL) & size_t(-2)) + 1UL);
+            //            ret = expr(0) * expr(0);
+            //            for (size_t i = 1UL; i < end; i += 2UL) {
+            //                ret += expr(i) * expr(i) + expr(i + 1) * expr(i + 1);
+            //            }
+            //
+            //            if (end < s) {
+            //                ret += expr(end) * expr(end);
+            //            }
         }
         return (ret);
     }
@@ -421,6 +424,17 @@ namespace atl {
         atl::Vector<typename A::BASE_TYPE > ret(expr.Size(0));
         for (int i = 0; i < expr.Size(0); i++) {
             ret(i) = expr(i) * expr(i);
+        }
+        return ret;
+    }
+
+    template<class T2, class A>
+    inline const atl::Vector<typename A::BASE_TYPE> FirstDifference(const VectorExpression<T2, A> &expr) {
+        atl::Vector<typename A::BASE_TYPE> ret;
+        size_t n = expr.Size(0) - 1;
+        ret.Resize(n);
+        for (size_t i = 0; i < n; i++) {
+            ret(i) = expr(i + 1) - expr(i);
         }
         return ret;
     }
