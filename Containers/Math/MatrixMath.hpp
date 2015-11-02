@@ -1751,6 +1751,7 @@ namespace atl {
             return MatrixATan2Scalar<LHS,TYPE > (a.Cast(), b);\
         } \
     
+
     ATL_MATRIX_MatrixATan2_SCALAR(short)
     ATL_MATRIX_MatrixATan2_SCALAR(unsigned short)
     ATL_MATRIX_MatrixATan2_SCALAR(int)
@@ -1786,6 +1787,37 @@ namespace atl {
     ATL_MatrixATan2_SCALAR_MATRIX(atl::Variable<long double>)
 
 
+
+    template<class T,class A>
+    const T Max(const atl::MatrixExpression<T,A>& m) {
+        T max = std::numeric_limits<typename atl::IntrinsicBaseType<T>::TYPE>::min();
+
+
+        for (int i = 0; i < m.Size(0); i++) {
+            for (int j = 0; j < m.Size(1); j++) {
+                if (m(i, j) > max) {
+                    max = m(i,j);
+                }
+            }
+        }
+        return max;
+
+    }
+
+    template<class T,class A>
+    const T Min(const atl::MatrixExpression<T,A>& m) {
+        T min = std::numeric_limits<typename atl::IntrinsicBaseType<T>::TYPE>::max();
+
+        for (int i = 0; i < m.Size(0); i++) {
+            for (int j = 0; j < m.Size(1); j++) {
+                if (m(i, j) < min) {
+                    min = m(i,j);
+                }
+            }
+        }
+        return min;
+
+    }
 
 
 

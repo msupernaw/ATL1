@@ -59,17 +59,19 @@ namespace atl {
         }
         //
 
-//        operator REAL_T() {
-//            return Cast().GetValue();
-//        }
-//
-//        operator REAL_T()const {
-//            return Cast().GetValue();
-//        }
+        //        operator REAL_T() {
+        //            return Cast().GetValue();
+        //        }
+        //
+        //        operator REAL_T()const {
+        //            return Cast().GetValue();
+        //        }
 
-      
+        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids, bool include_dependent = true)const {
+            Cast().PushIds(ids, include_dependent);
+        }
 
-        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+        inline void PushIds(IDSet<uint32_t >& ids)const {
             Cast().PushIds(ids);
         }
 

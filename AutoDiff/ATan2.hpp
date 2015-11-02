@@ -121,10 +121,7 @@ namespace atl {
             return 0.0;
         }
 
-        inline void PushHessianEntry(atl::Adjoint<REAL_T>& entry, uint32_t i, uint32_t j, REAL_T coefficient = 1.0) const {
-            std::cout << __FILE__ << ":" << __LINE__ << ":" << __func__ << " not yet implemented.";
-        }
-
+      
 
         const EXPR1& expr1_m;
         const EXPR2& expr2_m;
@@ -167,9 +164,7 @@ namespace atl {
             exit(0);
         }
 
-        inline void PushHessianEntry(atl::Adjoint<REAL_T>& entry, uint32_t i, uint32_t j, REAL_T coefficient = 1.0) const {
-            std::cout << __FILE__ << ":" << __LINE__ << ":" << __func__ << " not yet implemented.";
-        }
+    
 
         inline REAL_T EvaluateDerivative(uint32_t a, uint32_t b) const {
             std::cout << __FILE__ << ":" << __LINE__ << ":" << __func__ << " not yet implemented.";
@@ -217,9 +212,7 @@ namespace atl {
             exit(0);
         }
 
-        inline void PushHessianEntry(atl::Adjoint<REAL_T>& entry, uint32_t i, uint32_t j, REAL_T coefficient = 1.0) const {
-            std::cout << __FILE__ << ":" << __LINE__ << ":" << __func__ << " not yet implemented.";
-        }
+      
 
         inline REAL_T EvaluateDerivative(uint32_t a, uint32_t b) const {
             std::cout << __FILE__ << ":" << __LINE__ << ":" << __func__ << " not yet implemented.";

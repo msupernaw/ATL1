@@ -56,7 +56,11 @@ namespace atl {
             expr_m.VariableCount(count);
         }
 
-        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids, bool include_dependent = true)const {
+            expr_m.PushIds(ids, include_dependent);
+        }
+
+        inline void PushIds(IDSet<uint32_t >& ids)const {
             expr_m.PushIds(ids);
         }
 

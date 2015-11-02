@@ -49,7 +49,12 @@ namespace atl {
             rhs_m.VariableCount(count);
         }
 
-        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids, bool include_dependent = true)const {
+            lhs_m.PushIds(ids, include_dependent);
+            rhs_m.PushIds(ids, include_dependent);
+        }
+
+        inline void PushIds(IDSet<uint32_t >& ids)const {
             lhs_m.PushIds(ids);
             rhs_m.PushIds(ids);
         }
@@ -114,11 +119,11 @@ namespace atl {
             lhs_m.VariableCount(count);
         }
 
-        inline void PushStackEntry(Entry& entry, REAL_T coefficient = 1.00000e+0) const {
-            lhs_m.PushStackEntry(entry, coefficient / (rhs_m));
+        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids, bool include_dependent = true)const {
+            lhs_m.PushIds(ids, include_dependent);
         }
 
-        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+        inline void PushIds(IDSet<uint32_t >& ids)const {
             lhs_m.PushIds(ids);
         }
 
@@ -188,11 +193,11 @@ namespace atl {
             rhs_m.VariableCount(count);
         }
 
-        inline void PushStackEntry(Entry& entry, REAL_T coefficient = 1.00000e+0) const {
-            rhs_m.PushStackEntry(entry, -1.0 * coefficient * GetValue() / rhs_m.GetValue());
+        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids, bool include_dependent = true)const {
+            rhs_m.PushIds(ids, include_dependent);
         }
 
-        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+        inline void PushIds(IDSet<uint32_t >& ids)const {
             rhs_m.PushIds(ids);
         }
 

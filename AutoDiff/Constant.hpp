@@ -33,7 +33,10 @@ namespace atl {
         inline void VariableCount(uint32_t& count) const {
         }
 
-        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids, bool include_dependent = true)const {
+        }
+
+        inline void PushIds(IDSet<uint32_t >& ids)const {
         }
 
         inline REAL_T EvaluateDerivative(uint32_t id) const {

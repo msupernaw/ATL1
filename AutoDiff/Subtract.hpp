@@ -30,7 +30,12 @@ namespace atl {
             rhs_m.VariableCount(count);
         }
 
-        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids, bool include_dependent = true)const {
+            lhs_m.PushIds(ids, include_dependent);
+            rhs_m.PushIds(ids, include_dependent);
+        }
+
+        inline void PushIds(IDSet<uint32_t >& ids)const {
             lhs_m.PushIds(ids);
             rhs_m.PushIds(ids);
         }
@@ -83,7 +88,11 @@ namespace atl {
             lhs_m.VariableCount(count);
         }
 
-        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids, bool include_dependent = true)const {
+            lhs_m.PushIds(ids, include_dependent);
+        }
+
+        inline void PushIds(IDSet<uint32_t >& ids)const {
             lhs_m.PushIds(ids);
         }
 
@@ -129,7 +138,11 @@ namespace atl {
             rhs_m.VariableCount(count);
         }
 
-        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids, bool include_dependent = true)const {
+            rhs_m.PushIds(ids, include_dependent);
+        }
+
+        inline void PushIds(IDSet<uint32_t >& ids)const {
             rhs_m.PushIds(ids);
         }
 
@@ -144,7 +157,7 @@ namespace atl {
         const REAL_T lhs_m;
         const RHS& rhs_m;
         const REAL_T value_m;
-    } ;
+    };
 
     /**
      * Operator for subtracting  a expression templates from a constant.

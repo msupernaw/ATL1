@@ -39,33 +39,33 @@ namespace atl {
             rhs_m.VariableCount(count);
         }
 
-        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids, bool include_dependent = true)const {
+            lhs_m.PushIds(ids, include_dependent);
+            rhs_m.PushIds(ids, include_dependent);
+        }
+
+        inline void PushIds(IDSet<uint32_t >& ids)const {
             lhs_m.PushIds(ids);
             rhs_m.PushIds(ids);
         }
 
         inline REAL_T EvaluateDerivative(uint32_t id) const {
+            //            std::cout<<__func__
+            //                    <<" id "<<id<<"\n";
+            //            std::cout<<rhs_value_m<<" * "<<lhs_m.EvaluateDerivative(id) <<" + "<<
+            //                    rhs_m.EvaluateDerivative(id)<<" * "<< lhs_value_m<<"\n";
             return (rhs_value_m * lhs_m.EvaluateDerivative(id) +
                     rhs_m.EvaluateDerivative(id) * lhs_value_m);
         }
 
         inline REAL_T EvaluateDerivative(uint32_t a, uint32_t b) const {
-            //
-            //            REAL_T fxy = lhs_m.EvaluateDerivative(a, b);
-            //            REAL_T g = rhs_value_m;
-            //            REAL_T f = lhs_value_m;
-            //            REAL_T fx = lhs_m.EvaluateDerivative(a);
-            //            REAL_T gy = rhs_m.EvaluateDerivative(b);
-            //            REAL_T fy = lhs_m.EvaluateDerivative(b);
-            //            REAL_T gx = rhs_m.EvaluateDerivative(a);
-            //            REAL_T gxy = rhs_m.EvaluateDerivative(a, b);
-            //
-            //            return fxy * g + fx * gy + fy * gx + gxy*f;
-
-            return lhs_m.EvaluateDerivative(a, b) * rhs_value_m +
-                    lhs_m.EvaluateDerivative(a) * rhs_m.EvaluateDerivative(b) +
-                    lhs_m.EvaluateDerivative(b) * rhs_m.EvaluateDerivative(a) +
-                    rhs_m.EvaluateDerivative(a, b) * lhs_value_m;
+//            std::cout << __func__ << "(" << a << "," << b << ")\n";
+//            std::cout << lhs_m.EvaluateDerivative(a) << " * " << rhs_m.EvaluateDerivative(b) << " + " << lhs_value_m << " * " << rhs_m.EvaluateDerivative(a, b) << " + " <<
+//                    lhs_m.EvaluateDerivative(b) << " * " << rhs_m.EvaluateDerivative(a) << " + " << rhs_value_m << " * " << lhs_m.EvaluateDerivative(a, b) << " = " <<
+//                    lhs_m.EvaluateDerivative(a) * rhs_m.EvaluateDerivative(b) + lhs_value_m * rhs_m.EvaluateDerivative(a, b) +
+//                    lhs_m.EvaluateDerivative(b) * rhs_m.EvaluateDerivative(a) + rhs_value_m * lhs_m.EvaluateDerivative(a, b) << "\n";
+            return lhs_m.EvaluateDerivative(a) * rhs_m.EvaluateDerivative(b) + lhs_value_m * rhs_m.EvaluateDerivative(a, b) +
+                    lhs_m.EvaluateDerivative(b) * rhs_m.EvaluateDerivative(a) + rhs_value_m * lhs_m.EvaluateDerivative(a, b);
         }
 
 
@@ -102,7 +102,11 @@ namespace atl {
             lhs_m.VariableCount(count);
         }
 
-        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids, bool include_dependent = true)const {
+            lhs_m.PushIds(ids, include_dependent);
+        }
+
+        inline void PushIds(IDSet<uint32_t >& ids)const {
             lhs_m.PushIds(ids);
         }
 
@@ -112,16 +116,13 @@ namespace atl {
 
         inline REAL_T EvaluateDerivative(uint32_t a, uint32_t b) const {
 
-            REAL_T fxy = lhs_m.EvaluateDerivative(a, b);
-            REAL_T g = rhs_m;
-//            REAL_T f = lhs_m.GetValue();
-//            REAL_T fx = lhs_m.EvaluateDerivative(a);
-//            REAL_T gy = 0;
-//            REAL_T fy = lhs_m.EvaluateDerivative(b);
-//            REAL_T gx = 0;
-//            REAL_T gxy = 0;
+            //            REAL_T fxy = lhs_m.EvaluateDerivative(a, b);
+            return lhs_m.EvaluateDerivative(a, b) * rhs_m; /* +
+                    lhs_m.EvaluateDerivative(a) * 0 +
+                    lhs_m.EvaluateDerivative(b) * 0+
+                    0 * lhs_m.GetValue();*/
 
-            return fxy * g;
+
         }
 
         const LHS& lhs_m;
@@ -159,7 +160,11 @@ namespace atl {
             rhs_m.VariableCount(count);
         }
 
-        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids, bool include_dependent = true)const {
+            rhs_m.PushIds(ids, include_dependent);
+        }
+
+        inline void PushIds(IDSet<uint32_t >& ids)const {
             rhs_m.PushIds(ids);
         }
 

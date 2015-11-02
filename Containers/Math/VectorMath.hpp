@@ -1740,11 +1740,11 @@ namespace atl {
 
 
 
-    template<class T>
-    const T Max(const atl::Vector<T>& v) {
+    template<class T,class A>
+    const T Max(const atl::VectorExpression<T,A>& v) {
         T max =  std::numeric_limits<typename atl::IntrinsicBaseType<T>::TYPE>::min();
 
-        for (int i = 0; i < v.Size(); i++) {
+        for (int i = 0; i < v.Size(0); i++) {
             if (v(i) > max) {
                 max = v(i);
             }
@@ -1753,11 +1753,11 @@ namespace atl {
 
     }
 
-    template<class T>
-    const T Min(const atl::Vector<T>& v) {
+    template<class T,class A>
+    const T Min(const atl::VectorExpression<T,A>& v) {
         T min = std::numeric_limits<typename atl::IntrinsicBaseType<T>::TYPE>::max();
 
-        for (int i = 0; i < v.Size(); i++) {
+        for (int i = 0; i < v.Size(0); i++) {
             if (v(i) < min) {
                 min = v(i);
             }

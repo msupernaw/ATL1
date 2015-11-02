@@ -58,17 +58,21 @@ namespace atl {
         }
 
 
-        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids, bool include_dependent = true)const {
+            expr_m.PushIds(ids,include_dependent);
+        }
+
+        inline void PushIds(IDSet<uint32_t >& ids)const {
             expr_m.PushIds(ids);
         }
 
         inline REAL_T EvaluateDerivative(uint32_t id) const {
-            return expr_m.EvaluateDerivative(id) * value2_m; // expr_m.GetValue());
+            return expr_m.EvaluateDerivative(id) /expr_m.GetValue(); // expr_m.GetValue());
         }
 
         inline REAL_T EvaluateDerivative(uint32_t a, uint32_t b) const {
             //            REAL_T fx =expr_m.GetValue();
-            return (expr_m.EvaluateDerivative(a, b) * value2_m) - (expr_m.EvaluateDerivative(a) * expr_m.EvaluateDerivative(b)) / (value_m * value_m);
+            return (expr_m.EvaluateDerivative(a, b) /expr_m.GetValue()) - (expr_m.EvaluateDerivative(a) * expr_m.EvaluateDerivative(b)) / (expr_m.GetValue()*expr_m.GetValue());
         }
 
     private:
@@ -101,4 +105,3 @@ namespace std {
 }
 
 #endif	/* LOG_HPP */
-

@@ -40,7 +40,12 @@ namespace atl {
             return this->GetValue();
         }
 
-        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids, bool include_dependent = true)const {
+            lhs_m.PushIds(ids, include_dependent);
+            rhs_m.PushIds(ids, include_dependent);
+        }
+
+        inline void PushIds(IDSet<uint32_t >& ids)const {
             lhs_m.PushIds(ids);
             rhs_m.PushIds(ids);
         }
@@ -94,7 +99,11 @@ namespace atl {
             lhs_m.PushStackEntry(entry, coefficient);
         }
 
-        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids, bool include_dependent = true)const {
+            lhs_m.PushIds(ids, include_dependent);
+        }
+        
+        inline void PushIds(IDSet<uint32_t >& ids)const {
             lhs_m.PushIds(ids);
         }
 
@@ -145,10 +154,14 @@ namespace atl {
             rhs_m.PushStackEntry(entry, coefficient);
         }
 
-        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
-            rhs_m.PushIds(ids);
+        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids, bool include_dependent = true)const {
+            rhs_m.PushIds(ids, include_dependent);
         }
 
+        inline void PushIds(IDSet<uint32_t >& ids)const {
+            rhs_m.PushIds(ids);
+        }
+        
         inline REAL_T EvaluateDerivative(uint32_t id) const {
             return rhs_m.EvaluateDerivative(id);
         }

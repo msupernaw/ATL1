@@ -63,6 +63,7 @@ namespace atl {
         REAL_T function_value;
         REAL_T step;
         Routine routine;
+        atl::Variable<REAL_T> objective_function_value;
 
     public:
 
@@ -364,10 +365,13 @@ gradient_structure(&atl::Variable<REAL_T>::gradient_structure_g)*/ {
         }
         
         const atl::Matrix<REAL_T> GetHessian() {
-            atl::Variable<REAL_T>::SetRecording(true);
-            atl::Variable<REAL_T> f;
+            atl::Variable<REAL_T>::gradient_structure_g.derivative_trace_level = atl::GRADIENT_AND_HESSIAN;
+            atl::Variable<REAL_T>::gradient_structure_g.recording=true;
+            
+            atl::Variable<REAL_T> f=0.0;
             this->call_objective_function(f);
             this->get_gradient_and_hessian();
+            
             atl::Matrix<REAL_T> hess(this->active_parameters.size(), this->active_parameters.size());
 
             for (int i = 0; i < this->active_parameters.size(); i++) {
@@ -375,6 +379,8 @@ gradient_structure(&atl::Variable<REAL_T>::gradient_structure_g)*/ {
                     hess(i,j) = this->hessian[i][j];
                 }
             }
+            
+            std::cout<<"Function = "<<f<<"\n";
             return hess;
         }
 
@@ -433,6 +439,8 @@ gradient_structure(&atl::Variable<REAL_T>::gradient_structure_g)*/ {
                 this->TransitionPhase();
                 routine = r;
             }
+            objective_function_value = 0.0;
+            this->call_objective_function(this->objective_function_value);
         }
 
         std::vector<uint32_t>& GetPhaseMaxIterations() {
@@ -510,6 +518,7 @@ gradient_structure(&atl::Variable<REAL_T>::gradient_structure_g)*/ {
         }
 
         bool lbfgs(REAL_T tolerance = 1e-4) {
+            atl::Variable<REAL_T>::gradient_structure_g.derivative_trace_level = atl::GRADIENT_AND_HESSIAN;
             atl::Variable<REAL_T>::SetRecording(true);
             atl::Variable<REAL_T>::gradient_structure_g.Reset();
             int nops = this->active_parameters.size();
@@ -1596,7 +1605,7 @@ OUT_OF:
                     maxgc = std::fabs(this->gradient[i]);
                 }
                 for (int j = 0; j < this->active_parameters.size(); j++) {
-                    hessian[i][j] = this->active_parameters[i]->info->hessian_row[this->active_parameters[j]->info];
+                    hessian[i][j] = this->active_parameters[i]->info->hessian_row[this->active_parameters[j]->info->id];
                 }
             }
 
@@ -1614,7 +1623,7 @@ OUT_OF:
                     maxgc = std::fabs(gradient[i]);
                 }
                 for (int j = 0; j < this->active_parameters.size(); j++) {
-                    h[i][j] = this->active_parameters[i]->info->hessian_row[this->active_parameters[j]->info];
+                    h[i][j] = this->active_parameters[i]->info->hessian_row[this->active_parameters[j]->info->id];
                 }
             }
 

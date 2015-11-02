@@ -73,7 +73,7 @@ namespace atl {
 
 
                     var f;
-                    std::cout << "evaluating...";
+                    std::cout << "evaluating..." << std::flush;
                     auto exact_start = std::chrono::steady_clock::now();
 
                     auto eval_start = std::chrono::steady_clock::now();
@@ -82,9 +82,9 @@ namespace atl {
                     std::chrono::duration<double> eval_time = eval_end - eval_start;
                     std::cout << (eval_time.count()) << " sec...";
 
-                    std::cout << "computing exact hessian..." << std::flush;
+                    std::cout << "computing exact gradient and hessian..." << std::flush;
 
-                    var::gradient_structure_g.HessianAndGradientAccumulate2();
+                    var::gradient_structure_g.HessianAndGradientAccumulate();
                     auto exact_end = std::chrono::steady_clock::now();
                     std::chrono::duration<double> exact_time = (exact_end - exact_start);
                     std::cout << exact_time.count() << "sec...";
@@ -175,7 +175,7 @@ do_exact:
                     tests += 2;
                     var::gradient_structure_g.Reset();
                     var::SetRecording(true);
-                    var::gradient_structure_g.derivative_trace_level = GRADIENT_AND_HESSIAN;
+                    var::gradient_structure_g.derivative_trace_level = GRADIENT;
                     this->Initialize();
                     var f;
 
@@ -196,9 +196,34 @@ do_exact:
                     out << "Number of Parameters: " << this->active_parameters_m.size() << "\n";
 
 
-                    std::cout << "evaluating...";
+                    std::cout << "evaluating..." << std::flush;
+                    ;
 
 
+                    auto eval_gstart = std::chrono::steady_clock::now();
+                    this->ObjectiveFunction(f);
+                    auto eval_gend = std::chrono::steady_clock::now();
+                    std::chrono::duration<double> eval_gtime = eval_gend - eval_gstart;
+
+                    fval = f.GetValue();
+
+                    std::cout << "computing exact gradient..." << std::flush;
+                    auto exact_gstart = std::chrono::steady_clock::now();
+                    var::gradient_structure_g.Accumulate();
+                    auto exact_gend = std::chrono::steady_clock::now();
+                    std::chrono::duration<double> exact_gtime = (exact_gend - exact_gstart);
+                    var::gradient_structure_g.Reset();
+                    std::cout << "done!\nevaluating..." << std::flush;
+                    ;
+                    f = 0.0;
+                    var::gradient_structure_g.derivative_trace_level = GRADIENT_AND_HESSIAN;
+
+                    //run hessian twice to make sure everything resets properly
+                    this->ObjectiveFunction(f);
+                    var::gradient_structure_g.HessianAndGradientAccumulate();
+                    var::gradient_structure_g.Reset();
+
+                    f = 0.0;
                     auto eval_start = std::chrono::steady_clock::now();
                     this->ObjectiveFunction(f);
                     auto eval_end = std::chrono::steady_clock::now();
@@ -215,7 +240,7 @@ do_exact:
                     for (int i = 0; i < this->active_parameters_m.size(); i++) {
                         gradient[i] = this->active_parameters_m[i]->info->dvalue;
                         for (int j = 0; j < this->active_parameters_m.size(); j++) {
-                            exact_hessian[i][j] = this->active_parameters_m[i]->info->hessian_row[this->active_parameters_m[j]->info];
+                            exact_hessian[i][j] = this->active_parameters_m[i]->info->hessian_row[this->active_parameters_m[j]->info->id];
                         }
                     }
                     std::cout << "done!\n";
@@ -299,11 +324,14 @@ do_exact:
                     out << "Gradient mse = " << gmse << ", Error Range{" << gmin << " - " << gmax << "}\n";
                     out << "Hessian mse = " << mse << ", Error Range{" << hmin << " - " << hmax << "}\n";
                     out << std::fixed;
-                    out << "Time to evaluate objective function: " << eval_time.count() << " sec\n";
+                    out << "Time to evaluate objective function with only gradient info: " << eval_gtime.count() << " sec\n";
+                    out << "Time to evaluate objective function with Hessian info: " << eval_time.count() << " sec\n";
+                    out << "Time to compute exact gradient: " << exact_gtime.count() << " sec\n";
                     out << "Time to compute exact gradient and Hessian: " << exact_time.count() << " sec\n";
                     out << "Time to estimate gradient: " << estimatedg_time.count() << " sec\n";
                     out << "Time to estimate Hessian: " << estimated_time.count() << " sec\n";
-                    out << "Speed up = " << estimated_time / exact_time << "\n\n";
+                    out << "Gradient Speed up = " << estimatedg_time / exact_gtime << "\n";
+                    out << "Hessain Speed up = " << estimated_time / exact_time << "\n\n";
 
 
 
@@ -1392,79 +1420,79 @@ do_exact:
 
 
             };
-            
+
             template<class T>
             class PowCAutoDiffTest : public AutoDiffTest<T> {
             public:
                 typedef atl::Variable<T> var;
                 var a;
                 var b;
-                
+
                 PowCAutoDiffTest(std::ofstream& out) {
                     this->RunTestToFile(out);
                 }
-                
+
                 void Initialize() {
                     a = .03434;
                     b = .034230;
                     this->Register(a);
                     this->Register(b);
-                    
-                    
-                    
+
+
+
                 }
-                
+
                 void Description(std::stringstream& out) {
                     out << "Test Problem:\n";
                     out << "Parameters:\n";
                     out << "Variable a = " << a << "\n";
                     out << "Variable b = " << b << "\n";
                     out << "f = atl::pow((a * b),2.0)" << std::endl;
-                    
+
                 }
-                
+
                 void ObjectiveFunction(var& f) {
                     f = atl::pow((a * b), 2.0);
                 }
-                
-                
+
+
             };
-            
+
             template<class T>
             class PowC2AutoDiffTest : public AutoDiffTest<T> {
             public:
                 typedef atl::Variable<T> var;
                 var a;
                 var b;
-                
+
                 PowC2AutoDiffTest(std::ofstream& out) {
                     this->RunTestToFile(out);
                 }
-                
+
                 void Initialize() {
                     a = .03434;
                     b = .034230;
                     this->Register(a);
                     this->Register(b);
-                    
-                    
-                    
+
+
+
                 }
-                
+
                 void Description(std::stringstream& out) {
                     out << "Test Problem:\n";
                     out << "Parameters:\n";
                     out << "Variable a = " << a << "\n";
                     out << "Variable b = " << b << "\n";
                     out << "f = atl::pow(2.0,(a * b))" << std::endl;
-                    
+
                 }
-                
+
                 void ObjectiveFunction(var& f) {
-                    f = atl::pow(2.0,(a * b));
+                    f = atl::pow(2.0, (a * b));
                 }
-                
-                
+
+
             };
 
             template<class T>
@@ -1672,8 +1700,10 @@ do_exact:
                     this->Register(b);
                     //                int nobs = 50;
 
+                    T small = 1.00001212;
                     for (int i = 0; i < nobs; i++) {
-                        v.push_back(var(1.00023));
+                        small += .000000001;
+                        v.push_back(var(small));
                         //                 
                     }
                     //
@@ -1686,25 +1716,30 @@ do_exact:
                 void Description(std::stringstream& out) {
                     out << "Test Problem:\n";
                     out << "Parameters:\n";
-                    out << "Variable a = " << a << "\n";
-                    out << "Variable b = " << b << "\n";
+                    out << "Variable a = " << a << ";\n";
+                    out << "Variable b = " << b << ";\n";
                     out << "Variable v[" << nobs << "]\n\n";
-                    out << "f = (a / b); \n"; //// (a * b+a/b+a*a) - (a*(a * b+a/b+a*a));
+                    out << "Variable ff = 0;\n";
+                    out << "ff = (a / b); \n"; //// (a * b+a/b+a*a) - (a*(a * b+a/b+a*a));
                     out << "for (int i = 0; i < nobs; i++) {\n";
                     out << "    for (int j = 0; j < nobs; j++) {\n";
-                    out << "         f += atl::log(v[j] * v[i] * atl::tanh(a / b * v[j] * v[i]) * atl::tanh(a / b) * v[j] * v[i] * atl::tanh(a / b));\n";
+                    out << "         ff += atl::log(v[j] * v[i] * atl::tanh(a / b * v[j] * v[i]) * atl::tanh(a / b) * v[j] * v[i] * atl::tanh(a / b));\n";
                     out << "     }\n";
                     out << "}\n";
+                    out<<"f.assign(Variable::gradient_structure_g, ff);\n";
 
                 }
 
                 void ObjectiveFunction(var& f) {
-                    f = (a / b); // (a * b+a/b+a*a) - (a*(a * b+a/b+a*a));
+                    var ff;
+                    ff = (a / b); // (a * b+a/b+a*a) - (a*(a * b+a/b+a*a));
                     for (int i = 0; i < nobs; i++) {
                         for (int j = 0; j < nobs; j++) {
-                            f += atl::log(v[j] * v[i] * atl::tanh(a / b * v[j] * v[i]) * atl::tanh(a / b) * v[j] * v[i] * atl::tanh(a / b));
+                            ff += (v[j] * v[i] * atl::tanh(a / b * v[j] * v[i]) * atl::tanh(a / b) * v[j] * v[i] * atl::tanh(a / b));
                         }
                     }
+                    ff = (nobs / 2.0) * atl::log(ff);
+                    f.Assign(var::gradient_structure_g, ff);
                 }
 
 
@@ -1752,10 +1787,10 @@ do_exact:
                 atl::tests::auto_diff::CeilAutoDiffTest<double> ceil(out);
                 atl::tests::auto_diff::FloorAutoDiffTest<double> floor(out);
                 atl::tests::auto_diff::SumAlotOfParametersAutoDiffTest<double> s1(out, 10);
-                atl::tests::auto_diff::SumAlotOfParametersAutoDiffTest<double> s2(out, 50);
-                //            atl::tests::auto_diff::SumAlotOfParametersAutoDiffTest<double> s3(out, 100);
-                //            atl::tests::auto_diff::SumAlotOfParametersAutoDiffTest<double> s4(out, 200);
-                //        atl::tests::auto_diff::SumAlotOfParametersAutoDiffTest<double> s5(out, 500);
+                //                atl::tests::auto_diff::SumAlotOfParametersAutoDiffTest<double> s2(out, 50);
+                //                            atl::tests::auto_diff::SumAlotOfParametersAutoDiffTest<double> s3(out, 100);
+                //                            atl::tests::auto_diff::SumAlotOfParametersAutoDiffTest<double> s4(out, 200);
+                //                        atl::tests::auto_diff::SumAlotOfParametersAutoDiffTest<double> s5(out, 500);
                 std::cout << "Test complete.\n";
                 if (atl::tests::auto_diff::fail == 0) {
                     std::cout << "All tests passed, review file \"autodiff_test.txt\" for details." << std::endl;

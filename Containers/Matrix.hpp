@@ -64,23 +64,22 @@ namespace atl {
          */
         MatrixRowVector(std::vector<T>* data, size_t i, size_t j, size_t r)
         :
-        data_m(data),isize(i), jsize(j), row(r) {
+        data_m(data), isize(i), jsize(j), row(r) {
 
         }
-//        
+        //        
+
         MatrixRowVector(const MatrixRowVector<T>& other)
         :
-         data_m(other.data_m),isize(other.isize), jsize(other.jsize), row(other.row) {
+        data_m(other.data_m), isize(other.isize), jsize(other.jsize), row(other.row) {
 
         }
-        
-        
 
         void SetBounds(INTRINSIC_BASE minb, INTRINSIC_BASE maxb) {
             std::cout << "warning atl::Vector<>::" << __func__ << "not implemented for primitive types";
         }
 
-        const MatrixRowVector& operator=(const T& val) const{
+        const MatrixRowVector& operator=(const T& val) const {
             for (int j = 0; j < jsize; j++) {
                 data_m->at((row * jsize) + j) = val;
             }
@@ -92,7 +91,7 @@ namespace atl {
         }
 
         template<class T2, class A>
-        const MatrixRowVector& operator=(const VectorExpression<T2, A> &expr)const  {
+        const MatrixRowVector& operator=(const VectorExpression<T2, A> &expr)const {
 #ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(expr.Dimensions() == 1);
             assert(expr.Size(0) == jsize);
@@ -271,7 +270,7 @@ namespace atl {
 #ifdef ATL_ENABLE_BOUNDS_CHECKING
             CheckBounds(i);
 #endif
-           
+
             return data_m->at((row * jsize) + i);
         }
 
@@ -359,6 +358,9 @@ namespace atl {
 
             if (i >= isize) {
                 std::cout << "-->" << i << " >= " << isize << std::endl;
+            }
+            if (j >= jsize) {
+                std::cout << "-->" << j << " >= " << jsize << std::endl;
             }
             assert(i < isize);
             assert(j < jsize);
@@ -1011,6 +1013,54 @@ namespace atl {
         const_iterator rend()const {
             return this->data_m.rend();
         }
+
+        void Invert() {
+            size_t actualsize = isize;
+            if (actualsize <= 0) return; // sanity check
+            if (actualsize == 1) return; // must be of dimension >= 2
+            for (int i = 1; i < actualsize; i++) data_m[i] /= data_m[0]; // normalize row 0
+            for (int i = 1; i < actualsize; i++) {
+                for (int j = i; j < actualsize; j++) { // do a column of L
+                    T sum = 0.0;
+                    for (int k = 0; k < i; k++)
+                        sum += data_m[j * actualsize + k] * data_m[k * actualsize + i];
+                    data_m[j * actualsize + i] -= sum;
+                }
+                if (i == actualsize - 1) continue;
+                for (int j = i + 1; j < actualsize; j++) { // do a row of U
+                    T sum = 0.0;
+                    for (int k = 0; k < i; k++)
+                        sum += data_m[i * actualsize + k] * data_m[k * actualsize + j];
+                    data_m[i * actualsize + j] =
+                            (data_m[i * actualsize + j] - sum) / data_m[i * actualsize + i];
+                }
+            }
+            for (int i = 0; i < actualsize; i++) // invert L
+                for (int j = i; j < actualsize; j++) {
+                    T x = 1.0;
+                    if (i != j) {
+                        x = 0.0;
+                        for (int k = i; k < j; k++)
+                            x -= data_m[j * actualsize + k] * data_m[k * actualsize + i];
+                    }
+                    data_m[j * actualsize + i] = x / data_m[j * actualsize + j];
+                }
+            for (int i = 0; i < actualsize; i++) // invert U
+                for (int j = i; j < actualsize; j++) {
+                    if (i == j) continue;
+                    T sum = 0.0;
+                    for (int k = i; k < j; k++)
+                        sum += data_m[k * actualsize + j]*((i == k) ? 1.0 : data_m[i * actualsize + k]);
+                    data_m[i * actualsize + j] = -sum;
+                }
+            for (int i = 0; i < actualsize; i++) // final inversion
+                for (int j = 0; j < actualsize; j++) {
+                    T sum = 0.0;
+                    for (int k = ((i > j) ? i : j); k < actualsize; k++)
+                        sum += ((j == k) ? 1.0 : data_m[j * actualsize + k]) * data_m[k * actualsize + i];
+                    data_m[j * actualsize + i] = sum;
+                }
+        };
 
     };
 
