@@ -6,7 +6,7 @@
  */
 
 #ifndef ET4AD_SQRT_HPP
-#define	ET4AD_SQRT_HPP
+#define ET4AD_SQRT_HPP
 
 #include <cmath>
 #include "Expression.hpp"
@@ -60,13 +60,18 @@ namespace atl {
             expr_m.VariableCount(count);
         }
 
-        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids, bool include_dependent = true)const {
+        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids, bool include_dependent)const {
             expr_m.PushIds(ids, include_dependent);
+        }
+
+        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+            expr_m.PushIds(ids);
         }
 
         inline void PushIds(IDSet<uint32_t >& ids)const {
             expr_m.PushIds(ids);
         }
+
 
         inline REAL_T EvaluateDerivative(uint32_t id) const {
             return expr_m.EvaluateDerivative(id) / (2.0 * this->GetValue());
@@ -75,6 +80,21 @@ namespace atl {
         inline REAL_T EvaluateDerivative(uint32_t a, uint32_t b) const {
             return (expr_m.EvaluateDerivative(a, b) / (2.0 * this->GetValue())) -
                     (expr_m.EvaluateDerivative(a) * expr_m.EvaluateDerivative(b)) / (4.0 * std::pow(expr_m.GetValue(), 1.5));
+        }
+
+        inline REAL_T EvaluateDerivative(uint32_t x, uint32_t y, uint32_t z) const {
+            return (3.0*(expr_m.EvaluateDerivative(x))*(expr_m.EvaluateDerivative(y))
+                    *(expr_m.EvaluateDerivative(z)))/(8.0*std::pow(expr_m.GetValue(),5.0/2.0))
+                    -((expr_m.EvaluateDerivative(x,y))*(expr_m.EvaluateDerivative(z)))
+                    /(4.0*std::pow(expr_m.GetValue(),3.0/2.0))-((expr_m.EvaluateDerivative(x))
+                    *(expr_m.EvaluateDerivative(y,z)))/(4*std::pow(expr_m.GetValue(),3.0/2.0))
+                    -((expr_m.EvaluateDerivative(x,z))*(expr_m.EvaluateDerivative(y)))
+                    /(4.0*std::pow(expr_m.GetValue(),3.0/2.0))+expr_m.EvaluateDerivative(x,y,z)
+                    /(2.0*std::sqrt(expr_m.GetValue()));
+        }
+
+        inline atl::DynamicExpression<REAL_T>* GetDynamicExpession() const {
+            return new atl::DynamicSqrt<REAL_T>(expr_m.GetDynamicExpession());
         }
 
 
@@ -103,5 +123,5 @@ namespace std {
     }
 }
 
-#endif	/* SQRT_HPP */
+#endif /* SQRT_HPP */
 

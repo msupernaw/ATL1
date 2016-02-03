@@ -6,7 +6,7 @@
  */
 
 #ifndef GRADIENTSTRUCTURE_HPP
-#define	GRADIENTSTRUCTURE_HPP
+#define GRADIENTSTRUCTURE_HPP
 #include <memory>
 #include <vector>
 #include <algorithm>
@@ -16,8 +16,9 @@
 #include "VariableInfo.hpp"
 #include <fstream>
 #include <cmath>
+#include "AlignedAllocator.hpp"
 
-#include <unordered_set>
+//#include <unordered_set>
 //#define USE_BOOST
 #ifdef USE_BOOST
 #include <boost/container/flat_set.hpp>
@@ -28,8 +29,12 @@
 #include "../Utilities/flat_set.hpp"
 #endif
 
-#define ATL_USE_SMID
+#include "DynamicExpression.hpp"
 
+#include "../Utilities/small_set.hpp"
+
+#define ATL_USE_SMID
+#define ATL_ENABLE_BOUNDS_CHECKING
 //#ifdef ATL_USE_SMID
 //#include "../Utilities/SMID.hpp"
 //#endif
@@ -49,6 +54,7 @@
 #endif
 #define Entry StackEntry<REAL_T>
 
+//#define ATL_THREAD_SAFE
 
 
 namespace atl {
@@ -56,24 +62,37 @@ namespace atl {
     template<typename REAL_T>
     struct StackEntry {
         typedef typename VariableInfo<REAL_T>::HessianInfo HessianInfo;
-
-        std::stack<size_t> entry_indexes;
         VariableInfo<REAL_T>* w; //function or dependent variable.
+        atl::DynamicExpression<REAL_T>* exp;
         IDSet<atl::VariableInfo<REAL_T>* > ids;
-        //        flat_map<VariableInfo<REAL_T>*, REAL_T > first_order;
-        //        flat_map<VariableInfo<REAL_T>*, flat_map<VariableInfo<REAL_T>*, REAL_T> > second_order;
         std::vector<VariableInfo<REAL_T>* > live_ids; //live variables used in reverse accumulation
         std::vector<atl::VariableInfo<REAL_T>* >id_list;
         std::vector<REAL_T> first;
         std::vector<REAL_T> second;
-        size_t local_size;
-        //        bool is_aliased;
+        std::vector<REAL_T> second_mixed;
+        std::vector<REAL_T> third;
+        std::vector<REAL_T> third_mixed;
 
-        StackEntry() : w(NULL) {
+        StackEntry() : w(NULL), exp(NULL) {
+            first.reserve(10);
+            ids.reserve(5);
+        }
+
+        StackEntry(const StackEntry<REAL_T>& orig) {
+            this->w = orig.w;
+            this->exp = orig.exp->Clone();
+            typename IDSet<atl::VariableInfo<REAL_T>* >::const_iterator it;
+            for (it = orig.ids.begin(); it != orig.ids.end(); ++it) {
+                this->ids.insert((*it));
+            }
+
+            this->first.insert(this->first.begin(), orig.first.begin(), orig.first.end());
+            this->second.insert(this->second.begin(), orig.second.begin(), orig.second.end());
         }
 
         inline void PushVariable(VariableInfo<REAL_T>* v) {
             if (v != w) {
+                v->occurences--;
                 if (!ids.contains(v)) {
                     live_ids.push_back(v);
                 }
@@ -134,24 +153,52 @@ namespace atl {
         }
 
         inline void Reset() {
+
             first.resize(0);
             second.resize(0);
+
             typename IDSet<atl::VariableInfo<REAL_T>* >::iterator it;
-            for (it = ids.begin(); it != ids.end(); ++it) {
+            typename IDSet<atl::VariableInfo<REAL_T>* >::iterator end = ids.end();
+            for (it = ids.begin(); it != end; ++it) {
                 (*it)->Reset();
             }
+
             w->Reset();
             w = NULL;
-            local_size = 0;
+            //            local_size = 0;
             live_ids.resize(0);
+            if (exp) {
+                delete exp;
+                exp = NULL;
+            }
             ids.clear();
+
+        }
+
+        inline void SoftReset() {
+
+
+            typename IDSet<atl::VariableInfo<REAL_T>* >::iterator it;
+            typename IDSet<atl::VariableInfo<REAL_T>* >::iterator end = ids.end();
+            for (it = ids.begin(); it != end; ++it) {
+                (*it)->dvalue = 0;
+            }
+
+            w->dvalue = 0;
+
         }
 
     };
 
     enum DerivativeTraceLevel {
-        GRADIENT = 0,
-        GRADIENT_AND_HESSIAN
+        FIRST_ORDER = 0, //SAME AS GRADIENT
+        SECOND_ORDER, // SECOND ORDER PER VARIABLE ONLY
+        THIRD_ORDER, // THIRD ORDER PER VARIABLE ONLY
+        SECOND_ORDER_MIXED_PARTIALS, //SAME AS HESSIAN_AND_GRADIENT
+        THIRD_ORDER_MIXED_PARTIALS,
+        GRADIENT,
+        GRADIENT_AND_HESSIAN,
+        DYNAMIC_RECORD,
     };
 
     /**
@@ -164,8 +211,11 @@ namespace atl {
     public:
         DerivativeTraceLevel derivative_trace_level;
         std::vector<StackEntry<REAL_T> > gradient_stack;
-        //        Adjoint<REAL_T>* gradient_stack;
+#ifdef ATL_THREAD_SAFE
         std::atomic<size_t> stack_current;
+#else
+        size_t stack_current;
+#endif
         bool recording;
         size_t max_stack_size;
         size_t max_initialized_size;
@@ -181,6 +231,20 @@ namespace atl {
             max_initialized_size = 0;
         }
 
+        GradientStructure(const GradientStructure<REAL_T>& other) :
+        derivative_trace_level(other.derivative_trace_level),
+        stack_current(other.stack_current),
+        recording(other.recording),
+        max_stack_size(other.max_stack_size),
+        max_initialized_size(other.max_initialized_size),
+        gradient_computed(other.gradient_computed) {
+
+            //            this->gradient_stack.resize(other.stack_current);
+            for (int i = 0; i < other.stack_current; i++) {
+                this->gradient_stack.push_back(other.gradient_stack[i]);
+            }
+        }
+
         /**
          * Sets the size of the stack.
          * @param size
@@ -193,9 +257,9 @@ namespace atl {
 
         }
 
-        inline const uint32_t GetStartIndex(uint32_t count) {
-            return stack_current.fetch_add(count, std::memory_order_relaxed);
-        }
+        //        inline const uint32_t GetStartIndex(uint32_t count) {
+        //            return stack_current.fetch_add(count, std::memory_order_relaxed);
+        //        }
 
         inline void SetRecording(bool recording) {
             this->recording = recording;
@@ -206,50 +270,201 @@ namespace atl {
          *
          * @return
          */
-        inline size_t NextIndex() {
+        inline const size_t NextIndex() {
+#ifdef ATL_THREAD_SAFE
             return stack_current.fetch_add(1, std::memory_order_relaxed);
+#else
+            return stack_current++;
+#endif
         }
 
         inline StackEntry<REAL_T>& NextEntry() {
 #ifdef ATL_ENABLE_BOUNDS_CHECKING
-            if ((this->stack_current + 1) >= this->max_stack_size) {
+            if ((this->stack_current) >= this->max_stack_size - 5) {
                 std::cout << "Current derivative stack index exceeds stack limits.\n" << std::flush;
-                exit(0);
+
+                gradient_stack.resize(this->max_stack_size * 2);
+                this->max_stack_size = gradient_stack.size();
             }
 #endif
             return this->gradient_stack[this->NextIndex()];
         }
 
         /**
-         * Computes the gradient via reverse mode accumulation.
+         * Accumulates derivatives in reverse mode according to the member <i>derivative_trace</i>.
+         *<br><br> <b>Reverse mode accumulation equations for each <i>derivative_trace</i> flag:</b><br>
+         * <br><br>For <b><i>GRADIENT</i></b> or <b><i>FIRST_ORDER</i></b> 
          * \image html gradient.png
+         * For <b><i>HESSIAN</i></b> or <b><i>SECOND_ORDER_MIXED_PARTIALS</i></b> 
+         * \image html hessian.png
+         * For <b><i>THIRD_ORDER_MIXED_PARTIALS</i></b>
+         * \image html third_order.png
+         * 
          */
-        inline void Accumulate() {
+        inline void Accumulate(REAL_T seed = 0.0) {
             gradient_computed = true;
 
             if (recording) {
                 REAL_T w = 0.0;
                 typename IDSet<atl::VariableInfo<REAL_T>* >::iterator it;
-                typename flat_map<VariableInfo<REAL_T>*, REAL_T>::iterator git;
+                typename IDSet<atl::VariableInfo<REAL_T>* >::iterator end;
 
-                this->gradient_stack[stack_current - 1].w->dvalue = 1.0;
+                int j = 0;
+                switch (this->derivative_trace_level) {
+
+                    case GRADIENT:
+                        gradient_stack[stack_current - 1].w->dvalue = 1.0;
 #pragma unroll
-                for (int i = (stack_current - 1); i >= 0; i--) {
-                    w = this->gradient_stack[i].w->dvalue;
-                    this->gradient_stack[i].w->dvalue = 0;
-                    if (w != static_cast<REAL_T> (0)) {
-                        int j = 0;
-                        for (it = this->gradient_stack[i].ids.begin(); it != this->gradient_stack[i].ids.end(); ++it) {
-                            (*it)->dvalue += w * this->gradient_stack[i].first[j];
-                            j++;
+                        for (int i = (stack_current - 1); i >= 0; i--) {
+                            w = this->gradient_stack[i].w->dvalue;
+                            gradient_stack[i].w->dvalue = seed;
+                            if (w != static_cast<REAL_T> (0)) {
+                                j = 0;
+                                for (it = gradient_stack[i].ids.begin(); it != gradient_stack[i].ids.end(); ++it) {
+                                    (*it)->dvalue += w * gradient_stack[i].first[j];
+                                    j++;
+                                }
+                            }
                         }
-                    }
+                        break;
+                    case DYNAMIC_RECORD:
+                        gradient_stack[stack_current - 1].w->dvalue = 1.0;
+#pragma unroll
+                        for (int i = (stack_current - 1); i >= 0; i--) {
+                            w = this->gradient_stack[i].w->dvalue;
+                            gradient_stack[i].w->dvalue = seed;
+                            if (w != static_cast<REAL_T> (0)) {
+                                j = 0;
+                                for (it = gradient_stack[i].ids.begin(); it != gradient_stack[i].ids.end(); ++it) {
+                                    (*it)->dvalue += w * gradient_stack[i].exp->EvaluateDerivative((*it)->id);
+                                    j++;
+                                }
+                            }
+                        }
+                        break;
+                    case FIRST_ORDER:
+                        gradient_stack[stack_current - 1].w->dvalue = 1.0;
+#pragma unroll
+                        for (int i = (stack_current - 1); i >= 0; i--) {
+                            w = this->gradient_stack[i].w->dvalue;
+                            gradient_stack[i].w->dvalue = seed;
+                            if (w != static_cast<REAL_T> (0)) {
+                                j = 0;
+                                for (it = gradient_stack[i].ids.begin(); it != gradient_stack[i].ids.end(); ++it) {
+                                    (*it)->dvalue += w * gradient_stack[i].first[j];
+                                    j++;
+                                }
+                            }
+                        }
+                        break;
+
+                    case SECOND_ORDER:
+                        gradient_stack[stack_current - 1].w->dvalue = 1.0;
+#pragma unroll
+                        for (int i = (stack_current - 1); i >= 0; i--) {
+                            w = this->gradient_stack[i].w->dvalue;
+                            gradient_stack[i].w->dvalue = seed;
+                            if (w != static_cast<REAL_T> (0)) {
+                                j = 0;
+                                for (it = gradient_stack[i].ids.begin(); it != gradient_stack[i].ids.end(); ++it) {
+                                    (*it)->dvalue += w * gradient_stack[i].first[j];
+                                    (*it)->d2value += w * gradient_stack[i].second[j];
+                                    j++;
+                                }
+                            }
+                        }
+                        break;
+                    case THIRD_ORDER:
+                        gradient_stack[stack_current - 1].w->dvalue = 1.0;
+#pragma unroll
+                        for (int i = (stack_current - 1); i >= 0; i--) {
+                            w = this->gradient_stack[i].w->dvalue;
+                            gradient_stack[i].w->dvalue = seed;
+                            if (w != static_cast<REAL_T> (0)) {
+                                j = 0;
+                                for (it = gradient_stack[i].ids.begin(); it != gradient_stack[i].ids.end(); ++it) {
+                                    (*it)->dvalue += w * gradient_stack[i].first[j];
+                                    (*it)->d2value += w * gradient_stack[i].second[j];
+                                    (*it)->d3value += w * gradient_stack[i].third[j];
+                                    j++;
+                                }
+                            }
+                        }
+                        break;
+                    case GRADIENT_AND_HESSIAN:
+                        this->HessianAndGradientAccumulate();
+                        break;
+                    case SECOND_ORDER_MIXED_PARTIALS:
+                        this->HessianAndGradientAccumulate();
+                        break;
+                    case THIRD_ORDER_MIXED_PARTIALS:
+                        this->ThirdOrderMixedAccumulate();
+                        break;
+                    default:
+                        std::cout << __func__ << "unknown trace level...\n";
+                        //                        std::cout<<"\n";
                 }
             }
         }
 
         /**
          * Computes the gradient and Hessian matrix via reverse mode accumulation.
+         * \f[
+            \begin{equation}
+        \begin{split}
+        \frac{\hat{\partial}}{\hat{\partial} v_b}\left[\frac{\hat{\partial} f_i}{\hat{\partial} v_c}\right] &=
+        \frac{\partial^2 f_{i+1}}{\partial v_b \partial v_c} +
+        \left(\frac{\partial^2 \phi_i}{\partial v_b \partial v_c} * \frac{\partial f_{i+1}}{\partial v_i} \right) +
+        \left(\frac{\partial\phi_i}{\partial v_c} * \frac{\partial^2 f_{i+1}}{\partial v_b \partial v_i}\right)
+        \\
+        &+ \left(\frac{\partial\phi_i}{\partial v_b} * \frac{\partial^2 f_{i+1}}{\partial v_i \partial v_c}\right) + 
+        \left(\frac{\partial\phi_i}{\partial v_b} * \frac{\partial\phi_i}{\partial v_c} * \frac{\partial^2 f_{i+1}}{\partial v_i \partial v_i}\right)
+        \end{split}
+        \end{equation}
+	
+        \begin{equation}
+        \begin{split}
+        \frac{\hat{\partial}}{\hat{\partial}  v_a}\left[\frac{\hat{\partial}}{\hat{\partial} v_b}\left(\frac{\hat{\partial} f_i}{\hat{\partial} v_c}\right)\right] &= 
+        \frac{\partial^3 f_{i+1}}{\partial v_a \partial v_b \partial v_c} + 
+        \left(\frac{\partial^3 \phi_i}{\partial v_a \partial v_b \partial v_c} * \frac{\partial f_{i+1}}{\partial v_i}\right) + 
+        \left(\frac{\partial^2 \phi_i}{\partial v_b \partial v_c} * \frac{\partial^2 f_{i+1}}{\partial v_a \partial v_i}\right) 
+        \\
+        &+ \left(\frac{\partial^2 \phi_i}{\partial v_a \partial v_c} * \frac{\partial^2 f_{i+1}}{\partial v_b \partial v_i}\right) + 
+        \left(\frac{\partial \phi_i}{\partial v_c} * \frac{\partial^3 f_{i+1}}{\partial v_a \partial v_b \partial v_i}\right) 
+        \\
+        &+ \left(\frac{\partial^2 \phi_i}{\partial v_a \partial v_b} * \frac{\partial^2 f_{i+1}}{\partial v_i \partial v_c}\right) + 
+        \left(\frac{\partial \phi_i}{\partial v_b} * \frac{\partial^3 f_{i+1}}{\partial v_a \partial v_i \partial v_c}\right) 
+        \\
+        &+ \left(\frac{\partial^2 \phi_i}{\partial v_a \partial v_b} * \frac{\partial \phi_i}{\partial v_c} * \frac{\partial^2 f_{i+1}}{\partial v_i \partial v_i}\right) + 
+        \left(\frac{\partial \phi_i}{\partial v_b} * \frac{\partial^2 \phi_i}{\partial v_a \partial v_c} * \frac{\partial^2 f_{i+1}}{\partial v_i \partial v_i}\right) + 
+        \\
+        &+ \left(\frac{\partial \phi_i}{\partial v_b} * \frac{\partial \phi_i}{\partial v_c} * \frac{\partial^3 f_{i+1}}{\partial v_a \partial v_i \partial v_i}\right) 
+        \\
+        &+ \frac{\partial \phi_i}{\partial v_a} * 
+        \left[\frac{\partial^3 f_{i+1}}{\partial v_i \partial v_b \partial v_c} + 
+        \left(\frac{\partial^3 \phi_i}{\partial v_i \partial v_b \partial v_c} * \frac{\partial f_{i+1}}{\partial v_i}\right) + 
+        \left(\frac{\partial^2 \phi_i}{\partial v_b \partial v_c} * \frac{\partial^2 f_{i+1}}{\partial v_i \partial v_i}\right) 
+        \right.
+        \\
+        &\left.
+        + \left(\frac{\partial^2 \phi_i}{\partial v_i \partial v_c} * \frac{\partial^2 f_{i+1}}{\partial v_b \partial v_i}\right) + 
+        \left(\frac{\partial \phi_i}{\partial v_c} * \frac{\partial^3 f_{i+1}}{\partial v_i \partial v_b \partial v_i}\right) 
+        \right.
+        \\
+        &\left.
+        + \left(\frac{\partial^2 \phi_i}{\partial v_i \partial v_b} * \frac{\partial^2 f_{i+1}}{\partial v_i \partial v_c}\right) + 
+        \left(\frac{\partial \phi_i}{\partial v_b} * \frac{\partial^3 f_{i+1}}{\partial v_i \partial v_i \partial v_c}\right) 
+        \right.
+        \\
+        &\left.
+        + \left(\frac{\partial^2 \phi_i}{\partial v_i \partial v_b} * \frac{\partial \phi_i}{\partial v_c} * \frac{\partial^2 f_{i+1}}{\partial v_i \partial v_i}\right) + 
+        \left(\frac{\partial \phi_i}{\partial v_b} * \frac{\partial^2 \phi_i}{\partial v_i \partial v_c} * \frac{\partial^2 f_{i+1}}{\partial v_i \partial v_i}\right) 
+        \right.
+        \\
+        &\left.
+        + \left(\frac{\partial \phi_i}{\partial v_b} * \frac{\partial \phi_i}{\partial v_c} * \frac{\partial^3 f_{i+1}}{\partial v_i \partial v_i \partial v_i}\right)\right]
+        \end{split}
+         * ]
          * 
          * \image html hessian.png
          */
@@ -262,12 +477,14 @@ namespace atl {
                     this->Accumulate();
                 } else {
                     REAL_T w;
+                    REAL_T w2;
                     typedef typename VariableInfo<REAL_T>::HessianInfo HessianInfo;
 
+                    flat_set<VariableInfo<REAL_T>*> live;
 
                     //initialize w
                     this->gradient_stack[stack_current - 1].w->dvalue = 1.0;
-
+                    this->gradient_stack[stack_current - 1].w->d2value = 1.0;
 
                     unsigned rows = 0; //the size of the local derivatives, anything higher was pushed from previous calculation
 
@@ -285,6 +502,7 @@ namespace atl {
                     REAL_T hjk = 0;
                     REAL_T dj = 0;
                     REAL_T dk = 0;
+
                     for (int i = (stack_current - 1); i >= 0; i--) {
 
 #ifdef HESSIAN_TRACE
@@ -304,9 +522,9 @@ namespace atl {
                         iend = vi->hessian_row.end();
                         vit = vi->hessian_row.find(vi->id);
                         if (vit != iend) {
-                            hii = (*vit);
-                            if (hii != 0) {
-                                (*vit) = 0.0;
+                            hii = (*vit).second;
+                            if (hii != REAL_T(0.0)) {
+                                (*vit).second = 0.0;
                             }
                         }
 
@@ -314,6 +532,8 @@ namespace atl {
                         //builds a list of variables to use, statement level variables come first,
                         //then any pushed variables are after.
                         gradient_stack[i].Prepare();
+
+
 
                         //resize second order derivative for i wrt j
                         vij.resize(gradient_stack[i].id_list.size());
@@ -323,8 +543,9 @@ namespace atl {
                             atl::VariableInfo<REAL_T>* vj = gradient_stack[i].id_list[j];
 
                             //compute gradient
-                            if (j < rows && w != 0) {
+                            if (j < rows && w != REAL_T(0.0)) {
                                 vj->dvalue += w * gradient_stack[i].first[j];
+                                vj->d2value += w * gradient_stack[i].second_mixed[j * rows + j];
                             }
 
                             //load second order partial derivative for i wrt j and k
@@ -332,12 +553,14 @@ namespace atl {
 
                             vijt = vi->hessian_row.find(vj->id);
                             if (vijt != iend) {
-                                hij = (*vijt);
-                                (*vijt) = 0;
+                                hij = (*vijt).second;
+                                (*vijt).second = 0;
                             }
                             vij[j] = (hij);
 
                         }
+
+                        std::vector<int> pushed_js(gradient_stack[i].id_list.size(), 0);
 
 #pragma unroll
                         //start the Hessian calculations    
@@ -355,7 +578,7 @@ namespace atl {
                             }
 
 
-                            bool j_pushed = false;
+                            //                            bool j_pushed = false;
 #pragma unroll
                             //use symmetry
                             for (unsigned k = 0; k <= j; k++) {
@@ -370,50 +593,37 @@ namespace atl {
                                 }
 
                                 if (!j_in_local && !k_in_local) {
-                                    if (dk == 0 && dj == 0) {
+                                    if (dk == REAL_T(0.0) && dj == REAL_T(0.0)) {
                                         continue; //pushed variable doesn't matter
                                     }
                                 }
 
-                              
 
-                                entry += vij[k] * dj + (hij * dk)+ hii * dj*dk;
+
+                                entry += vij[k] * dj + (hij * dk) + hii * dj*dk;
 
 #ifdef HESSIAN_TRACE
                                 REAL_T s = 0;
 #endif
-                                //                                if (w != 0) {
+
                                 if (j_in_local && k_in_local) {
-                                    entry += w * gradient_stack[i].second[j * rows + k];
+                                    entry += w * gradient_stack[i].second_mixed[j * rows + k];
                                 }
-                                //                                    if (unsigned(j) < unsigned(rows)) {
-                                //                                        if (unsigned(k) < unsigned(rows)) {
-                                //                                            entry += w * gradient_stack[i].second[j * rows + k];
-                                //#ifdef HESSIAN_TRACE
-                                //                                            s = this->gradient_stack[i].second[j * rows + k];
-                                //#endif
-                                //                                        }
-                                //                                    }
-                                //                                }
+
 #ifdef HESSIAN_TRACE
                                 std::cout << "h[" << vj->id << "][" << vk->id << "] +=" << "h[" << vi->id << "][" << vj->id << "]{" << hij << "} *" << dk << " + " <<
                                         "h[" << vi->id << "][" << vk->id << "]{" << vij[k] << "}*" << dj << " + " <<
                                         "h[" << vi->id << "][" << vi->id << "]{" << hii << "} *" << dj << "*" << dk << " + " << w << "*" << s;
 #endif
 
-                                if (std::fabs(entry) > 0.0) {//h[j][k] needs to be updated
+                                if (/*std::fabs(entry)*/entry != REAL_T(0.0)) {//h[j][k] needs to be updated
 
-                                    //                                    hjk = 0.0;
-
-                                    //                                    vjt = vj->hessian_row.find(vk->id);
-                                    //                                    if (vjt != jend) {
-                                    //                                        hjk = (*vjt);
-                                    //                                    }
 #ifdef HESSIAN_TRACE
                                     std::cout << " = " << (entry + hjk) << "\n";
                                     if (j > this->gradient_stack[i].first.size()) {
                                         pushed_count++;
-                                        std::cout << "Push mattered!!!!\n";
+                                        std::cout << "Push mattered. occurences " << vj->occurences << "\n";
+                                        ;
                                     }
 #endif
                                     //set h[j][k]
@@ -424,13 +634,16 @@ namespace atl {
                                     }
 
                                     if (i > 0) {
-                                        if (!j_pushed) {
+                                        if (!pushed_js[j]) {
                                             //this variable may be needed in the future, so push it to the next entry
                                             gradient_stack[i - 1].PushVariable(vj);
+                                            pushed_js[j] = 1;
+                                            //                                            std::cout<<"pushed...\n";
+                                            //                                            live.insert(vj);
 #ifdef HESSIAN_TRACE
                                             ss << vj->id << " ";
 #endif
-                                            j_pushed = true;
+                                            //                                            j_pushed = true;
                                         }
                                     }
                                 }
@@ -447,6 +660,370 @@ namespace atl {
 #endif
                     }
                 }
+            }
+        }
+
+        void ThirdOrderMixedAccumulate() {
+
+            if (recording) {
+
+
+
+                REAL_T w;
+                typedef typename VariableInfo<REAL_T>::HessianInfo HessianInfo;
+                typedef typename VariableInfo<REAL_T>::ThirdOrderMixed ThirdOrderMixed;
+
+                for (int i = 0; i < stack_current; i++) {
+                    if (this->gradient_stack[stack_current - 1].w->dvalue != 0) {
+                        std::cout << "Error bad seed\n\n";
+                        exit(0);
+                    }
+                }
+
+                //initialize w
+                this->gradient_stack[stack_current - 1].w->dvalue = 1.0;
+
+                unsigned rows = 0; //the size of the local derivatives, anything higher was pushed from previous calculation
+
+                std::vector<REAL_T> vij; //holds current second order derivative for i wrt j
+                std::vector<REAL_T> viij_;
+                std::vector<REAL_T> vijk_;
+                //Hessian iterators
+                typename HessianInfo::iterator vit;
+                typename HessianInfo::iterator vijt;
+                typename ThirdOrderMixed::iterator viii;
+                typename ThirdOrderMixed::iterator viij;
+                typename ThirdOrderMixed::iterator viik;
+                typename ThirdOrderMixed::iterator vijk;
+                typename ThirdOrderMixed::iterator vijl;
+                typename ThirdOrderMixed::iterator viil;
+                typename ThirdOrderMixed::iterator vjkl;
+                typename ThirdOrderMixed::iterator vikl;
+
+                typename HessianInfo::iterator iend;
+                typename HessianInfo::iterator jend;
+                typename HessianInfo::iterator vjt;
+
+                REAL_T hii = 0.0;
+                REAL_T hij = 0.0;
+                REAL_T hik = 0.0;
+                REAL_T hjk = 0;
+                REAL_T diii = 0.0;
+                REAL_T dijl = 0.0;
+                REAL_T dikl = 0.0;
+                REAL_T djkl = 0.0;
+                REAL_T dijk = 0.0;
+                REAL_T diil = 0.0;
+                REAL_T diik = 0.0;
+                REAL_T diij = 0.0;
+                REAL_T dj = 0.0;
+                REAL_T dk = 0.0;
+                REAL_T dl = 0.0;
+
+                for (int i = (stack_current - 1); i >= 0; i--) {
+                    atl::VariableInfo<REAL_T>* vi = gradient_stack[i].w; //variable info for i
+
+                    w = gradient_stack[i].w->dvalue; //set w
+                    gradient_stack[i].w->dvalue = 0; //cancel out derivative for i
+
+                    //                        std::cout<<"w = "<<w<<"\n";
+                    rows = gradient_stack[i].first.size();
+
+                    //get h[i][i]
+                    hii = 0.0;
+
+                    iend = vi->hessian_row.end();
+                    vit = vi->hessian_row.find(vi->id);
+                    if (vit != iend) {
+                        hii = (*vit).second;
+                        if (hii != REAL_T(0.0)) {
+                            (*vit).second = 0.0;
+                        }
+                    }
+
+                    diii = 0.0;
+                    viii = vi->third_order_mixed.find(vi->id);
+                    if (viii != vi->third_order_mixed.end()) {
+                        vit = (*viii).second.find(vi->id);
+                        if (vit != (*viii).second.end()) {
+                            diii = (*vit).second;
+                            if (diii != REAL_T(0.0)) {
+                                (*vit).second = 0.0;
+                            }
+                        }
+                    }
+
+
+                    //prepare for the hessian calculation. 
+                    //builds a list of variables to use, statement level variables come first,
+                    //then any pushed "live" variables are after.
+                    gradient_stack[i].Prepare();
+
+                    //                    for (int s = 0; s < gradient_stack[i].id_list.size(); s++) {
+                    //                        if (s == gradient_stack[i].first.size()) {
+                    //                            std::cout << " | ";
+                    //                        }
+                    //                        std::cout << gradient_stack[i].id_list[s]->id << " ";
+                    //                    }
+                    //                    std::cout << std::endl;
+
+
+                    //resize second order derivative for i wrt j
+                    vij.resize(gradient_stack[i].id_list.size());
+                    viij_.resize(gradient_stack[i].id_list.size());
+                    vijk_.resize(gradient_stack[i].id_list.size() * gradient_stack[i].id_list.size());
+#pragma unroll
+                    for (unsigned j = 0; j < gradient_stack[i].id_list.size(); j++) {
+                        atl::VariableInfo<REAL_T>* vj = gradient_stack[i].id_list[j];
+
+                        //compute gradient
+                        if (j < rows && w != REAL_T(0.0)) {
+                            vj->dvalue += w * gradient_stack[i].first[j];
+                            vj->d2value += w * gradient_stack[i].second_mixed[j * rows + j];
+                            vj->d3value += w * gradient_stack[i].third_mixed[j * rows * rows + j * rows + j];
+
+                        }
+
+                        //load second order partial derivative for i wrt j and k
+                        hij = 0.0;
+
+                        vijt = vi->hessian_row.find(vj->id);
+                        if (vijt != iend) {
+                            hij = (*vijt).second;
+                            (*vijt).second = 0;
+                        }
+                        vij[j] = (hij);
+
+                        diil = 0.0;
+                        viil = vi->third_order_mixed.find(vi->id);
+                        if (viil != vi->third_order_mixed.end()) {
+                            vit = (*viil).second.find(vj->id);
+                            if (vit != (*viil).second.end()) {
+                                diil = (*vit).second;
+                                if (diil != REAL_T(0.0)) {
+                                    (*vit).second = 0.0;
+                                }
+                            }
+                        }
+
+                        viij_[j] = diil;
+
+                        for (unsigned k = 0; k < gradient_stack[i].id_list.size(); k++) {
+
+                            dijk = 0.0;
+                            atl::VariableInfo<REAL_T>* vk = gradient_stack[i].id_list[k];
+
+                            vijk = vi->third_order_mixed.find(vj->id);
+                            if (vijk != vi->third_order_mixed.end()) {
+                                vit = (*vijk).second.find(vk->id);
+                                if (vit != (*vijk).second.end()) {
+                                    dijk = (*vit).second;
+                                    if (dijk != REAL_T(0.0)) {
+                                        (*vit).second = 0.0;
+                                    }
+                                }
+                                vijk_[(j * gradient_stack[i].id_list.size()) + k] = dijk;
+                                //                                if (k != j) {
+                                //                                    vijk_[(k * rows) + j] = dijk;
+                                //                                }
+                            }
+                        }
+
+                    }
+                    std::vector<int> pushed_js(gradient_stack[i].id_list.size(), 0);
+
+#pragma unroll
+
+
+                    //start the Hessian calculations    
+                    for (unsigned j = 0; j < gradient_stack[i].id_list.size(); j++) {
+
+                        atl::VariableInfo<REAL_T>* vj = gradient_stack[i].id_list[j]; //vj
+                        //                        jend = vj->hessian_row.end();
+                        REAL_T hij = vij[j]; //h[i][j]
+
+                        dj = 0;
+                        bool j_in_local = false;
+                        if (j < rows) {
+                            dj = gradient_stack[i].first[j];
+                            j_in_local = true;
+                        }
+                        //find diij
+                        diij = viij_[j];
+
+
+                        //                        bool j_pushed = false;
+#pragma unroll
+                        //use symmetry
+                        for (unsigned k = 0; k < gradient_stack[i].id_list.size(); k++) {
+                            REAL_T entry = 0.0; //the entry value for h[j][k]
+                            atl::VariableInfo<REAL_T>* vk = gradient_stack[i].id_list[k]; //vk
+
+                            hik = vij[k];
+
+                            //find diik
+
+                            diik = viij_[k];
+
+
+                            //find dijk
+                            dijk = vijk_[(j * gradient_stack[i].id_list.size() + k)];
+
+                            dk = 0;
+                            bool k_in_local = false;
+                            if (k < rows) {
+                                dk = gradient_stack[i].first[k];
+                                k_in_local = true;
+                            }
+
+
+
+
+                            entry += vij[k] * dj + (hij * dk) + hii * dj*dk;
+
+
+
+                            if (j_in_local && k_in_local) {
+                                entry += w * gradient_stack[i].second_mixed[j * rows + k];
+                            }
+
+
+
+                            if (/*std::fabs(entry)*/entry != REAL_T(0.0)) {//h[j][k] needs to be updated
+
+
+                                //set h[j][k]
+                                vj->hessian_row[vk->id] += entry; // + hjk;
+                                //                                if (j > 0 && j != k) {
+                                //                                    //set h[k][j]
+                                //                                    vk->hessian_row[vj->id] += entry; /// + hjk;
+                                //                                }
+
+                                if (i > 0) {
+                                    if (pushed_js[j] == 0) {
+                                        //this variable may be needed in the future, so push it to the next entry
+                                        gradient_stack[i - 1].PushVariable(vj);
+                                        pushed_js[j] = 1;
+                                    }
+                                    if (pushed_js[k] == 0) {
+                                        gradient_stack[i - 1].PushVariable(vk);
+                                        pushed_js[k] = 1;
+
+                                    }
+                                }
+
+                            }
+
+                            for (int l = k; l < gradient_stack[i].id_list.size(); l++) {
+                                atl::VariableInfo<REAL_T>* vl = gradient_stack[i].id_list[l]; //vl
+                                //                                    std::cout << "computing dx_" << vj->id << "_" << vk->id << "_" << vl->id << " " << std::endl;
+
+                                REAL_T hil = vij[l];
+
+
+                                dijl = vijk_[(j * gradient_stack[i].id_list.size() + l)];
+
+                                dikl = vijk_[(k * gradient_stack[i].id_list.size() + l)];
+
+                                diil = viij_[l];
+
+
+                                REAL_T d3 = 0.0;
+                                dl = 0.0;
+
+                                //                                
+                                if (l < rows) {
+                                    dl = gradient_stack[i].first[l];
+                                    if (k < rows && j < rows) {
+                                        d3 = gradient_stack[i].third_mixed[(j * rows * rows) + (k * rows) + l];
+                                    }
+                                }
+
+                                //                                std::cout << i << "," << j << "," << k << "," << l << std::endl;
+                                //                                std::cout << "hjk = " << entry << "\n";
+                                //                                std::cout << "dj = " << dj << "," << vj->dvalue << "\n";
+                                //                                std::cout << "dk = " << dk << "," << vk->dvalue << "\n";
+                                //                                std::cout << "dl = " << dl << "," << vl->dvalue << "\n";
+                                //                                std::cout << "diii = " << diii << "\n";
+                                //                                std::cout << "dikl = " << dikl << "\n";
+                                //                                std::cout << "dijl = " << dijl << "\n";
+                                //                                std::cout << "dijk = " << dijk << "\n";
+                                //                                std::cout << "diij = " << diij << "\n";
+                                //
+                                //                                std::cout << "diil = " << diil << "\n";
+                                //                                std::cout << "hii = " << hii << "\n";
+                                //                                std::cout << "hil = " << hil << ", " << vi->hessian_row[vl->id] << "\n";
+                                //                                std::cout << "hik = " << hik << ", " << vi->hessian_row[vk->id] << "\n";
+                                //                                std::cout << "hij = " << hij << ", " << vi->hessian_row[vj->id] << "\n";
+                                //                                std::cout << "d3 = " << d3 << "," << vj->third_order_mixed[vk->id][vj->id] << "\n";
+                                //                                std::cout << "w = " << w << "\n";
+                                //                                std::cout << "w_id = " << vi->id << "\n";
+                                REAL_T sj = 0.0;
+                                REAL_T pjk = 0.0;
+                                REAL_T pjl = 0.0;
+                                REAL_T pkl = 0.0;
+                                REAL_T sk = 0.0;
+                                REAL_T sl = 0.0;
+
+
+
+                                if (k < rows && l < rows) {
+                                    pkl = gradient_stack[i].second_mixed[k * rows + l];
+                                    sj = dj * gradient_stack[i].second_mixed[k * rows + l];
+                                }
+
+                                if (j < rows && l < rows) {
+                                    pjl = gradient_stack[i].second_mixed[j * rows + l];
+                                    sk = dk * gradient_stack[i].second_mixed[j * rows + l];
+                                }
+
+                                if (j < rows && k < rows) {
+                                    pjk = gradient_stack[i].second_mixed[j * rows + k];
+                                    sl = dl * gradient_stack[i].second_mixed[j * rows + k];
+                                }
+
+
+
+
+                                REAL_T entry_3 = 0;
+                                entry_3 = (d3 * w) + (pkl * hij)
+                                        + (pjl * hik) + (dl * dijk)
+                                        +(pjk * hil) + (dk * dijl)
+                                        +(pjk * dl * hii) + (dk * pjl * hii)+(dk * dl * diij)
+                                        + dj * (dikl + (pkl * hii)+(dl * diik) + (dk * diil)
+                                        +(dk * dl * diii));
+
+                                if (entry_3 != 0.0) {
+
+                                    vj->third_order_mixed[vk->id][vl->id] += entry_3;
+                                    if (k != l) {
+                                        vj->third_order_mixed[vl->id][vk->id] += entry_3;
+                                    }
+                                    if (i > 0) {
+                                        if (pushed_js[j] == 0) {
+                                            gradient_stack[i - 1].PushVariable(vj);
+                                            pushed_js[j] = 1;
+                                        }
+                                        if (pushed_js[k] == 0) {
+                                            gradient_stack[i - 1].PushVariable(vk);
+                                            pushed_js[k] = 1;
+                                        }
+                                        if (pushed_js[l] == 0) {
+                                            gradient_stack[i - 1].PushVariable(vl);
+                                            pushed_js[l] = 1;
+                                        }
+                                    }
+                                }
+                            }
+
+
+                        }
+                    }
+
+
+
+                }
+
             }
         }
 
@@ -475,10 +1052,18 @@ namespace atl {
             }
         }
 
+        inline void SoftReset() {
+            for (int i = (stack_current - 1); i >= 0; i--) {
+                this->gradient_stack[i].SoftReset();
+            }
+        }
+
+
+
     };
 
 
 
 }
 
-#endif	/* GRADIENTSTRUCTURE_HPP */
+#endif /* GRADIENTSTRUCTURE_HPP */

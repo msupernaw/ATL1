@@ -6,10 +6,10 @@
  */
 
 #ifndef ET4AD_SUBTRACT_HPP
-#define	ET4AD_SUBTRACT_HPP
+#define ET4AD_SUBTRACT_HPP
 
 #include "Expression.hpp"
-//#include "Constant.hpp"
+//#include "Scalar.hpp"
 namespace atl {
 
     template <class REAL_T, class LHS, class RHS>
@@ -30,9 +30,14 @@ namespace atl {
             rhs_m.VariableCount(count);
         }
 
-        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids, bool include_dependent = true)const {
+        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids, bool include_dependent)const {
             lhs_m.PushIds(ids, include_dependent);
             rhs_m.PushIds(ids, include_dependent);
+        }
+
+        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+            lhs_m.PushIds(ids);
+            rhs_m.PushIds(ids);
         }
 
         inline void PushIds(IDSet<uint32_t >& ids)const {
@@ -47,6 +52,15 @@ namespace atl {
         inline REAL_T EvaluateDerivative(uint32_t a, uint32_t b) const {
             return lhs_m.EvaluateDerivative(a, b) - rhs_m.EvaluateDerivative(a, b);
         }
+
+        inline REAL_T EvaluateDerivative(uint32_t x, uint32_t y, uint32_t z) const {
+            return lhs_m.EvaluateDerivative(x, y, z) - rhs_m.EvaluateDerivative(x, y, z);
+        }
+
+        inline atl::DynamicExpression<REAL_T>* GetDynamicExpession() const {
+            return new atl::DynamicSubtract<REAL_T>(lhs_m.GetDynamicExpession(), rhs_m.GetDynamicExpession());
+        }
+
 
 
 
@@ -68,13 +82,13 @@ namespace atl {
     }
 
     template <class REAL_T, class LHS>
-    struct SubtractConstant : public ExpressionBase<REAL_T, SubtractConstant<REAL_T, LHS> > {
+    struct SubtractScalar : public ExpressionBase<REAL_T, SubtractScalar<REAL_T, LHS> > {
         typedef REAL_T BASE_TYPE;
         const LHS& lhs_m;
         const REAL_T rhs_m;
         const REAL_T value_m;
 
-        SubtractConstant(const ExpressionBase<REAL_T, LHS>& lhs, const REAL_T& rhs)
+        SubtractScalar(const ExpressionBase<REAL_T, LHS>& lhs, const REAL_T& rhs)
         : lhs_m(lhs.Cast()), rhs_m(rhs), value_m(lhs.GetValue() - rhs) {
 
 
@@ -88,8 +102,12 @@ namespace atl {
             lhs_m.VariableCount(count);
         }
 
-        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids, bool include_dependent = true)const {
+        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids, bool include_dependent)const {
             lhs_m.PushIds(ids, include_dependent);
+        }
+
+        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+            lhs_m.PushIds(ids);
         }
 
         inline void PushIds(IDSet<uint32_t >& ids)const {
@@ -104,6 +122,14 @@ namespace atl {
             return lhs_m.EvaluateDerivative(a, b);
         }
 
+        inline REAL_T EvaluateDerivative(uint32_t x, uint32_t y, uint32_t z) const {
+            return lhs_m.EvaluateDerivative(x, y, z);
+        }
+
+        inline atl::DynamicExpression<REAL_T>* GetDynamicExpession() const {
+            return new atl::DynamicSubtract<REAL_T>(lhs_m.GetDynamicExpession(), new atl::DynamicScalar<REAL_T>(rhs_m));
+        }
+
 
 
     };
@@ -115,16 +141,16 @@ namespace atl {
      * @return 
      */
     template <class LHS, class REAL_T>
-    inline const SubtractConstant<REAL_T, LHS> operator-(const ExpressionBase<REAL_T, LHS>& lhs,
+    inline const SubtractScalar<REAL_T, LHS> operator-(const ExpressionBase<REAL_T, LHS>& lhs,
             const REAL_T& rhs) {
-        return SubtractConstant<REAL_T, LHS > (lhs.Cast(), rhs);
+        return SubtractScalar<REAL_T, LHS > (lhs.Cast(), rhs);
     }
 
     template <class REAL_T, class RHS>
-    struct ConstantSubtract : public ExpressionBase<REAL_T, ConstantSubtract<REAL_T, RHS> > {
+    struct ScalarSubtract : public ExpressionBase<REAL_T, ScalarSubtract<REAL_T, RHS> > {
         typedef REAL_T BASE_TYPE;
 
-        ConstantSubtract(const REAL_T& lhs, const ExpressionBase<REAL_T, RHS>& rhs)
+        ScalarSubtract(const REAL_T& lhs, const ExpressionBase<REAL_T, RHS>& rhs)
         : lhs_m(lhs), rhs_m(rhs.Cast()), value_m(lhs_m - rhs_m.GetValue()) {
 
 
@@ -138,12 +164,20 @@ namespace atl {
             rhs_m.VariableCount(count);
         }
 
-        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids, bool include_dependent = true)const {
+        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids, bool include_dependent)const {
             rhs_m.PushIds(ids, include_dependent);
+        }
+
+        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+            rhs_m.PushIds(ids);
         }
 
         inline void PushIds(IDSet<uint32_t >& ids)const {
             rhs_m.PushIds(ids);
+        }
+
+        inline void PushAdjoints(std::vector<std::pair<atl::VariableInfo<REAL_T>*, REAL_T> >& adjoints, REAL_T coefficient = 1.0) const {
+            rhs_m.PushAdjoints(adjoints, static_cast<REAL_T> (-1.0) * coefficient);
         }
 
         inline REAL_T EvaluateDerivative(uint32_t id) const {
@@ -153,6 +187,15 @@ namespace atl {
         inline REAL_T EvaluateDerivative(uint32_t a, uint32_t b) const {
             return -1.0 * rhs_m.EvaluateDerivative(a, b);
         }
+
+        inline REAL_T EvaluateDerivative(uint32_t x, uint32_t y, uint32_t z) const {
+            return -1.0*rhs_m.EvaluateDerivative(x, y, z);
+        }
+
+        inline atl::DynamicExpression<REAL_T>* GetDynamicExpession() const {
+            return new atl::DynamicSubtract<REAL_T>(new atl::DynamicScalar<REAL_T>(lhs_m), rhs_m.GetDynamicExpession());
+        }
+
 
         const REAL_T lhs_m;
         const RHS& rhs_m;
@@ -166,13 +209,13 @@ namespace atl {
      * @return 
      */
     template <class REAL_T, class RHS >
-    inline const ConstantSubtract< REAL_T, RHS > operator-(const REAL_T& lhs,
+    inline const ScalarSubtract< REAL_T, RHS > operator-(const REAL_T& lhs,
             const ExpressionBase<REAL_T, RHS> &rhs) {
-        return ConstantSubtract<REAL_T, RHS > (lhs, rhs.Cast());
+        return ScalarSubtract<REAL_T, RHS > (lhs, rhs.Cast());
     }
 
 }
 
 
-#endif	/* SUBTRACTION_HPP */
+#endif /* SUBTRACTION_HPP */
 

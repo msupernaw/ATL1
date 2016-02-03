@@ -6,7 +6,7 @@
  */
 
 #ifndef ET4AD_FLOOR_HPP
-#define	ET4AD_FLOOR_HPP
+#define ET4AD_FLOOR_HPP
 
 #include <cmath>
 #include "Expression.hpp"
@@ -59,8 +59,12 @@ namespace atl {
             expr_m.VariableCount(count);
         }
 
-        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids, bool include_dependent = true)const {
+        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids, bool include_dependent)const {
             expr_m.PushIds(ids, include_dependent);
+        }
+
+        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+            expr_m.PushIds(ids);
         }
 
         inline void PushIds(IDSet<uint32_t >& ids)const {
@@ -73,6 +77,14 @@ namespace atl {
 
         inline REAL_T EvaluateDerivative(uint32_t a, uint32_t b) const {
             return (expr_m.EvaluateDerivative(a, b) * this->GetValue());
+        }
+
+        inline REAL_T EvaluateDerivative(uint32_t x, uint32_t y, uint32_t z) const {
+            return (expr_m.EvaluateDerivative(x, y, z) * this->GetValue());
+        }
+
+        inline atl::DynamicExpression<REAL_T>* GetDynamicExpession() const {
+            return new atl::DynamicFloor<REAL_T>(expr_m.GetDynamicExpession());
         }
 
     private:
@@ -102,5 +114,5 @@ namespace std {
     }
 }
 
-#endif	/* FLOOR_HPP */
+#endif /* FLOOR_HPP */
 

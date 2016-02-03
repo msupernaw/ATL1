@@ -6,7 +6,7 @@
  */
 
 #ifndef ET4AD_ASIN_HPP
-#define	ET4AD_ASIN_HPP
+#define ET4AD_ASIN_HPP
 
 #include <cmath>
 #include "Expression.hpp"
@@ -60,12 +60,24 @@ namespace atl {
             expr_m.VariableCount(count);
         }
 
-        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids, bool include_dependent = true)const {
+        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids, bool include_dependent)const {
             expr_m.PushIds(ids, include_dependent);
+        }
+
+        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+            expr_m.PushIds(ids);
         }
 
         inline void PushIds(IDSet<uint32_t >& ids)const {
             expr_m.PushIds(ids);
+        }
+
+        inline void PushAdjoints(std::vector<std::pair<atl::VariableInfo<REAL_T>*, REAL_T> >& adjoints, REAL_T coefficient = 1.0) const {
+            expr_m.PushAdjoints(adjoints, coefficient *
+                    static_cast<REAL_T> (1.0) /
+                    std::pow((static_cast<REAL_T> (1.0) -
+                    std::pow(expr_m.GetValue(),
+                    static_cast<REAL_T> (2.0))), static_cast<REAL_T> (0.5)));
         }
 
         inline REAL_T EvaluateDerivative(uint32_t id) const {
@@ -81,6 +93,29 @@ namespace atl {
 
         }
 
+        inline REAL_T EvaluateDerivative(uint32_t x, uint32_t y, uint32_t z) const {
+            return ((expr_m.EvaluateDerivative(x))*(expr_m.EvaluateDerivative(y))*
+                    (expr_m.EvaluateDerivative(z))) / 
+                    std::pow((1 - std::pow(expr_m.GetValue(), 2.0)), (3.0 / 2.0))
+                    +(3 * std::pow(expr_m.GetValue(), 2.0)*(expr_m.EvaluateDerivative(x))
+                    *(expr_m.EvaluateDerivative(y))*(expr_m.EvaluateDerivative(z))) /
+                    std::pow((1 - std::pow(expr_m.GetValue(), 2.0)), (5.0 / 2.0))+
+                    (expr_m.GetValue()*(expr_m.EvaluateDerivative(x, y))*
+                    (expr_m.EvaluateDerivative(z))) / 
+                    std::pow((1 - std::pow(expr_m.GetValue(), 2.0)), (3.0 / 2.0))
+                    +(expr_m.GetValue()*(expr_m.EvaluateDerivative(x))*
+                    (expr_m.EvaluateDerivative(y, z))) / 
+                    std::pow((1 - std::pow(expr_m.GetValue(), 2.0)), (3.0 / 2.0))+
+                    (expr_m.GetValue()*(expr_m.EvaluateDerivative(x, z))*
+                    (expr_m.EvaluateDerivative(y))) / 
+                    std::pow((1 - std::pow(expr_m.GetValue(), 2.0)), (3.0 / 2.0)) +
+                    expr_m.EvaluateDerivative(x, y, z) / 
+                    std::sqrt(1 - std::pow(expr_m.GetValue(), 2.0));
+        }
+
+        inline atl::DynamicExpression<REAL_T>* GetDynamicExpession() const {
+            return new atl::DynamicASin<REAL_T>(expr_m.GetDynamicExpession());
+        }
 
 
 
@@ -109,5 +144,5 @@ namespace std {
     }
 
 }
-#endif	/* ASIN_HPP */
+#endif /* ASIN_HPP */
 

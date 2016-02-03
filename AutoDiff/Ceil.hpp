@@ -6,7 +6,7 @@
  */
 
 #ifndef ET4AD_CEIL_HPP
-#define	ET4AD_CEIL_HPP
+#define ET4AD_CEIL_HPP
 
 #include <cmath>
 #include "Expression.hpp"
@@ -57,13 +57,19 @@ namespace atl {
             expr_m.VariableCount(count);
         }
 
-        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids, bool include_dependent = true)const {
+        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids, bool include_dependent)const {
             expr_m.PushIds(ids, include_dependent);
+        }
+
+        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+            expr_m.PushIds(ids);
         }
 
         inline void PushIds(IDSet<uint32_t >& ids)const {
             expr_m.PushIds(ids);
         }
+
+
 
         inline REAL_T EvaluateDerivative(uint32_t id) const {
             return 0.0; //expr_m.EvaluateDerivative(id) * GetValue();
@@ -72,6 +78,15 @@ namespace atl {
         inline REAL_T EvaluateDerivative(uint32_t a, uint32_t b) const {
             return 0.0; //expr_m.EvaluateDerivative(a, b) * GetValue();
 
+        }
+        
+        inline REAL_T EvaluateDerivative(uint32_t x, uint32_t y, uint32_t z) const {
+            return 0.0;
+        }
+
+        
+        inline atl::DynamicExpression<REAL_T>* GetDynamicExpession() const {
+            return new atl::DynamicCeil<REAL_T>(expr_m.GetDynamicExpession());
         }
 
 
@@ -102,5 +117,5 @@ namespace std {
 }
 
 
-#endif	/* CEIL_HPP */
+#endif /* CEIL_HPP */
 

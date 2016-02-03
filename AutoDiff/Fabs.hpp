@@ -6,7 +6,7 @@
  */
 
 #ifndef ET4AD_FABS_HPP
-#define	ET4AD_FABS_HPP
+#define ET4AD_FABS_HPP
 
 #include <cmath>
 #include "Expression.hpp"
@@ -55,8 +55,12 @@ namespace atl {
             return std::fabs(expr_m.GetValue());
         }
 
-        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids, bool include_dependent = true)const {
+        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids, bool include_dependent)const {
             expr_m.PushIds(ids, include_dependent);
+        }
+
+        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+            expr_m.PushIds(ids);
         }
 
         inline void PushIds(IDSet<uint32_t >& ids)const {
@@ -71,12 +75,32 @@ namespace atl {
             return (expr_m.EvaluateDerivative(a, b) * expr_m.GetValue()) / this->GetValue();
         }
 
+        inline REAL_T EvaluateDerivative(uint32_t x, uint32_t y, uint32_t z) const {
+            return (expr_m.GetValue()*(expr_m.EvaluateDerivative(x, y, z))) / std::fabs(expr_m.GetValue());
+        }
+
+        inline atl::DynamicExpression<REAL_T>* GetDynamicExpession() const {
+            return new atl::DynamicFabs<REAL_T>(expr_m.GetDynamicExpession());
+        }
+
     private:
         const EXPR& expr_m;
     };
 
     template<class REAL_T, class EXPR>
     inline const atl::Fabs<REAL_T, EXPR> fabs(const atl::ExpressionBase<REAL_T, EXPR>& expr) {
+        return atl::Fabs<REAL_T, EXPR > (expr.Cast());
+    }
+
+    /**
+     * Override for the fabs function in namespace std.
+     * 
+     * @param expr
+     * @return 
+     */
+    template<class REAL_T, class EXPR>
+    inline const atl::Fabs<REAL_T, EXPR> abs(const atl::ExpressionBase<REAL_T, EXPR>& expr) {
+
         return atl::Fabs<REAL_T, EXPR > (expr.Cast());
     }
 
@@ -96,7 +120,20 @@ namespace std {
         return atl::Fabs<REAL_T, EXPR > (expr.Cast());
     }
 
+    /**
+     * Override for the fabs function in namespace std.
+     * 
+     * @param expr
+     * @return 
+     */
+    template<class REAL_T, class EXPR>
+    inline const atl::Fabs<REAL_T, EXPR> abs(const atl::ExpressionBase<REAL_T, EXPR>& expr) {
+
+        return atl::Fabs<REAL_T, EXPR > (expr.Cast());
+    }
+
+
 }
 
-#endif	/* FABS_HPP */
+#endif /* FABS_HPP */
 

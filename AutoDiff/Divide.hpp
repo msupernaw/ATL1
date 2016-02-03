@@ -6,7 +6,7 @@
  */
 
 #ifndef ET4AD_DIVIDE_HPP
-#define	ET4AD_DIVIDE_HPP
+#define ET4AD_DIVIDE_HPP
 
 #include "Expression.hpp"
 
@@ -49,9 +49,14 @@ namespace atl {
             rhs_m.VariableCount(count);
         }
 
-        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids, bool include_dependent = true)const {
+        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids, bool include_dependent)const {
             lhs_m.PushIds(ids, include_dependent);
             rhs_m.PushIds(ids, include_dependent);
+        }
+
+        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+            lhs_m.PushIds(ids);
+            rhs_m.PushIds(ids);
         }
 
         inline void PushIds(IDSet<uint32_t >& ids)const {
@@ -65,23 +70,51 @@ namespace atl {
         }
 
         inline REAL_T EvaluateDerivative(uint32_t a, uint32_t b) const {
-            //            REAL_T y = rhs_value_m;
-            //            REAL_T x = lhs_value_m;
-            //            REAL_T fxy = lhs_m.EvaluateDerivative(a, b);
-            //            REAL_T fx = lhs_m.EvaluateDerivative(a);
-            REAL_T gy = rhs_m.EvaluateDerivative(b);
-            //            REAL_T fy = lhs_m.EvaluateDerivative(b);
-            REAL_T gx = rhs_m.EvaluateDerivative(a);
-            //            REAL_T gxy = rhs_m.EvaluateDerivative(a, b);
-            //            return fxy * (1.0 / y) + (fx * gy + fy * gx + gxy * x)*(-1.0 / (y2)) + (x * gx * gy) * (2.0 / (y3));
-            return lhs_m.EvaluateDerivative(a, b) * (1.0 / rhs_value_m) +
-                    (lhs_m.EvaluateDerivative(a) * gy + lhs_m.EvaluateDerivative(b) *
-                    gx + rhs_m.EvaluateDerivative(a, b) * lhs_value_m)*(-1.0 / (y2)) +
-                    (lhs_value_m * gx * gy) * (2.0 / (y3));
 
-
+            REAL_T aa = ((2.0 * lhs_m.GetValue() * rhs_m.EvaluateDerivative(a) * rhs_m.EvaluateDerivative(b)) / (rhs_m.GetValue() * rhs_m.GetValue() * rhs_m.GetValue())); //(2*f(a,b)*('diff(g(a,b),a,1))*('diff(g(a,b),b,1)))/g(a,b)^3
+            REAL_T bb = ((lhs_m.EvaluateDerivative(a) * rhs_m.EvaluateDerivative(b)) / (rhs_m.GetValue() * rhs_m.GetValue())); //(('diff(f(a,b),a,1))*('diff(g(a,b),b,1)))/g(a,b)^2
+            REAL_T cc = ((lhs_m.GetValue() * rhs_m.EvaluateDerivative(a, b)) / (rhs_m.GetValue() * rhs_m.GetValue())); //(f(a,b)*('diff(g(a,b),a,1,b,1)))/g(a,b)^2
+            REAL_T dd = ((lhs_m.EvaluateDerivative(b) * rhs_m.EvaluateDerivative(a)) / (rhs_m.GetValue() * rhs_m.GetValue())); //(('diff(f(a,b),b,1))*('diff(g(a,b),a,1)))/g(a,b)^2
+            REAL_T ee = lhs_m.EvaluateDerivative(a, b) / rhs_m.GetValue();
+            return aa - bb - cc - dd - ee;
 
         }
+
+        inline REAL_T EvaluateDerivative(uint32_t x, uint32_t y, uint32_t z) const {
+            return -(6.0 * lhs_m.GetValue()*(rhs_m.EvaluateDerivative(x))*
+                    (rhs_m.EvaluateDerivative(y))*(rhs_m.EvaluateDerivative(z)))
+                    / std::pow(rhs_m.GetValue(), 4.0)+(2.0 * (lhs_m.EvaluateDerivative(x))
+                    *(rhs_m.EvaluateDerivative(y))*(rhs_m.EvaluateDerivative(z)))
+                    / std::pow(rhs_m.GetValue(), 3.0)+(2.0 * lhs_m.GetValue()*
+                    (rhs_m.EvaluateDerivative(x, y))*(rhs_m.EvaluateDerivative(z)))
+                    / std::pow(rhs_m.GetValue(), 3.0)+(2.0 * (lhs_m.EvaluateDerivative(y))
+                    *(rhs_m.EvaluateDerivative(x))*(rhs_m.EvaluateDerivative(z)))
+                    / std::pow(rhs_m.GetValue(), 3.0)-
+                    ((lhs_m.EvaluateDerivative(x, y))*(rhs_m.EvaluateDerivative(z)))
+                    / std::pow(rhs_m.GetValue(), 2.0)+(2.0 * lhs_m.GetValue()
+                    *(rhs_m.EvaluateDerivative(x))*(rhs_m.EvaluateDerivative(y, z)))
+                    / std::pow(rhs_m.GetValue(), 3.0)-((lhs_m.EvaluateDerivative(x))
+                    *(rhs_m.EvaluateDerivative(y, z))) /
+                    std::pow(rhs_m.GetValue(), 2.0)+(2.0 * lhs_m.GetValue()
+                    *(rhs_m.EvaluateDerivative(x, z))*(rhs_m.EvaluateDerivative(y)))
+                    / std::pow(rhs_m.GetValue(), 3.0)+(2.0 * (lhs_m.EvaluateDerivative(z))
+                    *(rhs_m.EvaluateDerivative(x))*(rhs_m.EvaluateDerivative(y)))
+                    / std::pow(rhs_m.GetValue(), 3.0)-
+                    ((lhs_m.EvaluateDerivative(x, z))*(rhs_m.EvaluateDerivative(y)))
+                    / std::pow(rhs_m.GetValue(), 2.0)-((lhs_m.EvaluateDerivative(y))
+                    *(rhs_m.EvaluateDerivative(x, z))) / std::pow(rhs_m.GetValue(), 2.0)
+                    -(lhs_m.GetValue()*(rhs_m.EvaluateDerivative(x, y, z))) /
+                    std::pow(rhs_m.GetValue(), 2.0)-((lhs_m.EvaluateDerivative(z))
+                    *(rhs_m.EvaluateDerivative(x, y))) / std::pow(rhs_m.GetValue(), 2.0)
+                    -((lhs_m.EvaluateDerivative(y, z))*(rhs_m.EvaluateDerivative(x)))
+                    / std::pow(rhs_m.GetValue(), 2.0) + lhs_m.EvaluateDerivative(x, y, z)
+                    / rhs_m.GetValue();
+        }
+
+        inline atl::DynamicExpression<REAL_T>* GetDynamicExpession() const {
+            return new atl::DynamicDivide<REAL_T>(lhs_m.GetDynamicExpession(), rhs_m.GetDynamicExpession());
+        }
+
 
     private:
 
@@ -100,12 +133,12 @@ namespace atl {
     }
 
     template <class REAL_T, class LHS>
-    class DivideConstant : public ExpressionBase<REAL_T, DivideConstant<REAL_T, LHS> > {
+    class DivideScalar : public ExpressionBase<REAL_T, DivideScalar<REAL_T, LHS> > {
     public:
         typedef REAL_T BASE_TYPE;
-        typedef MultiplyConstant<REAL_T, typename LHS::DIFF_EXPRESSION> DIFF_EXPRESSION;
+        //        typedef MultiplyScalar<REAL_T, typename LHS::DIFF_EXPRESSION> DIFF_EXPRESSION;
 
-        DivideConstant(const ExpressionBase<REAL_T, LHS>& lhs, const REAL_T& rhs)
+        DivideScalar(const ExpressionBase<REAL_T, LHS>& lhs, const REAL_T& rhs)
         : lhs_m(lhs.Cast()), rhs_m(rhs), value_m(lhs_m.GetValue() / rhs_m) {
 
 
@@ -119,8 +152,12 @@ namespace atl {
             lhs_m.VariableCount(count);
         }
 
-        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids, bool include_dependent = true)const {
+        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids, bool include_dependent)const {
             lhs_m.PushIds(ids, include_dependent);
+        }
+
+        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+            lhs_m.PushIds(ids);
         }
 
         inline void PushIds(IDSet<uint32_t >& ids)const {
@@ -143,6 +180,15 @@ namespace atl {
             REAL_T gxy = 0;
             return fxy * (1.0 / y) + (fx * gy + fy * gx + gxy * x)*(-1.0 / (y * y)) + (x * gx * gy) * (2.0 / (y * y * y));
 
+        }
+
+        inline REAL_T EvaluateDerivative(uint32_t x, uint32_t y, uint32_t z) const {
+            return lhs_m.EvaluateDerivative(x, y, z)
+                    / rhs_m;
+        }
+
+        inline atl::DynamicExpression<REAL_T>* GetDynamicExpession() const {
+            return new atl::DynamicDivide<REAL_T>(lhs_m.GetDynamicExpession(), new atl::DynamicScalar<REAL_T>(rhs_m));
         }
 
 
@@ -169,17 +215,17 @@ namespace atl {
      * @return 
      */
     template <class LHS, class REAL_T>
-    inline const DivideConstant<REAL_T, LHS > operator/(const ExpressionBase<REAL_T, LHS>& lhs,
+    inline const DivideScalar<REAL_T, LHS > operator/(const ExpressionBase<REAL_T, LHS>& lhs,
             const REAL_T& rhs) {
-        return DivideConstant<REAL_T, LHS > (lhs.Cast(), rhs);
+        return DivideScalar<REAL_T, LHS > (lhs.Cast(), rhs);
     }
 
     template <class REAL_T, class RHS>
-    class ConstantDivide : public ExpressionBase<REAL_T, ConstantDivide<REAL_T, RHS> > {
+    class ScalarDivide : public ExpressionBase<REAL_T, ScalarDivide<REAL_T, RHS> > {
     public:
         typedef REAL_T BASE_TYPE;
 
-        ConstantDivide(const REAL_T& lhs, const ExpressionBase<REAL_T, RHS>& rhs)
+        ScalarDivide(const REAL_T& lhs, const ExpressionBase<REAL_T, RHS>& rhs)
         : lhs_m(lhs), rhs_m(rhs.Cast()), value_m(lhs_m / rhs_m.GetValue()) {
 
 
@@ -193,12 +239,20 @@ namespace atl {
             rhs_m.VariableCount(count);
         }
 
-        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids, bool include_dependent = true)const {
+        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids, bool include_dependent)const {
             rhs_m.PushIds(ids, include_dependent);
+        }
+
+        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+            rhs_m.PushIds(ids);
         }
 
         inline void PushIds(IDSet<uint32_t >& ids)const {
             rhs_m.PushIds(ids);
+        }
+
+        inline void PushAdjoints(std::vector<std::pair<atl::VariableInfo<REAL_T>*, REAL_T> >& adjoints, REAL_T coefficient = 1.0) const {
+            rhs_m.PushAdjoints(adjoints, -1.0 * coefficient * this->GetValue() / rhs_m);
         }
 
         inline REAL_T EvaluateDerivative(uint32_t id) const {
@@ -219,6 +273,20 @@ namespace atl {
 
         }
 
+        inline REAL_T EvaluateDerivative(uint32_t x, uint32_t y, uint32_t z) const {
+            return -(6 * lhs_m * (rhs_m.EvaluateDerivative(x))*
+                    (rhs_m.EvaluateDerivative(y))*(rhs_m.EvaluateDerivative(z)))
+                    / std::pow(rhs_m.GetValue(), 4.0)+(2 * lhs_m * (rhs_m.EvaluateDerivative(x, y))
+                    *(rhs_m.EvaluateDerivative(z))) / std::pow(rhs_m.GetValue(), 3.0)+
+                    (2 * lhs_m * (rhs_m.EvaluateDerivative(x))*(rhs_m.EvaluateDerivative(y, z)))
+                    / std::pow(rhs_m.GetValue(), 3.0)+(2 * lhs_m * (rhs_m.EvaluateDerivative(x, z))
+                    *(rhs_m.EvaluateDerivative(y))) / std::pow(rhs_m.GetValue(), 3.0)-
+                    (lhs_m * (rhs_m.EvaluateDerivative(x, y, z))) / std::pow(rhs_m.GetValue(), 2.0);
+        }
+
+        inline atl::DynamicExpression<REAL_T>* GetDynamicExpession() const {
+            return new atl::DynamicDivide<REAL_T>(new atl::DynamicScalar<REAL_T>(lhs_m), rhs_m.GetDynamicExpession());
+        }
 
 
 
@@ -237,12 +305,12 @@ namespace atl {
     //     */
 
     template <class REAL_T, class RHS >
-    inline const ConstantDivide< REAL_T, RHS > operator/(const REAL_T& lhs,
+    inline const ScalarDivide< REAL_T, RHS > operator/(const REAL_T& lhs,
             const ExpressionBase<REAL_T, RHS>& rhs) {
-        return ConstantDivide<REAL_T, RHS > (lhs, rhs.Cast());
+        return ScalarDivide<REAL_T, RHS > (lhs, rhs.Cast());
     }
 
 }
 
-#endif	/* DIVIDE_HPP */
+#endif /* DIVIDE_HPP */
 

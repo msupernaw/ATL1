@@ -6,12 +6,16 @@
  */
 
 #ifndef EXPRESSION_HPP
-#define	EXPRESSION_HPP
+#define EXPRESSION_HPP
 
 //#define ET4AD_USE_SSE
 
 
+
 #include "GradientStructure.hpp"
+#include "DynamicExpression.hpp"
+#include "../Utilities/Platform.hpp"
+
 #include <string>
 #include <sstream>
 #include <memory>
@@ -28,6 +32,7 @@
 
 namespace atl {
 
+ 
     /**
      * Base class for expression types.
      */
@@ -67,12 +72,20 @@ namespace atl {
         //            return Cast().GetValue();
         //        }
 
-        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids, bool include_dependent = true)const {
+        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids, bool include_dependent)const {
             Cast().PushIds(ids, include_dependent);
+        }
+
+        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+            Cast().PushIds(ids);
         }
 
         inline void PushIds(IDSet<uint32_t >& ids)const {
             Cast().PushIds(ids);
+        }
+
+        inline void PushAdjoints(std::vector<std::pair<atl::VariableInfo<REAL_T>*, REAL_T> >& adjoints, REAL_T coefficient = 1.0) const {
+            Cast().PushAdjoints(adjoints, coefficient);
         }
 
         inline REAL_T EvaluateDerivative(uint32_t a) const {
@@ -81,6 +94,14 @@ namespace atl {
 
         inline REAL_T EvaluateDerivative(uint32_t a, uint32_t b) const {
             return Cast().EvaluateDerivative(a, b);
+        }
+
+        inline REAL_T EvaluateDerivative(uint32_t x, uint32_t y, uint32_t z) const {
+            return Cast().EvaluateDerivative(x, y,z);
+        }
+        
+        inline atl::DynamicExpression<REAL_T>* GetDynamicExpession() const{
+            return Cast().GetDynamicExpession();
         }
 
         const ExpressionBase& operator=(const ExpressionBase & exp) const {
@@ -183,6 +204,9 @@ namespace atl {
     inline const int operator>=(const atl::ExpressionBase<REAL_T, T>& lhs, const REAL_T &rhs) {
         return lhs.GetValue() >= rhs;
     }
+
+
+
 }
 namespace std {
 
@@ -197,5 +221,5 @@ namespace std {
     }
 }
 
-#endif	/* EXPRESSION_HPP */
+#endif /* EXPRESSION_HPP */
 

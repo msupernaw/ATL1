@@ -1,16 +1,16 @@
 /*
  * (c) Copyright 2007, IBM Corporation.
- * 
- *	Licensed under the Apache License, Version 2.0 (the "License"); 
- *  you may not use this file except in compliance with the License. 
- *  You may obtain a copy of the License at 
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0 
- *      
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
- * See the License for the specific language governing permissions and 
+ *
+ *	Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
  * limitations under the License.
  */
 
@@ -25,83 +25,83 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif
-
+    
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <pthread.h>
 #include <string.h>
 #include <sys/mman.h>
-
-
-
-
+    
+    
+    
+    
 #define IA32_LINUX_GCC
-
-
-
-
+    
+    
+    
+    
 #ifdef PPC32_AIX_XLC
 #define PPC
 #define BIT32
 #define AIX
 #define XLC
 #endif
-
+    
 #ifdef PPC32_LINUX_GCC
 #define PPC
 #define BIT32
 #define LINUX
 #define GCC
 #endif
-
+    
 #ifdef PPC64_AIX_XLC
 #define PPC
 #define BIT64
 #define AIX
 #define XLC
 #endif
-
+    
 #ifdef PPC64_AIX_GCC
 #define PPC
 #define BIT64
 #define AIX
 #define GCC
 #endif
-
+    
 #ifdef PPC64_LINUX_GCC
 #define PPC
 #define BIT64
 #define LINUX
 #define GCC
 #endif
-
+    
 #ifdef AMD64_LINUX_GCC
 #define X86
 #define BIT64
 #define LINUX
 #define GCC
-
+    
     //if there is wider cas than length of machine word, such as CMPXCHG8/16
 #define CASD
 #endif
-
+    
 #ifdef IA32_LINUX_GCC
 #define X86
 #define BIT32
 #define LINUX
 #define GCC
-
+    
 #define CASD
 #endif
-
+    
 #ifdef SPARC32_SOLARIS_SCC
 #define SPARC
 #define BIT32
 #define SOLARIS
 #define SCC
 #endif
-
+    
     /*---------------------------------------------------------------------------*/
 #define FALSE	0
 #define TRUE	1
@@ -112,7 +112,7 @@ extern "C" {
 #define MIN(x,y)	((x)<=(y)?(x):(y))
 #endif
 #define MMAP(size) \
-		mmap(0,size,PROT_READ|PROT_WRITE,MAP_ANON|MAP_PRIVATE,-1,0)
+mmap(0,size,PROT_READ|PROT_WRITE,MAP_ANON|MAP_PRIVATE,-1,0)
     /*---------------------------------------------------------------------------*/
 #if defined(X86) || defined(SPARC)
 #define REFCOUNT
@@ -140,83 +140,83 @@ extern "C" {
 #endif
     /*---------------------------------------------------------------------------*/
 #if defined(PPC)
-
+    
 #define ISYNC		IFUNI asm volatile ("isync")
 #define LWSYNC		IFUNI asm volatile ("lwsync")
     //#define SYNC		IFUNI asm volatile ("sync")
 #define RBR
 #define RBW
 #define WBW
-
+    
 #define LL64(ret,addr) 	asm volatile ("ldarx %0,0,%1;":"=r"(ret):"r"(addr))
 #define LL32(ret,addr) 	asm volatile ("lwarx %0,0,%1;":"=r"(ret):"r"(addr))
 #define SC64(ret,addr,new_val) \
- asm volatile ( \
-	"  stdcx. %2,0,%1;\n" \
- 	"  mfcr %0;\n" \
- 	"  andis. %0,%0,0x2000;" \
-	: "=r"(ret):"r"(addr),"r"(new_val) \
-        : "cr0","memory")
+asm volatile ( \
+"  stdcx. %2,0,%1;\n" \
+"  mfcr %0;\n" \
+"  andis. %0,%0,0x2000;" \
+: "=r"(ret):"r"(addr),"r"(new_val) \
+: "cr0","memory")
 #define SC32(ret,addr,new_val) \
- asm volatile ( \
-	"  stwcx. %2,0,%1;\n" \
- 	"  mfcr %0;\n" \
- 	"  andis. %0,%0,0x2000;" \
-	: "=r"(ret):"r"(addr),"r"(new_val) \
-        : "cr0","memory")
+asm volatile ( \
+"  stwcx. %2,0,%1;\n" \
+"  mfcr %0;\n" \
+"  andis. %0,%0,0x2000;" \
+: "=r"(ret):"r"(addr),"r"(new_val) \
+: "cr0","memory")
 #define CAS64(ret,addr,expval,new_val) \
- do { \
-    unsigned long long oldval; \
-    LL64(oldval,addr); \
-    if (oldval != (unsigned long long)expval) { ret = 0; break; } \
-    SC64(ret,addr,new_val); \
- } while (!ret);
+do { \
+unsigned long long oldval; \
+LL64(oldval,addr); \
+if (oldval != (unsigned long long)expval) { ret = 0; break; } \
+SC64(ret,addr,new_val); \
+} while (!ret);
 #define CAS32(ret,addr,expval,new_val) \
- do { \
-    unsigned oldval; \
-    LL32(oldval,addr); \
-    if (oldval != (unsigned)expval) { ret = 0; break; } \
-    SC32(ret,addr,new_val); \
- } while (!ret);
-
+do { \
+unsigned oldval; \
+LL32(oldval,addr); \
+if (oldval != (unsigned)expval) { ret = 0; break; } \
+SC32(ret,addr,new_val); \
+} while (!ret);
+    
 #ifdef BIT64
-
+    
 #define LL(ret,addr)			LL64(ret,addr)
 #define SC(ret,addr,new_val)		SC64(ret,addr,new_val)
 #define CAS(ret,addr,expval,new_val)	CAS64(ret,addr,expval,new_val)
 #define ptrsize_t			unsigned long
-
+    
 #else /* PPC32 */
-
+    
 #define LL(ret,addr)			LL32(ret,addr)
 #define SC(ret,addr,new_val)		SC32(ret,addr,new_val)
 #define CAS(ret,addr,expval,new_val)	CAS32(ret,addr,expval,new_val)
 #define ptrsize_t			unsigned
-
+    
 #endif
-
+    
 #define anchorsize_t			ptrsize_t
 #define LLA(ret,addr)			LL(ret,addr)
 #define SCA(ret,addr,expval,new_val)    	SC(ret,addr,new_val)
-
+    
 #elif defined(X86)
-
+    
 #define CAS32(ret,addr,expval,new_val) \
- __asm__ __volatile__( \
-    "lock; cmpxchg %2, %1; setz %0;\n" \
-    : "=a"(ret), "=m"(*(addr)) \
-    : "r" (new_val), "a"(expval) \
-    : "cc")
-
+__asm__ __volatile__( \
+"lock; cmpxchg %2, %1; setz %0;\n" \
+: "=a"(ret), "=m"(*(addr)) \
+: "r" (new_val), "a"(expval) \
+: "cc")
+    
     char cas64(unsigned long long volatile * addr,
-            unsigned long long oval,
-            unsigned long long nval);
-
+               unsigned long long oval,
+               unsigned long long nval);
+    
 #define CAS64(ret,addr,expval,new_val) \
-	ret = cas64((unsigned long long volatile *)addr, \
-		    (unsigned long long)expval, \
-		    (unsigned long long)new_val)
-
+ret = cas64((unsigned long long volatile *)addr, \
+(unsigned long long)expval, \
+(unsigned long long)new_val)
+    
 #define ISYNC
 #define LWSYNC
 #define SYNC
@@ -224,76 +224,76 @@ extern "C" {
 #define RBR
 #define RBW
 #define WBW
-
-#ifdef BIT32 
-
+    
+#ifdef BIT32
+    
 #define ptrsize_t			unsigned long
 #define CAS(ret,addr,expval,new_val)	CAS32(ret,addr,expval,new_val)
 #define LLA(ret,addr)			ret = *(addr);
 #define SCA(ret,addr,expval,new_val)	CAS32(ret,addr,expval,new_val)
 #define anchorsize_t			unsigned long
-
+    
 #else /* X64 */
-
+    
 #define ptrsize_t			unsigned long long
 #define CAS(ret,addr,expval,new_val)	CAS64(ret,addr,expval,new_val)
 #define LLA(ret,addr)			ret = *(addr);
 #define SCA(ret,addr,expval,new_val)	CAS64(ret,addr,expval,new_val)
 #define anchorsize_t			unsigned long long
-
+    
 #endif /* X86 32 and 64 */
-
+    
 #elif defined(SPARC)
-
+    
 #define CAS32(ret,addr,expval,new_val) \
-	ret = cas32((unsigned volatile *)addr,(unsigned)expval,(unsigned)new_val)
-
+ret = cas32((unsigned volatile *)addr,(unsigned)expval,(unsigned)new_val)
+    
     static char cas32(unsigned volatile * addr, unsigned expval, unsigned new_val) {
         asm volatile ( \
-       "casa  [%2] 0x80, %3, %1\n" \
-       : "+m"(*(addr)), "+r"(new_val) \
-       : "r"(addr), "r" (expval) \
-       );
+                      "casa  [%2] 0x80, %3, %1\n" \
+                      : "+m"(*(addr)), "+r"(new_val) \
+                      : "r"(addr), "r" (expval) \
+                      );
         return (new_val == expval);
     }
-
+    
 #define CAS64(ret,addr,expval,new_val) \
-	ret = cas64((unsigned long long volatile *)addr,(unsigned long long)expval,(unsigned long long)new_val)
-
+ret = cas64((unsigned long long volatile *)addr,(unsigned long long)expval,(unsigned long long)new_val)
+    
     static char cas64(unsigned long long volatile * addr, unsigned long long expval, unsigned long long new_val) {
         asm volatile ( \
-       "casxa  [%2] 0x80, %3, %1\n" \
-       : "+m"(*(addr)), "+r"(new_val) \
-       : "r"(addr), "r" (expval) \
-       );
+                      "casxa  [%2] 0x80, %3, %1\n" \
+                      : "+m"(*(addr)), "+r"(new_val) \
+                      : "r"(addr), "r" (expval) \
+                      );
         return (new_val == expval);
     }
-
+    
 #define ISYNC
 #define LWSYNC
 #define SYNC
 #define RBR	IFUNI asm volatile ("membar #LoadLoad")
 #define RBW	IFUNI asm volatile ("membar #LoadStore")
 #define WBW	IFUNI asm volatile ("membar #StoreStore")
-
-#ifdef BIT32 
-
+    
+#ifdef BIT32
+    
 #define ptrsize_t			unsigned
 #define CAS(ret,addr,expval,new_val)	CAS32(ret,addr,expval,new_val)
 #define LLA(ret,addr)			ret = *(addr);
 #define SCA(ret,addr,expval,new_val)	CAS32(ret,addr,expval,new_val)
 #define anchorsize_t			unsigned
-
+    
 #else /* SPARC64 */
-
+    
 #define ptrsize_t			unsigned long long
 #define CAS(ret,addr,expval,new_val)	CAS64(ret,addr,expval,new_val)
 #define LLA(ret,addr)			ret = *(addr);
 #define SCA(ret,addr,expval,new_val)	CAS64(ret,addr,expval,new_val)
 #define anchorsize_t			unsigned long long
-
+    
 #endif /* SPARC32 v SPARC64 */
-
+    
 #else
 #error architecture not defined
 #endif /* architecture */
@@ -305,24 +305,24 @@ extern "C" {
 #endif
     /*---------------------------------------------------------------------------*/
 #define FAA(oldval,addr,val) \
- do { \
-    ret_t ret; \
-    ptrsize_t new_val; \
-    oldval = *(addr); \
-    new_val = (ptrsize_t)oldval + val; \
-    CAS(ret,addr,new_val); \
-    if (ret) break; \
- } while (1);
+do { \
+ret_t ret; \
+ptrsize_t new_val; \
+oldval = *(addr); \
+new_val = (ptrsize_t)oldval + val; \
+CAS(ret,addr,new_val); \
+if (ret) break; \
+} while (1);
     /*---------------------------------------------------------------------------*/
     /* Reference counting */
 #define SAFE_READ(x)		rc_safe_read(&x)
 #define DESC_RETIRE(x)		rc_desc_release(x)
 #define RC_INIT(x)		x->rc = 1
 #define RC_RELEASE(x)		rc_desc_release(x)
-
-/*---------------------------------------------------------------------------*/
+    
+    /*---------------------------------------------------------------------------*/
     typedef union anchor {
-
+        
         struct {
             unsigned head : 7;
             unsigned count : 7;
@@ -332,7 +332,7 @@ extern "C" {
         } sep;
         anchorsize_t all;
     } anchor_t;
-
+    
     /*---------------------------------------------------------------------------*/
     typedef struct desc {
         anchor_t volatile Anchor;
@@ -345,12 +345,12 @@ extern "C" {
         int maxcount;
         int volatile rc;
         char pad[128
-                - sizeof (anchor_t)
-        - 5 * sizeof (void*)
-        - 3 * sizeof (int)
-        ];
+                 - sizeof (anchor_t)
+                 - 5 * sizeof (void*)
+                 - 3 * sizeof (int)
+                 ];
     } desc_t;
-
+    
     /*---------------------------------------------------------------------------*/
     typedef struct procheap {
         desc_t * volatile Active;
@@ -358,7 +358,7 @@ extern "C" {
         struct sizeclass * sc;
         char pad[32 - 3 * sizeof (void*) ];
     } procheap_t;
-
+    
     /*---------------------------------------------------------------------------*/
     typedef struct sizeclass {
         procheap_t procheap;
@@ -369,15 +369,15 @@ extern "C" {
         unsigned sbsize;
         unsigned maxcount;
         char pad[128
-                - sizeof (procheap_t)
-        - 2 * sizeof (void*)
-        - 4 * sizeof (unsigned)
-        ];
+                 - sizeof (procheap_t)
+                 - 2 * sizeof (void*)
+                 - 4 * sizeof (unsigned)
+                 ];
     } sizeclass_t;
     /*---------------------------------------------------------------------------*/
 #define MAXSIZECLASSES		32 /* max size classes */
-
-typedef struct {
+    
+    typedef struct {
         sizeclass_t sizeclass[MAXSIZECLASSES];
         procheap_t procheap[1024][MAXSIZECLASSES];
         /* not really going to allocate that much */
@@ -409,23 +409,23 @@ typedef struct {
     /*---------------------------------------------------------------------------*/
     /*---------------------------------------------------------------------------*/
 #define DOTRACE(a,b,c,d,e,f,g) \
- if (!trace_stop) { \
-    unsigned id; \
-    unsigned i; \
-    id =  (pthread_self() & 0xf)-1; /* only for AIX */ \
-    i = trace_ind[id][0]++ & TRACEMASK; \
-    tr[id][i].op = a; \
-    tr[id][i].sz = b; \
-    tr[id][i].desc = d; \
-    tr[id][i].heap = f; \
-    tr[id][i].anchor.all = g; \
- }
+if (!trace_stop) { \
+unsigned id; \
+unsigned i; \
+id =  (pthread_self() & 0xf)-1; /* only for AIX */ \
+i = trace_ind[id][0]++ & TRACEMASK; \
+tr[id][i].op = a; \
+tr[id][i].sz = b; \
+tr[id][i].desc = d; \
+tr[id][i].heap = f; \
+tr[id][i].anchor.all = g; \
+}
     /*
-        tr[id][i].sb = e; \
-        tr[id][i].id = id; \
-        tr[id][i].addr = c; \
-        unsigned ind; \
-        FAA32(ind,&trace_ind,1); \
+     tr[id][i].sb = e; \
+     tr[id][i].id = id; \
+     tr[id][i].addr = c; \
+     unsigned ind; \
+     FAA32(ind,&trace_ind,1); \
      */
 #ifdef DEBUGTRACE
 #define TRACE(a,b,c,d,e,f,g)  std::cout<<a<<","<<b<<","<<c<<","<<d<<","<<e<<","<<f<<","<<g<<"\n";
@@ -434,8 +434,8 @@ typedef struct {
 #endif
     /*---------------------------------------------------------------------------*/
 #ifdef DEBUGTRACE
-
-typedef struct trace {
+    
+    typedef struct trace {
         unsigned id;
         unsigned op;
         unsigned sz;
@@ -478,7 +478,7 @@ typedef struct trace {
     ptrsize_t volatile trace_stop = 0;
     unsigned volatile trace_dumped = 0;
     trace_t tr[3][MAXTRACE];
-
+    
     /*---------------------------------------------------------------------------*/
     void debug() {
         unsigned total, i, j, k;
@@ -486,7 +486,7 @@ typedef struct trace {
         ret_t ret;
         char opstr[40];
         char trfile[40];
-
+        
         printf("%d assertion failed .....\n", pthread_self());
         CAS(ret, &trace_stop, 0, 1);
         if (!ret) {
@@ -586,8 +586,8 @@ typedef struct trace {
 #if defined(PPC)
     void __malloc_start__()
 #else
-
-__attribute__((constructor)) void clfmalloc_init()
+    
+    __attribute__((constructor)) void clfmalloc_init()
 #endif
     {
         controlblock_t * cb;
@@ -595,14 +595,14 @@ __attribute__((constructor)) void clfmalloc_init()
         ret_t ret;
         unsigned size;
         unsigned i;
-
-
+        
+        
         assert(sizeof (desc_t) == 128);
         assert(sizeof (sizeclass_t) == 128);
         assert(sizeof (procheap_t) == 32);
         assert(NUMSIZECLASSES <= MAXSIZECLASSES);
-
-       
+        
+        
         /* Set number of proc heaps */
         char * nphstr = getenv("CLFMALLOC_NUMHEAPS");
         if (nphstr) {
@@ -614,13 +614,13 @@ __attribute__((constructor)) void clfmalloc_init()
             }
         }
         heapidmask = numprocheaps - 1;
-
+        
         /* allocate control block */
         size = 4096 + numprocheaps * 1024;
         if ((cb = (controlblock_t *) MMAP(size)) == MAP_FAILED) {
             perror("clfmalloc_init mmap failed\n");
         }
-
+        
         for (i = 0; i < NUMSIZECLASSES; i++) {
             sc = &cb->sizeclass[i];
             sc->PartialHead = NULL;
@@ -666,7 +666,7 @@ __attribute__((constructor)) void clfmalloc_init()
             }
         }
     }
-
+    
     /*---------------------------------------------------------------------------*/
     static void desc_push(desc_t * desc) {
         ret_t ret;
@@ -679,12 +679,12 @@ __attribute__((constructor)) void clfmalloc_init()
         } while (!ret);
     }
     /*---------------------------------------------------------------------------*/
-
+    
     /*---------------------------------------------------------------------------*/
     static void rc_desc_release(desc_t * desc) {
         int old, new_;
         rc_ret_t ret;
-
+        
         LWSYNC; /* rbw */
         RBW;
         ASSERT(desc);
@@ -704,13 +704,13 @@ __attribute__((constructor)) void clfmalloc_init()
             desc_push(desc);
         }
     }
-
+    
     /*---------------------------------------------------------------------------*/
     static desc_t * rc_safe_read(desc_t * volatile * addr) {
         desc_t * desc;
         int old, new_;
         rc_ret_t ret;
-
+        
         while (1) {
             desc = *addr;
             if (desc == NULL) return NULL;
@@ -728,12 +728,12 @@ __attribute__((constructor)) void clfmalloc_init()
         }
     }
     /*---------------------------------------------------------------------------*/
-
+    
     /*---------------------------------------------------------------------------*/
     static desc_t * desc_alloc() {
         desc_t * desc;
         ret_t ret;
-
+        
         while (1) {
             desc = SAFE_READ(DescAvail);
             if (desc) {
@@ -750,8 +750,8 @@ __attribute__((constructor)) void clfmalloc_init()
                 }
                 RC_INIT(desc);
                 for (ptr = desc + 1;
-                        (ptrsize_t) (ptr + 1)<(ptrsize_t) (desc) + DESCSBSIZE;
-                        ptr++) {
+                     (ptrsize_t) (ptr + 1)<(ptrsize_t) (desc) + DESCSBSIZE;
+                     ptr++) {
                     ptr->Next = ptr + 1;
                     RC_INIT(ptr);
                 }
@@ -774,13 +774,13 @@ __attribute__((constructor)) void clfmalloc_init()
     /*---------------------------------------------------------------------------*/
     static void * super_malloc(unsigned sz);
     static void super_free(void * ptr);
-
+    
     /*---------------------------------------------------------------------------*/
     static void sb_alloc(desc_t * desc) {
         sizeclass_t * sc;
         void ** addr;
         unsigned sz;
-
+        
         sc = desc->Heap->sc;
         sz = sc->sz;
         if (sc->sbsize < HYPERBLOCKSIZE) {
@@ -797,7 +797,7 @@ __attribute__((constructor)) void clfmalloc_init()
                 desc_t * head;
                 desc_t * next;
                 ret_t ret;
-
+                
                 head = SAFE_READ(HyperblockHead);
                 if (head) {
                     next = head->Next;
@@ -824,7 +824,7 @@ __attribute__((constructor)) void clfmalloc_init()
             unsigned * ptr2;
             ptrsize_t num1;
             ptrsize_t num2;
-
+            
             num1 = (ptrsize_t) addr;
             for (i = 0; i < sc->maxcount; i++) {
                 ptr1 = (desc_t**) num1;
@@ -837,7 +837,7 @@ __attribute__((constructor)) void clfmalloc_init()
         }
         desc->SB = addr;
     }
-
+    
     /*---------------------------------------------------------------------------*/
     static void sb_dealloc(void * sb, desc_t * pdesc) {
         if (pdesc) {
@@ -848,7 +848,7 @@ __attribute__((constructor)) void clfmalloc_init()
         } else {
             /* sbsize is 1 MB */
             ret_t ret;
-
+            
             desc_t * desc = desc_alloc();
             desc->SB = sb;
             do {
@@ -863,8 +863,8 @@ __attribute__((constructor)) void clfmalloc_init()
     }
     /*---------------------------------------------------------------------------*/
 #ifdef REFCOUNT
-
-/*---------------------------------------------------------------------------*/
+    
+    /*---------------------------------------------------------------------------*/
     static void list_enqueue(sizeclass_t * sc, desc_t * desc) {
         ret_t ret;
         ASSERT(sc);
@@ -879,7 +879,7 @@ __attribute__((constructor)) void clfmalloc_init()
         } while (!ret);
         TRACE(OP_LIST_ENQ_END, desc->sz, 0, desc, desc->SB, desc->Heap, desc->Anchor.all);
     }
-
+    
     /*---------------------------------------------------------------------------*/
     static desc_t * list_pop(sizeclass_t * sc) {
         /* pop from central list */
@@ -902,14 +902,14 @@ __attribute__((constructor)) void clfmalloc_init()
         } while (1);
         TRACE(OP_PARTIAL_POPPED, desc->sz, 0, desc, desc->SB, desc->Heap, desc->Anchor.all);
         return desc;
-
+        
     }
-
+    
     /*---------------------------------------------------------------------------*/
     static void partial_push(procheap_t * heap, desc_t * desc) {
         ret_t ret;
         desc_t * desc2;
-
+        
         ASSERT(desc);
         ASSERT(heap);
         ASSERT(heap->sc);
@@ -926,7 +926,7 @@ __attribute__((constructor)) void clfmalloc_init()
             list_enqueue(heap->sc, desc2);
         }
     }
-
+    
     /*---------------------------------------------------------------------------*/
     static desc_t * partial_pop(procheap_t* heap) {
         ret_t ret;
@@ -945,17 +945,17 @@ __attribute__((constructor)) void clfmalloc_init()
         /* pop from central list */
         return list_pop(heap->sc);
     }
-
+    
     /*---------------------------------------------------------------------------*/
     static void list_desc_remove(procheap_t * heap) {
     }
     /*---------------------------------------------------------------------------*/
 #else /* LLSC */
-
-/*---------------------------------------------------------------------------*/
+    
+    /*---------------------------------------------------------------------------*/
     static void list_enqueue(desc_t * desc) {
         sizeclass_t * sc;
-
+        
         //TRACE(OP_LIST_ENQ_STR,desc->sz,0,desc,desc->SB,desc->Heap,desc->Anchor.all);
         sc = desc->Heap->sc;
         ASSERT(sc);
@@ -966,7 +966,7 @@ __attribute__((constructor)) void clfmalloc_init()
             desc_t * head;
             desc_t * next;
             void * ret;
-
+            
             tail = sc->PartialTail;
             if (tail == NULL) {
                 LL(tail, &sc->PartialTail);
@@ -1023,12 +1023,12 @@ __attribute__((constructor)) void clfmalloc_init()
         }
         TRACE(OP_LIST_ENQ_END, desc->sz, 0, desc, desc->SB, desc->Heap, desc->Anchor.all);
     }
-
+    
     /*---------------------------------------------------------------------------*/
     static void partial_push(procheap_t * heap, desc_t * desc) {
         ret_t ret;
         desc_t * desc2;
-
+        
         //ASSERT(desc);
         //ASSERT(heap);
         //ASSERT(heap->sc);
@@ -1045,7 +1045,7 @@ __attribute__((constructor)) void clfmalloc_init()
             list_enqueue(desc2);
         }
     }
-
+    
     /*---------------------------------------------------------------------------*/
     static desc_t* partial_pop(procheap_t* heap) {
         desc_t* desc;
@@ -1053,7 +1053,7 @@ __attribute__((constructor)) void clfmalloc_init()
         sizeclass_t* sc;
         void* ret;
         anchor_t tmp;
-
+        
         TRACE(OP_PARTIAL_POP_SLT, 0, 0, 0, 0, heap, 0);
         ASSERT(heap);
         ASSERT(heap->sc);
@@ -1064,10 +1064,10 @@ __attribute__((constructor)) void clfmalloc_init()
             SC(ret, &heap->Partial, NULL); /* no ABA */
             if (ret) {
                 /*
-                tmp.all = desc->Anchor.all;
-                TRACE(OP_PARTIAL_POPPED,desc->sz,0,desc,desc->SB,heap,tmp.all);
-                ASSERT(!tmp.sep.active);
-                ASSERT(tmp.sep.count > 0);
+                 tmp.all = desc->Anchor.all;
+                 TRACE(OP_PARTIAL_POPPED,desc->sz,0,desc,desc->SB,heap,tmp.all);
+                 ASSERT(!tmp.sep.active);
+                 ASSERT(tmp.sep.count > 0);
                  */
                 return desc;
             }
@@ -1112,7 +1112,7 @@ __attribute__((constructor)) void clfmalloc_init()
         TRACE(OP_PARTIAL_POPPED, desc->sz, 0, desc, desc->SB, heap, desc->Anchor.all);
         return desc;
     }
-
+    
     /*---------------------------------------------------------------------------*/
     static void list_desc_remove(procheap_t * heap) {
         desc_t * head;
@@ -1120,7 +1120,7 @@ __attribute__((constructor)) void clfmalloc_init()
         sizeclass_t * sc;
         void * ret;
         unsigned nonempty = 0;
-
+        
         TRACE(OP_DESC_REMOVE_SLT, 0, 0, 0, 0, heap, 0);
         ASSERT(heap);
         ASSERT(heap->sc);
@@ -1192,14 +1192,14 @@ __attribute__((constructor)) void clfmalloc_init()
 #endif /* REFCOUNT or LLSC */
     /*---------------------------------------------------------------------------*/
 #ifdef PLDI2004
-
-/*---------------------------------------------------------------------------*/
+    
+    /*---------------------------------------------------------------------------*/
     static void make_active(procheap_t * heap, desc_t * desc, unsigned morecredits) {
         ptrsize_t new_active;
         anchor_t oldanchor;
         anchor_t new_anchor;
         ret_t ret;
-
+        
         TRACE(OP_MAKE_ACTIVE, desc->sz, 0, desc, desc->SB, heap, desc->Anchor.all);
         new_active = (ptrsize_t) (desc)+(morecredits - 1);
         CAS(ret, &heap->Active, NULL, new_active);
@@ -1208,8 +1208,8 @@ __attribute__((constructor)) void clfmalloc_init()
             return;
         }
         /*
-          Someone installed another active sb.
-          Return credits and make sb partial
+         Someone installed another active sb.
+         Return credits and make sb partial
          */
         do {
             aret_t aret;
@@ -1227,7 +1227,7 @@ __attribute__((constructor)) void clfmalloc_init()
         WBW;
         partial_push(heap, desc);
     }
-
+    
     /*---------------------------------------------------------------------------*/
     static void * malloc_from_partial(procheap_t * heap) {
         desc_t * desc;
@@ -1237,9 +1237,9 @@ __attribute__((constructor)) void clfmalloc_init()
         void * sb;
         unsigned morecredits;
         unsigned sz;
-
+        
         TRACE(OP_PARTIAL_STR, 0, 0, 0, 0, heap, 0);
-retry:
+    retry:
         desc = partial_pop(heap);
         if (!desc)
             return NULL;
@@ -1280,8 +1280,8 @@ retry:
         TRACE(OP_PARTIAL_END, sz, addr, desc, sb, heap, new_anchor.all);
         if (morecredits > 0) { /* update Active */
             /* cannot check for new_anchor.active because someone else
-            might have already made it active even though our morecredits
-            is zero */
+             might have already made it active even though our morecredits
+             is zero */
             ASSERT(new_anchor.sep.active);
             desc->Heap = heap;
             LWSYNC; /* wbw */
@@ -1290,7 +1290,7 @@ retry:
         }
         return addr;
     }
-
+    
     /*---------------------------------------------------------------------------*/
     static void * malloc_from_new__sb(procheap_t * heap) {
         desc_t ** addr;
@@ -1300,7 +1300,7 @@ retry:
         anchor_t new_anchor;
         ptrsize_t new_active;
         unsigned credits;
-
+        
         desc = desc_alloc();
         desc->Heap = heap;
         sb_alloc(desc);
@@ -1332,7 +1332,7 @@ retry:
         TRACE(OP_new__END, heap->sc->sz, addr, desc, sb, heap, new_anchor.all);
         return addr;
     }
-
+    
     /*---------------------------------------------------------------------------*/
     static void * malloc_regular(procheap_t * heap) {
         void ** addr;
@@ -1344,7 +1344,7 @@ retry:
         void * sb;
         unsigned credits;
         unsigned morecredits = 0;
-
+        
         TRACE(OP_MALLOC_STR, heap->sc->sz, 0, 0, 0, heap, 0);
         do {
             ret_t ret;
@@ -1400,8 +1400,8 @@ retry:
 #if defined(PPC)
     void __free__(void * ptr)
 #else
-
-void free(void * ptr)
+    
+    void free(void * ptr)
 #endif
     {
         desc_t ** header;
@@ -1413,7 +1413,7 @@ void free(void * ptr)
         procheap_t * heap;
         desc_t * pdesc;
         size_t sz;
-
+        
         if (!ptr)
             return;
         header = ptr - EIGHT;
@@ -1444,8 +1444,8 @@ void free(void * ptr)
             WBW;
             new_anchor.sep.head = ((ptr - sb) / sz);
             if ((!oldanchor.sep.active) &&
-                    //(oldanchor.sep.count == heap->sc->maxcount-1)) {
-                    (oldanchor.sep.count == desc->maxcount - 1)) {
+                //(oldanchor.sep.count == heap->sc->maxcount-1)) {
+                (oldanchor.sep.count == desc->maxcount - 1)) {
                 new_anchor.sep.valid = FALSE;
                 pdesc = desc->Pdesc;
                 if (pdesc == (void*) 1) continue; /* rbw */
@@ -1469,19 +1469,19 @@ void free(void * ptr)
     }
     /*---------------------------------------------------------------------------*/
 #else /* 2005 */
-
-/*---------------------------------------------------------------------------*/
+    
+    /*---------------------------------------------------------------------------*/
     static void make_active(procheap_t * heap, desc_t* desc) {
         anchor_t oldanchor;
         anchor_t new_anchor;
         ret_t ret;
-
+        
         CAS(ret, &heap->Active, NULL, desc);
         if (ret)
             return;
         /*
-          Someone installed another active sb.
-          Return credits and make sb partial
+         Someone installed another active sb.
+         Return credits and make sb partial
          */
         do {
             aret_t aret;
@@ -1497,7 +1497,7 @@ void free(void * ptr)
         WBW;
         partial_push(heap, desc);
     }
-
+    
     /*---------------------------------------------------------------------------*/
     static void * malloc_from_partial(procheap_t * heap) {
         desc_t * desc;
@@ -1506,8 +1506,8 @@ void free(void * ptr)
         anchor_t new_anchor;
         void * sb;
         unsigned sz;
-
-retry:
+        
+    retry:
         desc = partial_pop(heap);
         if (!desc)
             return NULL;
@@ -1547,7 +1547,7 @@ retry:
         }
         return addr;
     }
-
+    
     /*---------------------------------------------------------------------------*/
     static void * malloc_from_new__sb(procheap_t * heap) {
         desc_t ** addr;
@@ -1555,7 +1555,7 @@ retry:
         void * sb;
         ret_t ret;
         anchor_t new_anchor;
-
+        
         desc = desc_alloc();
         desc->Heap = heap;
         sb_alloc(desc);
@@ -1581,7 +1581,7 @@ retry:
         addr = (desc_t**) ((char*) sb + EIGHT);
         return addr;
     }
-
+    
     /*---------------------------------------------------------------------------*/
     static void * malloc_regular(procheap_t * heap) {
         void ** addr;
@@ -1591,7 +1591,7 @@ retry:
         void * sb;
         ret_t ret;
         aret_t aret;
-
+        
         do {
             desc = heap->Active;
             if (!desc) {
@@ -1653,8 +1653,8 @@ retry:
 #if defined(PPC)
     void __free__(void * ptr)
 #else
-
-void free(void * ptr)
+    
+    void free(void * ptr)
 #endif
     {
         desc_t ** header;
@@ -1666,7 +1666,7 @@ void free(void * ptr)
         procheap_t * heap;
         desc_t * pdesc;
         unsigned sz;
-
+        
         if (!ptr)
             return;
         header = (desc_t**) ((char*) ptr - EIGHT);
@@ -1696,7 +1696,7 @@ void free(void * ptr)
             WBW;
             new_anchor.sep.head = (((char*) ptr - (char*) sb) / sz);
             if ((!oldanchor.sep.active) &&
-                    (oldanchor.sep.count == desc->maxcount - 1)) {
+                (oldanchor.sep.count == desc->maxcount - 1)) {
                 //	    (oldanchor.sep.count == heap->sc->maxcount-1)) {
                 new_anchor.sep.valid = FALSE;
                 pdesc = desc->Pdesc;
@@ -1723,8 +1723,8 @@ void free(void * ptr)
 #if defined(PPC)
     void * __malloc__(size_t sz)
 #else
-
-void * malloc(size_t sz)
+    
+    void * malloc(size_t sz)
 #endif
     {
         procheap_t * heap;
@@ -1732,14 +1732,14 @@ void * malloc(size_t sz)
         void ** addr;
         unsigned ind;
         unsigned heapid;
-
+        
 #if defined(PPC)
         /* __malloc_start__ is guaranteed to have been called */
 #else
         /* Check for initialization */
         if (controlblock == NULL) clfmalloc_init();
 #endif
-
+        
         /* find sizeclass */
         sz += EIGHT;
         /* find procheap */
@@ -1783,12 +1783,12 @@ void * malloc(size_t sz)
         /* regular block */
         return malloc_regular(heap);
     }
-
+    
     /*---------------------------------------------------------------------------*/
     static void * super_malloc(unsigned sz) {
         return malloc(sz);
     }
-
+    
     /*---------------------------------------------------------------------------*/
     static void super_free(void * ptr) {
         free(ptr);
@@ -1797,8 +1797,8 @@ void * malloc(size_t sz)
 #if defined(PPC)
     void * __calloc__(size_t n, size_t sz)
 #else
-
-void * calloc(size_t n, size_t sz)
+    
+    void * calloc(size_t n, size_t sz)
 #endif
     {
         void * addr = malloc(n * sz);
@@ -1809,8 +1809,8 @@ void * calloc(size_t n, size_t sz)
 #if defined(PPC)
     void * __realloc__(void * ptr, size_t sz)
 #else
-
-void * realloc(void * ptr, size_t sz)
+    
+    void * realloc(void * ptr, size_t sz)
 #endif
     {
         desc_t ** header;
@@ -1818,7 +1818,7 @@ void * realloc(void * ptr, size_t sz)
         void * addr;
         desc_t * desc;
         ptrsize_t num;
-
+        
         /* realloc zero frees */
         if (sz == 0) {
             free(ptr);
@@ -1855,21 +1855,21 @@ void * realloc(void * ptr, size_t sz)
 #if defined(PPC)
 #include <malloc.h>
 #include <errno.h>
-
-int __mallopt__(int cmd, int value) {
+    
+    int __mallopt__(int cmd, int value) {
         errno = ENOSYS;
         perror("mallopt not supported");
         return 1;
     }
     /*---------------------------------------------------------------------------*/
     static struct mallinfo mi;
-
+    
     struct mallinfo __mallinfo__() {
         errno = ENOSYS;
         perror("mallinfo not supported");
         return mi;
     }
-
+    
     /*---------------------------------------------------------------------------*/
     int __posix_memalign__(void **p2p, size_t align, size_t sz) {
         errno = ENOSYS;
@@ -1877,23 +1877,23 @@ int __mallopt__(int cmd, int value) {
         *p2p = NULL;
         return ENOSYS;
     }
-
+    
     /*---------------------------------------------------------------------------*/
     void __malloc_init__() {
     }
-
+    
     /*---------------------------------------------------------------------------*/
     void __malloc_prefork_lock__() {
     }
-
+    
     /*---------------------------------------------------------------------------*/
     void __malloc_postfork_unlock__() {
     }
     /*---------------------------------------------------------------------------*/
 #endif
-
-
-
+    
+    
+    
 #ifdef	__cplusplus
 }
 #endif
