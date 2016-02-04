@@ -48,7 +48,7 @@ public:
     typedef typename std::vector<value_type>::reverse_iterator reverse_iterator;
     typedef typename std::vector<value_type>::const_reverse_iterator const_reverse_iterator;
 
-    flat_map(std::size_t n = 32) {
+    flat_map(std::size_t n = 0) {
         data_m.reserve(n);
     }
 

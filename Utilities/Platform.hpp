@@ -35,5 +35,24 @@
 #endif
 
 
+namespace atl{
+    
+    template <int alignment =16> void* AllocateAligned (std::size_t size);
+	template <int alignment =16> void DeallocateAligned (void* ptr);
+
+#if defined(__MACH__)
+// on Mach-based systems i.e. Mac OS X, malloc always returns 16-byte aligned memory, but we don't guarantee arbitrary alignment, yet...
+template <> inline void* AllocateAligned <16> (std::size_t size)	{ return std::malloc (size); }
+template <> inline void DeallocateAligned <16> (void* ptr)			{ std::free (ptr); }
+#elif defined(_WIN32) || defined (_WIN64) || defined (__CYGWIN__)
+// on Windows, we can get arbitrary aligned memory...
+template <int alignment> void* AllocateAligned (std::size_t size)	{ return ::_mm_malloc (size, alignment); }
+template <int alignment> void DeallocateAligned (void* ptr)		{ ::_mm_free (ptr); }
+#elif defined(__linux__)
+// on Linux-based systems, we also can get arbitrary aligned memory...
+template <int alignment> void* AllocateAligned (std::size_t size)	{ return ::memalign (alignment, size); }
+template <int alignment> void DeallocateAligned (void* ptr)		{ ::free (ptr); }
+#endif
+}
 
 #endif
