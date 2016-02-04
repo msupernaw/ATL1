@@ -16,7 +16,7 @@
 #include "../Utilities/MemoryPool.hpp"
 #include "PoolAllocator.hpp"
 #include "third_party/dlmalloc/malloc.h"
-#include <google/dense_hash_map>
+//#include <google/dense_hash_map>
 #include <cassert>
 #include <unordered_map>
 
@@ -180,6 +180,7 @@ namespace atl {
         return only_copy2;
     }
 
+    /*
     template<typename T>
     class HashMapWrapper {
         typedef google::dense_hash_map<uint32_t, T> wrapped_map;
@@ -223,7 +224,7 @@ namespace atl {
 
 
     };
-
+*/
     template<typename REAL_T>
     class VariableInfo : public atl::PoolAllocator<VariableInfo<REAL_T> > {
     public:
