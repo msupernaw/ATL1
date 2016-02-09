@@ -25,19 +25,19 @@ Function value: 0.06857
 Gradient mse = 2.86986e-32, Error Range{1.69407e-16 - 1.69407e-16}
 Hessian mse = 2.92719e-24, Error Range{-1.7109e-12 - 1.7109e-12}
 Third-Order mse = 4.32046e-13
-Time to evaluate objective function with only gradient info: 0.000009 sec
+Time to evaluate objective function with only gradient info: 0.000007 sec
 Time to evaluate objective function with Hessian info: 0.000005 sec
-Time to evaluate objective function with Third-Order info: 0.000004 sec
+Time to evaluate objective function with Third-Order info: 0.000002 sec
 Time to compute exact gradient: 0.000002 sec
-Time to compute exact gradient and Hessian: 0.000021 sec
-Time to compute exact gradient, Hessian, and Third-Order: 0.000009 sec
+Time to compute exact gradient and Hessian: 0.000011 sec
+Time to compute exact gradient, Hessian, and Third-Order: 0.000008 sec
 Time to estimate gradient: 0.000000 sec
-Time to estimate Hessian: 0.000012 sec
-Time to estimate Third-Order: 0.000089 sec
-Gradient Speed up = 0.196104
-Hessain Speed up = 0.572473
+Time to estimate Hessian: 0.000009 sec
+Time to estimate Third-Order: 0.000075 sec
+Gradient Speed up = 0.200723
+Hessain Speed up = 0.821675
 
-Third-Order Speed up = 10.002583
+Third-Order Speed up = 9.272177
 
 Estimated gradient:
 1.000000 1.000000 
@@ -93,19 +93,19 @@ Function value: 3.180240
 Gradient mse = 0.000000, Error Range{-0.000000 - -0.000000}
 Hessian mse = 0.000000, Error Range{0.000000 - 0.000000}
 Third-Order mse = -0.000000
-Time to evaluate objective function with only gradient info: 0.000002 sec
+Time to evaluate objective function with only gradient info: 0.000001 sec
 Time to evaluate objective function with Hessian info: 0.000001 sec
 Time to evaluate objective function with Third-Order info: 0.000002 sec
 Time to compute exact gradient: 0.000000 sec
-Time to compute exact gradient and Hessian: 0.000003 sec
+Time to compute exact gradient and Hessian: 0.000002 sec
 Time to compute exact gradient, Hessian, and Third-Order: 0.000003 sec
 Time to estimate gradient: 0.000000 sec
-Time to estimate Hessian: 0.000007 sec
-Time to estimate Third-Order: 0.000041 sec
-Gradient Speed up = 2.702381
-Hessain Speed up = 2.408677
+Time to estimate Hessian: 0.000004 sec
+Time to estimate Third-Order: 0.000026 sec
+Gradient Speed up = 2.362573
+Hessain Speed up = 2.188648
 
-Third-Order Speed up = 12.700282
+Third-Order Speed up = 9.307440
 
 Estimated gradient:
 1.000000 
@@ -152,15 +152,15 @@ Time to evaluate objective function with only gradient info: 0.000001 sec
 Time to evaluate objective function with Hessian info: 0.000001 sec
 Time to evaluate objective function with Third-Order info: 0.000002 sec
 Time to compute exact gradient: 0.000000 sec
-Time to compute exact gradient and Hessian: 0.000001 sec
-Time to compute exact gradient, Hessian, and Third-Order: 0.000002 sec
+Time to compute exact gradient and Hessian: 0.000002 sec
+Time to compute exact gradient, Hessian, and Third-Order: 0.000003 sec
 Time to estimate gradient: 0.000000 sec
-Time to estimate Hessian: 0.000003 sec
-Time to estimate Third-Order: 0.000024 sec
-Gradient Speed up = 3.101911
-Hessain Speed up = 2.524400
+Time to estimate Hessian: 0.000005 sec
+Time to estimate Third-Order: 0.000029 sec
+Gradient Speed up = 1.783550
+Hessain Speed up = 2.211864
 
-Third-Order Speed up = 10.843679
+Third-Order Speed up = 9.338264
 
 Estimated gradient:
 1.000000 
@@ -212,11 +212,11 @@ Time to compute exact gradient and Hessian: 0.000002 sec
 Time to compute exact gradient, Hessian, and Third-Order: 0.000003 sec
 Time to estimate gradient: 0.000000 sec
 Time to estimate Hessian: 0.000006 sec
-Time to estimate Third-Order: 0.000068 sec
-Gradient Speed up = 2.664773
-Hessain Speed up = 3.334664
+Time to estimate Third-Order: 0.000067 sec
+Gradient Speed up = 2.761364
+Hessain Speed up = 3.002055
 
-Third-Order Speed up = 20.501362
+Third-Order Speed up = 19.257842
 
 Estimated gradient:
 1.000000 -1.000000 
@@ -274,17 +274,17 @@ Hessian mse = 0.000000, Error Range{0.000000 - 0.000000}
 Third-Order mse = -0.000000
 Time to evaluate objective function with only gradient info: 0.000001 sec
 Time to evaluate objective function with Hessian info: 0.000001 sec
-Time to evaluate objective function with Third-Order info: 0.000001 sec
+Time to evaluate objective function with Third-Order info: 0.000002 sec
 Time to compute exact gradient: 0.000000 sec
-Time to compute exact gradient and Hessian: 0.000006 sec
+Time to compute exact gradient and Hessian: 0.000002 sec
 Time to compute exact gradient, Hessian, and Third-Order: 0.000003 sec
 Time to estimate gradient: 0.000000 sec
-Time to estimate Hessian: 0.000005 sec
-Time to estimate Third-Order: 0.000029 sec
-Gradient Speed up = 2.317204
-Hessain Speed up = 0.750319
+Time to estimate Hessian: 0.000004 sec
+Time to estimate Third-Order: 0.000025 sec
+Gradient Speed up = 2.544379
+Hessain Speed up = 2.440129
 
-Third-Order Speed up = 9.343964
+Third-Order Speed up = 9.981644
 
 Estimated gradient:
 1.000000 
@@ -335,12 +335,12 @@ Time to compute exact gradient: 0.000000 sec
 Time to compute exact gradient and Hessian: 0.000001 sec
 Time to compute exact gradient, Hessian, and Third-Order: 0.000002 sec
 Time to estimate gradient: 0.000000 sec
-Time to estimate Hessian: 0.000003 sec
+Time to estimate Hessian: 0.000004 sec
 Time to estimate Third-Order: 0.000025 sec
-Gradient Speed up = 3.267123
-Hessain Speed up = 2.586626
+Gradient Speed up = 3.133333
+Hessain Speed up = 2.749075
 
-Third-Order Speed up = 9.862595
+Third-Order Speed up = 10.020942
 
 Estimated gradient:
 -1.000000 
@@ -388,15 +388,15 @@ Time to evaluate objective function with only gradient info: 0.000001 sec
 Time to evaluate objective function with Hessian info: 0.000001 sec
 Time to evaluate objective function with Third-Order info: 0.000002 sec
 Time to compute exact gradient: 0.000000 sec
-Time to compute exact gradient and Hessian: 0.000003 sec
-Time to compute exact gradient, Hessian, and Third-Order: 0.000004 sec
+Time to compute exact gradient and Hessian: 0.000005 sec
+Time to compute exact gradient, Hessian, and Third-Order: 0.000005 sec
 Time to estimate gradient: 0.000001 sec
-Time to estimate Hessian: 0.000006 sec
-Time to estimate Third-Order: 0.000069 sec
-Gradient Speed up = 4.891566
-Hessain Speed up = 2.180394
+Time to estimate Hessian: 0.000010 sec
+Time to estimate Third-Order: 0.000093 sec
+Gradient Speed up = 4.121951
+Hessain Speed up = 1.960046
 
-Third-Order Speed up = 17.547184
+Third-Order Speed up = 18.824384
 
 Estimated gradient:
 0.034230 0.034340 
@@ -454,17 +454,17 @@ Hessian mse = 0.000000, Error Range{0.000000 - 0.000000}
 Third-Order mse = -0.000000
 Time to evaluate objective function with only gradient info: 0.000001 sec
 Time to evaluate objective function with Hessian info: 0.000001 sec
-Time to evaluate objective function with Third-Order info: 0.000001 sec
+Time to evaluate objective function with Third-Order info: 0.000002 sec
 Time to compute exact gradient: 0.000000 sec
-Time to compute exact gradient and Hessian: 0.000001 sec
+Time to compute exact gradient and Hessian: 0.000002 sec
 Time to compute exact gradient, Hessian, and Third-Order: 0.000002 sec
 Time to estimate gradient: 0.000000 sec
-Time to estimate Hessian: 0.000003 sec
-Time to estimate Third-Order: 0.000025 sec
-Gradient Speed up = 2.664634
-Hessain Speed up = 2.605762
+Time to estimate Hessian: 0.000004 sec
+Time to estimate Third-Order: 0.000024 sec
+Gradient Speed up = 2.640523
+Hessain Speed up = 2.386968
 
-Third-Order Speed up = 11.555050
+Third-Order Speed up = 9.987588
 
 Estimated gradient:
 3.145900 
@@ -510,17 +510,17 @@ Hessian mse = 0.000000, Error Range{-0.000000 - -0.000000}
 Third-Order mse = 0.000000
 Time to evaluate objective function with only gradient info: 0.000001 sec
 Time to evaluate objective function with Hessian info: 0.000001 sec
-Time to evaluate objective function with Third-Order info: 0.000001 sec
+Time to evaluate objective function with Third-Order info: 0.000002 sec
 Time to compute exact gradient: 0.000000 sec
-Time to compute exact gradient and Hessian: 0.000001 sec
-Time to compute exact gradient, Hessian, and Third-Order: 0.000002 sec
+Time to compute exact gradient and Hessian: 0.000002 sec
+Time to compute exact gradient, Hessian, and Third-Order: 0.000003 sec
 Time to estimate gradient: 0.000000 sec
-Time to estimate Hessian: 0.000003 sec
-Time to estimate Third-Order: 0.000024 sec
-Gradient Speed up = 3.269737
-Hessain Speed up = 2.614642
+Time to estimate Hessian: 0.000004 sec
+Time to estimate Third-Order: 0.000025 sec
+Gradient Speed up = 2.854305
+Hessain Speed up = 2.566609
 
-Third-Order Speed up = 10.885388
+Third-Order Speed up = 9.092214
 
 Estimated gradient:
 3.145900 
@@ -566,17 +566,17 @@ Hessian mse = 0.000000, Error Range{-0.000255 - 0.000073}
 Third-Order mse = -8.111389
 Time to evaluate objective function with only gradient info: 0.000001 sec
 Time to evaluate objective function with Hessian info: 0.000001 sec
-Time to evaluate objective function with Third-Order info: 0.000008 sec
+Time to evaluate objective function with Third-Order info: 0.000009 sec
 Time to compute exact gradient: 0.000000 sec
 Time to compute exact gradient and Hessian: 0.000003 sec
 Time to compute exact gradient, Hessian, and Third-Order: 0.000006 sec
-Time to estimate gradient: 0.000001 sec
+Time to estimate gradient: 0.000000 sec
 Time to estimate Hessian: 0.000006 sec
-Time to estimate Third-Order: 0.000070 sec
-Gradient Speed up = 2.865591
-Hessain Speed up = 2.269004
+Time to estimate Third-Order: 0.000072 sec
+Gradient Speed up = 2.701657
+Hessain Speed up = 2.127273
 
-Third-Order Speed up = 11.663404
+Third-Order Speed up = 11.925232
 
 Estimated gradient:
 29.214140 -29.308023 
@@ -637,14 +637,14 @@ Time to evaluate objective function with Hessian info: 0.000001 sec
 Time to evaluate objective function with Third-Order info: 0.000002 sec
 Time to compute exact gradient: 0.000000 sec
 Time to compute exact gradient and Hessian: 0.000002 sec
-Time to compute exact gradient, Hessian, and Third-Order: 0.000002 sec
-Time to estimate gradient: 0.000001 sec
-Time to estimate Hessian: 0.000005 sec
+Time to compute exact gradient, Hessian, and Third-Order: 0.000003 sec
+Time to estimate gradient: 0.000000 sec
+Time to estimate Hessian: 0.000004 sec
 Time to estimate Third-Order: 0.000025 sec
-Gradient Speed up = 3.194969
-Hessain Speed up = 2.603149
+Gradient Speed up = 2.497409
+Hessain Speed up = 2.308665
 
-Third-Order Speed up = 10.880309
+Third-Order Speed up = 9.151786
 
 Estimated gradient:
 0.317874 
@@ -692,15 +692,15 @@ Time to evaluate objective function with only gradient info: 0.000001 sec
 Time to evaluate objective function with Hessian info: 0.000001 sec
 Time to evaluate objective function with Third-Order info: 0.000002 sec
 Time to compute exact gradient: 0.000000 sec
-Time to compute exact gradient and Hessian: 0.000002 sec
-Time to compute exact gradient, Hessian, and Third-Order: 0.000003 sec
+Time to compute exact gradient and Hessian: 0.000003 sec
+Time to compute exact gradient, Hessian, and Third-Order: 0.000004 sec
 Time to estimate gradient: 0.000000 sec
-Time to estimate Hessian: 0.000003 sec
-Time to estimate Third-Order: 0.000025 sec
-Gradient Speed up = 2.292553
-Hessain Speed up = 1.631809
+Time to estimate Hessian: 0.000004 sec
+Time to estimate Third-Order: 0.000027 sec
+Gradient Speed up = 2.341584
+Hessain Speed up = 1.716154
 
-Third-Order Speed up = 7.382864
+Third-Order Speed up = 6.516759
 
 Estimated gradient:
 -2684.918777 
@@ -752,11 +752,11 @@ Time to compute exact gradient and Hessian: 0.000003 sec
 Time to compute exact gradient, Hessian, and Third-Order: 0.000007 sec
 Time to estimate gradient: 0.000001 sec
 Time to estimate Hessian: 0.000007 sec
-Time to estimate Third-Order: 0.000083 sec
-Gradient Speed up = 3.849711
-Hessain Speed up = 2.337626
+Time to estimate Third-Order: 0.000082 sec
+Gradient Speed up = 4.380952
+Hessain Speed up = 2.241916
 
-Third-Order Speed up = 12.266970
+Third-Order Speed up = 12.257906
 
 Estimated gradient:
 -0.000040 -0.000040 
@@ -812,19 +812,19 @@ Function value: 1.569621
 Gradient mse = 0.000000, Error Range{0.000000 - 0.000000}
 Hessian mse = 0.000000, Error Range{-0.000000 - 0.000000}
 Third-Order mse = -inf
-Time to evaluate objective function with only gradient info: 0.000005 sec
+Time to evaluate objective function with only gradient info: 0.000003 sec
 Time to evaluate objective function with Hessian info: 0.000003 sec
 Time to evaluate objective function with Third-Order info: 0.000008 sec
 Time to compute exact gradient: 0.000000 sec
-Time to compute exact gradient and Hessian: 0.000004 sec
-Time to compute exact gradient, Hessian, and Third-Order: 0.000013 sec
+Time to compute exact gradient and Hessian: 0.000003 sec
+Time to compute exact gradient, Hessian, and Third-Order: 0.000012 sec
 Time to estimate gradient: 0.000001 sec
-Time to estimate Hessian: 0.000010 sec
-Time to estimate Third-Order: 0.000097 sec
-Gradient Speed up = 4.456621
-Hessain Speed up = 2.423512
+Time to estimate Hessian: 0.000009 sec
+Time to estimate Third-Order: 0.000092 sec
+Gradient Speed up = 5.448485
+Hessain Speed up = 2.920354
 
-Third-Order Speed up = 7.167643
+Third-Order Speed up = 7.523364
 
 Estimated gradient:
 -0.034230 -0.034340 
@@ -884,15 +884,15 @@ Time to evaluate objective function with only gradient info: 0.000001 sec
 Time to evaluate objective function with Hessian info: 0.000005 sec
 Time to evaluate objective function with Third-Order info: 0.000003 sec
 Time to compute exact gradient: 0.000000 sec
-Time to compute exact gradient and Hessian: 0.000003 sec
+Time to compute exact gradient and Hessian: 0.000004 sec
 Time to compute exact gradient, Hessian, and Third-Order: 0.000007 sec
 Time to estimate gradient: 0.000001 sec
 Time to estimate Hessian: 0.000008 sec
-Time to estimate Third-Order: 0.000082 sec
-Gradient Speed up = 4.669014
-Hessain Speed up = 2.325843
+Time to estimate Third-Order: 0.000083 sec
+Gradient Speed up = 3.308081
+Hessain Speed up = 2.222099
 
-Third-Order Speed up = 12.148741
+Third-Order Speed up = 11.927098
 
 Estimated gradient:
 0.034230 0.034340 
@@ -949,7 +949,7 @@ Gradient mse = 0.000000, Error Range{-0.000000 - -0.000000}
 Hessian mse = 0.000000, Error Range{-0.000000 - 0.000000}
 Third-Order mse = -0.000000
 Time to evaluate objective function with only gradient info: 0.000006 sec
-Time to evaluate objective function with Hessian info: 0.000002 sec
+Time to evaluate objective function with Hessian info: 0.000003 sec
 Time to evaluate objective function with Third-Order info: 0.000005 sec
 Time to compute exact gradient: 0.000000 sec
 Time to compute exact gradient and Hessian: 0.000003 sec
@@ -957,10 +957,10 @@ Time to compute exact gradient, Hessian, and Third-Order: 0.000007 sec
 Time to estimate gradient: 0.000001 sec
 Time to estimate Hessian: 0.000009 sec
 Time to estimate Third-Order: 0.000093 sec
-Gradient Speed up = 5.622754
-Hessain Speed up = 2.971325
+Gradient Speed up = 4.593407
+Hessain Speed up = 2.913776
 
-Third-Order Speed up = 14.012390
+Third-Order Speed up = 14.081611
 
 Estimated gradient:
 0.034230 0.034340 
@@ -1016,19 +1016,19 @@ Function value: 0.001175
 Gradient mse = 0.000000, Error Range{-0.000000 - -0.000000}
 Hessian mse = 0.000000, Error Range{-0.000000 - 0.000000}
 Third-Order mse = -0.000000
-Time to evaluate objective function with only gradient info: 0.000006 sec
+Time to evaluate objective function with only gradient info: 0.000007 sec
 Time to evaluate objective function with Hessian info: 0.000002 sec
 Time to evaluate objective function with Third-Order info: 0.000004 sec
 Time to compute exact gradient: 0.000000 sec
 Time to compute exact gradient and Hessian: 0.000003 sec
-Time to compute exact gradient, Hessian, and Third-Order: 0.000006 sec
+Time to compute exact gradient, Hessian, and Third-Order: 0.000007 sec
 Time to estimate gradient: 0.000001 sec
 Time to estimate Hessian: 0.000008 sec
-Time to estimate Third-Order: 0.000086 sec
-Gradient Speed up = 4.725610
-Hessain Speed up = 2.807692
+Time to estimate Third-Order: 0.000087 sec
+Gradient Speed up = 4.397661
+Hessain Speed up = 2.502825
 
-Third-Order Speed up = 13.648889
+Third-Order Speed up = 12.930181
 
 Estimated gradient:
 0.034230 0.034340 
@@ -1092,11 +1092,11 @@ Time to compute exact gradient and Hessian: 0.000003 sec
 Time to compute exact gradient, Hessian, and Third-Order: 0.000006 sec
 Time to estimate gradient: 0.000001 sec
 Time to estimate Hessian: 0.000008 sec
-Time to estimate Third-Order: 0.000085 sec
-Gradient Speed up = 4.731250
-Hessain Speed up = 2.974359
+Time to estimate Third-Order: 0.000086 sec
+Gradient Speed up = 4.363636
+Hessain Speed up = 2.702853
 
-Third-Order Speed up = 13.611272
+Third-Order Speed up = 13.604611
 
 Estimated gradient:
 0.034230 0.034340 
@@ -1152,19 +1152,19 @@ Function value: 1.000001
 Gradient mse = 0.000000, Error Range{-0.000000 - -0.000000}
 Hessian mse = 0.000000, Error Range{-0.000000 - 0.000000}
 Third-Order mse = 0.000000
-Time to evaluate objective function with only gradient info: 0.000005 sec
+Time to evaluate objective function with only gradient info: 0.000007 sec
 Time to evaluate objective function with Hessian info: 0.000002 sec
-Time to evaluate objective function with Third-Order info: 0.000003 sec
+Time to evaluate objective function with Third-Order info: 0.000004 sec
 Time to compute exact gradient: 0.000000 sec
-Time to compute exact gradient and Hessian: 0.000003 sec
-Time to compute exact gradient, Hessian, and Third-Order: 0.000006 sec
+Time to compute exact gradient and Hessian: 0.000004 sec
+Time to compute exact gradient, Hessian, and Third-Order: 0.000007 sec
 Time to estimate gradient: 0.000001 sec
 Time to estimate Hessian: 0.000008 sec
-Time to estimate Third-Order: 0.000082 sec
-Gradient Speed up = 4.657718
-Hessain Speed up = 2.727241
+Time to estimate Third-Order: 0.000085 sec
+Gradient Speed up = 4.005780
+Hessain Speed up = 2.191976
 
-Third-Order Speed up = 13.501645
+Third-Order Speed up = 11.588300
 
 Estimated gradient:
 0.000040 0.000040 
@@ -1220,19 +1220,19 @@ Function value: 0.001175
 Gradient mse = 0.000000, Error Range{-0.000000 - -0.000000}
 Hessian mse = 0.000000, Error Range{-0.000000 - 0.000000}
 Third-Order mse = -0.000000
-Time to evaluate objective function with only gradient info: 0.000001 sec
+Time to evaluate objective function with only gradient info: 0.000002 sec
 Time to evaluate objective function with Hessian info: 0.000002 sec
-Time to evaluate objective function with Third-Order info: 0.000003 sec
+Time to evaluate objective function with Third-Order info: 0.000004 sec
 Time to compute exact gradient: 0.000000 sec
-Time to compute exact gradient and Hessian: 0.000003 sec
-Time to compute exact gradient, Hessian, and Third-Order: 0.000006 sec
+Time to compute exact gradient and Hessian: 0.000004 sec
+Time to compute exact gradient, Hessian, and Third-Order: 0.000007 sec
 Time to estimate gradient: 0.000001 sec
 Time to estimate Hessian: 0.000008 sec
-Time to estimate Third-Order: 0.000082 sec
-Gradient Speed up = 4.775510
-Hessain Speed up = 2.849525
+Time to estimate Third-Order: 0.000088 sec
+Gradient Speed up = 3.810526
+Hessain Speed up = 2.041719
 
-Third-Order Speed up = 14.035264
+Third-Order Speed up = 12.497009
 
 Estimated gradient:
 0.034230 0.034340 
@@ -1288,19 +1288,19 @@ Function value: 0.001175
 Gradient mse = 0.000000, Error Range{0.000000 - 0.000000}
 Hessian mse = 0.000000, Error Range{-0.000000 - 0.000000}
 Third-Order mse = -0.000000
-Time to evaluate objective function with only gradient info: 0.000003 sec
+Time to evaluate objective function with only gradient info: 0.000006 sec
 Time to evaluate objective function with Hessian info: 0.000001 sec
-Time to evaluate objective function with Third-Order info: 0.000004 sec
+Time to evaluate objective function with Third-Order info: 0.000003 sec
 Time to compute exact gradient: 0.000000 sec
-Time to compute exact gradient and Hessian: 0.000003 sec
-Time to compute exact gradient, Hessian, and Third-Order: 0.000006 sec
+Time to compute exact gradient and Hessian: 0.000004 sec
+Time to compute exact gradient, Hessian, and Third-Order: 0.000007 sec
 Time to estimate gradient: 0.000001 sec
-Time to estimate Hessian: 0.000009 sec
-Time to estimate Third-Order: 0.000095 sec
-Gradient Speed up = 5.798742
-Hessain Speed up = 3.488233
+Time to estimate Hessian: 0.000010 sec
+Time to estimate Third-Order: 0.000097 sec
+Gradient Speed up = 4.096491
+Hessain Speed up = 2.729327
 
-Third-Order Speed up = 16.184484
+Third-Order Speed up = 14.244988
 
 Estimated gradient:
 0.034230 0.034340 
@@ -1356,19 +1356,19 @@ Function value: 1.001176
 Gradient mse = 0.000000, Error Range{0.000000 - 0.000000}
 Hessian mse = 0.000000, Error Range{-0.000000 - 0.000000}
 Third-Order mse = 0.000000
-Time to evaluate objective function with only gradient info: 0.000003 sec
+Time to evaluate objective function with only gradient info: 0.000005 sec
 Time to evaluate objective function with Hessian info: 0.000001 sec
 Time to evaluate objective function with Third-Order info: 0.000003 sec
 Time to compute exact gradient: 0.000000 sec
 Time to compute exact gradient and Hessian: 0.000003 sec
-Time to compute exact gradient, Hessian, and Third-Order: 0.000006 sec
+Time to compute exact gradient, Hessian, and Third-Order: 0.000009 sec
 Time to estimate gradient: 0.000001 sec
-Time to estimate Hessian: 0.000008 sec
-Time to estimate Third-Order: 0.000089 sec
-Gradient Speed up = 5.413333
-Hessain Speed up = 3.295197
+Time to estimate Hessian: 0.000009 sec
+Time to estimate Third-Order: 0.000138 sec
+Gradient Speed up = 3.531746
+Hessain Speed up = 2.590465
 
-Third-Order Speed up = 15.437295
+Third-Order Speed up = 14.612176
 
 Estimated gradient:
 0.034270 0.034380 
@@ -1426,17 +1426,17 @@ Hessian mse = 0.000000, Error Range{0.000000 - 0.000000}
 Third-Order mse = 0.000000
 Time to evaluate objective function with only gradient info: 0.000007 sec
 Time to evaluate objective function with Hessian info: 0.000001 sec
-Time to evaluate objective function with Third-Order info: 0.000003 sec
+Time to evaluate objective function with Third-Order info: 0.000005 sec
 Time to compute exact gradient: 0.000000 sec
-Time to compute exact gradient and Hessian: 0.000006 sec
-Time to compute exact gradient, Hessian, and Third-Order: 0.000008 sec
+Time to compute exact gradient and Hessian: 0.000004 sec
+Time to compute exact gradient, Hessian, and Third-Order: 0.000010 sec
 Time to estimate gradient: 0.000001 sec
-Time to estimate Hessian: 0.000009 sec
-Time to estimate Third-Order: 0.000083 sec
-Gradient Speed up = 2.795349
-Hessain Speed up = 1.513121
+Time to estimate Hessian: 0.000008 sec
+Time to estimate Third-Order: 0.000112 sec
+Gradient Speed up = 4.311203
+Hessain Speed up = 2.140237
 
-Third-Order Speed up = 10.085244
+Third-Order Speed up = 10.861849
 
 Estimated gradient:
 1.458364 1.458364 
@@ -1492,19 +1492,19 @@ Function value: -0.929793
 Gradient mse = 0.000000, Error Range{-0.000000 - -0.000000}
 Hessian mse = 0.000000, Error Range{-0.000000 - 0.000000}
 Third-Order mse = 0.000000
-Time to evaluate objective function with only gradient info: 0.000013 sec
-Time to evaluate objective function with Hessian info: 0.000001 sec
-Time to evaluate objective function with Third-Order info: 0.000003 sec
+Time to evaluate objective function with only gradient info: 0.000009 sec
+Time to evaluate objective function with Hessian info: 0.000002 sec
+Time to evaluate objective function with Third-Order info: 0.000005 sec
 Time to compute exact gradient: 0.000000 sec
-Time to compute exact gradient and Hessian: 0.000012 sec
-Time to compute exact gradient, Hessian, and Third-Order: 0.000006 sec
+Time to compute exact gradient and Hessian: 0.000005 sec
+Time to compute exact gradient, Hessian, and Third-Order: 0.000009 sec
 Time to estimate gradient: 0.000001 sec
-Time to estimate Hessian: 0.000007 sec
-Time to estimate Third-Order: 0.000078 sec
-Gradient Speed up = 3.927711
-Hessain Speed up = 0.592544
+Time to estimate Hessian: 0.000011 sec
+Time to estimate Third-Order: 0.000126 sec
+Gradient Speed up = 3.797619
+Hessain Speed up = 2.110193
 
-Third-Order Speed up = 13.197085
+Third-Order Speed up = 13.964879
 
 Estimated gradient:
 1.264690 1.268754 
@@ -1560,19 +1560,19 @@ Function value: 0.001175
 Gradient mse = 0.000000, Error Range{-0.000000 - 0.000000}
 Hessian mse = 0.000000, Error Range{-0.000000 - 0.000000}
 Third-Order mse = 0.000000
-Time to evaluate objective function with only gradient info: 0.000001 sec
-Time to evaluate objective function with Hessian info: 0.000001 sec
+Time to evaluate objective function with only gradient info: 0.000002 sec
+Time to evaluate objective function with Hessian info: 0.000002 sec
 Time to evaluate objective function with Third-Order info: 0.000002 sec
 Time to compute exact gradient: 0.000000 sec
-Time to compute exact gradient and Hessian: 0.000003 sec
+Time to compute exact gradient and Hessian: 0.000004 sec
 Time to compute exact gradient, Hessian, and Third-Order: 0.000004 sec
 Time to estimate gradient: 0.000000 sec
 Time to estimate Hessian: 0.000006 sec
-Time to estimate Third-Order: 0.000067 sec
-Gradient Speed up = 3.212903
-Hessain Speed up = 2.223768
+Time to estimate Third-Order: 0.000095 sec
+Gradient Speed up = 1.814961
+Hessain Speed up = 1.796919
 
-Third-Order Speed up = 16.739692
+Third-Order Speed up = 21.883433
 
 Estimated gradient:
 0.034230 0.034340 
@@ -1628,19 +1628,19 @@ Function value: 0.034285
 Gradient mse = 0.000000, Error Range{-0.000000 - -0.000000}
 Hessian mse = 0.000000, Error Range{-0.000000 - 0.000000}
 Third-Order mse = 0.009406
-Time to evaluate objective function with only gradient info: 0.000001 sec
-Time to evaluate objective function with Hessian info: 0.000002 sec
-Time to evaluate objective function with Third-Order info: 0.000004 sec
+Time to evaluate objective function with only gradient info: 0.000002 sec
+Time to evaluate objective function with Hessian info: 0.000004 sec
+Time to evaluate objective function with Third-Order info: 0.000007 sec
 Time to compute exact gradient: 0.000000 sec
-Time to compute exact gradient and Hessian: 0.000003 sec
-Time to compute exact gradient, Hessian, and Third-Order: 0.000007 sec
+Time to compute exact gradient and Hessian: 0.000005 sec
+Time to compute exact gradient, Hessian, and Third-Order: 0.000011 sec
 Time to estimate gradient: 0.000001 sec
-Time to estimate Hessian: 0.000006 sec
-Time to estimate Third-Order: 0.000068 sec
-Gradient Speed up = 3.758865
-Hessain Speed up = 1.856606
+Time to estimate Hessian: 0.000010 sec
+Time to estimate Third-Order: 0.000117 sec
+Gradient Speed up = 2.726950
+Hessain Speed up = 2.039803
 
-Third-Order Speed up = 10.147368
+Third-Order Speed up = 10.666148
 
 Estimated gradient:
 0.499199 0.500803 
@@ -1698,17 +1698,17 @@ Hessian mse = 0.000000, Error Range{-0.000000 - 0.000000}
 Third-Order mse = -0.000353
 Time to evaluate objective function with only gradient info: 0.000005 sec
 Time to evaluate objective function with Hessian info: 0.000005 sec
-Time to evaluate objective function with Third-Order info: 0.000006 sec
+Time to evaluate objective function with Third-Order info: 0.000007 sec
 Time to compute exact gradient: 0.000000 sec
-Time to compute exact gradient and Hessian: 0.000003 sec
-Time to compute exact gradient, Hessian, and Third-Order: 0.000006 sec
+Time to compute exact gradient and Hessian: 0.000004 sec
+Time to compute exact gradient, Hessian, and Third-Order: 0.000011 sec
 Time to estimate gradient: 0.000001 sec
 Time to estimate Hessian: 0.000013 sec
-Time to estimate Third-Order: 0.000124 sec
-Gradient Speed up = 9.427586
-Hessain Speed up = 4.182177
+Time to estimate Third-Order: 0.000202 sec
+Gradient Speed up = 6.968750
+Hessain Speed up = 3.471886
 
-Third-Order Speed up = 19.832906
+Third-Order Speed up = 18.675711
 
 Estimated gradient:
 -0.195135 -0.195762 
@@ -1766,17 +1766,17 @@ Hessian mse = 0.000000, Error Range{-0.000000 - 0.000000}
 Third-Order mse = -0.000000
 Time to evaluate objective function with only gradient info: 0.000004 sec
 Time to evaluate objective function with Hessian info: 0.000001 sec
-Time to evaluate objective function with Third-Order info: 0.000002 sec
+Time to evaluate objective function with Third-Order info: 0.000004 sec
 Time to compute exact gradient: 0.000000 sec
-Time to compute exact gradient and Hessian: 0.000002 sec
-Time to compute exact gradient, Hessian, and Third-Order: 0.000004 sec
-Time to estimate gradient: 0.000001 sec
-Time to estimate Hessian: 0.000009 sec
-Time to estimate Third-Order: 0.000135 sec
-Gradient Speed up = 6.040541
-Hessain Speed up = 4.163070
+Time to compute exact gradient and Hessian: 0.000003 sec
+Time to compute exact gradient, Hessian, and Third-Order: 0.000005 sec
+Time to estimate gradient: 0.000002 sec
+Time to estimate Hessian: 0.000013 sec
+Time to estimate Third-Order: 0.000119 sec
+Gradient Speed up = 9.341463
+Hessain Speed up = 4.965647
 
-Third-Order Speed up = 32.295802
+Third-Order Speed up = 23.224878
 
 Estimated gradient:
 0.068680 0.000000 
@@ -1833,18 +1833,18 @@ Gradient mse = 0.000000, Error Range{0.000000 - 0.000000}
 Hessian mse = 0.000000, Error Range{-0.000000 - 0.000000}
 Third-Order mse = -0.000000
 Time to evaluate objective function with only gradient info: 0.000005 sec
-Time to evaluate objective function with Hessian info: 0.000002 sec
+Time to evaluate objective function with Hessian info: 0.000003 sec
 Time to evaluate objective function with Third-Order info: 0.000006 sec
 Time to compute exact gradient: 0.000000 sec
-Time to compute exact gradient and Hessian: 0.000003 sec
+Time to compute exact gradient and Hessian: 0.000004 sec
 Time to compute exact gradient, Hessian, and Third-Order: 0.000007 sec
 Time to estimate gradient: 0.000001 sec
 Time to estimate Hessian: 0.000013 sec
-Time to estimate Third-Order: 0.000123 sec
-Gradient Speed up = 7.741935
-Hessain Speed up = 3.855778
+Time to estimate Third-Order: 0.000125 sec
+Gradient Speed up = 6.612745
+Hessain Speed up = 3.395290
 
-Third-Order Speed up = 17.969534
+Third-Order Speed up = 17.454672
 
 Estimated gradient:
 0.023746 0.023822 
@@ -1900,19 +1900,19 @@ Function value: 1.000000
 Gradient mse = 0.000000, Error Range{0.000000 - 0.000000}
 Hessian mse = 0.000000, Error Range{0.000000 - 0.000000}
 Third-Order mse = 0.000000
-Time to evaluate objective function with only gradient info: 0.000004 sec
-Time to evaluate objective function with Hessian info: 0.000001 sec
-Time to evaluate objective function with Third-Order info: 0.000002 sec
+Time to evaluate objective function with only gradient info: 0.000009 sec
+Time to evaluate objective function with Hessian info: 0.000002 sec
+Time to evaluate objective function with Third-Order info: 0.000003 sec
 Time to compute exact gradient: 0.000000 sec
-Time to compute exact gradient and Hessian: 0.000002 sec
-Time to compute exact gradient, Hessian, and Third-Order: 0.000003 sec
-Time to estimate gradient: 0.000000 sec
-Time to estimate Hessian: 0.000006 sec
-Time to estimate Third-Order: 0.000068 sec
-Gradient Speed up = 3.217105
-Hessain Speed up = 3.654084
+Time to compute exact gradient and Hessian: 0.000003 sec
+Time to compute exact gradient, Hessian, and Third-Order: 0.000007 sec
+Time to estimate gradient: 0.000001 sec
+Time to estimate Hessian: 0.000010 sec
+Time to estimate Third-Order: 0.000095 sec
+Gradient Speed up = 4.447581
+Hessain Speed up = 4.014247
 
-Third-Order Speed up = 19.955947
+Third-Order Speed up = 13.600402
 
 Estimated gradient:
 0.000000 0.000000 
@@ -1968,19 +1968,19 @@ Function value: 0.000000
 Gradient mse = 0.000000, Error Range{0.000000 - 0.000000}
 Hessian mse = 0.000000, Error Range{0.000000 - 0.000000}
 Third-Order mse = 0.000000
-Time to evaluate objective function with only gradient info: 0.000007 sec
+Time to evaluate objective function with only gradient info: 0.000010 sec
 Time to evaluate objective function with Hessian info: 0.000001 sec
 Time to evaluate objective function with Third-Order info: 0.000002 sec
 Time to compute exact gradient: 0.000000 sec
 Time to compute exact gradient and Hessian: 0.000002 sec
-Time to compute exact gradient, Hessian, and Third-Order: 0.000003 sec
-Time to estimate gradient: 0.000001 sec
-Time to estimate Hessian: 0.000006 sec
-Time to estimate Third-Order: 0.000069 sec
-Gradient Speed up = 3.076923
-Hessain Speed up = 4.061720
+Time to compute exact gradient, Hessian, and Third-Order: 0.000004 sec
+Time to estimate gradient: 0.000000 sec
+Time to estimate Hessian: 0.000007 sec
+Time to estimate Third-Order: 0.000070 sec
+Gradient Speed up = 1.863636
+Hessain Speed up = 3.091164
 
-Third-Order Speed up = 21.490056
+Third-Order Speed up = 19.050299
 
 Estimated gradient:
 0.000000 0.000000 
@@ -2045,19 +2045,19 @@ Function value: -31.345690
 Gradient mse = 0.000000, Error Range{-0.000000 - -0.000000}
 Hessian mse = 0.000000, Error Range{-0.000000 - 0.000000}
 Third-Order mse = 0.000000
-Time to evaluate objective function with only gradient info: 0.000143 sec
-Time to evaluate objective function with Hessian info: 0.001292 sec
-Time to evaluate objective function with Third-Order info: 0.020019 sec
-Time to compute exact gradient: 0.000002 sec
-Time to compute exact gradient and Hessian: 0.000414 sec
-Time to compute exact gradient, Hessian, and Third-Order: 0.001313 sec
-Time to estimate gradient: 0.000383 sec
-Time to estimate Hessian: 0.017121 sec
-Time to estimate Third-Order: 0.796227 sec
-Gradient Speed up = 157.591601
-Hessain Speed up = 41.366780
+Time to evaluate objective function with only gradient info: 0.000206 sec
+Time to evaluate objective function with Hessian info: 0.001421 sec
+Time to evaluate objective function with Third-Order info: 0.021744 sec
+Time to compute exact gradient: 0.000004 sec
+Time to compute exact gradient and Hessian: 0.000437 sec
+Time to compute exact gradient, Hessian, and Third-Order: 0.001317 sec
+Time to estimate gradient: 0.000382 sec
+Time to estimate Hessian: 0.018519 sec
+Time to estimate Third-Order: 0.874898 sec
+Gradient Speed up = 100.153463
+Hessain Speed up = 42.425970
 
-Third-Order Speed up = 606.576805
+Third-Order Speed up = 664.553109
 
 Estimated gradient:
 145.954129 -75.264594 -2.028488 -1.909078 -1.786621 -1.661079 -1.532415 -1.400592 -1.265573 -1.127322 -0.985803 -0.840981 
@@ -2572,19 +2572,19 @@ Function value: -128.005409
 Gradient mse = 0.000000, Error Range{-0.000000 - -0.000000}
 Hessian mse = 0.000000, Error Range{-0.000000 - 0.000001}
 Third-Order mse = 0.000000
-Time to evaluate objective function with only gradient info: 0.000520 sec
-Time to evaluate objective function with Hessian info: 0.004788 sec
-Time to evaluate objective function with Third-Order info: 0.083716 sec
-Time to compute exact gradient: 0.000016 sec
-Time to compute exact gradient and Hessian: 0.001528 sec
-Time to compute exact gradient, Hessian, and Third-Order: 0.004999 sec
-Time to estimate gradient: 0.004354 sec
-Time to estimate Hessian: 0.221945 sec
-Time to estimate Third-Order: 19.539602 sec
-Gradient Speed up = 268.102210
-Hessain Speed up = 145.270227
+Time to evaluate objective function with only gradient info: 0.000510 sec
+Time to evaluate objective function with Hessian info: 0.006240 sec
+Time to evaluate objective function with Third-Order info: 0.085163 sec
+Time to compute exact gradient: 0.000009 sec
+Time to compute exact gradient and Hessian: 0.002399 sec
+Time to compute exact gradient, Hessian, and Third-Order: 0.005451 sec
+Time to estimate gradient: 0.002705 sec
+Time to estimate Hessian: 0.237671 sec
+Time to estimate Third-Order: 20.784453 sec
+Gradient Speed up = 312.400092
+Hessain Speed up = 99.070220
 
-Third-Order Speed up = 3909.065809
+Third-Order Speed up = 3812.759294
 
 Estimated gradient:
 633.294178 -323.061208 -1.694323 -1.403559 -1.106239 -0.802280 -0.491602 -0.174125 0.150230 0.481540 0.819883 1.165333 1.517964 1.877851 2.245065 2.619678 3.001760 3.391381 3.788610 4.193514 4.606160 5.026615 
