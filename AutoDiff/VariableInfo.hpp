@@ -14,12 +14,13 @@
 #include "../Utilities/Platform.hpp"
 #include "../Utilities/flat_set.hpp"
 #include "../Utilities/MemoryPool.hpp"
+#include "../Utilities/compressed_vector.hpp"
 #include "PoolAllocator.hpp"
 #include "third_party/dlmalloc/malloc.h"
-//#include <google/dense_hash_map>
+#include <google/sparse_hash_map>
 #include <cassert>
 #include <unordered_map>
-
+//#include "third_party/cache-table-0.2/mm/cache_map.hpp"
 namespace atl {
 
     //    template <class T>
@@ -180,10 +181,9 @@ namespace atl {
         return only_copy2;
     }
 
-    /*
     template<typename T>
     class HashMapWrapper {
-        typedef google::dense_hash_map<uint32_t, T> wrapped_map;
+        typedef google::sparse_hash_map<uint32_t, T> wrapped_map;
         wrapped_map data;
 
     public:
@@ -191,7 +191,7 @@ namespace atl {
         typedef typename wrapped_map::const_iterator const_iterator;
 
         HashMapWrapper() : data(1) {
-            data.set_empty_key(0);
+            //            data.set_empty_key(0);
         }
 
         inline iterator find(uint32_t key) {
@@ -224,7 +224,7 @@ namespace atl {
 
 
     };
-*/
+
     template<typename REAL_T>
     class VariableInfo : public atl::PoolAllocator<VariableInfo<REAL_T> > {
     public:
@@ -238,14 +238,19 @@ namespace atl {
         REAL_T vvalue;
         int count;
         std::atomic<int> occurences;
-        //        typedef google::dense_hash_map<uint32_t, REAL_T> HessianInfo;
-        //        typedef google::dense_hash_map<uint32_t, HessianInfo> ThirdOrderMixed;
-        typedef std::unordered_map<uint32_t, REAL_T> HessianInfo;
-        typedef std::unordered_map<uint32_t, HessianInfo> ThirdOrderMixed;
+
+        typedef util::compressed_vector<REAL_T> HessianInfo;
+        typedef util::compressed_vector<HessianInfo> ThirdOrderMixed;
+        //                typedef google::sparse_hash_map<uint32_t, REAL_T> HessianInfo;
+        //                typedef google::sparse_hash_map<uint32_t, HessianInfo> ThirdOrderMixed;
+        //                        typedef mm::cache_map<uint32_t, REAL_T> HessianInfo;
+        //                typedef mm::cache_map<uint32_t, HessianInfo> ThirdOrderMixed;
+//        typedef std::unordered_map<uint32_t, REAL_T> HessianInfo;
+//        typedef std::unordered_map<uint32_t, HessianInfo> ThirdOrderMixed;
         //        typedef HashMapWrapper<REAL_T> HessianInfo;
         //        typedef HashMapWrapper< HessianInfo> ThirdOrderMixed;
-        HessianInfo hessian_row;
-        ThirdOrderMixed third_order_mixed;
+//        HessianInfo hessian_row;
+//        ThirdOrderMixed third_order_mixed;
         typedef typename HessianInfo::iterator row_iterator;
         typedef typename ThirdOrderMixed::iterator h_iterator;
         uint32_t id;
@@ -254,6 +259,7 @@ namespace atl {
             //            hessian_row.set_empty_key(0);
             //            third_order_mixed.set_empty_key(0);
             //            hessian_row.bucket_size(100);
+
         }
 
         inline void Aquire() {
@@ -263,29 +269,29 @@ namespace atl {
         virtual ~VariableInfo() {
         }
 
-        inline REAL_T GetHessianRowValue(VariableInfo<REAL_T>* var) {
-            row_iterator it = hessian_row.find(var->id);
-            if (it != hessian_row.end()) {
-                return (*it).second;
-            } else {
-                return static_cast<REAL_T> (0.0);
-            }
-        }
-
-        inline REAL_T GetThirdOrderValue(VariableInfo<REAL_T>* a, VariableInfo<REAL_T>* b) {
-
-            h_iterator it = this->third_order_mixed.find(a->id);
-            if (it != this->third_order_mixed.end()) {
-                row_iterator jt = (*it).second.find(b->id);
-                if (jt != (*it).second.end()) {
-                    return (*jt).second;
-                } else {
-                    return static_cast<REAL_T> (0.0);
-                }
-            }else{
-                return static_cast<REAL_T> (0.0);
-            }
-        }
+//        inline REAL_T GetHessianRowValue(VariableInfo<REAL_T>* var) {
+//            row_iterator it = hessian_row.find(var->id);
+//            if (it != hessian_row.end()) {
+//                return (*it).second;
+//            } else {
+//                return static_cast<REAL_T> (0.0);
+//            }
+//        }
+//
+//        inline REAL_T GetThirdOrderValue(VariableInfo<REAL_T>* a, VariableInfo<REAL_T>* b) {
+//
+//            h_iterator it = this->third_order_mixed.find(a->id);
+//            if (it != this->third_order_mixed.end()) {
+//                row_iterator jt = (*it).second.find(b->id);
+//                if (jt != (*it).second.end()) {
+//                    return (*jt).second;
+//                } else {
+//                    return static_cast<REAL_T> (0.0);
+//                }
+//            } else {
+//                return static_cast<REAL_T> (0.0);
+//            }
+//        }
 
         inline void Release() {
             count--;
@@ -305,8 +311,8 @@ namespace atl {
         }
 
         inline void Reset() {
-            this->hessian_row.clear();
-            this->third_order_mixed.clear();
+//            this->hessian_row.clear();
+//            this->third_order_mixed.clear();
             this->dvalue = 0;
             this->d2value = 0;
             this->d3value = 0;

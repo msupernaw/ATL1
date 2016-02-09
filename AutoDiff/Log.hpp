@@ -74,7 +74,9 @@ namespace atl {
         }
 
         inline REAL_T EvaluateDerivative(uint32_t a, uint32_t b) const {
-            return (expr_m.EvaluateDerivative(a, b) / expr_m.GetValue()) - (expr_m.EvaluateDerivative(a) * expr_m.EvaluateDerivative(b)) / (expr_m.GetValue() * expr_m.GetValue());
+            return (expr_m.EvaluateDerivative(a, b) / expr_m.GetValue()) - 
+                    (expr_m.EvaluateDerivative(a) * expr_m.EvaluateDerivative(b)) 
+                    / (expr_m.GetValue() * expr_m.GetValue());
         }
 
         inline REAL_T EvaluateDerivative(uint32_t x, uint32_t y, uint32_t z) const {

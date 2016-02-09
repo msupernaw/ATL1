@@ -1,6 +1,6 @@
 #ifndef ATL_PLATFORM
 #define ATL_PLATFORM
-
+#include <stdlib.h>
 
 #if defined(linux) || defined(__linux) || defined(__linux__)
 #  define ATL_LINUX
