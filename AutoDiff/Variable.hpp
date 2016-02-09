@@ -29,6 +29,11 @@
 #endif
 
 
+#ifndef M_E
+#define M_E 2.7182818284590452354
+#endif
+
+
 
 #ifdef ATL_USE_THREAD_LOCAL_STORAGE
 
