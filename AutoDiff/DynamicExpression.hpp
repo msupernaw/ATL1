@@ -14,8 +14,10 @@
 #ifndef DYNAMICEXPRESSION_HPP
 #define DYNAMICEXPRESSION_HPP
 
-//#include "GradientStructure.hpp"
+#include "GradientStructure.hpp"
+#include "Expression.hpp"
 #include "VariableInfo.hpp"
+#include "GradientStructure.hpp"
 #include "third_party/dlmalloc/malloc.h"
 #include <cmath>
 #include <sstream>
@@ -41,7 +43,7 @@ NAME(atl::DynamicExpression< REAL_T>* expr):expr_m(expr) {}\
        virtual REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) { \
        SECOND_DERIVATIVE_EVAL \
         } \
-       virtual void PushIds(flat_set<atl::VariableInfo<REAL_T>* >& ids) { \
+       virtual void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids) { \
                 expr_m->push_ids(ids);    \
         } \
        virtual DynamicExpression<REAL_T>* Differentiate() { \
@@ -83,7 +85,7 @@ namespace atl {
         virtual REAL_T Evaluate() = 0;
         virtual REAL_T EvaluateDerivative(uint32_t wrt) = 0;
         virtual REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) = 0;
-        virtual void PushIds(flat_set<atl::VariableInfo<REAL_T>* >& ids) = 0;
+        virtual void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids) = 0;
         virtual DynamicExpression<REAL_T>* Differentiate(uint32_t id) = 0;
         virtual DynamicExpression<REAL_T>* Differentiate() = 0;
         virtual DynamicExpression<REAL_T>* Clone() = 0;
@@ -127,7 +129,7 @@ namespace atl {
             return static_cast<REAL_T> (0.0);
         }
 
-        virtual void PushIds(flat_set<atl::VariableInfo<REAL_T>* >& ids) {
+        virtual void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids) {
         }
 
         virtual DynamicExpression<REAL_T>* Differentiate(uint32_t id) {
@@ -182,7 +184,7 @@ namespace atl {
             return static_cast<REAL_T> (0.0);
         }
 
-        virtual void PushIds(flat_set<atl::VariableInfo<REAL_T>* >& ids) {
+        virtual void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids) {
             ids.insert(this->info_m);
         }
 
@@ -240,7 +242,7 @@ namespace atl {
             return lhs_m->EvaluateDerivative(wrt_x, wrt_y) + rhs_m->EvaluateDerivative(wrt_x, wrt_y);
         }
 
-        virtual void PushIds(flat_set<atl::VariableInfo<REAL_T>* >& ids) {
+        virtual void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids) {
             lhs_m->PushIds(ids);
             rhs_m->PushIds(ids);
         }
@@ -292,7 +294,7 @@ namespace atl {
             return lhs_m->EvaluateDerivative(wrt_x, wrt_y) - rhs_m->EvaluateDerivative(wrt_x, wrt_y);
         }
 
-        virtual void PushIds(flat_set<atl::VariableInfo<REAL_T>* >& ids) {
+        virtual void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids) {
             lhs_m->PushIds(ids);
             rhs_m->PushIds(ids);
         }
@@ -346,7 +348,7 @@ namespace atl {
                     lhs_m->EvaluateDerivative(wrt_y) * rhs_m->EvaluateDerivative(wrt_x) + rhs_m->Evaluate() * lhs_m->EvaluateDerivative(wrt_x, wrt_y);
         }
 
-        virtual void PushIds(flat_set<atl::VariableInfo<REAL_T>* >& ids) {
+        virtual void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids) {
             lhs_m->PushIds(ids);
             rhs_m->PushIds(ids);
         }
@@ -409,7 +411,7 @@ namespace atl {
 
         }
 
-        virtual void PushIds(flat_set<atl::VariableInfo<REAL_T>* >& ids) {
+        virtual void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids) {
             lhs_m->PushIds(ids);
             rhs_m->PushIds(ids);
         }
@@ -486,7 +488,7 @@ namespace atl {
                     g * fx / f)*(std::log(f) * gy + g * fy / f);
         }
 
-        virtual void PushIds(flat_set<atl::VariableInfo<REAL_T>* >& ids) {
+        virtual void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids) {
             lhs_m->PushIds(ids);
             rhs_m->PushIds(ids);
         }
@@ -561,7 +563,7 @@ namespace atl {
 
         }
 
-        virtual void PushIds(flat_set<atl::VariableInfo<REAL_T>* >& ids) {
+        virtual void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids) {
             expr_m->PushIds(ids);
         }
 
@@ -620,7 +622,7 @@ namespace atl {
                     +(expr_m->EvaluateDerivative(wrt_x, wrt_y) / std::sqrt(1.0 - fx * fx)));
         }
 
-        virtual void PushIds(flat_set<atl::VariableInfo<REAL_T>* >& ids) {
+        virtual void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids) {
             expr_m->PushIds(ids);
         }
 
@@ -678,7 +680,7 @@ namespace atl {
                     (2.0 * fx * expr_m->EvaluateDerivative(wrt_x) * expr_m->EvaluateDerivative(wrt_y)) / ((fx * fx + 1.0)*(fx * fx + 1.0));
         }
 
-        virtual void PushIds(flat_set<atl::VariableInfo<REAL_T>* >& ids) {
+        virtual void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids) {
             expr_m->PushIds(ids);
         }
 
@@ -731,7 +733,7 @@ namespace atl {
             exit(0);
         }
 
-        virtual void PushIds(flat_set<atl::VariableInfo<REAL_T>* >& ids) {
+        virtual void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids) {
             expr_m->PushIds(ids);
         }
 
@@ -778,7 +780,7 @@ namespace atl {
                     - (std::sin(expr_m->Evaluate()) * expr_m->EvaluateDerivative(wrt_x, wrt_y)));
         }
 
-        virtual void PushIds(flat_set<atl::VariableInfo<REAL_T>* >& ids) {
+        virtual void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids) {
             expr_m->PushIds(ids);
         }
 
@@ -830,7 +832,7 @@ namespace atl {
                     + (std::sinh(expr_m->Evaluate()) * expr_m->EvaluateDerivative(wrt_x, wrt_y)));
         }
 
-        virtual void PushIds(flat_set<atl::VariableInfo<REAL_T>* >& ids) {
+        virtual void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids) {
             expr_m->PushIds(ids);
         }
 
@@ -881,7 +883,7 @@ namespace atl {
                     + (fx * expr_m->EvaluateDerivative(wrt_x, wrt_y)));
         }
 
-        virtual void PushIds(flat_set<atl::VariableInfo<REAL_T>* >& ids) {
+        virtual void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids) {
             expr_m->PushIds(ids);
         }
 
@@ -930,7 +932,7 @@ namespace atl {
             return (expr_m->EvaluateDerivative(wrt_x, wrt_y) * expr_m->Evaluate()) / this->Evaluate();
         }
 
-        virtual void PushIds(flat_set<atl::VariableInfo<REAL_T>* >& ids) {
+        virtual void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids) {
             expr_m->PushIds(ids);
         }
 
@@ -978,7 +980,7 @@ namespace atl {
             return (expr_m->EvaluateDerivative(wrt_x, wrt_y) * this->Evaluate());
         }
 
-        virtual void PushIds(flat_set<atl::VariableInfo<REAL_T>* >& ids) {
+        virtual void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids) {
             expr_m->PushIds(ids);
         }
 #warning this needs review, return clone or dynamic scalar???
@@ -1028,7 +1030,7 @@ namespace atl {
             return (expr_m->EvaluateDerivative(wrt_x, wrt_y) / expr_m->Evaluate()) - (expr_m->EvaluateDerivative(wrt_x) * expr_m->EvaluateDerivative(wrt_y)) / (expr_m->Evaluate() * expr_m->Evaluate());
         }
 
-        virtual void PushIds(flat_set<atl::VariableInfo<REAL_T>* >& ids) {
+        virtual void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids) {
             expr_m->PushIds(ids);
         }
 
@@ -1079,7 +1081,7 @@ namespace atl {
                     ((expr_m->EvaluateDerivative(wrt_x) * expr_m->EvaluateDerivative(wrt_y)) / (DYNAMIC_AD_LOG10 * (fx * fx)));
         }
 
-        virtual void PushIds(flat_set<atl::VariableInfo<REAL_T>* >& ids) {
+        virtual void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids) {
             expr_m->PushIds(ids);
         }
 
@@ -1137,7 +1139,7 @@ namespace atl {
                     std::sin(expr_m->Evaluate()) * expr_m->EvaluateDerivative(wrt_x) * expr_m->EvaluateDerivative(wrt_y);
         }
 
-        virtual void PushIds(flat_set<atl::VariableInfo<REAL_T>* >& ids) {
+        virtual void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids) {
             expr_m->PushIds(ids);
         }
 
@@ -1188,7 +1190,7 @@ namespace atl {
                     + (std::cosh(expr_m->Evaluate()) * expr_m->EvaluateDerivative(wrt_x, wrt_y)));
         }
 
-        virtual void PushIds(flat_set<atl::VariableInfo<REAL_T>* >& ids) {
+        virtual void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids) {
             expr_m->PushIds(ids);
         }
 
@@ -1239,7 +1241,7 @@ namespace atl {
                     (expr_m->EvaluateDerivative(wrt_x) * expr_m->EvaluateDerivative(wrt_y)) / (4.0 * std::pow(expr_m->Evaluate(), 1.5));
         }
 
-        virtual void PushIds(flat_set<atl::VariableInfo<REAL_T>* >& ids) {
+        virtual void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids) {
             expr_m->PushIds(ids);
         }
 
@@ -1290,7 +1292,7 @@ namespace atl {
                     sec2 * expr_m->EvaluateDerivative(wrt_x, wrt_y);
         }
 
-        virtual void PushIds(flat_set<atl::VariableInfo<REAL_T>* >& ids) {
+        virtual void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids) {
             expr_m->PushIds(ids);
         }
 
@@ -1353,7 +1355,7 @@ namespace atl {
             return sech2 * expr_m->EvaluateDerivative(wrt_x, wrt_y) - 2.0 * sech2 * this->Evaluate() * expr_m->EvaluateDerivative(wrt_x) * expr_m->EvaluateDerivative(wrt_y);
         }
 
-        virtual void PushIds(flat_set<atl::VariableInfo<REAL_T>* >& ids) {
+        virtual void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids) {
 
             expr_m->PushIds(ids);
         }

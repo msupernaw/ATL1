@@ -14,7 +14,7 @@
 #include <iostream>
 #include "../ATL.hpp"
 
-//#define HESSIAN_USE_AD_GRADIENT
+#define HESSIAN_USE_AD_GRADIENT
 
 namespace atl {
     namespace tests {
@@ -81,110 +81,6 @@ namespace atl {
                     
                 }
                 
-                void RunTest(bool exact_only = false) {
-                    var::gradient_structure_g.Reset();
-                    var::SetRecording(true);
-                    var::derivative_trace_level = GRADIENT_AND_HESSIAN;
-                    this->Initialize();
-                    //                std::cout.precision(50);
-                    
-                    std::cout << "Hessian Test:\n";
-                    std::cout << "Number of Paramters: " << this->active_parameters_m.size() << "\n";
-                    
-                    
-                    var f;
-                    std::cout << "evaluating..." << std::flush;
-                    auto exact_start = std::chrono::steady_clock::now();
-                    
-                    auto eval_start = std::chrono::steady_clock::now();
-                    this->ObjectiveFunction(f);
-                    auto eval_end = std::chrono::steady_clock::now();
-                    std::chrono::duration<double> eval_time = eval_end - eval_start;
-                    std::cout << (eval_time.count()) << " sec...";
-                    
-                    std::cout << "computing exact gradient and hessian..." << std::flush;
-                    
-                    var::gradient_structure_g.AccumulateSecondOrderMixed(); //HessianAndGradientAccumulate();
-                    auto exact_end = std::chrono::steady_clock::now();
-                    std::chrono::duration<double> exact_time = (exact_end - exact_start);
-                    std::cout << exact_time.count() << "sec...";
-                    std::vector<std::vector<T> > exact_hessian(this->active_parameters_m.size(), std::vector<T> (this->active_parameters_m.size()));
-                    for (int i = 0; i < this->active_parameters_m.size(); i++) {
-                        for (int j = 0; j < this->active_parameters_m.size(); j++) {
-                            exact_hessian[i][j] = var::gradient_structure_g.Value(this->active_parameters_m[i]->info->id, this->active_parameters_m[j]->info->id); //this->active_parameters_m[i]->info->hessian_row[this->active_parameters_m[j]->info];
-                            //                        std::cout<<exact_hessian[i][j]<<" ";
-                        }
-                        //                    std::cout<<"\n";
-                    }
-                    //                std::vector<std::vector<T> > exact_hessian = var::gradient_structure_g.HessianAndGradientAccumulate(pids);
-                    std::cout << "done!\n";
-                    //     exit(0);
-                    std::cout << std::scientific;
-                    if (!exact_only) {
-                        
-                        
-                        //                std::cout<<std::fixed;
-                        std::cout << "estimating hessian..." << std::flush;
-                        auto estimated_start = std::chrono::steady_clock::now();
-                        std::valarray<std::valarray<T> > estimated_hessian = this->EstimatedHessian();
-                        auto estimated_end = std::chrono::steady_clock::now();
-                        std::chrono::duration<double> estimated_time = (estimated_end - estimated_start);
-                        
-                        std::cout << "done\n";
-                        
-                        if (this->active_parameters_m.size() < 20) {//dont print a lot of stuff
-                            std::cout << "estimated: \n";
-                            for (int i = 0; i < estimated_hessian.size(); i++) {
-                                for (int j = 0; j < estimated_hessian[0].size(); j++) {
-                                    std::cout << estimated_hessian[i][j] << " ";
-                                }
-                                std::cout << std::endl;
-                            }
-                        }
-                        std::cout << "estimated done\n";
-                    do_exact:
-                        
-                        double sum = 0;
-                        //
-                        if (this->active_parameters_m.size() < 20) {//dont print a lot of stuff
-                            std::cout << "Exact:\n";
-                        }
-                        for (int i = 0; i < exact_hessian.size(); i++) {
-                            for (int j = 0; j < exact_hessian[0].size(); j++) {
-                                if (this->active_parameters_m.size() < 20) {//dont print a lot of stuff
-                                    std::cout << exact_hessian[i][j] << " ";
-                                }
-                                sum += (exact_hessian[i][j] - estimated_hessian[i][j])* (exact_hessian[i][j] - estimated_hessian[i][j]);
-                            }
-                            if (this->active_parameters_m.size() < 20) {
-                                std::cout << std::endl;
-                            }
-                        }
-                        
-                        if (this->active_parameters_m.size() < 20) {//dont print a lot of stuff
-                            std::cout << "\n\nDifference:\n";
-                            for (int i = 0; i < exact_hessian.size(); i++) {
-                                for (int j = 0; j < exact_hessian[0].size(); j++) {
-                                    std::cout << (exact_hessian[i][j] - estimated_hessian[i][j]) << " ";
-                                }
-                                std::cout << std::endl;
-                            }
-                        }
-                        
-                        T mss = (sum / exact_hessian.size() * exact_hessian.size());
-                        
-                        if (mss <= AutoDiffTest<T>::tolerance) {
-                            std::cout << "Test Passed.\n";
-                        } else {
-                            std::cout << "Test Failed.\n";
-                        }
-                        std::cout << "Mean squared error = " << mss << "\n";
-                        std::cout << std::fixed;
-                        std::cout << "Time to compute exact Hessian: " << exact_time.count() << " sec\n";
-                        std::cout << "Time to estimate Hessian: " << estimated_time.count() << " sec\n";
-                        std::cout << "Speed up = " << estimated_time / exact_time << "";
-                    }
-                }
                 
                 virtual void Description(std::stringstream& out) {
                     
@@ -195,7 +91,7 @@ namespace atl {
                     tests += 2;
                     var::gradient_structure_g.Reset();
                     var::SetRecording(true);
-                    var::gradient_structure_g.derivative_trace_level = GRADIENT;
+                    var::gradient_structure_g.derivative_trace_level = FIRST_ORDER;
                     this->Initialize();
                     var f;
                     //
@@ -217,7 +113,7 @@ namespace atl {
                     
                     
                     std::cout << "evaluating..." << std::flush;
-                    ;
+                    
                     
                     
                     auto eval_gstart = std::chrono::steady_clock::now();
@@ -232,6 +128,12 @@ namespace atl {
                     var::gradient_structure_g.Accumulate();
                     auto exact_gend = std::chrono::steady_clock::now();
                     std::chrono::duration<double> exact_gtime = (exact_gend - exact_gstart);
+                    
+                    for (int i = 0; i < this->active_parameters_m.size(); i++) {
+                        gradient[i] = this->active_parameters_m[i]->info->dvalue;
+                    }
+                    
+                    
                     var::gradient_structure_g.Reset();
                     std::cout << "done!\nevaluating..." << std::flush;
                     
@@ -258,7 +160,7 @@ namespace atl {
                     std::chrono::duration<double> exact_time = (exact_end - exact_start);
                     std::vector<std::vector<T> > exact_hessian(this->active_parameters_m.size(), std::vector<T> (this->active_parameters_m.size()));
                     for (int i = 0; i < this->active_parameters_m.size(); i++) {
-                        gradient[i] = var::gradient_structure_g.Value(this->active_parameters_m[i]->info->id); //this->active_parameters_m[i]->info->dvalue;
+                        //                        gradient[i] = this->active_parameters_m[i]->info->dvalue;
                         for (int j = 0; j < this->active_parameters_m.size(); j++) {
 #ifdef USE_EIGEN
                             
@@ -2087,7 +1989,7 @@ namespace atl {
             std::string TestTypeTrait<long double>::type = "long double";
             
             void Run() {
-                typedef long double real_t;
+                typedef double real_t;
                 std::ofstream out;
                 out.open("autodiff_tests.txt");
                 out << "This test compares the computed gradient, second-order, "
@@ -2134,7 +2036,7 @@ namespace atl {
                 atl::tests::auto_diff::FloorAutoDiffTest<real_t> floor(out);
                 atl::tests::auto_diff::SumAlotOfParametersAutoDiffTest<real_t> s1(out, 10);
                 atl::tests::auto_diff::SumAlotOfParametersAutoDiffTest<real_t> s2(out, 20);
-                //                atl::tests::auto_diff::SumAlotOfParametersAutoDiffTest<real_t> s3(out, 50);
+                atl::tests::auto_diff::SumAlotOfParametersAutoDiffTest<real_t> s3(out, 50);
                 //                atl::tests::auto_diff::SumAlotOfParametersAutoDiffTest<real_t> s4(out, 200);
                 //                atl::tests::auto_diff::SumAlotOfParametersAutoDiffTest<real_t> s5(out, 500);
                 
@@ -2152,6 +2054,7 @@ namespace atl {
         }
     }
 }
+
 
 
 
