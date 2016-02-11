@@ -95,7 +95,7 @@ namespace atl {
                     (expr_m.EvaluateDerivative(x))*
                     (expr_m.EvaluateDerivative(y))*
                     (expr_m.EvaluateDerivative(z))) 
-                    / std::pow((1 - std::pow(expr_m.GetValue(), 2.0)),(5.0 / 2/0))-
+                    / std::pow((1 - std::pow(expr_m.GetValue(), 2.0)),(5.0 / 2.0))-
                     (expr_m.GetValue()*(expr_m.EvaluateDerivative(x, y))*
                     (expr_m.EvaluateDerivative(z))) / 
                     std::pow((1 - std::pow(expr_m.GetValue(), 2.0)),(3.0 / 2.0))
