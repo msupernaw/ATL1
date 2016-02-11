@@ -4,14 +4,21 @@
  *
  * Created on June 15, 2015, 8:08 AM
  */
+/*
+ * File:   AutoDiffTests.hpp
+ * Author: matthewsupernaw
+ *
+ * Created on June 15, 2015, 8:08 AM
+ */
 
 #ifndef HESSIANTESTS_HPP
-#define	HESSIANTESTS_HPP
+#define HESSIANTESTS_HPP
 
 #include <valarray>
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <random>
 #include "../ATL.hpp"
 
 #define HESSIAN_USE_AD_GRADIENT
@@ -1975,6 +1982,95 @@ namespace atl {
             };
             
             
+            template<class T>
+            class Ackley : public AutoDiffTest<T> {
+            public:
+                typedef atl::Variable<T> var;
+                typedef atl::Variable<T> variable;
+                std::vector<variable > x;
+                
+                variable a;
+                variable b;
+                variable c;
+                variable d;
+                
+                atl::Variable<T> f;
+                std::mt19937 generator; //// mt19937 is a standard mersenne_twister_engine
+                std::normal_distribution<double> distribution;
+                
+                Ackley(std::ofstream& out, int dd) {
+                    d =(T)dd;
+                    this->RunTestToFile(out);
+                }
+                
+                void Initialize() {
+                    int dimensions = (int)d.GetValue();
+                    a = 20;
+                    b = .2;
+                    c = 2.0 * M_PI;
+//                    d = dimensions;
+                    //random seed
+                    generator.seed(40909);
+                    //set some random starting values
+                    for (int i = 0; i < dimensions; i++) {
+                        double r;
+                        r = distribution(generator);
+                        this->x.push_back(variable(r));
+                    }
+                    for (int i = 0; i < x.size(); i++) {
+                        this->Register(x[i]);
+                    }
+                    
+                    
+                }
+                
+                void Description(std::stringstream& out) {
+                    out << "Test Problem:\n";
+                    out << "Parameters:\n";
+                    out << "Variable a = " << a << ";\n";
+                    out << "Variable b = " << b << ";\n";
+                    out << "Variable c = " <<c << ";\n";
+                    out << "Variable x["<<(int)d.GetValue()<< "];\n";
+                    out<<"f = 0;"<<"\n";
+                    out<<"variable sum1;"<< ";\n";
+                    out<<"variable sum2;"<< ";\n";
+                    out<<"variable term1;"<< ";\n";
+                    out<<"variable term2;"<< ";\n\n";
+                    
+                    out<<"for (int i = 0; i < x.size(); i++) {"<< "\n";
+                    out<<"    sum1 += atl::pow(x[i], 2.0);"<< "\n";
+                    out<<"    sum2 += atl::cos(x[i] * c);"<< "\n";
+                    out<<"}\n\n";
+                    
+                    out<<"term1 = -a * atl::exp(-b * atl::sqrt(sum1 / d));"<< "\n";
+                    out<<"term2 = -1.0 * atl::exp(sum2 / d);"<< "\n\n";
+                    
+                    out<<"f = term1 + term2 + a + exp(1);"<< "\n";
+                }
+                
+                void ObjectiveFunction(var& f) {
+                    f = 0;
+                    variable sum1;
+                    variable sum2;
+                    variable term1;
+                    variable term2;
+                    
+                    for (int i = 0; i < x.size(); i++) {
+                        sum1 += atl::pow(x[i], 2.0);
+                        sum2 += atl::cos(x[i] * c);
+                    }
+                    
+                    term1 = -a * atl::exp(-b * atl::sqrt(sum1 / d));
+                    term2 = -1.0 * atl::exp(sum2 / d);
+                    
+                    f = term1 + term2 + a + std::exp(1);
+                }
+                
+                
+            };
+            
+            
+            
             template<typename T>
             struct TestTypeTrait{
                 static std::string type;
@@ -2003,40 +2099,47 @@ namespace atl {
                 
                 std::cout << "running...\n";
                 //
-                atl::tests::auto_diff::AddAutoDiffTest<real_t> add(out);
-                atl::tests::auto_diff::Add1AutoDiffTest<real_t> add1(out);
-                atl::tests::auto_diff::Add2AutoDiffTest<real_t> add2(out);
-                atl::tests::auto_diff::SubtractAutoDiffTest<real_t> subtract1(out);
-                atl::tests::auto_diff::Subtract1AutoDiffTest<real_t> subtract(out);
-                atl::tests::auto_diff::Subtract2AutoDiffTest<real_t> subtract2(out);
-                atl::tests::auto_diff::MultiplyAutoDiffTest<real_t> multiply(out);
-                atl::tests::auto_diff::Multiply1AutoDiffTest<real_t> multiply1(out);
-                atl::tests::auto_diff::Multiply2AutoDiffTest<real_t> multiply2(out);
-                atl::tests::auto_diff::DivideAutoDiffTest<real_t> divide(out);
-                atl::tests::auto_diff::Divide1AutoDiffTest<real_t> divide1(out);
-                atl::tests::auto_diff::Divide2AutoDiffTest<real_t> divide2(out);
-                atl::tests::auto_diff::CosAutoDiffTest<real_t> cos(out);
-                atl::tests::auto_diff::ACosAutoDiffTest<real_t> acos(out);
-                atl::tests::auto_diff::SinAutoDiffTest<real_t> sin(out);
-                atl::tests::auto_diff::ASinAutoDiffTest<real_t> asin(out);
-                atl::tests::auto_diff::TanAutoDiffTest<real_t> tan(out);
-                atl::tests::auto_diff::ATanAutoDiffTest<real_t> atan(out);
-                atl::tests::auto_diff::CoshAutoDiffTest<real_t> cosh(out);
-                atl::tests::auto_diff::SinhAutoDiffTest<real_t> sinh(out);
-                atl::tests::auto_diff::TanhAutoDiffTest<real_t> tanh(out);
-                atl::tests::auto_diff::ExpAutoDiffTest<real_t> exp(out);
-                atl::tests::auto_diff::LogAutoDiffTest<real_t> log(out);
-                atl::tests::auto_diff::Log10AutoDiffTest<real_t> log10(out);
-                atl::tests::auto_diff::FabsAutoDiffTest<real_t> fabs(out);
-                atl::tests::auto_diff::SqrtAutoDiffTest<real_t> sqrt(out);
-                atl::tests::auto_diff::PowAutoDiffTest<real_t> pow(out);
-                atl::tests::auto_diff::PowCAutoDiffTest<real_t> pow2(out);
-                atl::tests::auto_diff::PowC2AutoDiffTest<real_t> pow3(out);
-                atl::tests::auto_diff::CeilAutoDiffTest<real_t> ceil(out);
-                atl::tests::auto_diff::FloorAutoDiffTest<real_t> floor(out);
-                atl::tests::auto_diff::SumAlotOfParametersAutoDiffTest<real_t> s1(out, 10);
-                atl::tests::auto_diff::SumAlotOfParametersAutoDiffTest<real_t> s2(out, 20);
+//                atl::tests::auto_diff::AddAutoDiffTest<real_t> add(out);
+//                atl::tests::auto_diff::Add1AutoDiffTest<real_t> add1(out);
+//                atl::tests::auto_diff::Add2AutoDiffTest<real_t> add2(out);
+//                atl::tests::auto_diff::SubtractAutoDiffTest<real_t> subtract1(out);
+//                atl::tests::auto_diff::Subtract1AutoDiffTest<real_t> subtract(out);
+//                atl::tests::auto_diff::Subtract2AutoDiffTest<real_t> subtract2(out);
+//                atl::tests::auto_diff::MultiplyAutoDiffTest<real_t> multiply(out);
+//                atl::tests::auto_diff::Multiply1AutoDiffTest<real_t> multiply1(out);
+//                atl::tests::auto_diff::Multiply2AutoDiffTest<real_t> multiply2(out);
+//                atl::tests::auto_diff::DivideAutoDiffTest<real_t> divide(out);
+//                atl::tests::auto_diff::Divide1AutoDiffTest<real_t> divide1(out);
+//                atl::tests::auto_diff::Divide2AutoDiffTest<real_t> divide2(out);
+//                atl::tests::auto_diff::CosAutoDiffTest<real_t> cos(out);
+//                atl::tests::auto_diff::ACosAutoDiffTest<real_t> acos(out);
+//                atl::tests::auto_diff::SinAutoDiffTest<real_t> sin(out);
+//                atl::tests::auto_diff::ASinAutoDiffTest<real_t> asin(out);
+//                atl::tests::auto_diff::TanAutoDiffTest<real_t> tan(out);
+//                atl::tests::auto_diff::ATanAutoDiffTest<real_t> atan(out);
+//                atl::tests::auto_diff::CoshAutoDiffTest<real_t> cosh(out);
+//                atl::tests::auto_diff::SinhAutoDiffTest<real_t> sinh(out);
+//                atl::tests::auto_diff::TanhAutoDiffTest<real_t> tanh(out);
+//                atl::tests::auto_diff::ExpAutoDiffTest<real_t> exp(out);
+//                atl::tests::auto_diff::LogAutoDiffTest<real_t> log(out);
+//                atl::tests::auto_diff::Log10AutoDiffTest<real_t> log10(out);
+//                atl::tests::auto_diff::FabsAutoDiffTest<real_t> fabs(out);
+//                atl::tests::auto_diff::SqrtAutoDiffTest<real_t> sqrt(out);
+//                atl::tests::auto_diff::PowAutoDiffTest<real_t> pow(out);
+//                atl::tests::auto_diff::PowCAutoDiffTest<real_t> pow2(out);
+//                atl::tests::auto_diff::PowC2AutoDiffTest<real_t> pow3(out);
+//                atl::tests::auto_diff::CeilAutoDiffTest<real_t> ceil(out);
+//                atl::tests::auto_diff::FloorAutoDiffTest<real_t> floor(out);
+//                atl::tests::auto_diff::SumAlotOfParametersAutoDiffTest<real_t> s1(out, 10);
+//                atl::tests::auto_diff::SumAlotOfParametersAutoDiffTest<real_t> s2(out, 20);
                 atl::tests::auto_diff::SumAlotOfParametersAutoDiffTest<real_t> s3(out, 50);
+                atl::tests::auto_diff::Ackley<real_t>  ackley10(out,10);
+                atl::tests::auto_diff::Ackley<real_t>  ackley20(out,20);
+                atl::tests::auto_diff::Ackley<real_t>  ackley30(out,30);
+                atl::tests::auto_diff::Ackley<real_t>  ackley40(out,40);
+                atl::tests::auto_diff::Ackley<real_t>  ackley50(out,50);
+                atl::tests::auto_diff::Ackley<real_t>  ackley100(out,100);
+                atl::tests::auto_diff::Ackley<real_t>  ackley200(out,200);
                 //                atl::tests::auto_diff::SumAlotOfParametersAutoDiffTest<real_t> s4(out, 200);
                 //                atl::tests::auto_diff::SumAlotOfParametersAutoDiffTest<real_t> s5(out, 500);
                 
