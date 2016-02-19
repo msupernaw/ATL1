@@ -95,6 +95,11 @@ namespace atl {
     }
 
     template <class REAL_T, class LHS>
+    inline const Multiply<REAL_T, LHS, LHS> square(const ExpressionBase<REAL_T, LHS>& a) {
+        return Multiply<REAL_T, LHS, LHS > (a.Cast(), a.Cast());
+    }
+
+    template <class REAL_T, class LHS>
     struct MultiplyScalar : public ExpressionBase<REAL_T, MultiplyScalar<REAL_T, LHS> > {
         typedef REAL_T BASE_TYPE;
 
@@ -136,7 +141,7 @@ namespace atl {
         }
 
         inline REAL_T EvaluateDerivative(uint32_t x, uint32_t y, uint32_t z) const {
-            return rhs_m*(lhs_m.EvaluateDerivative(x, y, z));
+            return rhs_m * (lhs_m.EvaluateDerivative(x, y, z));
         }
 
         inline atl::DynamicExpression<REAL_T>* GetDynamicExpession() const {
@@ -202,8 +207,9 @@ namespace atl {
         inline REAL_T EvaluateDerivative(uint32_t a, uint32_t b) const {
             return (rhs_m.EvaluateDerivative(a, b) * lhs_m);
         }
+
         inline REAL_T EvaluateDerivative(uint32_t x, uint32_t y, uint32_t z) const {
-            return  lhs_m*(rhs_m.EvaluateDerivative(x, y, z));
+            return lhs_m * (rhs_m.EvaluateDerivative(x, y, z));
         }
 
         inline atl::DynamicExpression<REAL_T>* GetDynamicExpession() const {

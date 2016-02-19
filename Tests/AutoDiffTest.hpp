@@ -88,7 +88,6 @@ namespace atl {
                     
                 }
                 
-                
                 virtual void Description(std::stringstream& out) {
                     
                 }
@@ -166,6 +165,7 @@ namespace atl {
                     auto exact_end = std::chrono::steady_clock::now();
                     std::chrono::duration<double> exact_time = (exact_end - exact_start);
                     std::vector<std::vector<T> > exact_hessian(this->active_parameters_m.size(), std::vector<T> (this->active_parameters_m.size()));
+                    std::vector<std::vector<T> > exact_hessian2(this->active_parameters_m.size(), std::vector<T> (this->active_parameters_m.size()));
                     for (int i = 0; i < this->active_parameters_m.size(); i++) {
                         //                        gradient[i] = this->active_parameters_m[i]->info->dvalue;
                         for (int j = 0; j < this->active_parameters_m.size(); j++) {
@@ -261,8 +261,22 @@ namespace atl {
                     std::valarray< std::valarray<std::valarray < T> > > third_mixed_exact(std::valarray<std::valarray < T> > (std::valarray<T > (active_parameters_m.size()), active_parameters_m.size()), active_parameters_m.size());
                     
                     for (int i = 0; i < this->active_parameters_m.size(); i++) {
+                        if(std::fabs(gradient[i]- this->active_parameters_m[i]->info->dvalue) >1e-5){
+                            std::cout<<"gradient doesn't match....\n";
+                            std::cout<<gradient[i]<<" != "<< this->active_parameters_m[i]->info->dvalue;
+                            exit(0);
+                        }
                         for (int j = 0; j < this->active_parameters_m.size(); j++) {
                             for (int k = 0; k < this->active_parameters_m.size(); k++) {
+                                if (i == 0) {
+                                    exact_hessian2[j][k] = atl::Variable<T>::gradient_structure_g.Value(this->active_parameters_m[j]->info->id, this->active_parameters_m[k]->info->id);
+                                    if(std::fabs(exact_hessian[j][k]-exact_hessian2[j][k]) >1e-5){
+                                        
+                                        std::cout<<"hessian doesn't match....\n";
+                                        std::cout<< exact_hessian[j][k]<< " != " <<exact_hessian2[j][k];
+                                        exit(0);
+                                    }
+                                }
                                 third_mixed_exact[i][j][k] = atl::Variable<T>::gradient_structure_g.Value(this->active_parameters_m[i]->info->id, this->active_parameters_m[j]->info->id, this->active_parameters_m[k]->info->id);
                             }
                         }
@@ -387,7 +401,8 @@ namespace atl {
                     out << "\nHessian difference:\n";
                     for (int i = 0; i < exact_hessian.size(); i++) {
                         for (int j = 0; j < exact_hessian[0].size(); j++) {
-                            out << (exact_hessian[i][j] - estimated_hessian[i][j]) << " ";
+                            T diff = (exact_hessian[i][j] - estimated_hessian[i][j]);
+                            out << diff << " ";
                         }
                         out << std::endl;
                     }
@@ -566,7 +581,7 @@ namespace atl {
                     
                     std::valarray< std::valarray<std::valarray < T> > > third_mixed(std::valarray<std::valarray < T> > (std::valarray<T > (active_parameters_m.size()), active_parameters_m.size()), active_parameters_m.size());
                     
-                    T delta = 1.e-2;
+                    T delta = 1.e-3;
                     T eps = .1;
                     T sdelta1;
                     T sdelta2;
@@ -698,7 +713,7 @@ namespace atl {
             T AutoDiffTest<T>::second_tolerance = T(1e-3);
             
             template<class T>
-            T AutoDiffTest<T>::third_tolerance = T(1e-2);
+            T AutoDiffTest<T>::third_tolerance = T(1e-1);
             
             template<class T>
             class AddAutoDiffTest : public AutoDiffTest<T> {
@@ -768,7 +783,7 @@ namespace atl {
                 }
                 
                 void ObjectiveFunction(var& f) {
-                    f = a + static_cast<T>(3.1459);
+                    f = a + static_cast<T> (3.1459);
                 }
                 
                 
@@ -805,7 +820,7 @@ namespace atl {
                 }
                 
                 void ObjectiveFunction(var& f) {
-                    f = static_cast<T>(3.1459) + b;
+                    f = static_cast<T> (3.1459) + b;
                 }
                 
                 
@@ -879,7 +894,7 @@ namespace atl {
                 }
                 
                 void ObjectiveFunction(var& f) {
-                    f = a - static_cast<T>(3.1459);
+                    f = a - static_cast<T> (3.1459);
                 }
                 
                 
@@ -916,7 +931,7 @@ namespace atl {
                 }
                 
                 void ObjectiveFunction(var& f) {
-                    f = static_cast<T>(3.1459) - b;
+                    f = static_cast<T> (3.1459) - b;
                 }
                 
                 
@@ -990,7 +1005,7 @@ namespace atl {
                 }
                 
                 void ObjectiveFunction(var& f) {
-                    f = a * static_cast<T>(3.1459);
+                    f = a * static_cast<T> (3.1459);
                 }
                 
                 
@@ -1027,7 +1042,7 @@ namespace atl {
                 }
                 
                 void ObjectiveFunction(var& f) {
-                    f = static_cast<T>(3.1459) * b;
+                    f = static_cast<T> (3.1459) * b;
                 }
                 
                 
@@ -1064,7 +1079,7 @@ namespace atl {
                 }
                 
                 void ObjectiveFunction(var& f) {
-                    f = a / b;
+                    f = atl::sin(a) / b;
                 }
                 
                 
@@ -1101,7 +1116,7 @@ namespace atl {
                 }
                 
                 void ObjectiveFunction(var& f) {
-                    f = a / static_cast<T>(3.1459);
+                    f = a / static_cast<T> (3.1459);
                 }
                 
                 
@@ -1119,8 +1134,8 @@ namespace atl {
                 }
                 
                 void Initialize() {
-                    a = .03434;
-                    b = .034230;
+                    a = 1.03434;
+                    b = 1.034230;
                     //                    this->Register(a);
                     this->Register(b);
                     
@@ -1138,7 +1153,7 @@ namespace atl {
                 }
                 
                 void ObjectiveFunction(var& f) {
-                    f = static_cast<T>(3.1459) / b;
+                    f = static_cast<T> (3.1459) / b;
                 }
                 
                 
@@ -1619,7 +1634,7 @@ namespace atl {
                 }
                 
                 void ObjectiveFunction(var& f) {
-                    f = atl::pow(a, static_cast<T>(2.0));
+                    f = atl::pow(a, static_cast<T> (2.0));
                 }
                 
                 
@@ -1656,7 +1671,7 @@ namespace atl {
                 }
                 
                 void ObjectiveFunction(var& f) {
-                    f = atl::pow(static_cast<T>(2.0), (a * b));
+                    f = atl::pow(static_cast<T> (2.0), (a * b));
                 }
                 
                 
@@ -1981,7 +1996,6 @@ namespace atl {
                 
             };
             
-            
             template<class T>
             class Ackley : public AutoDiffTest<T> {
             public:
@@ -1996,30 +2010,33 @@ namespace atl {
                 
                 atl::Variable<T> f;
                 std::mt19937 generator; //// mt19937 is a standard mersenne_twister_engine
-                std::normal_distribution<double> distribution;
+                std::normal_distribution<T> distribution;
                 
                 Ackley(std::ofstream& out, int dd) {
-                    d =(T)dd;
+                    d = (T) dd;
                     this->RunTestToFile(out);
                 }
                 
                 void Initialize() {
-                    int dimensions = (int)d.GetValue();
+                    int dimensions = (int) d.GetValue();
                     a = 20;
                     b = .2;
                     c = 2.0 * M_PI;
-//                    d = dimensions;
+                    
                     //random seed
-                    generator.seed(40909);
+                    generator.seed(409009);
                     //set some random starting values
+                    
                     for (int i = 0; i < dimensions; i++) {
-                        double r;
+                        T r;
                         r = distribution(generator);
                         this->x.push_back(variable(r));
                     }
                     for (int i = 0; i < x.size(); i++) {
+                        //                        std::cout<<x[i]<<" ";
                         this->Register(x[i]);
                     }
+                    //                    std::cout<<"\n";
                     
                     
                 }
@@ -2029,23 +2046,23 @@ namespace atl {
                     out << "Parameters:\n";
                     out << "Variable a = " << a << ";\n";
                     out << "Variable b = " << b << ";\n";
-                    out << "Variable c = " <<c << ";\n";
-                    out << "Variable x["<<(int)d.GetValue()<< "];\n";
-                    out<<"f = 0;"<<"\n";
-                    out<<"variable sum1;"<< ";\n";
-                    out<<"variable sum2;"<< ";\n";
-                    out<<"variable term1;"<< ";\n";
-                    out<<"variable term2;"<< ";\n\n";
+                    out << "Variable c = " << c << ";\n";
+                    out << "Variable x[" << (int) d.GetValue() << "];\n";
+                    out << "f = 0;" << "\n";
+                    out << "variable sum1;" << ";\n";
+                    out << "variable sum2;" << ";\n";
+                    out << "variable term1;" << ";\n";
+                    out << "variable term2;" << ";\n\n";
                     
-                    out<<"for (int i = 0; i < x.size(); i++) {"<< "\n";
-                    out<<"    sum1 += atl::pow(x[i], 2.0);"<< "\n";
-                    out<<"    sum2 += atl::cos(x[i] * c);"<< "\n";
-                    out<<"}\n\n";
+                    out << "for (int i = 0; i < x.size(); i++) {" << "\n";
+                    out << "    sum1 += atl::pow(x[i], 2.0);" << "\n";
+                    out << "    sum2 += atl::cos(x[i] * c);" << "\n";
+                    out << "}\n\n";
                     
-                    out<<"term1 = -a * atl::exp(-b * atl::sqrt(sum1 / d));"<< "\n";
-                    out<<"term2 = -1.0 * atl::exp(sum2 / d);"<< "\n\n";
+                    out << "term1 = -a * atl::exp(-b * atl::sqrt(sum1 / d));" << "\n";
+                    out << "term2 = -1.0 * atl::exp(sum2 / d);" << "\n\n";
                     
-                    out<<"f = term1 + term2 + a + exp(1);"<< "\n";
+                    out << "f = term1 + term2 + a + exp(1);" << "\n";
                 }
                 
                 void ObjectiveFunction(var& f) {
@@ -2056,12 +2073,12 @@ namespace atl {
                     variable term2;
                     
                     for (int i = 0; i < x.size(); i++) {
-                        sum1 += atl::pow(x[i], 2.0);
+                        sum1 += atl::pow(x[i], static_cast<T> (2.0));
                         sum2 += atl::cos(x[i] * c);
                     }
                     
                     term1 = -a * atl::exp(-b * atl::sqrt(sum1 / d));
-                    term2 = -1.0 * atl::exp(sum2 / d);
+                    term2 = static_cast<T> (-1.0) * atl::exp(sum2 / d);
                     
                     f = term1 + term2 + a + std::exp(1);
                 }
@@ -2070,9 +2087,89 @@ namespace atl {
             };
             
             
+            //            template<typename T>
+            //        const T Bertalanffy(const T& Linf, const T& a0, const T& a, const T& k) {
+            //            return Linf * (1.0 - std::exp(-k * (a - a0)));
+            //        }
+            
+            template<class T>
+            class Bertalanffy : public AutoDiffTest<T> {
+            public:
+                typedef atl::Variable<T> var;
+                typedef atl::Variable<T> variable;
+                std::vector<T > y;
+                
+                std::vector<T> a = {2, 2, 2, 2, 3, 3, 3, 4, 4, 6, 9, 10, 11, 11, 15, 19, 21, 24, 30, 35};
+                std::vector<T> l = {1, 3, 4, 4, 3, 4, 5, 6, 9, 10, 14, 13, 16, 17, 18, 19, 20, 21, 20, 21};
+                variable Linf;
+                variable a0;
+                variable k;
+                variable sd;
+                
+                atl::Variable<T> f;
+                std::mt19937 generator; //// mt19937 is a standard mersenne_twister_engine
+                std::normal_distribution<T> distribution;
+                
+                Bertalanffy(std::ofstream& out) {
+                    this->RunTestToFile(out);
+                }
+                
+                void Initialize() {
+                    Linf = 22.1724234324;
+                    this->Register(Linf);
+                    
+                    a0 = 0.929192342346;
+                    this->Register(a0);
+                    
+                    k = 0.113242353188;
+                    this->Register(k);
+                    
+                    sd = 0.289336;
+                    this->Register(sd);
+                    
+                    
+                    
+                    
+                }
+                
+                void Description(std::stringstream& out) {
+                    out << "Test Problem:\n";
+                    out << "Parameters:\n";
+                    out << "Variable Linf = " << Linf << ";\n";
+                    out << "Variable a0= " << a0 << ";\n";
+                    out << "Variable k = " << k << ";\n";
+                    out << "Variable sd = " << sd << ";\n";
+                    out << "vector a[" << a.size() << "];\n";
+                    out << "vector l[" << a.size() << "];\n";
+                    out << "f = 0;" << "\n";
+                    out << "variable sum;" << ";\n";
+                    
+                    out << "for (int i = 0; i < y.size(); i++) {" << "\n";
+                    out << "    variable predL = (Linf * (static_cast<T> (1.0) - atl::exp(static_cast<T> (-1.0) * k * (a[i] - a0))));\n";
+                    out << "    sum += static_cast<T> (.5) * atl::square((std::log(l[i]) - atl::log(predL))) / sd;\n";
+                    out << "}\n\n";
+                    
+                    
+                    out << "T(a.size()) * atl::log(sd) * sum" << "\n";
+                }
+                
+                void ObjectiveFunction(var& f) {
+                    f = 0;
+                    variable sum;
+                    for (int i = 0; i < a.size(); i++) {
+                        variable predL = (Linf * (static_cast<T> (1.0) - atl::exp(static_cast<T> (-1.0) * k * (a[i] - a0))));
+                        sum += static_cast<T> (.5) * atl::square((std::log(l[i]) - atl::log(predL))) / sd;
+                    }
+                    
+                    
+                    f = T(a.size()) * atl::log(sd) * sum;
+                }
+                
+                
+            };
             
             template<typename T>
-            struct TestTypeTrait{
+            struct TestTypeTrait {
                 static std::string type;
             };
             template<typename T>
@@ -2092,13 +2189,12 @@ namespace atl {
                 "and third-order mixed \npartial derivatives against "
                 "those computed using the differences method.\n\n";
                 
-                out<<"Data type: "<<TestTypeTrait<real_t>::type<<"\n\n";
+                out << "Data type: " << TestTypeTrait<real_t>::type << "\n\n";
                 out << "Test Gradient Tolerance: " << atl::tests::auto_diff::AutoDiffTest<real_t>::GetTolerance() << "\n\n";
                 out << "Test Second-Order Tolerance: " << atl::tests::auto_diff::AutoDiffTest<real_t>::GetSecondOrderTolerance() << "\n\n";
-                out << "Test Second-Order Tolerance: " << atl::tests::auto_diff::AutoDiffTest<real_t>::GetThirdOrderTolerance() << "\n\n";
+                out << "Test Third-Order Tolerance: " << atl::tests::auto_diff::AutoDiffTest<real_t>::GetThirdOrderTolerance() << "\n\n";
                 
                 std::cout << "running...\n";
-                //
                 atl::tests::auto_diff::AddAutoDiffTest<real_t> add(out);
                 atl::tests::auto_diff::Add1AutoDiffTest<real_t> add1(out);
                 atl::tests::auto_diff::Add2AutoDiffTest<real_t> add2(out);
@@ -2140,15 +2236,61 @@ namespace atl {
                 atl::tests::auto_diff::Ackley<real_t>  ackley50(out,50);
                 atl::tests::auto_diff::Ackley<real_t>  ackley100(out,100);
                 atl::tests::auto_diff::Ackley<real_t>  ackley200(out,200);
-                //                atl::tests::auto_diff::SumAlotOfParametersAutoDiffTest<real_t> s4(out, 200);
-                //                atl::tests::auto_diff::SumAlotOfParametersAutoDiffTest<real_t> s5(out, 500);
-                
-                //                                atl::tests::auto_diff::ThirdTest<real_t> tt(out);
+                //                //                //
+                //                atl::tests::auto_diff::AddAutoDiffTest<real_t> add(out);
+                //                atl::tests::auto_diff::Add1AutoDiffTest<real_t> add1(out);
+                //                atl::tests::auto_diff::Add2AutoDiffTest<real_t> add2(out);
+                //                atl::tests::auto_diff::SubtractAutoDiffTest<real_t> subtract1(out);
+                //                atl::tests::auto_diff::Subtract1AutoDiffTest<real_t> subtract(out);
+                //                atl::tests::auto_diff::Subtract2AutoDiffTest<real_t> subtract2(out);
+                //                atl::tests::auto_diff::MultiplyAutoDiffTest<real_t> multiply(out);
+                //                atl::tests::auto_diff::Multiply1AutoDiffTest<real_t> multiply1(out);
+                //                atl::tests::auto_diff::Multiply2AutoDiffTest<real_t> multiply2(out);
+                //                atl::tests::auto_diff::DivideAutoDiffTest<real_t> divide(out);
+                //                atl::tests::auto_diff::Divide1AutoDiffTest<real_t> divide1(out);
+                //                atl::tests::auto_diff::Divide2AutoDiffTest<real_t> divide2(out);
+                //                atl::tests::auto_diff::CosAutoDiffTest<real_t> cos(out);
+                //                atl::tests::auto_diff::ACosAutoDiffTest<real_t> acos(out);
+                //                atl::tests::auto_diff::SinAutoDiffTest<real_t> sin(out);
+                //                atl::tests::auto_diff::ASinAutoDiffTest<real_t> asin(out);
+                //                atl::tests::auto_diff::TanAutoDiffTest<real_t> tan(out);
+                //                atl::tests::auto_diff::ATanAutoDiffTest<real_t> atan(out);
+                //                atl::tests::auto_diff::CoshAutoDiffTest<real_t> cosh(out);
+                //                atl::tests::auto_diff::SinhAutoDiffTest<real_t> sinh(out);
+                //                atl::tests::auto_diff::TanhAutoDiffTest<real_t> tanh(out);
+                //                atl::tests::auto_diff::ExpAutoDiffTest<real_t> exp(out);
+                //                atl::tests::auto_diff::LogAutoDiffTest<real_t> log(out);
+                //                atl::tests::auto_diff::Log10AutoDiffTest<real_t> log10(out);
+                //                atl::tests::auto_diff::FabsAutoDiffTest<real_t> fabs(out);
+                //                atl::tests::auto_diff::SqrtAutoDiffTest<real_t> sqrt(out);
+                //                atl::tests::auto_diff::PowAutoDiffTest<real_t> pow(out);
+                //                atl::tests::auto_diff::PowCAutoDiffTest<real_t> pow2(out);
+                //                atl::tests::auto_diff::PowC2AutoDiffTest<real_t> pow3(out);
+                //                atl::tests::auto_diff::CeilAutoDiffTest<real_t> ceil(out);
+                //                atl::tests::auto_diff::FloorAutoDiffTest<real_t> floor(out);
+                //#ifdef  HESSIAN_USE_AD_GRADIENT
+                ////                atl::tests::auto_diff::SumAlotOfParametersAutoDiffTest<real_t> s3(out, 50);
+                //#endif
+                //                atl::tests::auto_diff::SumAlotOfParametersAutoDiffTest<real_t> s1(out, 10);
+                //                atl::tests::auto_diff::SumAlotOfParametersAutoDiffTest<real_t> s2(out, 20);
+                //
+                //                atl::tests::auto_diff::Ackley<real_t> ackley10(out, 10);
+                //                atl::tests::auto_diff::Ackley<real_t> ackley20(out, 20);
+                //                atl::tests::auto_diff::Ackley<real_t> ackley30(out, 30);
+                //                atl::tests::auto_diff::Ackley<real_t> ackley40(out, 40);
+                //                atl::tests::auto_diff::Ackley<real_t> ackley50(out, 50);
+                //#ifdef  HESSIAN_USE_AD_GRADIENT
+                //                atl::tests::auto_diff::Ackley<real_t> ackley100(out, 100);
+                //                atl::tests::auto_diff::Ackley<real_t> ackley200(out, 200);
+                //#endif
+                //
+                //                atl::tests::auto_diff::Bertalanffy<real_t> bertalanffy(out);
                 std::cout << "Test complete.\n";
                 if (atl::tests::auto_diff::fail == 0) {
                     std::cout << "All tests passed, review file \"autodiff_test.txt\" for details." << std::endl;
                     
                 } else {
+                    
                     std::cout << atl::tests::auto_diff::fail << " of " << atl::tests::auto_diff::tests << " tests did not agree within a tolerance of " << atl::tests::auto_diff::AutoDiffTest<real_t>::GetTolerance() << ", review file \"autodiff_test.txt\" for details." << std::endl;
                 }
                 

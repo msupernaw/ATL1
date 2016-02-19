@@ -4,6 +4,7 @@
 #include "../AutoDiff/Variable.hpp"
 #include <valarray>
 #include <vector>
+#include <map>
 #include <cmath>
 #include "../Utilities/StringUtil.hpp"
 namespace atl {

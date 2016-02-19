@@ -76,7 +76,7 @@ namespace atl {
             REAL_T cc = ((lhs_m.GetValue() * rhs_m.EvaluateDerivative(a, b)) / (rhs_m.GetValue() * rhs_m.GetValue())); //(f(a,b)*('diff(g(a,b),a,1,b,1)))/g(a,b)^2
             REAL_T dd = ((lhs_m.EvaluateDerivative(b) * rhs_m.EvaluateDerivative(a)) / (rhs_m.GetValue() * rhs_m.GetValue())); //(('diff(f(a,b),b,1))*('diff(g(a,b),a,1)))/g(a,b)^2
             REAL_T ee = lhs_m.EvaluateDerivative(a, b) / rhs_m.GetValue();
-            return aa - bb - cc - dd - ee;
+            return aa - bb - cc - dd + ee;
 
         }
 

@@ -104,6 +104,10 @@ public:
         data_m.reserve(size);
     }
     
+    inline std::vector<T, Allocator>& data(){
+        return data_m;
+    }
+    
     inline bool contains(const T& t) {
         return std::binary_search(this->data_m.begin(), this->data_m.end(), t);
     }

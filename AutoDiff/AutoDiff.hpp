@@ -31,7 +31,6 @@
 #include "Floor.hpp"
 #include "Ceil.hpp"
 
-
 //
 //typedef atl::Variable<double> variable;
 //typedef atl::Variable<long double> variablel;

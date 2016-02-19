@@ -73,7 +73,7 @@ namespace util {
         typedef typename std::vector<std::pair<size_t, T> >::const_reverse_iterator const_reverse_iterator;
 
         compressed_vector(size_t size = 0) : size_m(0), allocated_size_m(0), max_held(0) {
-            //            this->reserve(32);
+//                        this->reserve(32);
             if (size)
                 this->resize(size);
         }

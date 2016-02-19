@@ -84,7 +84,16 @@ namespace util {
     class CombinationsWithRepetition {
         int n_m;
         int k_m;
+        uint32_t number_of_combinations;
+        uint32_t current_combination;
         std::vector<int> elements;
+
+        unsigned int Factorial(uint32_t n) {
+            unsigned int ret = 1;
+            for (unsigned int i = 1; i <= n; ++i)
+                ret *= i;
+            return ret;
+        }
 
         inline int Next_p(std::vector<int>& v, const int n, const int k) {
             int j; //index
@@ -117,11 +126,13 @@ namespace util {
     public:
 
         CombinationsWithRepetition(int n, int k) :
-        n_m(n), k_m(k) {
+        n_m(n), k_m(k), current_combination(0) {
             this->elements.resize(k, 0);
+//            this->number_of_combinations = this->Factorial(n)/(Factorial(k)*Factorial(n-k));
         }
 
         inline bool Next() {
+            current_combination++;
             return this->Next_p(elements, n_m, k_m);
         }
 

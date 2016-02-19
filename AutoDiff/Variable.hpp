@@ -29,11 +29,6 @@
 #endif
 
 
-#ifndef M_E
-#define M_E 2.7182818284590452354
-#endif
-
-
 
 #ifdef ATL_USE_THREAD_LOCAL_STORAGE
 
@@ -180,7 +175,9 @@ namespace atl {
 
                 exp.PushIds(entry.ids);
                 entry.first.resize(entry.ids.size());
-                REAL_T dx, dxx, dxxx;
+                REAL_T dx = 0.0;
+                REAL_T dxx = 0.0;
+                REAL_T dxxx = 0.0;
                 int i, j, k;
                 util::CombinationsWithRepetition combos(0, 0);
                 std::vector<int> indexes(Variable<REAL_T, group>::index_sequences.begin(), Variable<REAL_T, group>::index_sequences.begin() + entry.ids.size());
@@ -193,7 +190,14 @@ namespace atl {
                         i = 0;
                         entry.w = this->info;
                         for (it = entry.ids.begin(); it != entry.ids.end(); ++it) {
+                            if ((*it)->id > gs.max_id) {
+                                gs.max_id = (*it)->id;
+                            }
+                            if ((*it)->id < gs.min_id) {
+                                gs.min_id = (*it)->id;
+                            }
                             dx = exp.EvaluateDerivative((*it)->id);
+
                             entry.first[i] = dx;
                             i++;
                         }
@@ -220,6 +224,7 @@ namespace atl {
                         entry.second.resize(entry.ids.size());
                         entry.third.resize(entry.ids.size());
                         for (it = entry.ids.begin(); it != entry.ids.end(); ++it) {
+                            (*it)->dependence_level++;
                             dx = exp.EvaluateDerivative((*it)->id);
                             dxx = exp.EvaluateDerivative((*it)->id, (*it)->id);
                             dxxx = exp.EvaluateDerivative((*it)->id, (*it)->id, (*it)->id);
@@ -232,17 +237,25 @@ namespace atl {
                     case SECOND_ORDER_MIXED_PARTIALS:
 
                         i = 0;
-                        entry.w = new VariableInfo<REAL_T>();
+                        //                        entry.w = new VariableInfo<REAL_T>();
+                        entry.w = this->info;
                         entry.second_mixed.resize(entry.ids.size() * entry.ids.size());
+
                         for (it = entry.ids.begin(); it != entry.ids.end(); ++it) {
+
+
+                            (*it)->dependence_level++;
                             dx = exp.EvaluateDerivative((*it)->id);
                             entry.first[i] = dx;
                             j = 0;
-                            for (jt = entry.ids.begin(); jt <= it; ++jt) {
+                            for (jt = entry.ids.begin(); jt != entry.ids.end(); ++jt) {
                                 dxx = exp.EvaluateDerivative((*it)->id, (*jt)->id);
                                 entry.second_mixed[i * entry.first.size() + j] = dxx;
                                 if (i > 0 && i != j) {
                                     entry.second_mixed[j * entry.first.size() + i] = dxx;
+                                }
+                                if (j == i) {
+                                    break;
                                 }
                                 j++;
                             }
@@ -276,42 +289,61 @@ namespace atl {
                         //                        }
 
 
-                        this->info->Release();
-                        this->info = entry.w;
+                        //                        this->info->Release();
+                        //                        this->info = entry.w;
+                        this->info->dependence_level++;
                         break;
                     case THIRD_ORDER_MIXED_PARTIALS:
                         //Uses the extended Clairaut’s Theorem here. We expect our functions to be 
                         //continuous, therefore f_xyz = f_zxy = f_zyx and so on,
                         //this will speed up the evaluation.
-                        //                        util::Combonations::Create(indexes, 3, index_combos);
 
-                        //                        util::CombinationsWithRepetition combos(entry.ids.size(), 3);
-
-                        entry.w = new VariableInfo<REAL_T>();
+                        entry.w = this->info; //new VariableInfo<REAL_T>();
 
                         entry.second_mixed.resize(entry.ids.size() * entry.ids.size());
                         entry.third_mixed.resize(entry.ids.size() * entry.ids.size() * entry.ids.size());
-
+                        i = 0;
                         for (it = entry.ids.begin(); it != entry.ids.end(); ++it) {
+
+
+                            (*it)->dependence_level++;
+                            dx = exp.EvaluateDerivative((*it)->id);
+                            entry.first[i] = dx;
+                            j = 0;
+                            for (jt = entry.ids.begin(); jt != entry.ids.end(); ++jt) {
+                                dxx = exp.EvaluateDerivative((*it)->id, (*jt)->id);
+                                entry.second_mixed[i * entry.first.size() + j] = dxx;
+                                if (i > 0 && i != j) {
+                                    entry.second_mixed[j * entry.first.size() + i] = dxx;
+                                }
+                                if (j == i) {
+                                    break;
+                                }
+                                j++;
+                            }
+                            i++;
+                        }
+                        for (it = entry.ids.begin(); it != entry.ids.end(); ++it) {
+
                             ids.push_back((*it));
                         }
                         combos.Reset(entry.ids.size(), 3);
-                        //                        for (int c = 0; c < index_combos.size(); c++) {
+
                         do {
-                            if ((combos[0]) == 0) {
-                                dxx = exp.EvaluateDerivative(ids[combos[1]]->id, ids[combos[2]]->id);
-                                entry.second_mixed[combos[1] * ids.size() + combos[2]] = dxx;
-
-                                if (combos[2] != combos[1]) {
-                                    entry.second_mixed[combos[2] * ids.size() + combos[1]] = dxx;
-                                }
-
-                                if ((combos[1]) == 0) {
-                                    dx = exp.EvaluateDerivative(ids[combos[2]]->id);
-                                    entry.first[combos[2]] = dx;
-                                }
-
-                            }
+                            //                            if ((combos[0]) == 0) {
+                            //                                dxx = exp.EvaluateDerivative(ids[combos[1]]->id, ids[combos[2]]->id);
+                            //                                entry.second_mixed[combos[1] * ids.size() + combos[2]] = dxx;
+                            //
+                            ////                                if (combos[2] != combos[1]) {
+                            //                                    entry.second_mixed[combos[2] * ids.size() + combos[1]] = dxx;
+                            ////                                }
+                            //
+                            //                                if ((combos[1]) == 0) {
+                            //                                    dx = exp.EvaluateDerivative(ids[combos[2]]->id);
+                            //                                    entry.first[combos[2]] = dx;
+                            //                                }
+                            //
+                            //                            }
                             dxxx = exp.EvaluateDerivative(ids[combos[0]]->id, ids[combos[1]]->id, ids[combos[2]]->id);
                             entry.third_mixed[combos[0] * ids.size() * ids.size() + combos[1] * ids.size() + combos[2]] = dxxx;
                             entry.third_mixed[combos[0] * ids.size() * ids.size() + combos[2] * ids.size() + combos[1]] = dxxx;
@@ -321,8 +353,8 @@ namespace atl {
                             entry.third_mixed[combos[2] * ids.size() * ids.size() + combos[0] * ids.size() + combos[1]] = dxxx;
                         } while (combos.Next());
 
-                        this->info->Release();
-                        this->info = entry.w;
+                        //                        this->info->Release();
+                        //                        this->info = entry.w;
 
                         break;
                     case GRADIENT:
@@ -339,15 +371,21 @@ namespace atl {
                         i = 0;
                         entry.w = new VariableInfo<REAL_T>();
                         entry.second_mixed.resize(entry.ids.size() * entry.ids.size());
+
                         for (it = entry.ids.begin(); it != entry.ids.end(); ++it) {
+                            (*it)->dependence_level++;
+
                             dx = exp.EvaluateDerivative((*it)->id);
                             entry.first[i] = dx;
                             j = 0;
-                            for (jt = entry.ids.begin(); jt <= it; ++jt) {
+                            for (jt = entry.ids.begin(); jt != entry.ids.end(); ++jt) {
                                 dxx = exp.EvaluateDerivative((*it)->id, (*jt)->id);
                                 entry.second_mixed[i * entry.first.size() + j] = dxx;
                                 if (i > 0 && i != j) {
                                     entry.second_mixed[j * entry.first.size() + i] = dxx;
+                                }
+                                if (j == i) {
+                                    break;
                                 }
                                 j++;
                             }
@@ -448,6 +486,7 @@ namespace atl {
         transformation(&default_transformation) {
             info->Aquire();
             mapped_info = (other.mapped_info);
+
         }
 
         Variable(Variable&& other) {
@@ -516,7 +555,7 @@ namespace atl {
         }
 
         inline Variable operator-() {
-            return -1.0 * (*this);
+            return static_cast<REAL_T> (-1.0) * (*this);
         }
 
         inline Variable& operator+=(const REAL_T & val) {
@@ -964,7 +1003,7 @@ namespace atl {
             gradient.resize(size);
             hessian.resize(size);
             for (int i = 0; i < size; i++) {
-                gradient[i] = gs.Value(variables[i]->info->id); //variables[i]->info->dvalue;
+                gradient[i] = variables[i]->info->dvalue; //variables[i]->info->dvalue;
                 hessian[i].resize(size);
                 for (int j = 0; j < size; j++) {
                     hessian[i][j] = gs.Value(variables[i]->info->id, variables[j]->info->id); //variables[i]->info->GetHessianRowValue(variables[j]->info);
@@ -993,7 +1032,7 @@ namespace atl {
             gradient.resize(size);
             hessian.resize(size);
             for (int i = 0; i < size; i++) {
-                gradient[i] = gs.Value(variables[i]->info->id); //variables[i]->info->dvalue;
+                gradient[i] = variables[i]->info->dvalue;
                 hessian[i].resize(size);
                 for (int j = 0; j < size; j++) {
                     hessian[i][j] = gs.Value(variables[i]->info->id, variables[j]->info->id); //variables[i]->info->GetHessianRowValue(variables[j]->info);

@@ -93,7 +93,7 @@ namespace atl {
 
         //    private:
 
-        VariableIdGenerator() : _id(0), available_size(0) {
+        VariableIdGenerator() : _id(1), available_size(0) {
         }
 
         std::atomic<uint32_t> _id;
@@ -180,7 +180,12 @@ namespace atl {
     }
 
     template<typename REAL_T>
-    class VariableInfo : public atl::PoolAllocator<VariableInfo<REAL_T> > {
+    class VariableInfo
+#ifdef ATL_VARIABLE_INFO_USE_MEMORY_POOL
+    : public atl::PoolAllocator<VariableInfo<REAL_T> > {
+#else 
+    {
+#endif
     public:
         //    static util::MemoryPool<VariableInfo<REAL_T>* > pool_g;
         //        static std::mutex mutex_g;
@@ -188,11 +193,12 @@ namespace atl {
         static std::vector<VariableInfo<REAL_T>* > freed;
         REAL_T dvalue;
         REAL_T vvalue;
-        int count;
+        std::atomic<int> count;
+        std::atomic<int> dependence_level;
 
         uint32_t id;
 
-        VariableInfo() : vvalue(0.0), count(1), id(VariableIdGenerator::instance()->next()) {
+        VariableInfo() : dvalue(0.0),vvalue(0.0), count(1),dependence_level(1), id(VariableIdGenerator::instance()->next()) {
 
 
         }
@@ -246,20 +252,17 @@ namespace atl {
         }
 
         inline void Reset() {
-            //            this->hessian_row.clear();
-            //            this->third_order_mixed.clear();
                         this->dvalue = 0;
-            //            this->d2value = 0;
-            //            this->d3value = 0;
-            //            occurences = 0;
+                        this->dependence_level = 1;
         }
 
         static void FreeAll() {
 #pragma unroll
             for (int i = 0; i < freed.size(); i++) {
                 VariableIdGenerator::instance()->release(freed[i]->id);
-                VariableInfo<REAL_T>::operator delete(freed[i], sizeof (VariableInfo<REAL_T>));
-                //                delete freed[i];
+                freed[i]->vvalue = 0;
+//                VariableInfo<REAL_T>::operator delete(freed[i], sizeof (VariableInfo<REAL_T>));
+                                delete freed[i];
             }
             freed.resize(0);
         }
