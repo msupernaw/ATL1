@@ -1,5 +1,9 @@
 #include "../../../../Optimization/Optimization2/Optimization.hpp"
 #include "../../../../Utilities/IO/StreamedDataFile.hpp"
+
+
+
+
 template<typename T>
 class ThetaLog : public atl::ObjectiveFunction<T> {
     std::vector<T> Y;
@@ -26,7 +30,7 @@ public:
         
         int size = 0;
         data >> size;
-        std::cout << "size = " << size;
+
         this->Y.resize(size);
         this->X.resize(size);
         
@@ -41,18 +45,19 @@ public:
         logQ.SetName("logQ");
         logR.SetName("logR");
         
+        /**
+         * Register parameters.
+         */
         this->RegisterHyperParameter(logr0);
-        this->RegisterCheckParameter(logr0);
         this->RegisterHyperParameter(logtheta);
-        this->RegisterCheckParameter(logtheta);
         logK.SetBounds(4.6, 7.6);
         this->RegisterHyperParameter(logK);
-        this->RegisterCheckParameter(logK);
         this->RegisterHyperParameter(logQ);
-        this->RegisterCheckParameter(logQ);
         this->RegisterHyperParameter(logR);
-        this->RegisterCheckParameter(logR);
         
+        /**
+         * Register random variables.
+         */
         for (int i = 0; i < X.size(); i++) {
             this->RegisterRandomVariable(X[i]);
         }
@@ -86,37 +91,6 @@ public:
         return f;
     }
     
-    /*
-     
-     template<class Type>
-     Type objective_function<Type>::operator() ()
-     {
-     DATA_VECTOR(Y);
-     PARAMETER_VECTOR(X);
-     PARAMETER(logr0);
-     PARAMETER(logtheta);
-     PARAMETER(logK);
-     PARAMETER(logQ);
-     PARAMETER(logR);
-     Type r0=exp(logr0);
-     Type theta=exp(logtheta);
-     Type K=exp(logK);
-     Type Q=exp(logQ);
-     Type R=exp(logR);
-     int timeSteps=Y.size();
-     Type ans=0;
-     for(int i=1;i<timeSteps;i++){
-     Type m=X[i-1]+r0*(1.0-pow(exp(X[i-1])/K,theta));
-     ans-=dnorm(X[i],m,sqrt(Q),true);
-     }
-     for(int i=0;i<timeSteps;i++){
-     ans-=dnorm(Y[i],X[i],sqrt(R),true);
-     }
-     std::cout<<"ans = "<<ans<<"\n\n";
-     return ans;
-     }
-     */
-    
     void Report() {
         std::ofstream out;
         out.open("logtheta_atl.par");
@@ -135,11 +109,22 @@ public:
 };
 
 int main(int argc, char** argv) {
-    ThetaLog< double> of;
-    of.Initialize();
+    
+    //create the objective function 
+    ThetaLog< double> objective_function;
+    
+    //initialize the objective function
+    objective_function.Initialize();
+    
+    //create an instance of a L-BFGS minimizer
     atl::LBFGS< double> fm;
-    fm.SetObjectiveFunction(&of);
+    
+    //set the objective function
+    fm.SetObjectiveFunction(&objective_function);
+    
+    //run the minimizer
     fm.Run();
+    
     return 0;
 }
 
