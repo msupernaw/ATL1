@@ -1092,10 +1092,11 @@ namespace atl {
                         }
                     }
 
-#pragma unroll
+
                     REAL_T entry;
                     REAL_T hdk;
                     REAL_T hdj;
+#pragma unroll
                     for (int j = 0; j < rows; j++) {
                         vj = gradient_stack[i].id_list[j];
                         dj = gradient_stack[i].first[j];
