@@ -72,6 +72,17 @@ namespace atl {
             expr_m.PushIds(ids);
         }
 
+        bool IsNonlinear()const {
+            return true;
+        }
+
+        inline void MakeNLInteractions(bool b = false)const {
+            expr_m.MakeNLInteractions(b);
+        }
+
+        inline void PushNLInteractions(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+            expr_m.PushNLInteractions(ids);
+        }
 
         inline REAL_T EvaluateDerivative(uint32_t id) const {
             return expr_m.EvaluateDerivative(id) / (2.0 * this->GetValue());
@@ -83,14 +94,14 @@ namespace atl {
         }
 
         inline REAL_T EvaluateDerivative(uint32_t x, uint32_t y, uint32_t z) const {
-            return (3.0*(expr_m.EvaluateDerivative(x))*(expr_m.EvaluateDerivative(y))
-                    *(expr_m.EvaluateDerivative(z)))/(8.0*std::pow(expr_m.GetValue(),5.0/2.0))
-                    -((expr_m.EvaluateDerivative(x,y))*(expr_m.EvaluateDerivative(z)))
-                    /(4.0*std::pow(expr_m.GetValue(),3.0/2.0))-((expr_m.EvaluateDerivative(x))
-                    *(expr_m.EvaluateDerivative(y,z)))/(4*std::pow(expr_m.GetValue(),3.0/2.0))
-                    -((expr_m.EvaluateDerivative(x,z))*(expr_m.EvaluateDerivative(y)))
-                    /(4.0*std::pow(expr_m.GetValue(),3.0/2.0))+expr_m.EvaluateDerivative(x,y,z)
-                    /(2.0*std::sqrt(expr_m.GetValue()));
+            return (3.0 * (expr_m.EvaluateDerivative(x))*(expr_m.EvaluateDerivative(y))
+                    *(expr_m.EvaluateDerivative(z))) / (8.0 * std::pow(expr_m.GetValue(), 5.0 / 2.0))
+                    -((expr_m.EvaluateDerivative(x, y))*(expr_m.EvaluateDerivative(z)))
+                    / (4.0 * std::pow(expr_m.GetValue(), 3.0 / 2.0))-((expr_m.EvaluateDerivative(x))
+                    *(expr_m.EvaluateDerivative(y, z))) / (4 * std::pow(expr_m.GetValue(), 3.0 / 2.0))
+                    -((expr_m.EvaluateDerivative(x, z))*(expr_m.EvaluateDerivative(y)))
+                    / (4.0 * std::pow(expr_m.GetValue(), 3.0 / 2.0)) + expr_m.EvaluateDerivative(x, y, z)
+                    / (2.0 * std::sqrt(expr_m.GetValue()));
         }
 
         inline atl::DynamicExpression<REAL_T>* GetDynamicExpession() const {

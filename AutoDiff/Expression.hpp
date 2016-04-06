@@ -32,7 +32,6 @@
 
 namespace atl {
 
- 
     /**
      * Base class for expression types.
      */
@@ -62,6 +61,8 @@ namespace atl {
         inline const REAL_T GetValue() const {
             return Cast().GetValue();
         }
+
+
         //
 
         //        operator REAL_T() {
@@ -88,6 +89,18 @@ namespace atl {
             Cast().PushAdjoints(adjoints, coefficient);
         }
 
+        bool IsNonlinear()const {
+            return Cast().IsNonlinear();
+        }
+
+        inline void MakeNLInteractions(bool b = false)const {
+            Cast().MakeNLInteractions(b);
+        }
+
+        inline void PushNLInteractions(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+            Cast().PushNLInteractions(ids);
+        }
+
         inline REAL_T EvaluateDerivative(uint32_t a) const {
             return Cast().EvaluateDerivative(a);
         }
@@ -97,10 +110,10 @@ namespace atl {
         }
 
         inline REAL_T EvaluateDerivative(uint32_t x, uint32_t y, uint32_t z) const {
-            return Cast().EvaluateDerivative(x, y,z);
+            return Cast().EvaluateDerivative(x, y, z);
         }
-        
-        inline atl::DynamicExpression<REAL_T>* GetDynamicExpession() const{
+
+        inline atl::DynamicExpression<REAL_T>* GetDynamicExpession() const {
             return Cast().GetDynamicExpession();
         }
 

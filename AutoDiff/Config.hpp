@@ -15,7 +15,7 @@
 #define CONFIG_HPP
 
 //#define USE_BOOST
-#define USE_GOOGLE_SET
+//#define USE_GOOGLE_SET
 #ifdef USE_BOOST
 #include <boost/container/flat_set.hpp>
 #include <boost/container/flat_map.hpp>

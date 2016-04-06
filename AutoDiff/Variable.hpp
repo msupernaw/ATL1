@@ -150,7 +150,6 @@ namespace atl {
         static SinParameterTransformation<REAL_T> default_transformation;
         VariableInfo<REAL_T>* mapped_info;
         ParameterTransformation<REAL_T>* transformation;
-        static std::vector<int> index_sequences;
 
         /**
          * Default assignment function used by all operators and assignments.
@@ -161,8 +160,6 @@ namespace atl {
         inline void Assign_p(atl::GradientStructure<REAL_T>& gs, const atl::ExpressionBase<REAL_T, A>& exp) {
             if (gs.recording) {
 
-
-                //                std::vector<std::vector<int> > index_combos;
                 std::vector<atl::VariableInfo<REAL_T>* > ids;
                 size_t index = gs.NextIndex();
                 StackEntry<REAL_T>& entry = gs.gradient_stack[index];
@@ -180,12 +177,11 @@ namespace atl {
                 REAL_T dxxx = 0.0;
                 int i, j, k;
                 util::CombinationsWithRepetition combos(0, 0);
-                std::vector<int> indexes(Variable<REAL_T, group>::index_sequences.begin(), Variable<REAL_T, group>::index_sequences.begin() + entry.ids.size());
 
 
                 switch (gs.derivative_trace_level) {
 
-
+                        this->info->is_dependent++;
                     case FIRST_ORDER:
                         i = 0;
                         entry.w = this->info;
@@ -237,12 +233,17 @@ namespace atl {
                     case SECOND_ORDER_MIXED_PARTIALS:
 
                         i = 0;
-                        //                        entry.w = new VariableInfo<REAL_T>();
-                        entry.w = this->info;
+                        entry.w = new VariableInfo<REAL_T>();
+                        entry.w->is_dependent = 1;
+                        entry.w->is_nl = exp.IsNonlinear();
                         entry.second_mixed.resize(entry.ids.size() * entry.ids.size());
+                        exp.MakeNLInteractions();
 
                         for (it = entry.ids.begin(); it != entry.ids.end(); ++it) {
 
+                            if ((*it)->has_nl_interaction && (*it)->push_start == 0) {
+                                (*it)->push_start = index;
+                            }
 
                             (*it)->dependence_level++;
                             dx = exp.EvaluateDerivative((*it)->id);
@@ -253,57 +254,38 @@ namespace atl {
                                 entry.second_mixed[i * entry.first.size() + j] = dxx;
                                 if (i > 0 && i != j) {
                                     entry.second_mixed[j * entry.first.size() + i] = dxx;
+
                                 }
-                                if (j == i) {
-                                    break;
-                                }
+
                                 j++;
                             }
                             i++;
                         }
-                        //
-                        //                        util::Combonations::Create(indexes, 2, index_combos);
-                        //
-                        //                        entry.w = new VariableInfo<REAL_T>();
-                        //                        entry.second_mixed.resize(entry.ids.size() * entry.ids.size());
-                        //
-                        //                        for (it = entry.ids.begin(); it != entry.ids.end(); ++it) {
-                        //                            ids.push_back((*it));
-                        //                        }
-                        //                        util::CombinationsWithRepetition combos(entry.ids.size(), 2);
-                        //
-                        //                        //                        for (int c = 0; c < index_combos.size(); c++) {
-                        //                        do {
-                        //
-                        //                            dxx = exp.EvaluateDerivative(ids[index_combos[c][0]]->id, ids[index_combos[c][1]]->id);
-                        //                            entry.second_mixed[index_combos[c][0] * ids.size() + index_combos[c][1]] = dxx;
-                        //                            entry.second_mixed[index_combos[c][1] * ids.size() + index_combos[c][0]] = dxx;
-                        //
-                        //                            if ((index_combos[c][0]) == 0) {
-                        //                                dx = exp.EvaluateDerivative(ids[index_combos[c][1]]->id);
-                        //                                entry.first[index_combos[c][1]] = dx;
-                        //                            }
-                        //
-                        //
-                        //
-                        //                        }
 
-
-                        //                        this->info->Release();
-                        //                        this->info = entry.w;
+                        
+                        this->info->Release();
+                        this->info = entry.w;
                         this->info->dependence_level++;
                         break;
                     case THIRD_ORDER_MIXED_PARTIALS:
                         //Uses the extended Clairaut’s Theorem here. We expect our functions to be 
                         //continuous, therefore f_xyz = f_zxy = f_zyx and so on,
                         //this will speed up the evaluation.
-
-                        entry.w = this->info; //new VariableInfo<REAL_T>();
-
+ 
+                        entry.w = new VariableInfo<REAL_T>();
+                        entry.w->is_dependent = 1;
+                        entry.w->is_nl = exp.IsNonlinear();
                         entry.second_mixed.resize(entry.ids.size() * entry.ids.size());
                         entry.third_mixed.resize(entry.ids.size() * entry.ids.size() * entry.ids.size());
                         i = 0;
+
+                        exp.MakeNLInteractions();
+                     
                         for (it = entry.ids.begin(); it != entry.ids.end(); ++it) {
+
+                            if ((*it)->has_nl_interaction) {
+                                (*it)->push_start = index;
+                            }
 
 
                             (*it)->dependence_level++;
@@ -323,27 +305,14 @@ namespace atl {
                             }
                             i++;
                         }
-                        for (it = entry.ids.begin(); it != entry.ids.end(); ++it) {
 
+                        for (it = entry.ids.begin(); it != entry.ids.end(); ++it) {
                             ids.push_back((*it));
                         }
                         combos.Reset(entry.ids.size(), 3);
 
                         do {
-                            //                            if ((combos[0]) == 0) {
-                            //                                dxx = exp.EvaluateDerivative(ids[combos[1]]->id, ids[combos[2]]->id);
-                            //                                entry.second_mixed[combos[1] * ids.size() + combos[2]] = dxx;
-                            //
-                            ////                                if (combos[2] != combos[1]) {
-                            //                                    entry.second_mixed[combos[2] * ids.size() + combos[1]] = dxx;
-                            ////                                }
-                            //
-                            //                                if ((combos[1]) == 0) {
-                            //                                    dx = exp.EvaluateDerivative(ids[combos[2]]->id);
-                            //                                    entry.first[combos[2]] = dx;
-                            //                                }
-                            //
-                            //                            }
+                          
                             dxxx = exp.EvaluateDerivative(ids[combos[0]]->id, ids[combos[1]]->id, ids[combos[2]]->id);
                             entry.third_mixed[combos[0] * ids.size() * ids.size() + combos[1] * ids.size() + combos[2]] = dxxx;
                             entry.third_mixed[combos[0] * ids.size() * ids.size() + combos[2] * ids.size() + combos[1]] = dxxx;
@@ -353,8 +322,8 @@ namespace atl {
                             entry.third_mixed[combos[2] * ids.size() * ids.size() + combos[0] * ids.size() + combos[1]] = dxxx;
                         } while (combos.Next());
 
-                        //                        this->info->Release();
-                        //                        this->info = entry.w;
+                        this->info->Release();
+                        this->info = entry.w;
 
                         break;
                     case GRADIENT:
@@ -369,7 +338,7 @@ namespace atl {
                         break;
                     case GRADIENT_AND_HESSIAN:
                         i = 0;
-                        entry.w = new VariableInfo<REAL_T>();
+                        entry.w = this->info; //new VariableInfo<REAL_T>();
                         entry.second_mixed.resize(entry.ids.size() * entry.ids.size());
 
                         for (it = entry.ids.begin(); it != entry.ids.end(); ++it) {
@@ -391,38 +360,16 @@ namespace atl {
                             }
                             i++;
                         }
-                        //                        util::Combonations::Create(indexes, 2, index_combos);
-                        //
-                        //                        entry.w = new VariableInfo<REAL_T>();
-                        //                        entry.second_mixed.resize(entry.ids.size() * entry.ids.size());
-                        //
-                        //                        for (it = entry.ids.begin(); it != entry.ids.end(); ++it) {
-                        //                            ids.push_back((*it));
-                        //                        }
-                        //
-                        //                        for (int c = 0; c < index_combos.size(); c++) {
-                        //
-                        //
-                        //                            dxx = exp.EvaluateDerivative(ids[index_combos[c][0]]->id, ids[index_combos[c][1]]->id);
-                        //                            entry.second_mixed[index_combos[c][0] * ids.size() + index_combos[c][1]] = dxx;
-                        //                            entry.second_mixed[index_combos[c][1] * ids.size() + index_combos[c][0]] = dxx;
-                        //
-                        //                            if ((index_combos[c][0]) == 0) {
-                        //                                dx = exp.EvaluateDerivative(ids[index_combos[c][1]]->id);
-                        //                                entry.first[index_combos[c][1]] = dx;
-                        //                            }
-                        //
-                        //
-                        //
-                        //                        }
-
-
-                        this->info->Release();
-                        this->info = entry.w;
+                        
                         break;
                     case DYNAMIC_RECORD:
-                        std::cout << "\"DYNAMIC_RECORD\" not yet available!\n" << std::flush;
-                        exit(0);
+                        entry.w = this->info; //new VariableInfo<REAL_T>();
+                        for (it = entry.ids.begin(); it != entry.ids.end(); ++it) {
+                            (*it)->dependence_level++;
+                        }
+                        entry.exp = exp.GetDynamicExpession();
+//                        std::cout << "\"DYNAMIC_RECORD\" not yet available!\n" << std::flush;
+//                        exit(0);
                         break;
                     default:
                         std::cout << "Unkown derivative trace level.";
@@ -433,7 +380,7 @@ namespace atl {
             this->SetValue(exp.GetValue());
         }
 
-
+        
     public:
         static REAL_T penalty_slope;
         static REAL_T penalty_intercept;
@@ -463,8 +410,6 @@ namespace atl {
         min_boundary_m(std::numeric_limits<REAL_T>::min()),
         max_boundary_m(std::numeric_limits<REAL_T>::max()),
         transformation(&default_transformation) {
-            //            info->vvalue = (val);
-            //            mapped_info = (this->info);
         }
 
         Variable(REAL_T val,
@@ -685,8 +630,10 @@ namespace atl {
          * @param v
          */
         inline void UpdateValue(REAL_T v) {
+
             if (this->IsBounded()) {
                 this->SetValue(this->transformation->Internal2External(v, this->GetMinBoundary(), this->GetMaxBoundary()));
+
             } else {
                 this->SetValue(v);
             }
@@ -703,23 +650,20 @@ namespace atl {
         inline void UpdateValue(REAL_T v, atl::Variable<REAL_T>& penalty) {
 
             if (this->IsBounded()) {
-                if (v <= this->GetMinBoundary()) {
-                    atl::Variable<REAL_T> diff = this->max_boundary_m - this->min_boundary_m;
-                    atl::Variable<REAL_T> m = atl::Variable<REAL_T>::penalty_slope;
-                    atl::Variable<REAL_T> b = atl::Variable<REAL_T>::penalty_intercept;
-                    //                    penalty += -1.0 * ((m * v + b)- * this)*((m * v + b)- * this);
-                    penalty += -1.0 * diff / (m * v + b)*(*this);
 
-                } else if (v >= this->GetMaxBoundary()) {
-                    atl::Variable<REAL_T> diff = this->max_boundary_m - this->min_boundary_m;
-                    atl::Variable<REAL_T> m = atl::Variable<REAL_T>::penalty_slope;
-                    atl::Variable<REAL_T> b = atl::Variable<REAL_T>::penalty_intercept;
-                    //                    penalty +=  ((m * v + b) - * this)*((m * v + b)- * this);
-                    penalty += diff / (m * v + b)*(*this);
+                if (v >= this->GetMaxBoundary()) {
+                    atl::Variable<REAL_T> p(v - this->GetMaxBoundary());
+
+                    this->info->vvalue = v;
+                    penalty += p;
+                } else if (v <= this->GetMinBoundary()) {
+                    atl::Variable<REAL_T> p(std::fabs(v - this->GetMaxBoundary()));
+                    this->info->vvalue = v;
+                    penalty += p;
                 } else {
-                    penalty = 0.0;
+                    this->info->vvalue = v;
                 }
-                this->SetValue(this->transformation->Internal2External(v, this->GetMinBoundary(), this->GetMaxBoundary()));
+
             } else {
                 this->SetValue(v);
             }
@@ -813,7 +757,9 @@ namespace atl {
             this->bounded_m = true;
             this->SetMinBoundary(min_boundary);
             this->SetMaxBoundary(max_boundary);
-            //            this->SetValue((min_boundary+max_boundary)/2.0);
+            if (this->GetValue()<this->GetMinBoundary() || this->GetValue()>this->GetMaxBoundary()) {
+                this->SetValue((min_boundary + max_boundary) / 2.0);
+            }
         }
 
         /**
@@ -839,7 +785,14 @@ namespace atl {
          * @param name
          */
         void SetName(std::string name) {
+            this->info->name = name;
             this->name_m = name;
+        }
+
+        inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids, bool include_dependent)const {
+            this->info->has_nl_interaction = include_dependent;
+            //            std::cout<<"variable has nl = "<<include_dependent<<"\n";
+            ids.insert(this->info);
         }
 
         /**
@@ -862,6 +815,18 @@ namespace atl {
 
             ids.insert(this->info->id);
 
+        }
+
+        bool IsNonlinear()const {
+            return info->is_nl;
+        }
+
+        inline void MakeNLInteractions(bool b = false)const {
+            this->info->has_nl_interaction = b;
+        }
+
+        inline void PushNLInteractions(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+            //            ids.insert(this->info);
         }
 
         /**
@@ -957,7 +922,7 @@ namespace atl {
                 gradient[i] = variables[i]->info->dvalue;
                 hessian[i].resize(size);
                 for (int j = 0; j < size; j++) {
-                    hessian[i][j] = variables[i]->info->GetHessianRowValue(variables[j]->info); //hessian_row[variables[j]->info];
+                    hessian[i][j] = gs.Value(variables[i]->info->id, variables[j]->info->id); //hessian_row[variables[j]->info];
                 }
             }
         }
@@ -981,7 +946,7 @@ namespace atl {
                 gradient[i] = variables[i]->info->dvalue;
                 hessian[i].resize(size);
                 for (int j = 0; j < size; j++) {
-                    hessian[i][j] = variables[i]->info->GetHessianRowValue(variables[j]->info);
+                    hessian[i][j] = gs.Value(variables[i]->info->id, variables[j]->info->id);
                 }
             }
         }
@@ -1076,12 +1041,6 @@ namespace atl {
     template<typename REAL_T, int group>
     SinParameterTransformation<REAL_T> Variable<REAL_T, group>::default_transformation;
 
-    template<typename REAL_T, int group>
-    std::vector<int> Variable<REAL_T, group>::index_sequences = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-        11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-        21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
-        31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
-        41, 42, 43, 44, 45, 46, 47, 48, 49, 50};
 
 }
 

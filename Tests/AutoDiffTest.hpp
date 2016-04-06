@@ -26,7 +26,6 @@
 namespace atl {
     namespace tests {
         namespace auto_diff {
-            
             int fail = 0;
             int tests = 0;
             
@@ -121,7 +120,7 @@ namespace atl {
                     std::cout << "evaluating..." << std::flush;
                     
                     
-                    
+                    var::gradient_structure_g.Reset();
                     auto eval_gstart = std::chrono::steady_clock::now();
                     this->ObjectiveFunction(f);
                     auto eval_gend = std::chrono::steady_clock::now();
@@ -261,20 +260,21 @@ namespace atl {
                     std::valarray< std::valarray<std::valarray < T> > > third_mixed_exact(std::valarray<std::valarray < T> > (std::valarray<T > (active_parameters_m.size()), active_parameters_m.size()), active_parameters_m.size());
                     
                     for (int i = 0; i < this->active_parameters_m.size(); i++) {
-                        if(std::fabs(gradient[i]- this->active_parameters_m[i]->info->dvalue) >1e-5){
-                            std::cout<<"gradient doesn't match....\n";
-                            std::cout<<gradient[i]<<" != "<< this->active_parameters_m[i]->info->dvalue;
-                            exit(0);
+                        if (std::fabs(gradient[i] - this->active_parameters_m[i]->info->dvalue) > 1e-5) {
+                            std::cout << "gradient doesn't match....\n";
+                            std::cout << gradient[i] << " != " << this->active_parameters_m[i]->info->dvalue;
+                            //                            exit(0);
                         }
+                        //                        gradient[i]  =  this->active_parameters_m[i]->info->dvalue;
                         for (int j = 0; j < this->active_parameters_m.size(); j++) {
                             for (int k = 0; k < this->active_parameters_m.size(); k++) {
                                 if (i == 0) {
                                     exact_hessian2[j][k] = atl::Variable<T>::gradient_structure_g.Value(this->active_parameters_m[j]->info->id, this->active_parameters_m[k]->info->id);
-                                    if(std::fabs(exact_hessian[j][k]-exact_hessian2[j][k]) >1e-5){
+                                    if (std::fabs(exact_hessian[j][k] - exact_hessian2[j][k]) > 1e-5) {
                                         
-                                        std::cout<<"hessian doesn't match....\n";
-                                        std::cout<< exact_hessian[j][k]<< " != " <<exact_hessian2[j][k];
-                                        exit(0);
+                                        std::cout << "hessian doesn't match....\n";
+                                        std::cout << exact_hessian[j][k] << " != " << exact_hessian2[j][k];
+                                        //                                        exit(0);
                                     }
                                 }
                                 third_mixed_exact[i][j][k] = atl::Variable<T>::gradient_structure_g.Value(this->active_parameters_m[i]->info->id, this->active_parameters_m[j]->info->id, this->active_parameters_m[k]->info->id);
@@ -569,7 +569,7 @@ namespace atl {
                         hess2 = (g1 - g2) / (sdelta1 - sdelta2);
                         hessian[i] = (eps2 * hess1 - hess2) / (eps2 - 1.);
                     }
-                    
+                    var::gradient_structure_g.Reset();
                     return hessian;
                     
                 }
@@ -1412,7 +1412,7 @@ namespace atl {
                 }
                 
                 void ObjectiveFunction(var& f) {
-                    f = atl::exp((a * b));
+                    f = atl::exp((a / b));
                 }
                 
                 
@@ -1572,16 +1572,19 @@ namespace atl {
                 typedef atl::Variable<T> var;
                 var a;
                 var b;
+                var c;
                 
                 PowAutoDiffTest(std::ofstream& out) {
                     this->RunTestToFile(out);
                 }
                 
                 void Initialize() {
-                    a = .03434;
-                    b = .034230;
+                    a = .00;
+                    b = .00;
+                    c = .000;
                     this->Register(a);
                     this->Register(b);
+                    this->Register(c);
                     
                     
                     
@@ -1597,7 +1600,7 @@ namespace atl {
                 }
                 
                 void ObjectiveFunction(var& f) {
-                    f = atl::pow((a * b), (a * b));
+                    f = 1.0 - atl::pow(atl::exp(a) / atl::exp(b), atl::exp(c));
                 }
                 
                 
@@ -2024,7 +2027,7 @@ namespace atl {
                     c = 2.0 * M_PI;
                     
                     //random seed
-                    generator.seed(409009);
+                    generator.seed(4090091);
                     //set some random starting values
                     
                     for (int i = 0; i < dimensions; i++) {
@@ -2093,6 +2096,246 @@ namespace atl {
             //        }
             
             template<class T>
+            class LogTheta : public AutoDiffTest<T> {
+            public:
+                
+                std::vector<T> Y = {3.02315,
+                    3.21984, 3.65424, 3.60466, 3.5423, 4.43166, 4.29131, 4.36787, 4.37504, 3.94537, 4.2912,
+                    4.59584, 4.30217, 4.15193, 4.42821, 4.30537, 4.54861, 4.63205, 4.78491, 4.79962, 4.92626,
+                    5.13627, 5.14859, 4.64859, 5.29066, 4.67895, 5.08076, 5.22367, 5.26112, 4.76097, 4.7894,
+                    5.22118, 5.20706, 5.20803, 5.18209, 5.41249, 5.8154, 5.20875, 5.78776, 6.08957, 5.90054,
+                    5.94058, 6.21408, 5.84143, 6.42039, 6.46694, 6.73742, 6.7644, 6.80683, 6.33115, 6.7795,
+                    6.72164, 6.74198, 7.00933, 6.65849, 6.51895, 6.29572, 6.34795, 6.68318, 6.91444, 6.27536,
+                    6.41721, 6.82602, 6.58711, 6.50546, 6.85916, 6.67842, 6.83515, 6.88816, 6.82988, 6.62378,
+                    6.8927, 6.60941, 6.80232, 6.88835, 6.92828, 7.12176, 6.66136, 6.7966, 6.42991, 6.59199,
+                    6.77583, 6.4914, 6.52556, 6.95658, 6.57174, 6.62285, 6.40535, 6.5243, 6.64547, 6.14812,
+                    6.58134, 6.24897, 6.04781, 6.51518, 6.21539, 6.99472, 6.40441, 6.99795, 6.82203, 6.73572,
+                    6.74861, 6.30817, 6.53584, 6.37093, 6.47595, 6.29266, 6.35378, 6.53895, 6.24377, 6.49304,
+                    6.30005, 6.56823, 6.52514, 6.75102, 6.27068, 6.83394, 6.48833, 6.2357, 6.71897, 6.6146,
+                    6.71341, 6.62067, 6.50148, 6.38419, 6.72777, 6.76925, 6.66819, 6.31156, 7.05917, 6.69037,
+                    6.09881, 6.8032, 6.30866, 6.56355, 6.39023, 6.59533, 6.69288, 6.68218, 6.91985, 6.90063,
+                    6.51458, 6.88214, 7.04983, 7.07688, 7.12766, 6.59529, 6.71444, 6.95628, 6.49304, 6.76456,
+                    6.4496, 6.52297, 6.47359, 6.72056, 6.67134, 6.1982, 6.47844, 6.91845, 6.7916, 6.96461,
+                    6.7269, 6.49073, 6.9752, 7.01309, 7.25482, 6.79274, 7.05099, 6.95183, 6.98215, 7.10636,
+                    6.98072, 7.32764, 7.01756, 6.51239, 6.98783, 6.64356, 6.67166, 7.2179, 6.73284, 6.50916,
+                    6.32713, 6.90174, 6.5849, 6.71981, 6.44168, 6.74218, 6.6416, 6.87571, 6.727, 7.13012,
+                    7.01468, 6.92291, 6.68062, 7.07283, 6.64972, 7.01744, 6.98964, 6.71007, 6.83583};
+                
+                std::vector<atl::Variable<T> > X;
+                atl::Variable<T> logr0; // = -2.6032947;
+                atl::Variable<T> logtheta; // = 0.7625692;
+                atl::Variable<T> logK; // = 6.0; //  = 6.7250075;
+                atl::Variable<T> logQ; // = -4.7496015;
+                atl::Variable<T> logR; // = -3.1889239;
+                
+                LogTheta(std::ofstream& out) {
+                    this->RunTestToFile(out);
+                }
+                
+                void Description(std::stringstream& out) {
+                    out << "LogTheta model....\n";
+                }
+                
+                void Initialize() {
+                    
+                    
+                    
+                    int size = Y.size();
+                    std::cout << "size = " << size;
+                    this->X.resize(size);
+                    
+                    
+                    
+                    this->Register(logr0);
+                    this->Register(logtheta);
+                    //                    logK.SetBounds(4.6, 7.6);
+                    this->Register(logK);
+                    this->Register(logQ);
+                    this->Register(logR);
+                    
+                    for (int i = 0; i < X.size(); i++) {
+                        //            X[i] = atl::Variable<T>(.012);
+                        //                        this->RegisterRandomVariable(X[i]);
+                    }
+                }
+                
+                void step(atl::Variable<T>& jnll, const atl::Variable<T>& x1, const atl::Variable<T>& x2, const atl::Variable<T>& logr0, const atl::Variable<T>& logK, const atl::Variable<T>& logtheta, const atl::Variable<T>& logQ) {
+                    atl::Variable<T> var = atl::exp(logQ);
+                    atl::Variable<T> m = (x1 + atl::exp(logr0) * (1.0 - atl::pow(atl::exp(x1) / atl::exp(logK), atl::exp(logtheta))));
+                    jnll += 0.5 * (atl::log(2.0 * M_PI * atl::exp(logQ))+((x2 - m)*(x2 - m)) / var);
+                }
+                
+                void obs(atl::Variable<T>& jnll, const atl::Variable<T>& x, const atl::Variable<T>& logR, int i) {
+                    atl::Variable<T> var = atl::exp(logR);
+                    jnll += 0.5 * (atl::log(2.0 * M_PI * var)+((x - Y[i])*(x - Y[i])) / var);
+                }
+                
+                virtual void ObjectiveFunction(atl::Variable<T>& f) {
+                    
+                    f = 0.0;
+                    
+                    
+                    int timeSteps = Y.size();
+                    
+                    for (int i = 1; i < timeSteps; i++) {
+                        step(f, X[i - 1], X[i], logr0, logK, logtheta, logQ);
+                    }
+                    
+                    for (int i = 0; i < timeSteps; i++) {
+                        obs(f, X[i], logR, i);
+                    }
+                    
+                    
+                }
+                
+            };
+            
+            template<class T>
+            class LogTheta2 : public AutoDiffTest<T> {
+            public:
+                
+                std::vector<T> Y = {3.02315,
+                    3.21984, 3.65424, 3.60466, 3.5423, 4.43166, 4.29131, 4.36787, 4.37504, 3.94537, 4.2912,
+                    4.59584, 4.30217, 4.15193, 4.42821, 4.30537, 4.54861, 4.63205, 4.78491, 4.79962, 4.92626,
+                    5.13627, 5.14859, 4.64859, 5.29066, 4.67895, 5.08076, 5.22367, 5.26112, 4.76097, 4.7894,
+                    5.22118, 5.20706, 5.20803, 5.18209, 5.41249, 5.8154, 5.20875, 5.78776, 6.08957, 5.90054,
+                    5.94058, 6.21408, 5.84143, 6.42039, 6.46694, 6.73742, 6.7644, 6.80683, 6.33115, 6.7795,
+                    6.72164, 6.74198, 7.00933, 6.65849, 6.51895, 6.29572, 6.34795, 6.68318, 6.91444, 6.27536,
+                    6.41721, 6.82602, 6.58711, 6.50546, 6.85916, 6.67842, 6.83515, 6.88816, 6.82988, 6.62378,
+                    6.8927, 6.60941, 6.80232, 6.88835, 6.92828, 7.12176, 6.66136, 6.7966, 6.42991, 6.59199,
+                    6.77583, 6.4914, 6.52556, 6.95658, 6.57174, 6.62285, 6.40535, 6.5243, 6.64547, 6.14812,
+                    6.58134, 6.24897, 6.04781, 6.51518, 6.21539, 6.99472, 6.40441, 6.99795, 6.82203, 6.73572,
+                    6.74861, 6.30817, 6.53584, 6.37093, 6.47595, 6.29266, 6.35378, 6.53895, 6.24377, 6.49304,
+                    6.30005, 6.56823, 6.52514, 6.75102, 6.27068, 6.83394, 6.48833, 6.2357, 6.71897, 6.6146,
+                    6.71341, 6.62067, 6.50148, 6.38419, 6.72777, 6.76925, 6.66819, 6.31156, 7.05917, 6.69037,
+                    6.09881, 6.8032, 6.30866, 6.56355, 6.39023, 6.59533, 6.69288, 6.68218, 6.91985, 6.90063,
+                    6.51458, 6.88214, 7.04983, 7.07688, 7.12766, 6.59529, 6.71444, 6.95628, 6.49304, 6.76456,
+                    6.4496, 6.52297, 6.47359, 6.72056, 6.67134, 6.1982, 6.47844, 6.91845, 6.7916, 6.96461,
+                    6.7269, 6.49073, 6.9752, 7.01309, 7.25482, 6.79274, 7.05099, 6.95183, 6.98215, 7.10636,
+                    6.98072, 7.32764, 7.01756, 6.51239, 6.98783, 6.64356, 6.67166, 7.2179, 6.73284, 6.50916,
+                    6.32713, 6.90174, 6.5849, 6.71981, 6.44168, 6.74218, 6.6416, 6.87571, 6.727, 7.13012,
+                    7.01468, 6.92291, 6.68062, 7.07283, 6.64972, 7.01744, 6.98964, 6.71007, 6.83583};
+                
+                std::vector<atl::Variable<T> > X;
+                atl::Variable<T> logr0 = -2.6032947;
+                atl::Variable<T> logtheta = 0.7625692;
+                atl::Variable<T> logK = 6.0; //  = 6.7250075;
+                atl::Variable<T> logQ = -4.7496015;
+                atl::Variable<T> logR = -3.1889239;
+                
+                LogTheta2(std::ofstream& out) {
+                    this->RunTestToFile(out);
+                }
+                
+                void Description(std::stringstream& out) {
+                    out << "LogTheta model....\n";
+                }
+                
+                void Initialize() {
+                    
+                    
+                    
+                    int size = Y.size();
+                    std::cout << "size = " << size;
+                    this->X.resize(size);
+                    
+                    
+                    
+                    this->Register(logr0);
+                    this->Register(logtheta);
+                    //                    logK.SetBounds(4.6, 7.6);
+                    this->Register(logK);
+                    this->Register(logQ);
+                    this->Register(logR);
+                    
+                    for (int i = 0; i < X.size(); i++) {
+                        X[i] = atl::Variable<T>(3.012);
+                        //                        this->RegisterRandomVariable(X[i]);
+                    }
+                }
+                
+                const atl::Variable<T> dnorm(const atl::Variable<T> x,
+                                             const atl::Variable<T> mean,
+                                             const atl::Variable<T> sd, int give_log = 0) {
+                    atl::Variable<T> logres;
+                    logres = -1.0 * atl::Variable<T>(atl::Variable<T>(std::sqrt(2 * M_PI)) * sd) - atl::Variable<T>(.5) * atl::pow((x - mean) / sd, 2.0);
+                    if (give_log)return logres;
+                    else return atl::exp(logres);
+                }
+                
+                virtual void ObjectiveFunction(atl::Variable<T>& f) {
+                    
+                    size_t timeSteps = Y.size();
+                    atl::Variable<T> r0 = atl::exp(logr0);
+                    atl::Variable<T> theta = atl::exp(logtheta);
+                    atl::Variable<T> K = atl::exp(logK);
+                    atl::Variable<T> Q = atl::exp(logQ);
+                    atl::Variable<T> R = atl::exp(logR);
+                    
+                    f = 0.0;
+                    
+                    for (int i = 1; i < timeSteps; i++) {
+                        atl::Variable<T> m = X[i - 1] + r0 * (1.0 - atl::pow(atl::exp(X[i - 1]) / K, theta));
+                        //                        std::cout << "f = " << f << "\n";
+                        
+                        f -= dnorm(X[i], m, atl::pow(Q, .5), true);
+                    }
+                    for (int i = 0; i < timeSteps; i++) {
+                        f -= dnorm(Y[i], X[i], atl::pow(R, .5), true);
+                    }
+                    //                    return ans;
+                }
+                
+            };
+            
+            template<class T>
+            class DNormTest : public AutoDiffTest<T> {
+                atl::Variable<T> x;
+                atl::Variable<T> sd;
+                atl::Variable<T> mean;
+                
+                const atl::Variable<T> dnorm(const atl::Variable<T> x,
+                                             const atl::Variable<T> mean,
+                                             const atl::Variable<T> sd, int give_log = 0) {
+                    atl::Variable<T> logres;
+                    logres = atl::Variable<T>(-1.0) *
+                    std::sqrt(2 * M_PI) * sd -
+                    atl::Variable<T>(.5) * (((x - mean) / sd)*((x - mean) / sd));
+                    if (give_log)return logres;
+                    else return atl::exp(logres);
+                }
+                
+                
+            public:
+                
+                DNormTest(std::ofstream& out) {
+                    this->RunTestToFile(out);
+                }
+                
+                void Description(std::stringstream& out) {
+                    out << "dnorm model....\n";
+                }
+                
+                void Initialize() {
+                    
+                    x = .5;
+                    mean = .123123;
+                    sd = .25;
+                    
+                    this->Register(x);
+                    this->Register(mean);
+                    this->Register(sd);
+                }
+                
+                
+                virtual void ObjectiveFunction(atl::Variable<T>& f) {
+                    f = dnorm(x,mean,sd,false);
+                }
+                
+                
+            };
+            
+            template<class T>
             class Bertalanffy : public AutoDiffTest<T> {
             public:
                 typedef atl::Variable<T> var;
@@ -2158,7 +2401,7 @@ namespace atl {
                     variable sum;
                     for (int i = 0; i < a.size(); i++) {
                         variable predL = (Linf * (static_cast<T> (1.0) - atl::exp(static_cast<T> (-1.0) * k * (a[i] - a0))));
-                        sum += static_cast<T> (.5) * atl::square((std::log(l[i]) - atl::log(predL))) / sd;
+                        sum += static_cast<T> (.5) * ((std::log(l[i]) - atl::log(predL))*(std::log(l[i]) - atl::log(predL))) / sd;
                     }
                     
                     
@@ -2226,65 +2469,26 @@ namespace atl {
                 atl::tests::auto_diff::PowC2AutoDiffTest<real_t> pow3(out);
                 atl::tests::auto_diff::CeilAutoDiffTest<real_t> ceil(out);
                 atl::tests::auto_diff::FloorAutoDiffTest<real_t> floor(out);
+                
+#ifdef  HESSIAN_USE_AD_GRADIENT
+                //                atl::tests::auto_diff::SumAlotOfParametersAutoDiffTest<real_t> s3(out, 50);
+#endif
                 atl::tests::auto_diff::SumAlotOfParametersAutoDiffTest<real_t> s1(out, 10);
                 atl::tests::auto_diff::SumAlotOfParametersAutoDiffTest<real_t> s2(out, 20);
-                atl::tests::auto_diff::SumAlotOfParametersAutoDiffTest<real_t> s3(out, 50);
-                atl::tests::auto_diff::Ackley<real_t>  ackley10(out,10);
-                atl::tests::auto_diff::Ackley<real_t>  ackley20(out,20);
-                atl::tests::auto_diff::Ackley<real_t>  ackley30(out,30);
-                atl::tests::auto_diff::Ackley<real_t>  ackley40(out,40);
-                atl::tests::auto_diff::Ackley<real_t>  ackley50(out,50);
-                atl::tests::auto_diff::Ackley<real_t>  ackley100(out,100);
-                atl::tests::auto_diff::Ackley<real_t>  ackley200(out,200);
-                //                //                //
-                //                atl::tests::auto_diff::AddAutoDiffTest<real_t> add(out);
-                //                atl::tests::auto_diff::Add1AutoDiffTest<real_t> add1(out);
-                //                atl::tests::auto_diff::Add2AutoDiffTest<real_t> add2(out);
-                //                atl::tests::auto_diff::SubtractAutoDiffTest<real_t> subtract1(out);
-                //                atl::tests::auto_diff::Subtract1AutoDiffTest<real_t> subtract(out);
-                //                atl::tests::auto_diff::Subtract2AutoDiffTest<real_t> subtract2(out);
-                //                atl::tests::auto_diff::MultiplyAutoDiffTest<real_t> multiply(out);
-                //                atl::tests::auto_diff::Multiply1AutoDiffTest<real_t> multiply1(out);
-                //                atl::tests::auto_diff::Multiply2AutoDiffTest<real_t> multiply2(out);
-                //                atl::tests::auto_diff::DivideAutoDiffTest<real_t> divide(out);
-                //                atl::tests::auto_diff::Divide1AutoDiffTest<real_t> divide1(out);
-                //                atl::tests::auto_diff::Divide2AutoDiffTest<real_t> divide2(out);
-                //                atl::tests::auto_diff::CosAutoDiffTest<real_t> cos(out);
-                //                atl::tests::auto_diff::ACosAutoDiffTest<real_t> acos(out);
-                //                atl::tests::auto_diff::SinAutoDiffTest<real_t> sin(out);
-                //                atl::tests::auto_diff::ASinAutoDiffTest<real_t> asin(out);
-                //                atl::tests::auto_diff::TanAutoDiffTest<real_t> tan(out);
-                //                atl::tests::auto_diff::ATanAutoDiffTest<real_t> atan(out);
-                //                atl::tests::auto_diff::CoshAutoDiffTest<real_t> cosh(out);
-                //                atl::tests::auto_diff::SinhAutoDiffTest<real_t> sinh(out);
-                //                atl::tests::auto_diff::TanhAutoDiffTest<real_t> tanh(out);
-                //                atl::tests::auto_diff::ExpAutoDiffTest<real_t> exp(out);
-                //                atl::tests::auto_diff::LogAutoDiffTest<real_t> log(out);
-                //                atl::tests::auto_diff::Log10AutoDiffTest<real_t> log10(out);
-                //                atl::tests::auto_diff::FabsAutoDiffTest<real_t> fabs(out);
-                //                atl::tests::auto_diff::SqrtAutoDiffTest<real_t> sqrt(out);
-                //                atl::tests::auto_diff::PowAutoDiffTest<real_t> pow(out);
-                //                atl::tests::auto_diff::PowCAutoDiffTest<real_t> pow2(out);
-                //                atl::tests::auto_diff::PowC2AutoDiffTest<real_t> pow3(out);
-                //                atl::tests::auto_diff::CeilAutoDiffTest<real_t> ceil(out);
-                //                atl::tests::auto_diff::FloorAutoDiffTest<real_t> floor(out);
-                //#ifdef  HESSIAN_USE_AD_GRADIENT
-                ////                atl::tests::auto_diff::SumAlotOfParametersAutoDiffTest<real_t> s3(out, 50);
-                //#endif
-                //                atl::tests::auto_diff::SumAlotOfParametersAutoDiffTest<real_t> s1(out, 10);
-                //                atl::tests::auto_diff::SumAlotOfParametersAutoDiffTest<real_t> s2(out, 20);
+                
+                atl::tests::auto_diff::Ackley<real_t> ackley10(out, 10);
+                atl::tests::auto_diff::Ackley<real_t> ackley20(out, 20);
+                atl::tests::auto_diff::Ackley<real_t> ackley30(out, 30);
+                atl::tests::auto_diff::Ackley<real_t> ackley40(out, 40);
+                atl::tests::auto_diff::Ackley<real_t> ackley50(out, 50);
+#ifdef  HESSIAN_USE_AD_GRADIENT
+                atl::tests::auto_diff::Ackley<real_t> ackley100(out, 100);
+                atl::tests::auto_diff::Ackley<real_t> ackley200(out, 200);
+#endif
                 //
-                //                atl::tests::auto_diff::Ackley<real_t> ackley10(out, 10);
-                //                atl::tests::auto_diff::Ackley<real_t> ackley20(out, 20);
-                //                atl::tests::auto_diff::Ackley<real_t> ackley30(out, 30);
-                //                atl::tests::auto_diff::Ackley<real_t> ackley40(out, 40);
-                //                atl::tests::auto_diff::Ackley<real_t> ackley50(out, 50);
-                //#ifdef  HESSIAN_USE_AD_GRADIENT
-                //                atl::tests::auto_diff::Ackley<real_t> ackley100(out, 100);
-                //                atl::tests::auto_diff::Ackley<real_t> ackley200(out, 200);
-                //#endif
-                //
-                //                atl::tests::auto_diff::Bertalanffy<real_t> bertalanffy(out);
+                atl::tests::auto_diff::Bertalanffy<real_t> bertalanffy(out);
+                atl::tests::auto_diff::LogTheta<real_t> lt(out);
+                atl::tests::auto_diff::DNormTest<real_t> dnt(out);
                 std::cout << "Test complete.\n";
                 if (atl::tests::auto_diff::fail == 0) {
                     std::cout << "All tests passed, review file \"autodiff_test.txt\" for details." << std::endl;
@@ -2295,6 +2499,7 @@ namespace atl {
                 }
                 
             }
+
             
         }
     }

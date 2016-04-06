@@ -55,13 +55,49 @@ namespace atl {
         }
 
         inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+            //            if (lhs_m.IsNonlinear() && !rhs_m.IsNonlinear()) {
+            //                lhs_m.PushIds(ids);
+            //                rhs_m.PushIds(ids, true);
+            //            } else if (!lhs_m.IsNonlinear() && rhs_m.IsNonlinear()) {
+            //                lhs_m.PushIds(ids, true);
+            //                rhs_m.PushIds(ids);
+            //            } else {
             lhs_m.PushIds(ids);
             rhs_m.PushIds(ids);
+            //            }
         }
 
         inline void PushIds(IDSet<uint32_t >& ids)const {
             lhs_m.PushIds(ids);
             rhs_m.PushIds(ids);
+        }
+
+        bool IsNonlinear()const {
+            if (lhs_m.IsNonlinear() || rhs_m.IsNonlinear()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        inline void MakeNLInteractions(bool b = false)const {
+            if (lhs_m.IsNonlinear() && !rhs_m.IsNonlinear()) {
+                rhs_m.MakeNLInteractions(true);
+            }
+            if (!lhs_m.IsNonlinear() && rhs_m.IsNonlinear()) {
+                lhs_m.MakeNLInteractions(true);
+            }
+        }
+
+        inline void PushNLInteractions(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+            if (lhs_m.IsNonlinear() && !rhs_m.IsNonlinear()) {
+                rhs_m.PushIds(ids, true);
+            }
+            if (!lhs_m.IsNonlinear() && rhs_m.IsNonlinear()) {
+                lhs_m.PushIds(ids, true);
+            }
+            //            lhs_m.PushNLInteractions(ids);
+            //            rhs_m.PushNLInteractions(ids);
         }
 
         inline REAL_T EvaluateDerivative(uint32_t id) const {
@@ -81,34 +117,14 @@ namespace atl {
         }
 
         inline REAL_T EvaluateDerivative(uint32_t x, uint32_t y, uint32_t z) const {
-            return -(6.0 * lhs_m.GetValue()*(rhs_m.EvaluateDerivative(x))*
-                    (rhs_m.EvaluateDerivative(y))*(rhs_m.EvaluateDerivative(z)))
-                    / std::pow(rhs_m.GetValue(), 4.0)+(2.0 * (lhs_m.EvaluateDerivative(x))
-                    *(rhs_m.EvaluateDerivative(y))*(rhs_m.EvaluateDerivative(z)))
-                    / std::pow(rhs_m.GetValue(), 3.0)+(2.0 * lhs_m.GetValue()*
-                    (rhs_m.EvaluateDerivative(x, y))*(rhs_m.EvaluateDerivative(z)))
-                    / std::pow(rhs_m.GetValue(), 3.0)+(2.0 * (lhs_m.EvaluateDerivative(y))
-                    *(rhs_m.EvaluateDerivative(x))*(rhs_m.EvaluateDerivative(z)))
-                    / std::pow(rhs_m.GetValue(), 3.0)-
-                    ((lhs_m.EvaluateDerivative(x, y))*(rhs_m.EvaluateDerivative(z)))
-                    / std::pow(rhs_m.GetValue(), 2.0)+(2.0 * lhs_m.GetValue()
-                    *(rhs_m.EvaluateDerivative(x))*(rhs_m.EvaluateDerivative(y, z)))
-                    / std::pow(rhs_m.GetValue(), 3.0)-((lhs_m.EvaluateDerivative(x))
-                    *(rhs_m.EvaluateDerivative(y, z))) /
-                    std::pow(rhs_m.GetValue(), 2.0)+(2.0 * lhs_m.GetValue()
-                    *(rhs_m.EvaluateDerivative(x, z))*(rhs_m.EvaluateDerivative(y)))
-                    / std::pow(rhs_m.GetValue(), 3.0)+(2.0 * (lhs_m.EvaluateDerivative(z))
-                    *(rhs_m.EvaluateDerivative(x))*(rhs_m.EvaluateDerivative(y)))
-                    / std::pow(rhs_m.GetValue(), 3.0)-
-                    ((lhs_m.EvaluateDerivative(x, z))*(rhs_m.EvaluateDerivative(y)))
-                    / std::pow(rhs_m.GetValue(), 2.0)-((lhs_m.EvaluateDerivative(y))
-                    *(rhs_m.EvaluateDerivative(x, z))) / std::pow(rhs_m.GetValue(), 2.0)
-                    -(lhs_m.GetValue()*(rhs_m.EvaluateDerivative(x, y, z))) /
-                    std::pow(rhs_m.GetValue(), 2.0)-((lhs_m.EvaluateDerivative(z))
-                    *(rhs_m.EvaluateDerivative(x, y))) / std::pow(rhs_m.GetValue(), 2.0)
-                    -((lhs_m.EvaluateDerivative(y, z))*(rhs_m.EvaluateDerivative(x)))
-                    / std::pow(rhs_m.GetValue(), 2.0) + lhs_m.EvaluateDerivative(x, y, z)
-                    / rhs_m.GetValue();
+            return -(6 * lhs_m.GetValue()*(rhs_m.EvaluateDerivative(x))*(rhs_m.EvaluateDerivative(y))*(rhs_m.EvaluateDerivative(z))) / std::pow(rhs_m.GetValue(), 4.0)+(2 * (lhs_m.EvaluateDerivative(x))*(rhs_m.EvaluateDerivative(y))*(rhs_m.EvaluateDerivative(z))) / std::pow(rhs_m.GetValue(), 3.0)+
+                    (2 * lhs_m.GetValue()*(rhs_m.EvaluateDerivative(x, y))*(rhs_m.EvaluateDerivative(z))) / std::pow(rhs_m.GetValue(), 3.0)+(2 * (lhs_m.EvaluateDerivative(y))*(rhs_m.EvaluateDerivative(x))*(rhs_m.EvaluateDerivative(z))) / std::pow(rhs_m.GetValue(), 3.0)-
+                    ((lhs_m.EvaluateDerivative(x, y))*(rhs_m.EvaluateDerivative(z))) / std::pow(rhs_m.GetValue(), 2.0)+(2 * lhs_m.GetValue()*(rhs_m.EvaluateDerivative(x))*(rhs_m.EvaluateDerivative(y, z))) / std::pow(rhs_m.GetValue(), 3.0)-((lhs_m.EvaluateDerivative(x))*(rhs_m.EvaluateDerivative(y, z))) / std::pow(rhs_m.GetValue(), 2.0)+
+                    (2 * lhs_m.GetValue()*(rhs_m.EvaluateDerivative(x, z))*(rhs_m.EvaluateDerivative(y))) / std::pow(rhs_m.GetValue(), 3.0)+(2 * (lhs_m.EvaluateDerivative(z))*(rhs_m.EvaluateDerivative(x))*(rhs_m.EvaluateDerivative(y))) / std::pow(rhs_m.GetValue(), 3.0)-
+                    ((lhs_m.EvaluateDerivative(x, z))*(rhs_m.EvaluateDerivative(y))) / std::pow(rhs_m.GetValue(), 2.0)-((lhs_m.EvaluateDerivative(y))*(rhs_m.EvaluateDerivative(x, z))) / std::pow(rhs_m.GetValue(), 2.0)-(lhs_m.GetValue()*(rhs_m.EvaluateDerivative(x, y, z))) / std::pow(rhs_m.GetValue(), 2.0)-
+                    ((lhs_m.EvaluateDerivative(z))*(rhs_m.EvaluateDerivative(x, y))) / std::pow(rhs_m.GetValue(), 2.0)-((lhs_m.EvaluateDerivative(y, z))*(rhs_m.EvaluateDerivative(x))) / std::pow(rhs_m.GetValue(), 2.0) + lhs_m.EvaluateDerivative(x, y, z) / rhs_m.GetValue()
+                    ;
+
         }
 
         inline atl::DynamicExpression<REAL_T>* GetDynamicExpession() const {
@@ -162,6 +178,26 @@ namespace atl {
 
         inline void PushIds(IDSet<uint32_t >& ids)const {
             lhs_m.PushIds(ids);
+        }
+
+        bool IsNonlinear()const {
+            if (lhs_m.IsNonlinear()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        inline void MakeNLInteractions(bool b = false)const {
+
+            if (!lhs_m.IsNonlinear()) {
+                lhs_m.MakeNLInteractions(b);
+            }
+        }
+
+        inline void PushNLInteractions(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+            if (!lhs_m.IsNonlinear())
+                lhs_m.PushNLInteractions(ids);
         }
 
         inline REAL_T EvaluateDerivative(uint32_t id) const {
@@ -253,6 +289,25 @@ namespace atl {
 
         inline void PushAdjoints(std::vector<std::pair<atl::VariableInfo<REAL_T>*, REAL_T> >& adjoints, REAL_T coefficient = 1.0) const {
             rhs_m.PushAdjoints(adjoints, -1.0 * coefficient * this->GetValue() / rhs_m);
+        }
+
+        bool IsNonlinear()const {
+            if (rhs_m.IsNonlinear()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        inline void MakeNLInteractions(bool b = false)const {
+            if (!rhs_m.IsNonlinear()) {
+                rhs_m.MakeNLInteractions(b);
+            }
+        }
+
+        inline void PushNLInteractions(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+            if (!rhs_m.IsNonlinear())
+                rhs_m.PushNLInteractions(ids);
         }
 
         inline REAL_T EvaluateDerivative(uint32_t id) const {

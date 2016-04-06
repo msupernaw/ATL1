@@ -106,6 +106,15 @@ namespace atl {
             expr2_m.PushAdjoints(adjoints, coefficient * this->GetValue() * std::log(expr1_m.GetValue()));
         }
 
+        bool IsNonlinear()const {
+            return true;
+        }
+
+        inline void PushNLInteractions(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+            expr1_m.PushNLInteractions(ids);
+            expr2_m.PushNLInteractions(ids);
+        }
+
         inline REAL_T EvaluateDerivative(uint32_t id) const {
             REAL_T g = expr2_m.GetValue();
             REAL_T f = expr1_m.GetValue();
@@ -188,6 +197,14 @@ namespace atl {
             expr1_m.PushAdjoints(adjoints, coefficient * expr2_m * pow(expr1_m.GetValue(), expr2_m - static_cast<REAL_T> (1.0)));
         }
 
+        bool IsNonlinear()const {
+            return true;
+        }
+
+        inline void PushNLInteractions(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+            expr1_m.PushNLInteractions(ids);
+        }
+
         inline REAL_T EvaluateDerivative(uint32_t id) const {
             return expr2_m * std::pow(expr1_m.GetValue(), expr2_m - 1.0) * expr1_m.EvaluateDerivative(id);
         }
@@ -204,8 +221,8 @@ namespace atl {
                     * expr2_m * std::pow(expr1_m.GetValue(), expr2_m - 2.0)*(expr1_m.EvaluateDerivative(x, y))
                     *(expr1_m.EvaluateDerivative(z))+(expr2_m - 1.0) * expr2_m * std::pow(expr1_m.GetValue(), expr2_m - 2.0)*
                     (expr1_m.EvaluateDerivative(x))*(expr1_m.EvaluateDerivative(y, z))+(expr2_m - 1)
-                    * expr2_m * std::pow(expr1_m.GetValue(),expr2_m - 2.0) * (expr1_m.EvaluateDerivative(x, z))
-                    *(expr1_m.EvaluateDerivative(y)) + expr2_m * std::pow(expr1_m.GetValue(),expr2_m - 1.0)
+                    * expr2_m * std::pow(expr1_m.GetValue(), expr2_m - 2.0) * (expr1_m.EvaluateDerivative(x, z))
+                    *(expr1_m.EvaluateDerivative(y)) + expr2_m * std::pow(expr1_m.GetValue(), expr2_m - 1.0)
                     * (expr1_m.EvaluateDerivative(x, y, z));
         }
 
@@ -249,6 +266,18 @@ namespace atl {
 
         inline void PushAdjoints(std::vector<std::pair<atl::VariableInfo<REAL_T>*, REAL_T> >& adjoints, REAL_T coefficient = 1.0) const {
             expr2_m.PushAdjoints(adjoints, coefficient * this->GetValue() * std::log(expr1_m.value()));
+        }
+
+        bool IsNonlinear()const {
+            return true;
+        }
+        
+         inline void MakeNLInteractions(bool b = false)const {
+         
+        }
+
+        inline void PushNLInteractions(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+//            expr2_m.PushNLInteractions(ids);
         }
 
         inline REAL_T EvaluateDerivative(uint32_t id) const {
@@ -327,6 +356,18 @@ namespace atl {
     atl::PowScalar< REAL_T, EXPR > pow(const atl::ExpressionBase<REAL_T, EXPR>& expr,
             const REAL_T& val) {
         return atl::PowScalar< REAL_T, EXPR > (expr.Cast(), val);
+    }
+    
+    template <class REAL_T, class EXPR>
+    inline
+    atl::PowScalar< REAL_T, EXPR > square(const atl::ExpressionBase<REAL_T, EXPR>& expr) {
+        return atl::PowScalar< REAL_T, EXPR > (expr.Cast(), static_cast<REAL_T>(2.0));
+    }
+    
+    template <class REAL_T, class EXPR>
+    inline
+    atl::PowScalar< REAL_T, EXPR > cube(const atl::ExpressionBase<REAL_T, EXPR>& expr) {
+        return atl::PowScalar< REAL_T, EXPR > (expr.Cast(), static_cast<REAL_T>(3.0));
     }
 
     template <class REAL_T, class EXPR>

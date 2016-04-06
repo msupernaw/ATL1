@@ -74,6 +74,17 @@ namespace atl {
             expr_m.PushIds(ids);
         }
 
+        bool IsNonlinear()const {
+            return true;
+        }
+
+        inline void MakeNLInteractions(bool b = false)const {
+        }
+
+        inline void PushNLInteractions(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+//            expr_m.PushNLInteractions(ids);
+        }
+
         inline REAL_T EvaluateDerivative(uint32_t id) const {
             return expr_m.EvaluateDerivative(id) * std::cos(expr_m.GetValue());
         }
@@ -85,7 +96,7 @@ namespace atl {
 
         inline REAL_T EvaluateDerivative(uint32_t x, uint32_t y, uint32_t z) const {
             return -std::cos(expr_m.GetValue())*(expr_m.EvaluateDerivative(x))
-                    *(expr_m.EvaluateDerivative(y))*(expr_m.EvaluateDerivative(z)) 
+                    *(expr_m.EvaluateDerivative(y))*(expr_m.EvaluateDerivative(z))
                     - std::sin(expr_m.GetValue())*(expr_m.EvaluateDerivative(x, y))
                     *(expr_m.EvaluateDerivative(z)) - std::sin(expr_m.GetValue())
                     *(expr_m.EvaluateDerivative(x))*(expr_m.EvaluateDerivative(y, z))

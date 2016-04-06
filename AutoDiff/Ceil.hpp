@@ -69,7 +69,17 @@ namespace atl {
             expr_m.PushIds(ids);
         }
 
+        bool IsNonlinear()const {
+            return false;
+        }
 
+        inline void MakeNLInteractions(bool b = false)const {
+            expr_m.MakeNLInteractions(b);
+        }
+
+        inline void PushNLInteractions(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+            expr_m.PushNLInteractions(ids);
+        }
 
         inline REAL_T EvaluateDerivative(uint32_t id) const {
             return 0.0; //expr_m.EvaluateDerivative(id) * GetValue();
@@ -79,12 +89,11 @@ namespace atl {
             return 0.0; //expr_m.EvaluateDerivative(a, b) * GetValue();
 
         }
-        
+
         inline REAL_T EvaluateDerivative(uint32_t x, uint32_t y, uint32_t z) const {
             return 0.0;
         }
 
-        
         inline atl::DynamicExpression<REAL_T>* GetDynamicExpession() const {
             return new atl::DynamicCeil<REAL_T>(expr_m.GetDynamicExpession());
         }

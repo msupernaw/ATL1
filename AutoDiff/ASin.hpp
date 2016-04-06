@@ -80,6 +80,18 @@ namespace atl {
                     static_cast<REAL_T> (2.0))), static_cast<REAL_T> (0.5)));
         }
 
+        bool IsNonlinear()const {
+            return true;
+        }
+
+        inline void MakeNLInteractions(bool b = false)const {
+//            Cast().MakeNLInteractions();
+        }
+        
+        inline void PushNLInteractions(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+//            expr_m.PushNLInteractions(ids);
+        }
+
         inline REAL_T EvaluateDerivative(uint32_t id) const {
             REAL_T fx = expr_m.GetValue();
             return expr_m.EvaluateDerivative(id) / std::sqrt(1.0 - fx * fx);
@@ -95,21 +107,21 @@ namespace atl {
 
         inline REAL_T EvaluateDerivative(uint32_t x, uint32_t y, uint32_t z) const {
             return ((expr_m.EvaluateDerivative(x))*(expr_m.EvaluateDerivative(y))*
-                    (expr_m.EvaluateDerivative(z))) / 
+                    (expr_m.EvaluateDerivative(z))) /
                     std::pow((1 - std::pow(expr_m.GetValue(), 2.0)), (3.0 / 2.0))
                     +(3 * std::pow(expr_m.GetValue(), 2.0)*(expr_m.EvaluateDerivative(x))
                     *(expr_m.EvaluateDerivative(y))*(expr_m.EvaluateDerivative(z))) /
                     std::pow((1 - std::pow(expr_m.GetValue(), 2.0)), (5.0 / 2.0))+
                     (expr_m.GetValue()*(expr_m.EvaluateDerivative(x, y))*
-                    (expr_m.EvaluateDerivative(z))) / 
+                    (expr_m.EvaluateDerivative(z))) /
                     std::pow((1 - std::pow(expr_m.GetValue(), 2.0)), (3.0 / 2.0))
                     +(expr_m.GetValue()*(expr_m.EvaluateDerivative(x))*
-                    (expr_m.EvaluateDerivative(y, z))) / 
+                    (expr_m.EvaluateDerivative(y, z))) /
                     std::pow((1 - std::pow(expr_m.GetValue(), 2.0)), (3.0 / 2.0))+
                     (expr_m.GetValue()*(expr_m.EvaluateDerivative(x, z))*
-                    (expr_m.EvaluateDerivative(y))) / 
+                    (expr_m.EvaluateDerivative(y))) /
                     std::pow((1 - std::pow(expr_m.GetValue(), 2.0)), (3.0 / 2.0)) +
-                    expr_m.EvaluateDerivative(x, y, z) / 
+                    expr_m.EvaluateDerivative(x, y, z) /
                     std::sqrt(1 - std::pow(expr_m.GetValue(), 2.0));
         }
 

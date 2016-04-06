@@ -58,6 +58,18 @@ namespace atl {
 
         }
 
+        bool IsNonlinear()const {
+            return false;
+        }
+        
+         inline void MakeNLInteractions(bool b = false)const {
+         
+        }
+
+        inline void PushNLInteractions(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+   
+        }
+
         inline const REAL_T EvaluateDerivative(uint32_t id) const {
             return 0.0;
         }
@@ -68,6 +80,10 @@ namespace atl {
 
         inline REAL_T EvaluateDerivative(uint32_t x, uint32_t y, uint32_t z) const {
             return 0.0;
+        }
+        
+        inline atl::DynamicExpression<REAL_T>* GetDynamicExpession() const {
+            return new atl::DynamicScalar<REAL_T>(value_m);
         }
 
 

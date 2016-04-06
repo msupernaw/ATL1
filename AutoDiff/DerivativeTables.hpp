@@ -15,7 +15,7 @@
 #define DERIVATIVETABLES_HPP
 
 #include "third_party/sparsehash/src/google/dense_hash_map"
-
+#include "third_party/sparsehash/src/google/sparse_hash_map"
 namespace atl {
 
     template<class T>
@@ -26,6 +26,16 @@ namespace atl {
             this->set_empty_key(0);
         }
     };
+    
+    template<class T>
+    class dense_map_wrapper_long_key : public google::dense_hash_map<size_t, T> {
+    public:
+
+        dense_map_wrapper_long_key() {
+            this->set_empty_key(0);
+        }
+    };
+    
 
     class index_exception : public std::exception {
 
@@ -80,8 +90,8 @@ namespace atl {
             this->max_key = max_index;
             this->min_key = min_index;
             size = max_index - min_index;
-            data.resize(size+1);
-            for(int i =0; i < data.size(); i++){
+            data.resize(size + 1);
+            for (int i = 0; i < data.size(); i++) {
                 data[i] = 0.0;
             }
         }
@@ -164,13 +174,16 @@ namespace atl {
 
     template<typename T>
     class ThirdOrderTable {
+    public:
         uint32_t min_key;
         uint32_t max_key;
         uint32_t size;
-
         std::vector<dense_map_wrapper<dense_map_wrapper<T> > > data;
-
-    public:
+        typedef typename std::vector<dense_map_wrapper<dense_map_wrapper<T> > >::iterator I_iterator;
+        typedef typename dense_map_wrapper<dense_map_wrapper<T> >::iterator J_iterator;
+        typedef typename dense_map_wrapper<T>::iterator K_iterator;
+        I_iterator i_iter;
+        J_iterator j_iter;
 
         ThirdOrderTable() {
         }
@@ -216,6 +229,26 @@ namespace atl {
             }
         }
 
+        I_iterator getI(uint32_t i) {
+            //            return &data[i - min_key];
+            I_iterator iter = data.begin();
+            std::advance(iter, (i - min_key));
+            return iter;
+        }
+
+        J_iterator getJ(uint32_t i, uint32_t j) {
+            typename dense_map_wrapper<dense_map_wrapper<T> >::iterator it;
+            return data[i - min_key].find(j);
+        }
+
+        I_iterator endi() {
+            return data.end();
+        }
+
+        J_iterator endj(uint32_t i) {
+            return data[i - min_key].end();
+        }
+
         inline void clear() {
             data.clear();
         }
@@ -230,7 +263,7 @@ namespace atl {
             data.resize(nsize + 1);
             for (int i = 0; i < data.size(); i++) {
                 typename dense_map_wrapper<dense_map_wrapper<T> >::iterator it;
-                it = data[i].begin();
+                //                it = data[i].begin();
                 for (it = data[i].begin(); it != data[i].end(); ++it) {
                     (*it).second.clear_no_resize();
                 }

@@ -41,8 +41,16 @@ namespace atl {
         }
 
         inline void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+            //            if (lhs_m.IsNonlinear() && !rhs_m.IsNonlinear()) {
+            //                lhs_m.PushIds(ids);
+            //                rhs_m.PushIds(ids, true);
+            //            } else if (!lhs_m.IsNonlinear() && rhs_m.IsNonlinear()) {
+            //                lhs_m.PushIds(ids, true);
+            //                rhs_m.PushIds(ids);
+            //            } else {
             lhs_m.PushIds(ids);
             rhs_m.PushIds(ids);
+            //            }
         }
 
         inline void PushIds(IDSet<uint32_t >& ids)const {
@@ -55,12 +63,44 @@ namespace atl {
             rhs_m.PushAdjoints(adjoints, coefficient * lhs_m.GetValue());
         }
 
+        bool IsNonlinear()const {
+            if (lhs_m.IsNonlinear() || rhs_m.IsNonlinear()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        inline void MakeNLInteractions(bool b = false)const {
+            if (lhs_m.IsNonlinear() && !rhs_m.IsNonlinear()) {
+                rhs_m.MakeNLInteractions(true);
+            }
+            if (!lhs_m.IsNonlinear() && rhs_m.IsNonlinear()) {
+                lhs_m.MakeNLInteractions(true);
+            }
+        }
+
+        inline void PushNLInteractions(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+            if (lhs_m.IsNonlinear() && !rhs_m.IsNonlinear()) {
+                rhs_m.PushIds(ids, true);
+            }
+            if (!lhs_m.IsNonlinear() && rhs_m.IsNonlinear()) {
+                lhs_m.PushIds(ids, true);
+            }
+            //            lhs_m.PushNLInteractions(ids);
+            //            rhs_m.PushNLInteractions(ids);
+        }
+
         inline const REAL_T EvaluateDerivative(uint32_t id) const {
             return (lhs_m.GetValue() * rhs_m.EvaluateDerivative(id) +
                     lhs_m.EvaluateDerivative(id) * rhs_m.GetValue());
         }
 
         inline REAL_T EvaluateDerivative(uint32_t a, uint32_t b) const {
+//            std::cout<<"multiply = "<<lhs_m.EvaluateDerivative(a) * rhs_m.EvaluateDerivative(b) <<" + "
+//                    <<lhs_m.GetValue() * rhs_m.EvaluateDerivative(a, b) <<" + "
+//                    << lhs_m.EvaluateDerivative(b) * rhs_m.EvaluateDerivative(a)<<" + "
+//                    <<rhs_m.GetValue() * lhs_m.EvaluateDerivative(a, b)<<"\n";
             return lhs_m.EvaluateDerivative(a) * rhs_m.EvaluateDerivative(b) + lhs_m.GetValue() * rhs_m.EvaluateDerivative(a, b) +
                     lhs_m.EvaluateDerivative(b) * rhs_m.EvaluateDerivative(a) + rhs_m.GetValue() * lhs_m.EvaluateDerivative(a, b);
         }
@@ -92,11 +132,6 @@ namespace atl {
     inline const Multiply<REAL_T, LHS, RHS> operator*(const ExpressionBase<REAL_T, LHS>& a,
             const ExpressionBase<REAL_T, RHS>& b) {
         return Multiply<REAL_T, LHS, RHS > (a.Cast(), b.Cast());
-    }
-
-    template <class REAL_T, class LHS>
-    inline const Multiply<REAL_T, LHS, LHS> square(const ExpressionBase<REAL_T, LHS>& a) {
-        return Multiply<REAL_T, LHS, LHS > (a.Cast(), a.Cast());
     }
 
     template <class REAL_T, class LHS>
@@ -136,6 +171,25 @@ namespace atl {
             return (rhs_m * lhs_m.EvaluateDerivative(id));
         }
 
+        bool IsNonlinear()const {
+            if (lhs_m.IsNonlinear()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        inline void MakeNLInteractions(bool b = false)const {
+            if (!lhs_m.IsNonlinear()) {
+                lhs_m.MakeNLInteractions(b);
+            }
+        }
+
+        inline void PushNLInteractions(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+            if (!lhs_m.IsNonlinear())
+                lhs_m.PushNLInteractions(ids);
+        }
+
         inline REAL_T EvaluateDerivative(uint32_t a, uint32_t b) const {
             return lhs_m.EvaluateDerivative(a, b) * rhs_m;
         }
@@ -145,7 +199,7 @@ namespace atl {
         }
 
         inline atl::DynamicExpression<REAL_T>* GetDynamicExpession() const {
-            return new atl::DynamicMultiply<REAL_T>(lhs_m.GetDynamicExpession(), atl::DynamicScalar<REAL_T>(rhs_m));
+            return new atl::DynamicMultiply<REAL_T>(lhs_m.GetDynamicExpession(), new atl::DynamicScalar<REAL_T>(rhs_m));
         }
 
 
@@ -198,6 +252,25 @@ namespace atl {
 
         inline void PushAdjoints(std::vector<std::pair<atl::VariableInfo<REAL_T>*, REAL_T> >& adjoints, REAL_T coefficient = 1.0) const {
             rhs_m.PushAdjoints(adjoints, coefficient * lhs_m);
+        }
+
+        bool IsNonlinear()const {
+            if (rhs_m.IsNonlinear()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        inline void MakeNLInteractions(bool b = false)const {
+            if (!rhs_m.IsNonlinear()) {
+                rhs_m.MakeNLInteractions(b);
+            }
+        }
+
+        inline void PushNLInteractions(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+            if (!rhs_m.IsNonlinear())
+                rhs_m.PushNLInteractions(ids);
         }
 
         inline REAL_T EvaluateDerivative(uint32_t id) const {

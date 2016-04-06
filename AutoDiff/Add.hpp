@@ -55,6 +55,37 @@ namespace atl {
             rhs_m.PushIds(ids);
         }
 
+        bool IsNonlinear()const {
+            if (lhs_m.IsNonlinear() || rhs_m.IsNonlinear()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        inline void MakeNLInteractions(bool b = false)const {
+//            if (lhs_m.IsNonlinear() && !rhs_m.IsNonlinear()) {
+//                rhs_m.MakeNLInteractions(true);
+//            }
+//            if (!lhs_m.IsNonlinear() && rhs_m.IsNonlinear()) {
+//                lhs_m.MakeNLInteractions(true);
+//            }
+            lhs_m.MakeNLInteractions(b);
+            rhs_m.MakeNLInteractions(b);
+        }
+
+        inline void PushNLInteractions(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+//            if (lhs_m.IsNonlinear() && !rhs_m.IsNonlinear()) {
+//                rhs_m.PushIds(ids, true);
+//            }
+//            if (!lhs_m.IsNonlinear() && rhs_m.IsNonlinear()) {
+//                lhs_m.PushIds(ids, true);
+//            }
+            //            if(!lhs_m.IsNonlinear())
+                        lhs_m.PushNLInteractions(ids);
+                        rhs_m.PushNLInteractions(ids);
+        }
+
         inline const REAL_T EvaluateDerivative(uint32_t id) const {
             return lhs_m.EvaluateDerivative(id) + rhs_m.EvaluateDerivative(id);
         }
@@ -121,6 +152,24 @@ namespace atl {
 
         inline void PushAdjoints(std::vector<std::pair<atl::VariableInfo<REAL_T>*, REAL_T> >& adjoints, REAL_T coefficient = 1.0) const {
             lhs_m.PushAdjoints(adjoints, coefficient);
+        }
+
+        bool IsNonlinear()const {
+            if (lhs_m.IsNonlinear()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        inline void MakeNLInteractions(bool b = false)const {
+
+                lhs_m.MakeNLInteractions(b);
+            
+        }
+
+        inline void PushNLInteractions(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+            lhs_m.PushNLInteractions(ids);
         }
 
         inline REAL_T EvaluateDerivative(uint32_t id) const {
@@ -192,6 +241,23 @@ namespace atl {
 
         inline void PushAdjoints(std::vector<std::pair<atl::VariableInfo<REAL_T>*, REAL_T> >& adjoints, REAL_T coefficient = 1.0) const {
             rhs_m.PushAdjoints(adjoints, coefficient);
+        }
+
+        bool IsNonlinear()const {
+            if (rhs_m.IsNonlinear()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        inline void MakeNLInteractions(bool b = false)const {
+                rhs_m.MakeNLInteractions(b);
+            
+        }
+
+        inline void PushNLInteractions(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+            rhs_m.PushNLInteractions(ids);
         }
 
         inline REAL_T EvaluateDerivative(uint32_t id) const {

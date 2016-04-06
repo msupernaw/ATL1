@@ -75,6 +75,18 @@ namespace atl {
             expr_m.PushIds(ids);
         }
 
+        bool IsNonlinear()const {
+            return true;
+        }
+
+        inline void MakeNLInteractions(bool b = false)const {
+            //            expr_m.MakeNLInteractions();
+        }
+
+        inline void PushNLInteractions(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+            //            expr_m.PushNLInteractions(ids);
+        }
+
         inline REAL_T EvaluateDerivative(uint32_t id) const {
             return (expr_m.EvaluateDerivative(id) / (AD_LOG10 * expr_m.GetValue()));
         }
@@ -86,14 +98,14 @@ namespace atl {
         }
 
         inline REAL_T EvaluateDerivative(uint32_t x, uint32_t y, uint32_t z) const {
-            return (2.0*(expr_m.EvaluateDerivative(x))*(expr_m.EvaluateDerivative(y))
-                    *(expr_m.EvaluateDerivative(z)))/(AD_LOG10*std::pow(expr_m.GetValue(),3.0))
-                    -((expr_m.EvaluateDerivative(x,y))*(expr_m.EvaluateDerivative(z)))
-                    /(AD_LOG10*std::pow(expr_m.GetValue(),2.0))-((expr_m.EvaluateDerivative(x))
-                    *(expr_m.EvaluateDerivative(y,z)))/(AD_LOG10*std::pow(expr_m.GetValue(),2.0))
-                    -((expr_m.EvaluateDerivative(x,z))*(expr_m.EvaluateDerivative(y)))
-                    /(AD_LOG10*std::pow(expr_m.GetValue(),2.0))+
-                    expr_m.EvaluateDerivative(x,y,z)/(AD_LOG10*expr_m.GetValue());
+            return (2.0 * (expr_m.EvaluateDerivative(x))*(expr_m.EvaluateDerivative(y))
+                    *(expr_m.EvaluateDerivative(z))) / (AD_LOG10 * std::pow(expr_m.GetValue(), 3.0))
+                    -((expr_m.EvaluateDerivative(x, y))*(expr_m.EvaluateDerivative(z)))
+                    / (AD_LOG10 * std::pow(expr_m.GetValue(), 2.0))-((expr_m.EvaluateDerivative(x))
+                    *(expr_m.EvaluateDerivative(y, z))) / (AD_LOG10 * std::pow(expr_m.GetValue(), 2.0))
+                    -((expr_m.EvaluateDerivative(x, z))*(expr_m.EvaluateDerivative(y)))
+                    / (AD_LOG10 * std::pow(expr_m.GetValue(), 2.0)) +
+                    expr_m.EvaluateDerivative(x, y, z) / (AD_LOG10 * expr_m.GetValue());
         }
 
         inline atl::DynamicExpression<REAL_T>* GetDynamicExpession() const {

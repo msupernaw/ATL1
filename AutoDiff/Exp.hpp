@@ -71,24 +71,30 @@ namespace atl {
             expr_m.PushIds(ids);
         }
 
+        bool IsNonlinear()const {
+            return true;
+        }
+
+        inline void MakeNLInteractions(bool b = false)const {
+
+        }
+
+        inline void PushNLInteractions(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
+            //            expr_m.PushNLInteractions(ids);
+        }
+
         inline REAL_T EvaluateDerivative(uint32_t id) const {
-            return expr_m.EvaluateDerivative(id) * value_m;
+            return expr_m.EvaluateDerivative(id) * this->GetValue();
         }
 
         inline REAL_T EvaluateDerivative(uint32_t a, uint32_t b) const {
-            REAL_T fx = value_m;
-            return ((fx * expr_m.EvaluateDerivative(a) * expr_m.EvaluateDerivative(b))
-                    + (fx * expr_m.EvaluateDerivative(a, b)));
+            //            REAL_T fx = value_m;
+            return std::exp(expr_m.GetValue())*(expr_m.EvaluateDerivative(a))*(expr_m.EvaluateDerivative(b)) + std::exp(expr_m.GetValue())*(expr_m.EvaluateDerivative(a, b));
         }
 
         inline REAL_T EvaluateDerivative(uint32_t x, uint32_t y, uint32_t z) const {
-            return std::exp(expr_m.GetValue())*(expr_m.EvaluateDerivative(x))*
-                    (expr_m.EvaluateDerivative(y))*(expr_m.EvaluateDerivative(z)) +
-                    std::exp(expr_m.GetValue())*(expr_m.EvaluateDerivative(x, y))*
-                    (expr_m.EvaluateDerivative(z)) + std::exp(expr_m.GetValue())*
-                    (expr_m.EvaluateDerivative(x))*(expr_m.EvaluateDerivative(y, z)) +
-                    std::exp(expr_m.GetValue())*(expr_m.EvaluateDerivative(x, z))*
-                    (expr_m.EvaluateDerivative(y)) + std::exp(expr_m.GetValue())*
+            return std::exp(expr_m.GetValue())*(expr_m.EvaluateDerivative(x))*(expr_m.EvaluateDerivative(y))*(expr_m.EvaluateDerivative(z)) + std::exp(expr_m.GetValue())*(expr_m.EvaluateDerivative(x, y))*(expr_m.EvaluateDerivative(z)) +
+                    std::exp(expr_m.GetValue())*(expr_m.EvaluateDerivative(x))*(expr_m.EvaluateDerivative(y, z)) + std::exp(expr_m.GetValue())*(expr_m.EvaluateDerivative(x, z))*(expr_m.EvaluateDerivative(y)) + std::exp(expr_m.GetValue())*
                     (expr_m.EvaluateDerivative(x, y, z));
         }
 

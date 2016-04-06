@@ -12,45 +12,18 @@
 #include <stack>
 #include <memory>
 
-#include "../Utilities/MemoryPool.hpp"
-
+#ifdef ATL_VARIABLE_INFO_USE_MEMORY_POOL
 #include "PoolAllocator.hpp"
+#endif
+
+
 
 #include <cassert>
 #include <unordered_map>
-//#include "third_party/cache-table-0.2/mm/cache_map.hpp"
+
 namespace atl {
 
-    //    template <class T>
-    //    class PoolAllocator {
-    //    public:
-    //
-    //        static void* operator new(size_t size) {
-    //            return s_memPool.malloc();
-    ////                        return malloc(size);
-    //        }
-    //
-    //        static void operator delete(void* deletable, size_t size) {
-    //            //don't delete null pointers
-    //            if (deletable)
-    //                s_memPool.free(deletable);
-    ////                        free(deletable);
-    //        }
-    //
-    //    protected:
-    //
-    //        ~PoolAllocator() {
-    //        }
-    //
-    //    private:
-    //        //each FastAllocator specialization has it's own memory pool
-    //        static util::MemoryPool<T> s_memPool;
-    //    };
-    //
-    //    //the static variable s_memPool is defined here. It's constructor is passed the object size.
-    //    template <class T>
-    //    util::MemoryPool<T> PoolAllocator<T>::s_memPool(500000);
-
+    
     /*!
      * Creates a unique identifier for variables. Identifiers are recyclable.
      * @return 
@@ -186,19 +159,24 @@ namespace atl {
 #else 
     {
 #endif
-    public:
-        //    static util::MemoryPool<VariableInfo<REAL_T>* > pool_g;
-        //        static std::mutex mutex_g;
+        public:
+     
         static std::mutex vinfo_mutex_g;
         static std::vector<VariableInfo<REAL_T>* > freed;
         REAL_T dvalue;
         REAL_T vvalue;
         std::atomic<int> count;
         std::atomic<int> dependence_level;
-
+        std::atomic<int> is_dependent;
+//        IDSet<atl::VariableInfo<REAL_T>* > dependencies;
         uint32_t id;
-
-        VariableInfo() : dvalue(0.0),vvalue(0.0), count(1),dependence_level(1), id(VariableIdGenerator::instance()->next()) {
+        uint32_t push_start = 0;//the beginning of nonlinear interaction
+        std::string name;
+        int push_count =0;
+        bool has_nl_interaction =false;
+        bool is_nl = false;
+        
+        VariableInfo() : dvalue(0.0), vvalue(0.0), count(1), dependence_level(1), is_dependent(0), id(VariableIdGenerator::instance()->next()) {
 
 
         }
@@ -210,29 +188,6 @@ namespace atl {
         virtual ~VariableInfo() {
         }
 
-        //        inline REAL_T GetHessianRowValue(VariableInfo<REAL_T>* var) {
-        //            row_iterator it = hessian_row.find(var->id);
-        //            if (it != hessian_row.end()) {
-        //                return (*it).second;
-        //            } else {
-        //                return static_cast<REAL_T> (0.0);
-        //            }
-        //        }
-        //
-        //        inline REAL_T GetThirdOrderValue(VariableInfo<REAL_T>* a, VariableInfo<REAL_T>* b) {
-        //
-        //            h_iterator it = this->third_order_mixed.find(a->id);
-        //            if (it != this->third_order_mixed.end()) {
-        //                row_iterator jt = (*it).second.find(b->id);
-        //                if (jt != (*it).second.end()) {
-        //                    return (*jt).second;
-        //                } else {
-        //                    return static_cast<REAL_T> (0.0);
-        //                }
-        //            } else {
-        //                return static_cast<REAL_T> (0.0);
-        //            }
-        //        }
 
         inline void Release() {
             count--;
@@ -252,8 +207,13 @@ namespace atl {
         }
 
         inline void Reset() {
-                        this->dvalue = 0;
-                        this->dependence_level = 1;
+            this->dvalue = 0;
+            this->dependence_level = 1;
+            this->is_dependent = 0;
+            this->push_count = 0;
+            push_start = 0;
+            this->has_nl_interaction = false;
+            this->is_nl = false;
         }
 
         static void FreeAll() {
@@ -261,8 +221,7 @@ namespace atl {
             for (int i = 0; i < freed.size(); i++) {
                 VariableIdGenerator::instance()->release(freed[i]->id);
                 freed[i]->vvalue = 0;
-//                VariableInfo<REAL_T>::operator delete(freed[i], sizeof (VariableInfo<REAL_T>));
-                                delete freed[i];
+                delete freed[i];
             }
             freed.resize(0);
         }

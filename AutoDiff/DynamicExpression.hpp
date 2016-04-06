@@ -34,13 +34,13 @@ public:  \
 NAME(atl::DynamicExpression< REAL_T>* expr):expr_m(expr) {}\
 \
 \
-        virtual REAL_T Evaluate() { \
+        virtual inline const REAL_T Evaluate() { \
         EVALUATE \
          }\
-        virtual REAL_T EvaluateDerivative(uint32_t wrt){ \
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt){ \
         FIRST_DERIVATIVE_EVAL \
         } \
-       virtual REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) { \
+       virtual inline const REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) { \
        SECOND_DERIVATIVE_EVAL \
         } \
        virtual void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids) { \
@@ -82,9 +82,9 @@ namespace atl {
 
         }
 
-        virtual REAL_T Evaluate() = 0;
-        virtual REAL_T EvaluateDerivative(uint32_t wrt) = 0;
-        virtual REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) = 0;
+        virtual inline const REAL_T Evaluate() = 0;
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt) = 0;
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) = 0;
         virtual void PushIds(IDSet<atl::VariableInfo<REAL_T>* >& ids) = 0;
         virtual DynamicExpression<REAL_T>* Differentiate(uint32_t id) = 0;
         virtual DynamicExpression<REAL_T>* Differentiate() = 0;
@@ -117,15 +117,15 @@ namespace atl {
 
         }
 
-        virtual REAL_T Evaluate() {
+        virtual inline const REAL_T Evaluate() {
             return value_m;
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt) {
             return static_cast<REAL_T> (0.0);
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
             return static_cast<REAL_T> (0.0);
         }
 
@@ -172,15 +172,15 @@ namespace atl {
             free(ptr);
         }
 
-        virtual REAL_T Evaluate() {
+        virtual inline const REAL_T Evaluate() {
             return info_m->vvalue;
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt) {
             return info_m->id == wrt ? 1 : 0;
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
             return static_cast<REAL_T> (0.0);
         }
 
@@ -230,15 +230,15 @@ namespace atl {
             free(ptr);
         }
 
-        virtual REAL_T Evaluate() {
+        virtual inline const REAL_T Evaluate() {
             return lhs_m->Evaluate() + rhs_m->Evaluate();
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt) {
             return lhs_m->EvaluateDerivative(wrt) + rhs_m->EvaluateDerivative(wrt);
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
             return lhs_m->EvaluateDerivative(wrt_x, wrt_y) + rhs_m->EvaluateDerivative(wrt_x, wrt_y);
         }
 
@@ -282,15 +282,15 @@ namespace atl {
             delete rhs_m;
         }
 
-        virtual REAL_T Evaluate() {
+        virtual inline const REAL_T Evaluate() {
             return lhs_m->Evaluate() - rhs_m->Evaluate();
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt) {
             return lhs_m->EvaluateDerivative(wrt) - rhs_m->EvaluateDerivative(wrt);
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
             return lhs_m->EvaluateDerivative(wrt_x, wrt_y) - rhs_m->EvaluateDerivative(wrt_x, wrt_y);
         }
 
@@ -334,16 +334,16 @@ namespace atl {
             delete rhs_m;
         }
 
-        virtual REAL_T Evaluate() {
+        virtual inline const REAL_T Evaluate() {
             return lhs_m->Evaluate() * rhs_m->Evaluate();
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt) {
             return (lhs_m->Evaluate() * rhs_m->EvaluateDerivative(wrt) +
                     lhs_m->EvaluateDerivative(wrt) * rhs_m->Evaluate());
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
             return lhs_m->EvaluateDerivative(wrt_x) * rhs_m->EvaluateDerivative(wrt_y) + lhs_m->Evaluate() * rhs_m->EvaluateDerivative(wrt_x, wrt_y) +
                     lhs_m->EvaluateDerivative(wrt_y) * rhs_m->EvaluateDerivative(wrt_x) + rhs_m->Evaluate() * lhs_m->EvaluateDerivative(wrt_x, wrt_y);
         }
@@ -392,16 +392,16 @@ namespace atl {
             delete rhs_m;
         }
 
-        virtual REAL_T Evaluate() {
+        virtual inline const REAL_T Evaluate() {
             return lhs_m->Evaluate() / rhs_m->Evaluate();
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt) {
             return (rhs_m->Evaluate() * lhs_m->EvaluateDerivative(wrt) -
                     rhs_m->EvaluateDerivative(wrt) * lhs_m->Evaluate()) / (rhs_m->Evaluate() * rhs_m->Evaluate());
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
             REAL_T aa = ((2.0 * lhs_m->Evaluate() * rhs_m->EvaluateDerivative(wrt_x) * rhs_m->EvaluateDerivative(wrt_y)) / (rhs_m->Evaluate() * rhs_m->Evaluate() * rhs_m->Evaluate())); //(2*f(a,b)*('diff(g(a,b),a,1))*('diff(g(a,b),b,1)))/g(a,b)^3
             REAL_T bb = ((lhs_m->EvaluateDerivative(wrt_x) * rhs_m->EvaluateDerivative(wrt_y)) / (rhs_m->Evaluate() * rhs_m->Evaluate())); //(('diff(f(wrt_x,b),a,1))*('diff(g(wrt_x,b),b,1)))/g(wrt_x,b)^2
             REAL_T cc = ((lhs_m->Evaluate() * rhs_m->EvaluateDerivative(wrt_x, wrt_y)) / (rhs_m->Evaluate() * rhs_m->Evaluate())); //(f(wrt_x,b)*('diff(g(wrt_x,b),a,1,b,1)))/g(wrt_x,b)^2
@@ -461,11 +461,11 @@ namespace atl {
             delete rhs_m;
         }
 
-        virtual REAL_T Evaluate() {
+        virtual inline const REAL_T Evaluate() {
             return std::pow(lhs_m->Evaluate(), rhs_m->Evaluate());
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt) {
             REAL_T g = rhs_m->Evaluate();
             REAL_T f = lhs_m->Evaluate();
             REAL_T fx = lhs_m->EvaluateDerivative(wrt);
@@ -474,7 +474,7 @@ namespace atl {
 
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
             REAL_T fxy = lhs_m->EvaluateDerivative(wrt_x, wrt_y);
             REAL_T g = rhs_m->Evaluate();
             REAL_T f = lhs_m->Evaluate();
@@ -546,16 +546,16 @@ namespace atl {
             delete expr_m;
         }
 
-        virtual REAL_T Evaluate() {
+        virtual inline const REAL_T Evaluate() {
             return std::acos(expr_m->Evaluate());
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt) {
             REAL_T fx = expr_m->Evaluate();
             return -1.0 * expr_m->EvaluateDerivative(wrt) / std::sqrt(1.0 - fx * fx);
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
             REAL_T fx = expr_m->Evaluate();
             return (((-1.0 * (fx * expr_m->EvaluateDerivative(wrt_x) * expr_m->EvaluateDerivative(wrt_y)))
                     / std::pow((1.0 - fx * fx), 1.5))
@@ -606,16 +606,16 @@ namespace atl {
             delete expr_m;
         }
 
-        virtual REAL_T Evaluate() {
+        virtual inline const REAL_T Evaluate() {
             return std::asin(expr_m->Evaluate());
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt) {
             REAL_T fx = expr_m->Evaluate();
             return expr_m->EvaluateDerivative(wrt) / std::sqrt(1.0 - fx * fx);
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
             REAL_T fx = expr_m->Evaluate();
             return ((((fx * expr_m->EvaluateDerivative(wrt_x) * expr_m->EvaluateDerivative(wrt_y)))
                     / std::pow((1.0 - fx * fx), 1.5))
@@ -665,16 +665,16 @@ namespace atl {
             delete expr_m;
         }
 
-        virtual REAL_T Evaluate() {
+        virtual inline const REAL_T Evaluate() {
             return std::atan(expr_m->Evaluate());
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt) {
             REAL_T fx = expr_m->Evaluate();
             return expr_m->EvaluateDerivative(wrt) / (fx * fx + 1.0);
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
             REAL_T fx = expr_m->Evaluate();
             return (expr_m->EvaluateDerivative(wrt_x, wrt_y) / (fx * fx + 1.0)) -
                     (2.0 * fx * expr_m->EvaluateDerivative(wrt_x) * expr_m->EvaluateDerivative(wrt_y)) / ((fx * fx + 1.0)*(fx * fx + 1.0));
@@ -719,16 +719,16 @@ namespace atl {
             delete expr_m;
         }
 
-        virtual REAL_T Evaluate() {
+        virtual inline const REAL_T Evaluate() {
             return std::ceil(expr_m->Evaluate());
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt) {
             std::cout << __FILE__ << ":" << __LINE__ << ":" << __func__ << " not yet implemented.";
             exit(0);
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
             std::cout << __FILE__ << ":" << __LINE__ << ":" << __func__ << " not yet implemented.";
             exit(0);
         }
@@ -738,6 +738,11 @@ namespace atl {
         }
 
         virtual DynamicExpression<REAL_T>* Differentiate() {
+            std::cout << __FILE__ << ":" << __LINE__ << ":" << __func__ << " not yet implemented.";
+            exit(0);
+        }
+        
+         virtual DynamicExpression<REAL_T>* Differentiate(uint32_t wrt) {
             std::cout << __FILE__ << ":" << __LINE__ << ":" << __func__ << " not yet implemented.";
             exit(0);
         }
@@ -767,15 +772,15 @@ namespace atl {
             delete expr_m;
         }
 
-        virtual REAL_T Evaluate() {
+        virtual inline const REAL_T Evaluate() {
             return std::cos(expr_m->Evaluate());
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt) {
             return -1.0 * expr_m->EvaluateDerivative(wrt) * std::sin(expr_m->Evaluate());
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
             return ((-1.0 * std::cos(expr_m->Evaluate()) * expr_m->EvaluateDerivative(wrt_x) * expr_m->EvaluateDerivative(wrt_y))
                     - (std::sin(expr_m->Evaluate()) * expr_m->EvaluateDerivative(wrt_x, wrt_y)));
         }
@@ -819,15 +824,15 @@ namespace atl {
             delete expr_m;
         }
 
-        virtual REAL_T Evaluate() {
+        virtual inline const REAL_T Evaluate() {
             return std::cosh(expr_m->Evaluate());
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt) {
             return expr_m->EvaluateDerivative(wrt) * std::sinh(expr_m->Evaluate());
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
             return ((std::cosh(expr_m->Evaluate()) * expr_m->EvaluateDerivative(wrt_x) * expr_m->EvaluateDerivative(wrt_y))
                     + (std::sinh(expr_m->Evaluate()) * expr_m->EvaluateDerivative(wrt_x, wrt_y)));
         }
@@ -869,15 +874,15 @@ namespace atl {
             delete expr_m;
         }
 
-        virtual REAL_T Evaluate() {
+        virtual inline const REAL_T Evaluate() {
             return std::exp(expr_m->Evaluate());
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt) {
             return expr_m->EvaluateDerivative(wrt) * this->Evaluate();
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
             REAL_T fx = this->Evaluate();
             return ((fx * expr_m->EvaluateDerivative(wrt_x) * expr_m->EvaluateDerivative(wrt_y))
                     + (fx * expr_m->EvaluateDerivative(wrt_x, wrt_y)));
@@ -920,15 +925,15 @@ namespace atl {
             delete expr_m;
         }
 
-        virtual REAL_T Evaluate() {
+        virtual inline const REAL_T Evaluate() {
             return std::fabs(expr_m->Evaluate());
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt) {
             return (expr_m->EvaluateDerivative(wrt) * expr_m->Evaluate()) / this->Evaluate();
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
             return (expr_m->EvaluateDerivative(wrt_x, wrt_y) * expr_m->Evaluate()) / this->Evaluate();
         }
 
@@ -968,15 +973,15 @@ namespace atl {
             delete expr_m;
         }
 
-        virtual REAL_T Evaluate() {
+        virtual inline const REAL_T Evaluate() {
             return std::floor(expr_m->Evaluate());
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt) {
             return (expr_m->EvaluateDerivative(wrt) * this->Evaluate());
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
             return (expr_m->EvaluateDerivative(wrt_x, wrt_y) * this->Evaluate());
         }
 
@@ -1018,15 +1023,15 @@ namespace atl {
             delete expr_m;
         }
 
-        virtual REAL_T Evaluate() {
+        virtual inline const REAL_T Evaluate() {
             return std::log(expr_m->Evaluate());
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt) {
             return expr_m->EvaluateDerivative(wrt) / expr_m->Evaluate();
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
             return (expr_m->EvaluateDerivative(wrt_x, wrt_y) / expr_m->Evaluate()) - (expr_m->EvaluateDerivative(wrt_x) * expr_m->EvaluateDerivative(wrt_y)) / (expr_m->Evaluate() * expr_m->Evaluate());
         }
 
@@ -1067,15 +1072,15 @@ namespace atl {
             delete expr_m;
         }
 
-        virtual REAL_T Evaluate() {
+        virtual inline const REAL_T Evaluate() {
             return std::log10(expr_m->Evaluate());
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt) {
             return (expr_m->EvaluateDerivative(wrt) / (DYNAMIC_AD_LOG10 * expr_m->Evaluate()));
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
             REAL_T fx = expr_m->Evaluate();
             return (expr_m->EvaluateDerivative(wrt_x, wrt_y) / (DYNAMIC_AD_LOG10 * fx)) -
                     ((expr_m->EvaluateDerivative(wrt_x) * expr_m->EvaluateDerivative(wrt_y)) / (DYNAMIC_AD_LOG10 * (fx * fx)));
@@ -1126,15 +1131,15 @@ namespace atl {
             delete expr_m;
         }
 
-        virtual REAL_T Evaluate() {
+        virtual inline const REAL_T Evaluate() {
             return std::sin(expr_m->Evaluate());
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt) {
             return expr_m->EvaluateDerivative(wrt) * std::cos(expr_m->Evaluate());
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
             return (std::cos(expr_m->Evaluate()) * expr_m->EvaluateDerivative(wrt_x, wrt_y))-
                     std::sin(expr_m->Evaluate()) * expr_m->EvaluateDerivative(wrt_x) * expr_m->EvaluateDerivative(wrt_y);
         }
@@ -1177,15 +1182,15 @@ namespace atl {
             delete expr_m;
         }
 
-        virtual REAL_T Evaluate() {
+        virtual inline const REAL_T Evaluate() {
             return std::sinh(expr_m->Evaluate());
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt) {
             return expr_m->EvaluateDerivative(wrt) * std::cosh(expr_m->Evaluate());
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
             return ((std::sinh(expr_m->Evaluate()) * expr_m->EvaluateDerivative(wrt_x) * expr_m->EvaluateDerivative(wrt_y))
                     + (std::cosh(expr_m->Evaluate()) * expr_m->EvaluateDerivative(wrt_x, wrt_y)));
         }
@@ -1228,15 +1233,15 @@ namespace atl {
             delete expr_m;
         }
 
-        virtual REAL_T Evaluate() {
+        virtual inline const REAL_T Evaluate() {
             return std::sqrt(expr_m->Evaluate());
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt) {
             return expr_m->EvaluateDerivative(wrt) / (2.0 * this->Evaluate());
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
             return (expr_m->EvaluateDerivative(wrt_x, wrt_y) / (2.0 * this->Evaluate())) -
                     (expr_m->EvaluateDerivative(wrt_x) * expr_m->EvaluateDerivative(wrt_y)) / (4.0 * std::pow(expr_m->Evaluate(), 1.5));
         }
@@ -1278,15 +1283,15 @@ namespace atl {
             delete expr_m;
         }
 
-        virtual REAL_T Evaluate() {
+        virtual inline const REAL_T Evaluate() {
             return std::tan(expr_m->Evaluate());
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt) {
             return expr_m->EvaluateDerivative(wrt) * (1.0 / std::cos(expr_m->Evaluate()))*(1.0 / std::cos(expr_m->Evaluate()));
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
             REAL_T sec2 = (1.0 / std::cos(expr_m->Evaluate())) * (1.0 / std::cos(expr_m->Evaluate()));
             return 2.0 * sec2 * this->Evaluate() * expr_m->EvaluateDerivative(wrt_x) * expr_m->EvaluateDerivative(wrt_y) +
                     sec2 * expr_m->EvaluateDerivative(wrt_x, wrt_y);
@@ -1339,17 +1344,17 @@ namespace atl {
             free(ptr);
         }
 
-        virtual REAL_T Evaluate() {
+        virtual inline const REAL_T Evaluate() {
             return std::tanh(expr_m->Evaluate());
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt) {
             REAL_T sech2 = (1.0 / std::cosh(expr_m->Evaluate()))*(1.0 / std::cosh(expr_m->Evaluate()));
 
             return expr_m->EvaluateDerivative(wrt) * sech2;
         }
 
-        virtual REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
+        virtual inline const REAL_T EvaluateDerivative(uint32_t wrt_x, uint32_t wrt_y) {
             REAL_T sech2 = (1.0 / std::cosh(expr_m->Evaluate()))*(1.0 / std::cosh(expr_m->Evaluate()));
 
             return sech2 * expr_m->EvaluateDerivative(wrt_x, wrt_y) - 2.0 * sech2 * this->Evaluate() * expr_m->EvaluateDerivative(wrt_x) * expr_m->EvaluateDerivative(wrt_y);
