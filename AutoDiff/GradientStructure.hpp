@@ -1106,8 +1106,9 @@ namespace atl {
                             for (int k = j; k < rows; k++) {
                                 hdj = 0;
                                 hdj = gradient_stack[i].first[k];
+                                 atl::VariableInfo<REAL_T>* vk = gradient_stack[i].id_list[k];
 #pragma unroll
-                                atl::VariableInfo<REAL_T>* vk = gradient_stack[i].id_list[k];
+                               
                                 for (int l = k; l < rows; l++) {
 
                                     vl = gradient_stack[i].id_list[l];
