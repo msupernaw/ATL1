@@ -93,7 +93,7 @@ public:
     
     void Report() {
         std::ofstream out;
-        out.open("logtheta_atl.par");
+        out.open("ThetaLog.par");
         out << "logr0 = " << logr0 << "\n";
         out << "logtheta = " << logtheta << "\n";
         out << "logK = " << logK << "\n";
