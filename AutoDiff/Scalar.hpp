@@ -58,6 +58,10 @@ namespace atl {
 
         }
 
+              bool IsNonFunction()const {
+            return false;
+        }
+        
         bool IsNonlinear()const {
             return false;
         }

@@ -63,6 +63,14 @@ namespace atl {
             rhs_m.PushAdjoints(adjoints, coefficient * lhs_m.GetValue());
         }
 
+        bool IsNonFunction()const {
+            if (lhs_m.IsNonFunction() || rhs_m.IsNonFunction()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
         bool IsNonlinear()const {
             if (lhs_m.IsNonlinear() || rhs_m.IsNonlinear()) {
                 return true;
@@ -97,10 +105,10 @@ namespace atl {
         }
 
         inline REAL_T EvaluateDerivative(uint32_t a, uint32_t b) const {
-//            std::cout<<"multiply = "<<lhs_m.EvaluateDerivative(a) * rhs_m.EvaluateDerivative(b) <<" + "
-//                    <<lhs_m.GetValue() * rhs_m.EvaluateDerivative(a, b) <<" + "
-//                    << lhs_m.EvaluateDerivative(b) * rhs_m.EvaluateDerivative(a)<<" + "
-//                    <<rhs_m.GetValue() * lhs_m.EvaluateDerivative(a, b)<<"\n";
+            //            std::cout<<"multiply = "<<lhs_m.EvaluateDerivative(a) * rhs_m.EvaluateDerivative(b) <<" + "
+            //                    <<lhs_m.GetValue() * rhs_m.EvaluateDerivative(a, b) <<" + "
+            //                    << lhs_m.EvaluateDerivative(b) * rhs_m.EvaluateDerivative(a)<<" + "
+            //                    <<rhs_m.GetValue() * lhs_m.EvaluateDerivative(a, b)<<"\n";
             return lhs_m.EvaluateDerivative(a) * rhs_m.EvaluateDerivative(b) + lhs_m.GetValue() * rhs_m.EvaluateDerivative(a, b) +
                     lhs_m.EvaluateDerivative(b) * rhs_m.EvaluateDerivative(a) + rhs_m.GetValue() * lhs_m.EvaluateDerivative(a, b);
         }
@@ -169,6 +177,14 @@ namespace atl {
 
         inline REAL_T EvaluateDerivative(uint32_t id) const {
             return (rhs_m * lhs_m.EvaluateDerivative(id));
+        }
+
+        bool IsNonFunction()const {
+            if (lhs_m.IsNonFunction()) {
+                return true;
+            } else {
+                return false;
+            }
         }
 
         bool IsNonlinear()const {
@@ -252,6 +268,14 @@ namespace atl {
 
         inline void PushAdjoints(std::vector<std::pair<atl::VariableInfo<REAL_T>*, REAL_T> >& adjoints, REAL_T coefficient = 1.0) const {
             rhs_m.PushAdjoints(adjoints, coefficient * lhs_m);
+        }
+
+        bool IsNonFunction()const {
+            if ( rhs_m.IsNonFunction()) {
+                return true;
+            } else {
+                return false;
+            }
         }
 
         bool IsNonlinear()const {

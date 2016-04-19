@@ -106,8 +106,16 @@ namespace atl {
             expr2_m.PushAdjoints(adjoints, coefficient * this->GetValue() * std::log(expr1_m.GetValue()));
         }
 
+        bool IsNonFunction()const {
+            return true;
+        }
+
         bool IsNonlinear()const {
             return true;
+        }
+
+        inline void MakeNLInteractions(bool b = false)const {
+
         }
 
         inline void PushNLInteractions(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
@@ -197,12 +205,20 @@ namespace atl {
             expr1_m.PushAdjoints(adjoints, coefficient * expr2_m * pow(expr1_m.GetValue(), expr2_m - static_cast<REAL_T> (1.0)));
         }
 
+        bool IsNonFunction()const {
+            return true;
+        }
+
         bool IsNonlinear()const {
             return true;
         }
 
         inline void PushNLInteractions(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
             expr1_m.PushNLInteractions(ids);
+        }
+
+        inline void MakeNLInteractions(bool b = false)const {
+
         }
 
         inline REAL_T EvaluateDerivative(uint32_t id) const {
@@ -268,16 +284,20 @@ namespace atl {
             expr2_m.PushAdjoints(adjoints, coefficient * this->GetValue() * std::log(expr1_m.value()));
         }
 
+        bool IsNonFunction()const {
+            return true;
+        }
+
         bool IsNonlinear()const {
             return true;
         }
-        
-         inline void MakeNLInteractions(bool b = false)const {
-         
+
+        inline void MakeNLInteractions(bool b = false)const {
+
         }
 
         inline void PushNLInteractions(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
-//            expr2_m.PushNLInteractions(ids);
+            //            expr2_m.PushNLInteractions(ids);
         }
 
         inline REAL_T EvaluateDerivative(uint32_t id) const {
@@ -356,18 +376,6 @@ namespace atl {
     atl::PowScalar< REAL_T, EXPR > pow(const atl::ExpressionBase<REAL_T, EXPR>& expr,
             const REAL_T& val) {
         return atl::PowScalar< REAL_T, EXPR > (expr.Cast(), val);
-    }
-    
-    template <class REAL_T, class EXPR>
-    inline
-    atl::PowScalar< REAL_T, EXPR > square(const atl::ExpressionBase<REAL_T, EXPR>& expr) {
-        return atl::PowScalar< REAL_T, EXPR > (expr.Cast(), static_cast<REAL_T>(2.0));
-    }
-    
-    template <class REAL_T, class EXPR>
-    inline
-    atl::PowScalar< REAL_T, EXPR > cube(const atl::ExpressionBase<REAL_T, EXPR>& expr) {
-        return atl::PowScalar< REAL_T, EXPR > (expr.Cast(), static_cast<REAL_T>(3.0));
     }
 
     template <class REAL_T, class EXPR>

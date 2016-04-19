@@ -55,6 +55,14 @@ namespace atl {
             rhs_m.PushIds(ids);
         }
 
+        bool IsNonFunction()const {
+            if (lhs_m.IsNonFunction() || rhs_m.IsNonFunction()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
         bool IsNonlinear()const {
             if (lhs_m.IsNonlinear() || rhs_m.IsNonlinear()) {
                 return true;
@@ -64,26 +72,26 @@ namespace atl {
         }
 
         inline void MakeNLInteractions(bool b = false)const {
-//            if (lhs_m.IsNonlinear() && !rhs_m.IsNonlinear()) {
-//                rhs_m.MakeNLInteractions(true);
-//            }
-//            if (!lhs_m.IsNonlinear() && rhs_m.IsNonlinear()) {
-//                lhs_m.MakeNLInteractions(true);
-//            }
+            //            if (lhs_m.IsNonlinear() && !rhs_m.IsNonlinear()) {
+            //                rhs_m.MakeNLInteractions(true);
+            //            }
+            //            if (!lhs_m.IsNonlinear() && rhs_m.IsNonlinear()) {
+            //                lhs_m.MakeNLInteractions(true);
+            //            }
             lhs_m.MakeNLInteractions(b);
             rhs_m.MakeNLInteractions(b);
         }
 
         inline void PushNLInteractions(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
-//            if (lhs_m.IsNonlinear() && !rhs_m.IsNonlinear()) {
-//                rhs_m.PushIds(ids, true);
-//            }
-//            if (!lhs_m.IsNonlinear() && rhs_m.IsNonlinear()) {
-//                lhs_m.PushIds(ids, true);
-//            }
+            //            if (lhs_m.IsNonlinear() && !rhs_m.IsNonlinear()) {
+            //                rhs_m.PushIds(ids, true);
+            //            }
+            //            if (!lhs_m.IsNonlinear() && rhs_m.IsNonlinear()) {
+            //                lhs_m.PushIds(ids, true);
+            //            }
             //            if(!lhs_m.IsNonlinear())
-                        lhs_m.PushNLInteractions(ids);
-                        rhs_m.PushNLInteractions(ids);
+            lhs_m.PushNLInteractions(ids);
+            rhs_m.PushNLInteractions(ids);
         }
 
         inline const REAL_T EvaluateDerivative(uint32_t id) const {
@@ -154,6 +162,14 @@ namespace atl {
             lhs_m.PushAdjoints(adjoints, coefficient);
         }
 
+        bool IsNonFunction()const {
+            if (lhs_m.IsNonFunction()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
         bool IsNonlinear()const {
             if (lhs_m.IsNonlinear()) {
                 return true;
@@ -164,8 +180,8 @@ namespace atl {
 
         inline void MakeNLInteractions(bool b = false)const {
 
-                lhs_m.MakeNLInteractions(b);
-            
+            lhs_m.MakeNLInteractions(b);
+
         }
 
         inline void PushNLInteractions(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
@@ -243,6 +259,14 @@ namespace atl {
             rhs_m.PushAdjoints(adjoints, coefficient);
         }
 
+        bool IsNonFunction()const {
+            if (rhs_m.IsNonFunction()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
         bool IsNonlinear()const {
             if (rhs_m.IsNonlinear()) {
                 return true;
@@ -252,8 +276,8 @@ namespace atl {
         }
 
         inline void MakeNLInteractions(bool b = false)const {
-                rhs_m.MakeNLInteractions(b);
-            
+            rhs_m.MakeNLInteractions(b);
+
         }
 
         inline void PushNLInteractions(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {

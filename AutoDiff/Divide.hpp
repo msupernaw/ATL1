@@ -72,6 +72,14 @@ namespace atl {
             rhs_m.PushIds(ids);
         }
 
+        bool IsNonFunction() const {
+            if (lhs_m.IsNonFunction() || rhs_m.IsNonFunction()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
         bool IsNonlinear()const {
             if (lhs_m.IsNonlinear() || rhs_m.IsNonlinear()) {
                 return true;
@@ -178,6 +186,14 @@ namespace atl {
 
         inline void PushIds(IDSet<uint32_t >& ids)const {
             lhs_m.PushIds(ids);
+        }
+
+        bool IsNonFunction() const {
+            if (lhs_m.IsNonFunction()) {
+                return true;
+            } else {
+                return false;
+            }
         }
 
         bool IsNonlinear()const {
@@ -289,6 +305,14 @@ namespace atl {
 
         inline void PushAdjoints(std::vector<std::pair<atl::VariableInfo<REAL_T>*, REAL_T> >& adjoints, REAL_T coefficient = 1.0) const {
             rhs_m.PushAdjoints(adjoints, -1.0 * coefficient * this->GetValue() / rhs_m);
+        }
+
+        bool IsNonFunction() const {
+            if (rhs_m.IsNonFunction()) {
+                return true;
+            } else {
+                return false;
+            }
         }
 
         bool IsNonlinear()const {

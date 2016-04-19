@@ -13,6 +13,7 @@
 #include "VectorSubtract.hpp"
 #include "VectorMultiply.hpp"
 #include "VectorDivide.hpp"
+#include "VectorDotProduct.hpp"
 #include "Matrix.hpp"
 #include "ConcurrentOperators.hpp"
 #include <thread>

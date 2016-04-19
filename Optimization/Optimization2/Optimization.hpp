@@ -433,6 +433,7 @@ namespace atl {
         std::valarray<T> inner_x;
         std::valarray<T> inner_best;
         std::valarray<T> inner_gradient;
+        std::valarray<T> inner_wg;
         std::valarray<std::valarray<T> > inner_hessian;
         atl::GradientStructure<T> inner_gs;
         atl::Variable<T> log_det;
@@ -442,9 +443,9 @@ namespace atl {
         std::vector<std::vector<T> > rand_hessian_inv; //(this->random_variables_m.size(), std::vector<T>(this->random_variables_m.size()));
         std::vector<std::vector<T> > rand_hessian_dx; //(this->random_variables_m.size(), std::vector<T>(this->random_variables_m.size()));
         std::vector<std::vector<T> > ret;
-//        atl::Matrix<T > atl_rand_hessian;
-//        std::vector<T> sse_rand_hessian_inv;
-//        std::vector<T> sse_rand_hessian_dx;
+        //        atl::Matrix<T > atl_rand_hessian;
+        //        std::vector<T> sse_rand_hessian_inv;
+        //        std::vector<T> sse_rand_hessian_dx;
         std::vector<T> results;
         long outer_iteration;
 
@@ -590,7 +591,7 @@ namespace atl {
                 for (int i = 0; i < RANDOM_SIZE; i++) {
                     this->random_variables_m[i]->SetValue(0.0);
                 }
-                if (this->NewtonInner(20, 1e-7)) {
+                if (this->NewtonInner(10, 1e-7)) {
                     std::cout << "Inner converged!\n";
                     std::cout << "Inner f = " << this->inner_function_value << "\n";
                     std::cout << "Inner maxg = " << this->inner_maxgc << "\n\n";
@@ -669,7 +670,7 @@ namespace atl {
 
 
                 //compute derivatives of the logdetH using third-order mixed partials
-               
+
                 for (int p = 0; p < PARAMETERS_SIZE; p++) {
 
                     for (int i = 0; i < RANDOM_SIZE; i++) {
@@ -686,7 +687,7 @@ namespace atl {
 
                     T tr = 0;
                     for (int i = 0; i < RANDOM_SIZE; i++) {
-                        tr += ret[i][i]; 
+                        tr += ret[i][i];
                     }
 
                     derivatives_logdet[this->hyper_parameters_m[p]->info] = tr;
@@ -746,7 +747,7 @@ namespace atl {
                 std::valarray<T>&g, T & maxgc) {
             g.resize(p.size());
             atl::Variable<T>::gradient_structure_g.AccumulateFirstOrder();
-           
+
             for (int i = 0; i < g.size(); i++) {
                 g[i] = p[i]->info->dvalue;
                 if (i == 0) {
@@ -788,7 +789,7 @@ namespace atl {
             std::cout << "\n\n";
         }
 
-        virtual bool Evaluate() =0;
+        virtual bool Evaluate() = 0;
 
         T abs_sum(const std::valarray<T>&array) {
             T sum = 0.0;
@@ -815,7 +816,8 @@ namespace atl {
             this->inner_x.resize(nops);
             this->inner_best.resize(nops);
             this->inner_gradient.resize(nops);
-
+            this->inner_wg.resize(nops);
+            std::valarray<T> z(nops);
 
             for (int i = 0; i < nops; i++) {
                 if (this->random_variables_m[i]->IsBounded()) {
@@ -834,8 +836,11 @@ namespace atl {
 
                 std::cout << "Newton raphson " << iter << std::endl;
                 atl::Variable<T>::gradient_structure_g.Reset();
+                atl::Variable<T>::SetRecording(true);
+                atl::Variable<T>::gradient_structure_g.derivative_trace_level = atl::SECOND_ORDER_MIXED_PARTIALS;
                 fx = this->objective_function_m->Evaluate();
                 this->inner_function_value = fx.GetValue();
+
                 atl::Variable<T>::ComputeGradientAndHessian(
                         atl::Variable<T>::gradient_structure_g,
                         this->random_variables_m, gradient_, hessian_);
@@ -847,19 +852,39 @@ namespace atl {
                 bool all_positive = true;
                 this->inner_maxgc = std::fabs(gradient_[0]);
 
+                std::fill(p.begin(), p.end(), 0.0);
+                lu.solve(gradient_, p);
+                //prepare lone search
                 for (int i = 0; i < gradient_.size(); i++) {
+//                    this->inner_gradient[i] = gradient_[i];
+//                    this->inner_wg[i] = gradient_[i];
+//                    this->inner_x[i] = this->random_variables_m[i]->GetValue();
+//                    z[i] = p[i];
                     if (std::fabs(gradient_[i]) > this->inner_maxgc) {
                         this->inner_maxgc = std::fabs(gradient_[i]);
                     }
 
                 }
+//                std::cout << "Inner max g = " << this->inner_maxgc << "\n";
+
                 if (this->inner_maxgc <= tol /*&& all_positive*/) {
                     return true;
                 }
-                std::fill(p.begin(), p.end(), 0.0);
-                lu.solve(gradient_, p);
+//                
+//                if(!line_search(random_variables_m,
+//                        this->inner_function_value,
+//                        inner_x,
+//                        inner_best,
+//                        z,
+//                        inner_gradient,
+//                        inner_wg,
+//                        inner_maxgc, iter,
+//                        true)){
+//                    std::cout<<"Inner max line searches"<<std::endl;
+//                    return false;
+//                }
 
-
+ 
                 for (int j = 0; j < random_variables_m.size(); j++) {
                     random_variables_m[j]->SetValue(random_variables_m[j]->GetValue() - p[j]);
                 }
@@ -870,7 +895,6 @@ namespace atl {
 
         }
 
-    
         bool line_search(std::vector<atl::Variable<T>* >& parameters,
                 T& function_value,
                 std::valarray<T>& x,
@@ -896,8 +920,10 @@ namespace atl {
             descent *= T(-1.0); // * Dot(z, g);
             if ((descent > T(-0.00000001) * relative_tolerance /* tolerance relative_tolerance*/)) {
                 z = wg + .001;
+                if(!inner){
                 this->max_iterations -= i;
                 i = 0;
+                }
                 descent = -1.0 * Dot(z, wg);
             }//end if
 
@@ -1034,8 +1060,6 @@ namespace atl {
 
     };
 
-
-
     template<typename T>
     class LBFGS : public atl::OptimizationRoutine<T> {
     public:
@@ -1087,9 +1111,9 @@ namespace atl {
             this->ComputeGradient(this->hyper_parameters_m, this->gradient, this->maxgc);
 
             atl::Variable<T>::gradient_structure_g.Reset();
-          
 
-          
+
+
             std::valarray<T> p(this->max_history);
             std::valarray<T>a(this->max_history);
 

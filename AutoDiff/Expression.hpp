@@ -93,6 +93,10 @@ namespace atl {
             return Cast().IsNonlinear();
         }
 
+        bool IsNonFunction()const {
+            return Cast().IsNonFunction();
+        }
+
         inline void MakeNLInteractions(bool b = false)const {
             Cast().MakeNLInteractions(b);
         }

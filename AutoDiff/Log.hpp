@@ -69,6 +69,10 @@ namespace atl {
             expr_m.PushIds(ids);
         }
 
+        bool IsNonFunction() const {
+            return true;
+        }
+
         bool IsNonlinear()const {
             return true;
         }

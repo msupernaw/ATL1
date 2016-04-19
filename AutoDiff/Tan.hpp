@@ -80,6 +80,10 @@ namespace atl {
             expr_m.PushAdjoints(adjoints, coefficient * temp * static_cast<REAL_T> (2.0));
         }
 
+        bool IsNonFunction()const {
+            return true;
+        }
+        
         bool IsNonlinear()const {
             return true;
         }

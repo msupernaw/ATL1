@@ -68,16 +68,20 @@ namespace atl {
             expr_m.PushIds(ids);
         }
 
+        bool IsNonFunction()const {
+            return true;
+        }
+
         bool IsNonlinear()const {
             return true;
         }
 
         inline void MakeNLInteractions(bool b = false)const {
-//            Cast().MakeNLInteractions();
+            //            Cast().MakeNLInteractions();
         }
-        
+
         inline void PushNLInteractions(IDSet<atl::VariableInfo<REAL_T>* >& ids)const {
-//            expr_m.PushNLInteractions(ids);
+            //            expr_m.PushNLInteractions(ids);
         }
 
         inline REAL_T EvaluateDerivative(uint32_t id) const {

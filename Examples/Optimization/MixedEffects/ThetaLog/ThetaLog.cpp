@@ -2,7 +2,7 @@
 #include "../../../../Utilities/IO/StreamedDataFile.hpp"
 
 
-
+#ifdef ADMB_VERSION
 
 template<typename T>
 class ThetaLog : public atl::ObjectiveFunction<T> {
@@ -65,8 +65,8 @@ public:
     
     void step(atl::Variable<T>& jnll, const atl::Variable<T>& x1, const atl::Variable<T>& x2, const atl::Variable<T>& logr0, const atl::Variable<T>& logK, const atl::Variable<T>& logtheta, const atl::Variable<T>& logQ) {
         atl::Variable<T> var = atl::exp(logQ);
-        atl::Variable<T> m = (x1 + atl::exp(logr0) * (1.0 - atl::pow(atl::exp(x1) / atl::exp(logK), atl::exp(logtheta))));
-        jnll += 0.5 * (atl::log(2.0 * M_PI * var) + atl::pow((x2 - m), 2.0) / var);
+        atl::Variable<T> m = (x1 + atl::exp(logr0) * (static_cast<T>(1.0) - atl::pow(atl::exp(x1) / atl::exp(logK), atl::exp(logtheta))));
+        jnll += static_cast<T>(0.5) * (atl::log(static_cast<T>(2.0 * M_PI) * var) + atl::pow((x2 - m),static_cast<T>( 2.0)) / var);
     }
     
     void obs(atl::Variable<T>& jnll, const atl::Variable<T>& x, const atl::Variable<T>& logR, int i) {
@@ -108,16 +108,126 @@ public:
     
 };
 
+#else
+
+
+template<typename T>
+class ThetaLog : public atl::ObjectiveFunction<T> {
+    std::vector<T> Y;
+    std::vector<atl::Variable<T> > X;
+    atl::Variable<T> logr0; //  = -2.6032947;
+    atl::Variable<T> logtheta; //  = 0.7625692;
+    atl::Variable<T> logK = 6.0; //  = 6.7250075;
+    atl::Variable<T> logQ; //  = -4.7496015;
+    atl::Variable<T> logR; // = -3.1889239;
+    atl::Variable<T> Neg_SQRT_2_PI;
+    
+    
+public:
+    
+    ThetaLog() {
+        
+    }
+    
+    void Initialize() {
+        
+        atl::StreamedDataFile data;
+        data.open("thetalog.dat");
+        
+        int size = 0;
+        data >> size;
+        std::cout << "size = " << size;
+        this->Y.resize(size);
+        this->X.resize(size);
+        
+        
+        for (int i = 0; i < X.size(); i++) {
+            data >> Y[i];
+        }
+        
+        
+        this->RegisterHyperParameter(logr0);
+        logr0.SetName("logr0");
+        this->RegisterHyperParameter(logtheta);
+        logtheta.SetName("logtheta");
+        this->RegisterHyperParameter(logK);
+        logK.SetName("logK");
+        this->RegisterHyperParameter(logQ);
+        logQ.SetName("logQ");
+        this->RegisterHyperParameter(logR);
+        logR.SetName("logR");
+        
+        for (int i = 0; i < X.size(); i++) {
+            this->RegisterRandomVariable(X[i]);
+        }
+    }
+    
+    const atl::Variable<T> dnorm(const atl::Variable<T> x,
+                                 const atl::Variable<T> mean,
+                                 const atl::Variable<T> sd, int give_log = 0) {
+        if (sd.GetValue() == 0.0) {
+            throw std::overflow_error("Divide by zero exception");
+        }
+        
+        atl::Variable<T> logres;
+        logres = -1.0 * std::sqrt(2.0 * M_PI) * sd -
+        .5 * atl::pow((x - mean) / sd, 2.0);
+        if (give_log)return logres;
+        else return atl::exp(logres);
+    }
+    
+    virtual const atl::Variable<T> Evaluate() {
+        
+        atl::Variable<T> r0 = atl::exp(logr0);
+        atl::Variable<T> theta = atl::exp(logtheta);
+        atl::Variable<T> K = atl::exp(logK);
+        
+        
+        atl::Variable<T> Q = atl::exp(logQ);
+        atl::Variable<T> R = atl::exp(logR);
+        int timeSteps = Y.size();
+        atl::Variable<T> ans = 0;
+        for (int i = 1; i < timeSteps; i++) {
+            atl::Variable<T> m = X[i - 1] + r0 * (1.0 - atl::pow(atl::exp(X[i - 1]) / K, theta));
+            ans -= this->dnorm(X[i], m, atl::sqrt(Q), true);
+        }
+        for (int i = 0; i < timeSteps; i++) {
+            ans -= this->dnorm(Y[i], X[i], atl::sqrt(R), true);
+        }
+        return ans;
+    }
+    
+    void Report() {
+        std::ofstream out;
+        out.open("ThetaLog.par");
+        out << "logr0 = " << logr0 << "\n";
+        out << "logtheta = " << logtheta << "\n";
+        out << "logK = " << logK << "\n";
+        out << "logQ = " << logQ << "\n";
+        out << "logR = " << logR << "\n";
+        out << "\nRandom Effects:\n";
+        out << "X:\n";
+        for (int i = 0; i < X.size(); i++) {
+            out << X[i] << " ";
+        }
+    }
+    
+};
+
+#endif
+
 int main(int argc, char** argv) {
     
+    typedef double  REAL;
+
     //create the objective function 
-    ThetaLog< double> objective_function;
+    ThetaLog<REAL> objective_function;
     
     //initialize the objective function
     objective_function.Initialize();
     
     //create an instance of a L-BFGS minimizer
-    atl::LBFGS< double> fm;
+    atl::LBFGS<REAL> fm;
     
     //set the objective function
     fm.SetObjectiveFunction(&objective_function);

@@ -23,7 +23,6 @@
 
 namespace atl {
 
-    
     /*!
      * Creates a unique identifier for variables. Identifiers are recyclable.
      * @return 
@@ -160,7 +159,7 @@ namespace atl {
     {
 #endif
         public:
-     
+
         static std::mutex vinfo_mutex_g;
         static std::vector<VariableInfo<REAL_T>* > freed;
         REAL_T dvalue;
@@ -168,14 +167,16 @@ namespace atl {
         std::atomic<int> count;
         std::atomic<int> dependence_level;
         std::atomic<int> is_dependent;
-//        IDSet<atl::VariableInfo<REAL_T>* > dependencies;
+        IDSet<atl::VariableInfo<REAL_T>* > dependencies;
+        IDSet<atl::VariableInfo<REAL_T>* > nldependencies;
         uint32_t id;
-        uint32_t push_start = 0;//the beginning of nonlinear interaction
+        uint32_t push_start = 0; //the beginning of nonlinear interaction
         std::string name;
-        int push_count =0;
-        bool has_nl_interaction =false;
+        int push_count = 0;
+        int push_mattered = 0;
+        bool has_nl_interaction = false;
         bool is_nl = false;
-        
+
         VariableInfo() : dvalue(0.0), vvalue(0.0), count(1), dependence_level(1), is_dependent(0), id(VariableIdGenerator::instance()->next()) {
 
 
@@ -188,6 +189,46 @@ namespace atl {
         virtual ~VariableInfo() {
         }
 
+        bool CheckDeepDependency(atl::VariableInfo<REAL_T>* vi) {
+            //            std::cout<<__func__;
+            typename IDSet<atl::VariableInfo<REAL_T>* >::iterator it;
+            for (it = this->dependencies.begin(); it != this->dependencies.end(); ++it) {
+                if ((*it)->is_dependent) {
+                    if ((vi) != (*it) && (*it) != this)
+                        if ((*it)->CheckDeepDependency(vi)) {
+                            //                        std::cout<<std::endl;
+                            return true;
+                        }
+                }
+            }
+            //         std::cout<<std::endl;
+            return false;
+        }
+
+        inline void PushNLDependency(atl::VariableInfo<REAL_T>* vi) {
+            typename IDSet<atl::VariableInfo<REAL_T>* >::iterator it;
+            this->nldependencies.insert(vi);
+            if (vi != this) {
+                if(!this->is_dependent)
+                vi->nldependencies.insert(this);
+                for (it = this->dependencies.begin(); it != this->dependencies.end(); ++it) {
+                    
+                    if ((*it)->is_dependent){
+                        (*it)->PushNLDependency(vi);
+                    }else{
+                        vi->nldependencies.insert((*it));
+                    }
+                }
+            }
+        }
+
+        void ShowNL() {
+            typename IDSet<atl::VariableInfo<REAL_T>* >::iterator it;
+            for (it = this->nldependencies.begin(); it != this->nldependencies.end(); ++it) {
+                std::cout << (*it)->name << "[" << (*it)->id << "]\n";
+                (*it)->ShowNL();
+            }
+        }
 
         inline void Release() {
             count--;
@@ -212,8 +253,11 @@ namespace atl {
             this->is_dependent = 0;
             this->push_count = 0;
             push_start = 0;
+            push_mattered = 0;
             this->has_nl_interaction = false;
             this->is_nl = false;
+            this->dependencies.clear();
+            this->nldependencies.clear();
         }
 
         static void FreeAll() {

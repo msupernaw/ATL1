@@ -69,6 +69,10 @@ namespace atl {
         inline void PushIds(IDSet<uint32_t >& ids)const {
             expr_m.PushIds(ids);
         }
+        
+        bool IsNonFunction() const {
+            return true;
+        }
 
         bool IsNonlinear()const {
             return true;
