@@ -132,7 +132,7 @@ public:
     void Initialize() {
         
         atl::StreamedDataFile data;
-        data.open("thetalog.dat");
+        data.open("ThetaLog.dat");
         
         int size = 0;
         data >> size;
