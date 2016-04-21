@@ -60,6 +60,7 @@ namespace atl {
         int max_phase_m = 0;
         friend class OptimizationRoutine<T>;
         friend class MCMC<T>;
+        int phase_m = 1;
     public:
 
         inline operator atl::Variable<T>() {
@@ -68,7 +69,11 @@ namespace atl {
 
         virtual void Initialize() {
         }
-
+        
+        int Phase(){
+            return phase_m;
+        }
+        
         virtual const atl::Variable<T> Evaluate() = 0;
 
         void RegisterHyperParameter(atl::Variable<T>& v, int phase = 1) {
@@ -489,6 +494,7 @@ namespace atl {
             this->hyper_parameters_m.resize(0);
             this->random_variables_m.resize(0);
             this->all_variables_m.resize(0);
+            this->objective_function_m->phase_m = phase;
             for (int i = 0; i < this->objective_function_m->hyper_parameter_phases_m.size(); i++) {
                 if (this->objective_function_m->hyper_parameter_phases_m[i] <= phase) {
                     this->hyper_parameters_m.push_back(this->objective_function_m->hyper_parameters_m[i]);
