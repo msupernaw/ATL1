@@ -191,7 +191,7 @@ namespace atl {
         }
         
         const SubVector<T> Sub(size_t start, size_t end){
-            return SubVector<T>(this->data_m, start, end);
+            return SubVector<T>(&data_m, start, end);
         }
 
         void Resize(size_t size) {
