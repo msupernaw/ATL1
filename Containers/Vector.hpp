@@ -30,6 +30,45 @@
 #include <initializer_list>
 
 namespace atl {
+    
+    
+    template<class T>
+    class SubVector : public atl::VectorExpression<T, atl::SubVector<T> > {
+    protected:
+        size_t start;
+        size_t end;
+        
+        std::vector<T>* data_m;
+        
+    public:
+        
+        SubVector(const SubVector<T>& other) :
+        start(other.start), end(other.end), data_m(other.data_m) {
+        }
+        
+        SubVector(size_t start, size_t end, std::vector<class>* data_m) :
+        start(start), end(end), data_m(data_m) {
+        }
+        
+        const T& operator()(size_t element) const {
+#ifdef ATL_BOUNDS_CHECK
+            assert(element > this->Size());
+#endif
+            return start + element;
+        }
+        
+        T& operator()(size_t element) {
+#ifdef ATL_BOUNDS_CHECK
+            assert(element > this->Size());
+#endif
+            return start + element;
+        }
+        
+        size_t Size(int i = 0) {
+            return end - start;
+        }
+        
+    };
 
     template<class T>
     class Vector : public VectorExpression<T, Vector<T> > {
@@ -111,6 +150,8 @@ namespace atl {
             }
 
         }
+        
+        
 
         template<class T2, class A>
         Vector(const MatrixExpression<T2, A> &expr) {
@@ -147,6 +188,10 @@ namespace atl {
                 data_m[i] = expr(i, 0);
             }
 
+        }
+        
+        const SubVector<T> Sub(size_t start, size_t end){
+            return SubVector<T>(this->data_m, start, end);
         }
 
         void Resize(size_t size) {
