@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   Vector.hpp
  * Author: matthewsupernaw
  *
@@ -30,44 +30,44 @@
 #include <initializer_list>
 
 namespace atl {
-    
-    
+
+
     template<class T>
     class SubVector : public atl::VectorExpression<T, atl::SubVector<T> > {
     protected:
         size_t start;
         size_t end;
-        
+
         std::vector<T>* data_m;
-        
+
     public:
-        
+
         SubVector(const SubVector<T>& other) :
         start(other.start), end(other.end), data_m(other.data_m) {
         }
-        
-        SubVector(size_t start, size_t end, std::vector<class>* data_m) :
+
+        SubVector(size_t start, size_t end, std::vector<T>* data_m) :
         start(start), end(end), data_m(data_m) {
         }
-        
+
         const T& operator()(size_t element) const {
 #ifdef ATL_BOUNDS_CHECK
             assert(element > this->Size());
 #endif
             return start + element;
         }
-        
+
         T& operator()(size_t element) {
 #ifdef ATL_BOUNDS_CHECK
             assert(element > this->Size());
 #endif
             return start + element;
         }
-        
+
         size_t Size(int i = 0) {
             return end - start;
         }
-        
+
     };
 
     template<class T>
@@ -150,8 +150,8 @@ namespace atl {
             }
 
         }
-        
-        
+
+
 
         template<class T2, class A>
         Vector(const MatrixExpression<T2, A> &expr) {
@@ -189,7 +189,7 @@ namespace atl {
             }
 
         }
-        
+
         const SubVector<T> Sub(size_t start, size_t end){
             return SubVector<T>(&data_m, start, end);
         }
@@ -360,7 +360,7 @@ namespace atl {
         inline Vector& operator+=(const Vector &other) {
 #ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(isize == other.isize);
-#endif   
+#endif
             //            for (int i = 0; i < data_m.size(); i++) {
             //                data_m[i] += other.data_m[i];
             //            }
@@ -372,7 +372,7 @@ namespace atl {
         inline Vector& operator+=(const VectorExpression<T2, A> &expr) {
 #ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(isize == expr.Size(0));
-#endif   
+#endif
             //            for (int i = 0; i < data_m.size(); i++) {
             //                data_m[i] += expr(i);
             //            }
@@ -427,7 +427,7 @@ namespace atl {
         inline Vector& operator-=(const Vector &other) {
 #ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(isize == other.Size(0));
-#endif   
+#endif
             //            for (int i = 0; i < data_m.size(); i++) {
             //                data_m[i] -= other.data_m[i];
             //            }
@@ -440,7 +440,7 @@ namespace atl {
         inline Vector& operator-=(const VectorExpression<T2, A> &expr) {
 #ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(isize == expr.Size(0));
-#endif   
+#endif
             //            for (int i = 0; i < data_m.size(); i++) {
             //                data_m[i] -= expr(i);
             //            }
@@ -494,7 +494,7 @@ namespace atl {
         inline Vector& operator*=(const Vector &other) {
 #ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(isize == other.Size(0));
-#endif   
+#endif
             //            for (int i = 0; i < data_m.size(); i++) {
             //                data_m[i] *= other.data_m[i];
             //            }
@@ -507,7 +507,7 @@ namespace atl {
         inline Vector& operator*=(const VectorExpression<T2, A> &expr) {
 #ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(isize == expr.Size(0));
-#endif   
+#endif
             //            for (int i = 0; i < data_m.size(); i++) {
             //                data_m[i] *= expr(i);
             //            }
@@ -561,7 +561,7 @@ namespace atl {
         inline Vector& operator/=(const Vector &other) {
 #ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(isize == other.Size(0));
-#endif   
+#endif
             //            for (int i = 0; i < data_m.size(); i++) {
             //                data_m[i] /= other.data_m[i];
             //            }
@@ -574,7 +574,7 @@ namespace atl {
         inline Vector& operator/=(const VectorExpression<T2, A> &expr) {
 #ifdef ATL_ENABLE_BOUNDS_CHECKING
             assert(isize == expr.Size(0));
-#endif   
+#endif
             //            for (int i = 0; i < data_m.size(); i++) {
             //                data_m[i] /= expr(i);
             //            }
@@ -659,7 +659,7 @@ namespace atl {
 
         /*
          *
-         *Returns the first valid index for this vector. 
+         *Returns the first valid index for this vector.
          */
         inline const size_t IndexMin() const {
             return 0;
@@ -667,7 +667,7 @@ namespace atl {
 
         /*
          *
-         *Returns the last valid index for this vector. 
+         *Returns the last valid index for this vector.
          */
         inline const size_t IndexMax() const {
             return this->isize - 1;
@@ -680,10 +680,10 @@ namespace atl {
         }
 
         /**
-         * Get a value based on the raw index for the underlying 
+         * Get a value based on the raw index for the underlying
          * data. valid index is 0 - (length -1).
          * @param i
-         * @return 
+         * @return
          */
         inline const RET_TYPE AtRaw(const uint32_t & i) const {
             return data_m[i];
