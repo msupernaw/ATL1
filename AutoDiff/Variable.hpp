@@ -85,7 +85,7 @@ namespace atl {
     };
 
     /**
-     * Sine transformation for a variable.
+     * Tanh transformation for a variable.
      */
     template<typename REAL_T>
     class TanhParameterTransformation : public ParameterTransformation<REAL_T> {
@@ -123,8 +123,8 @@ namespace atl {
         }
 
         virtual REAL_T DerivativeInternal2External(REAL_T val, REAL_T min_, REAL_T max_)const {
-            //            return 0.5 * ((max_ - min_) * std::cos(val));
-            return ((max_ - min_) * std::cos(val)) / 2.0;
+                        return 0.5 * ((max_ - min_) * std::cos(val));
+//            return ((max_ - min_) * std::cos(val)) / 2.0;
         }
     };
 
@@ -147,6 +147,8 @@ namespace atl {
                     (::exp(2.0 * val) * ::log(M_E)*(max_ - min_)) / ::pow((::exp(val) + 1), 2.0);
         }
     };
+    
+    
 
     template<typename REAL_T, //base type
     int group = 0 > //group identifier

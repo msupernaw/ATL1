@@ -44,7 +44,7 @@ namespace atl {
 
         void CheckBounds(const uint32_t& i) const {
 
-            assert(i < isize);
+            assert(i < jsize);
 
         }
 

@@ -427,7 +427,7 @@ namespace atl {
         }
 
         int GetActivePhase(const atl::Variable<T>& v) {
-            typedef typename std::map<atl::Variable<T>*, uint32_t>::const_iterator piter;
+            typedef typename std::map<atl::Variable<T>*, int>::iterator piter;
             piter pi;
             pi = this->phase_info.find((atl::Variable<T>*) & v);
             if (pi != this->phase_info.end()) {

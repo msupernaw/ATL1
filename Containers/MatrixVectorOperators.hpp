@@ -9,7 +9,7 @@
 #define	MATRIXVECTOROPERATORS_HPP
 #include "MatrixExpressionBase.hpp"
 #include "../Traits/Primitive.hpp"
-//#include "Vector.hpp"
+
 namespace atl {
 
     template< class T, class A>
