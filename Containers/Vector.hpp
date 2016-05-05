@@ -46,7 +46,7 @@ namespace atl {
         start(other.start), end(other.end), data_m(other.data_m) {
         }
         
-        SubVector(size_t start, size_t end, std::vector<class>* data_m) :
+        SubVector(size_t start, size_t end, std::vector<T>* data_m) :
         start(start), end(end), data_m(data_m) {
         }
         

@@ -29,200 +29,39 @@ namespace atl {
     template<class T>
     class MCMC;
 
-    template<class T>
-    class MinimizerResults {
-        T function_value;
-        bool converged;
-        T convergence_criteria;
-        int max_phases;
+    template<typename T>
+    class Cholesky {
+        typedef std::vector<std::vector<T> > CMatrix;
+        typedef std::vector<T> CVector;
+        typedef std::vector<std::vector<unsigned> > CPattern;
 
-        std::vector<atl::Variable<T>* > hyper_parameters_m;
 
-        std::vector<T> gradient;
-        std::vector<std::vector<T> > hyper_parameter_hessian;
-        T log_determinant_of_hyper_parmameter_hessian;
-        std::vector<std::vector<T> > hyper_parameter_var_covar_matrix;
-        std::vector<T> hyper_parameter_standard_deviation;
 
-        std::vector<atl::Variable<T>* > random_variables_m;
-        std::vector<std::vector<T> > random_variable_hessian;
-        T log_determinant_of_random_variable_hessian;
-        std::vector<std::vector<T> > random_variable_var_covar_matrix;
-        std::vector<T> random_variable_standard_deviation;
-    };
-
-    template<class T>
-    class ObjectiveFunction : public DerivativeChecker<T> {
-        std::vector<atl::Variable<T>* > hyper_parameters_m;
-        std::vector<int> hyper_parameter_phases_m;
-        std::vector<atl::Variable<T>* > random_variables_m;
-        std::vector<int> random_variable_phases_m;
-        int max_phase_m = 0;
-        friend class OptimizationRoutine<T>;
-        friend class MCMC<T>;
-        int phase_m = 1;
     public:
+        size_t n;
+        CMatrix el;
+        CPattern pattern;
+        CPattern upper_pattern;
+        CPattern lower_pattern;
 
-        inline operator atl::Variable<T>() {
-            return this->Evaluate();
+        bool pd;
+        bool has_pattern;
+
+        Cholesky() {
+
         }
 
-        virtual void Initialize() {
-        }
-        
-        int Phase(){
-            return phase_m;
-        }
-        
-        virtual const atl::Variable<T> Evaluate() = 0;
+        Cholesky(const CMatrix& a, bool store_pattern = true) {
+            el = a;
+            pd = true;
+            n = a.size();
+            has_pattern = store_pattern;
 
-        void RegisterHyperParameter(atl::Variable<T>& v, int phase = 1) {
-            this->hyper_parameters_m.push_back(&v);
-            this->hyper_parameter_phases_m.push_back(phase);
-            if (phase > max_phase_m) {
-                max_phase_m = phase;
-            }
-        }
+            if (has_pattern) {
 
-        void RegisterRandomVariable(atl::Variable<T>& v, int phase = 1) {
-            this->random_variables_m.push_back(&v);
-            this->random_variable_phases_m.push_back(phase);
-            if (phase > max_phase_m) {
-                max_phase_m = phase;
-            }
-        }
-
-        virtual void Objective_Function(atl::Variable<T>& ff) {
-            ff = this->Evaluate();
-        }
-
-
-    };
-
-    template<class T>
-    class OptimizationRoutine {
-    protected:
-
-        class Cholesky {
-            typedef std::vector<std::vector<T> > CMatrix;
-            typedef std::vector<T> CVector;
-            typedef std::vector<std::vector<unsigned> > CPattern;
-
-
-
-        public:
-            size_t n;
-            CMatrix el;
-            CPattern pattern;
-            CPattern upper_pattern;
-            CPattern lower_pattern;
-
-            bool pd;
-            bool has_pattern;
-
-            Cholesky() {
-
-            }
-
-            Cholesky(const CMatrix& a, bool store_pattern = true) {
-                el = a;
-                pd = true;
-                n = a.size();
-                has_pattern = store_pattern;
-
-                if (has_pattern) {
-
-                    this->pattern.resize(this->n * this->n);
-                    this->lower_pattern.resize(n);
-                    this->upper_pattern.resize(n);
-                    for (int i = 0; i < n; i++) {
-                        for (int j = i; j < n; j++) {
-                            T sum = 0;
-                            int k;
-                            for (sum = el[i][j], k = i - 1; k >= 0; k--) {
-                                sum -= el[i][k] * el[j][k];
-                                if (el[i][k] != 0.0 && el[j][k] != 0.0) {
-                                    pattern[i * n + j].push_back(k);
-
-                                }
-                            }
-                            if (i == j) {
-                                if (sum <= 0.0) {
-                                    pd = false;
-                                    std::cout << "matrix is not positive definite.\n";
-                                }
-                                el[i][i] = std::sqrt(sum);
-                            } else {
-                                el[j][i] = sum / el[i][i];
-                            }
-                        }
-                    }
-                    for (int i = 0; i < n; i++)
-                        for (int j = 0; j < i; j++)
-                            el[j][i] = 0.0;
-
-                    for (int i = 0; i < n; i++) {
-                        int k;
-                        for (k = i - 1; k >= 0; k--) {
-                            if (el[i][ k] != 0.0) {
-                                this->lower_pattern[i].push_back(k);
-                            }
-                        }
-                    }
-
-                    for (int i = n - 1; i >= 0; i--) {
-                        int k;
-                        for (k = i + 1; k < n; k++) {
-                            if (el[k][i] != 0.0) {
-                                this->upper_pattern[i].push_back(k);
-                            }
-                        }
-                    }
-
-                } else {
-
-
-                    for (int i = 0; i < n; i++) {
-                        for (int j = i; j < n; j++) {
-                            T sum = 0;
-                            int k;
-                            for (sum = el[i][j], k = i - 1; k >= 0; k--) {
-                                sum -= el[i][k] * el[j][k];
-                            }
-                            if (i == j) {
-                                if (sum <= 0.0) {
-                                    pd = false;
-                                    std::cout << "matrix is not positive definite.\n";
-                                }
-                                el[i][i] = std::sqrt(sum);
-                            } else {
-                                el[j][i] = sum / el[i][i];
-                            }
-                        }
-                    }
-                    for (int i = 0; i < n; i++)
-                        for (int j = 0; j < i; j++)
-                            el[j][i] = 0.0;
-
-
-                }
-
-
-
-
-            }
-
-            void recompute(const CMatrix& a) {
-                el = a;
-                pd = true;
-                n = a.size();
-                this->pattern.resize(0);
                 this->pattern.resize(this->n * this->n);
-                this->lower_pattern.resize(0);
                 this->lower_pattern.resize(n);
-                this->upper_pattern.resize(0);
                 this->upper_pattern.resize(n);
-
                 for (int i = 0; i < n; i++) {
                     for (int j = i; j < n; j++) {
                         T sum = 0;
@@ -231,6 +70,7 @@ namespace atl {
                             sum -= el[i][k] * el[j][k];
                             if (el[i][k] != 0.0 && el[j][k] != 0.0) {
                                 pattern[i * n + j].push_back(k);
+
                             }
                         }
                         if (i == j) {
@@ -265,19 +105,16 @@ namespace atl {
                         }
                     }
                 }
-            }
 
-            void compute(const CMatrix& a) {
-                el = a;
-                pd = true;
+            } else {
+
+
                 for (int i = 0; i < n; i++) {
                     for (int j = i; j < n; j++) {
                         T sum = 0;
                         int k;
-                        //                sum = el[i][j];
-#pragma unroll
-                        for (sum = el[i][j], k = pattern[i * n + j].size() - 1; k >= 0; k--) {
-                            sum -= el[i][pattern[i * n + j][k]] * el[j][pattern[i * n + j][k]];
+                        for (sum = el[i][j], k = i - 1; k >= 0; k--) {
+                            sum -= el[i][k] * el[j][k];
                         }
                         if (i == j) {
                             if (sum <= 0.0) {
@@ -290,128 +127,388 @@ namespace atl {
                         }
                     }
                 }
-#pragma unroll
                 for (int i = 0; i < n; i++)
-#pragma unroll
                     for (int j = 0; j < i; j++)
                         el[j][i] = 0.0;
 
+
             }
 
-            const CVector solve(const CMatrix& a, const CVector& b, bool recompute = false) {
 
-                if (b.size() != this->n) {
-                    std::cout << "error!!!!\n";
-                }
 
-                CVector x(this->n);
-                if (!this->has_pattern) {
-                    std::cout << "no pattern.\n";
-                    return x;
-                }
 
-                recompute ? this->recompute(a) : this->compute(a);
-                // solve L y = b, storing y in x
-                for (int i = 0; i < n; i++) {
-                    T sum;
+        }
+
+        void recompute(const CMatrix& a) {
+            el = a;
+            pd = true;
+            n = a.size();
+            this->pattern.resize(0);
+            this->pattern.resize(this->n * this->n);
+            this->lower_pattern.resize(0);
+            this->lower_pattern.resize(n);
+            this->upper_pattern.resize(0);
+            this->upper_pattern.resize(n);
+
+            for (int i = 0; i < n; i++) {
+                for (int j = i; j < n; j++) {
+                    T sum = 0;
                     int k;
-                    for (sum = b[i], k = i - 1; k >= 0; k--)
-                        sum -= el[i][k] * x[k];
-                    x[i] = (sum / el[i][i]);
+                    for (sum = el[i][j], k = i - 1; k >= 0; k--) {
+                        sum -= el[i][k] * el[j][k];
+                        if (el[i][k] != 0.0 && el[j][k] != 0.0) {
+                            pattern[i * n + j].push_back(k);
+                        }
+                    }
+                    if (i == j) {
+                        if (sum <= 0.0) {
+                            pd = false;
+                            std::cout << "matrix is not positive definite.\n";
+                        }
+                        el[i][i] = std::sqrt(sum);
+                    } else {
+                        el[j][i] = sum / el[i][i];
+                    }
                 }
-                // solve L^T x = y
-                for (int i = n - 1; i >= 0; i--) {
-                    double sum;
+            }
+            for (int i = 0; i < n; i++)
+                for (int j = 0; j < i; j++)
+                    el[j][i] = 0.0;
+
+            for (int i = 0; i < n; i++) {
+                int k;
+                for (k = i - 1; k >= 0; k--) {
+                    if (el[i][ k] != 0.0) {
+                        this->lower_pattern[i].push_back(k);
+                    }
+                }
+            }
+
+            for (int i = n - 1; i >= 0; i--) {
+                int k;
+                for (k = i + 1; k < n; k++) {
+                    if (el[k][i] != 0.0) {
+                        this->upper_pattern[i].push_back(k);
+                    }
+                }
+            }
+        }
+
+        void compute(const CMatrix& a) {
+            el = a;
+            pd = true;
+            for (int i = 0; i < n; i++) {
+                for (int j = i; j < n; j++) {
+                    T sum = 0;
                     int k;
-                    for (sum = x[i], k = i + 1; k < n; k++)
-                        sum -= el(k, i) * x[k];
-                    x[i] = (sum / el[i][i]);
+                    //                sum = el[i][j];
+#pragma unroll
+                    for (sum = el[i][j], k = pattern[i * n + j].size() - 1; k >= 0; k--) {
+                        sum -= el[i][pattern[i * n + j][k]] * el[j][pattern[i * n + j][k]];
+                    }
+                    if (i == j) {
+                        if (sum <= 0.0) {
+                            pd = false;
+                            std::cout << "matrix is not positive definite.\n";
+                        }
+                        el[i][i] = std::sqrt(sum);
+                    } else {
+                        el[j][i] = sum / el[i][i];
+                    }
                 }
+            }
+#pragma unroll
+            for (int i = 0; i < n; i++)
+#pragma unroll
+                for (int j = 0; j < i; j++)
+                    el[j][i] = 0.0;
+
+        }
+
+        const CVector solve(const CMatrix& a, const CVector& b, bool recompute = false) {
+
+            if (b.size() != this->n) {
+                std::cout << "error!!!!\n";
+            }
+
+            CVector x(this->n);
+            if (!this->has_pattern) {
+                std::cout << "no pattern.\n";
                 return x;
-
             }
 
-            void solve(const CVector& b, CVector& x) {
-                if (b.size() != this->n) {
-                    std::cout << "error!!!!\n";
-                }
+            recompute ? this->recompute(a) : this->compute(a);
+            // solve L y = b, storing y in x
+            for (int i = 0; i < n; i++) {
+                T sum;
+                int k;
+                for (sum = b[i], k = i - 1; k >= 0; k--)
+                    sum -= el[i][k] * x[k];
+                x[i] = (sum / el[i][i]);
+            }
+            // solve L^T x = y
+            for (int i = n - 1; i >= 0; i--) {
+                double sum;
+                int k;
+                for (sum = x[i], k = i + 1; k < n; k++)
+                    sum -= el(k, i) * x[k];
+                x[i] = (sum / el[i][i]);
+            }
+            return x;
 
+        }
 
-                // solve L y = b, storing y in x
-#pragma unroll
-                for (int i = 0; i < n; i++) {
-                    T sum;
-                    int k;
-#pragma unroll
-                    for (sum = b[i], k = 0; k < this->lower_pattern[i].size(); k++)
-                        sum -= el[i][this->lower_pattern[i][k]] * x[this->lower_pattern[i][k]];
-                    x[i] = (sum / el[i][i]);
-                }
-                // solve L^T x = y
-#pragma unroll
-                for (int i = n - 1; i >= 0; i--) {
-                    double sum;
-                    int k;
-#pragma unroll
-                    for (sum = x[i], k = 0; k < this->upper_pattern[i].size(); k++)
-                        sum -= el[this->upper_pattern[i][k]][i] * x[this->upper_pattern[i][k]];
-                    x[i] = (sum / el[i][i]);
-                }
-
+        void solve(const CVector& b, CVector& x) {
+            if (b.size() != this->n) {
+                std::cout << "error!!!!\n";
             }
 
-            void solve(CMatrix &b, CMatrix &x) {
-                int i, j, m = b.size();
-                if (b.size() != n || x.size() != n || b[0].size() != x[0].size())
-                    throw ("Cholesky::solve bad sizes");
-                CVector xx(n);
-                for (j = 0; j < m; j++) {
-                    for (i = 0; i < n; i++) xx[i] = b[i][j];
-                    solve(xx, xx);
-                    for (i = 0; i < n; i++) x[i][j] = xx[i];
-                }
+
+            // solve L y = b, storing y in x
+#pragma unroll
+            for (int i = 0; i < n; i++) {
+                T sum;
+                int k;
+#pragma unroll
+                for (sum = b[i], k = 0; k < this->lower_pattern[i].size(); k++)
+                    sum -= el[i][this->lower_pattern[i][k]] * x[this->lower_pattern[i][k]];
+                x[i] = (sum / el[i][i]);
+            }
+            // solve L^T x = y
+#pragma unroll
+            for (int i = n - 1; i >= 0; i--) {
+                double sum;
+                int k;
+#pragma unroll
+                for (sum = x[i], k = 0; k < this->upper_pattern[i].size(); k++)
+                    sum -= el[this->upper_pattern[i][k]][i] * x[this->upper_pattern[i][k]];
+                x[i] = (sum / el[i][i]);
             }
 
-            void inverse(CMatrix& ainv) {
-                for (int i = 0; i < n; i++)
-                    for (int j = 0; j <= i; j++) {
-                        T sum = i == j ? 1.0 : 0.0;
-                        for (int k = i - 1; k >= j; k--)
-                            sum -= el[i][k] * ainv[j][k];
-                        ainv[j][i] = sum / el[i][i];
+        }
+
+        void solve(CMatrix &b, CMatrix &x) {
+            int i, j, m = b.size();
+            if (b.size() != n || x.size() != n || b[0].size() != x[0].size())
+                throw ("Cholesky::solve bad sizes");
+            CVector xx(n);
+            for (j = 0; j < m; j++) {
+                for (i = 0; i < n; i++) xx[i] = b[i][j];
+                solve(xx, xx);
+                for (i = 0; i < n; i++) x[i][j] = xx[i];
+            }
+        }
+
+        void inverse(CMatrix& ainv) {
+            for (int i = 0; i < n; i++)
+                for (int j = 0; j <= i; j++) {
+                    T sum = i == j ? 1.0 : 0.0;
+                    for (int k = i - 1; k >= j; k--)
+                        sum -= el[i][k] * ainv[j][k];
+                    ainv[j][i] = sum / el[i][i];
+                }
+            for (int i = n - 1; i >= 0; i--)
+                for (int j = 0; j <= i; j++) {
+                    T sum = i < j ? 0.0 : ainv[j][i];
+                    for (int k = i + 1; k < n; k++)
+                        sum -= el[k][i] * ainv[j][k];
+                    T temp = sum / el[i][i];
+                    ainv[i][j] = temp;
+                    ainv[j][i] = temp;
+                }
+        }
+
+        const T logdet() {
+            T sum = 0.0;
+            for (int i = 0; i < n; i++)
+                sum += std::log(std::fabs(el[i][i]));
+            return static_cast<T> (2.0) * sum;
+        }
+
+        const T det() {
+            return std::exp(logdet());
+        }
+
+
+
+    private:
+
+        inline int index(int i, int j) {
+            return i * n + j;
+        }
+
+
+    };
+
+    template<class T>
+    class MinimizerResults {
+        T function_value;
+        bool converged;
+        T convergence_criteria;
+        int max_phases;
+
+        std::vector<atl::Variable<T>* > hyper_parameters_m;
+
+        std::vector<T> gradient;
+        std::vector<std::vector<T> > hyper_parameter_hessian;
+        T log_determinant_of_hyper_parmameter_hessian;
+        std::vector<std::vector<T> > hyper_parameter_var_covar_matrix;
+        std::vector<T> hyper_parameter_standard_deviation;
+
+        std::vector<atl::Variable<T>* > random_variables_m;
+        std::vector<std::vector<T> > random_variable_hessian;
+        T log_determinant_of_random_variable_hessian;
+        std::vector<std::vector<T> > random_variable_var_covar_matrix;
+        std::vector<T> random_variable_standard_deviation;
+    };
+
+    template<class T>
+    struct ObjectiveFunctionStatistics {
+        T function_value;
+        bool converged;
+        T convergence_criteria;
+        T max_gradient_component;
+
+        std::vector<std::string> parameter_names;
+        std::vector<T> parameter_values;
+        std::vector<T> gradient;
+        std::vector<std::vector<T> > hessian;
+        T log_determinant_of_hessian;
+        std::vector<std::vector<T> > parameter_var_covar_matrix;
+        std::vector<T> parameter_standard_deviation;
+
+        std::vector<std::string> random_variable_names;
+        std::vector<T> random_variable_values;
+
+
+    };
+
+    template<class T>
+    class ObjectiveFunction : public DerivativeChecker<T> {
+        std::map<atl::Variable<REAL_T>*, int> phase_info;
+        std::vector<atl::Variable<T>* > hyper_parameters_m;
+        std::vector<int> hyper_parameter_phases_m;
+        std::vector<atl::Variable<T>* > random_variables_m;
+        std::vector<int> random_variable_phases_m;
+        int max_phase_m = 0;
+        friend class OptimizationRoutine<T>;
+        friend class MCMC<T>;
+        int phase_m = 1;
+    public:
+
+        inline operator atl::Variable<T>() {
+            return this->Evaluate();
+        }
+
+        virtual void Initialize() {
+        }
+
+        int Phase() {
+            return phase_m;
+        }
+
+        virtual const atl::Variable<T> Evaluate() = 0;
+
+        void RegisterHyperParameter(atl::Variable<T>& v, int phase = 1) {
+            this->hyper_parameters_m.push_back(&v);
+            this->hyper_parameter_phases_m.push_back(phase);
+            this->phase_info[&v] = phase;
+            if (phase > max_phase_m) {
+                max_phase_m = phase;
+            }
+        }
+
+        void RegisterRandomVariable(atl::Variable<T>& v, int phase = 1) {
+            this->random_variables_m.push_back(&v);
+            this->random_variable_phases_m.push_back(phase);
+            if (phase > max_phase_m) {
+                max_phase_m = phase;
+            }
+        }
+
+        int GetActivePhase(const atl::Variable<REAL_T>& v) {
+            typedef typename std::map<atl::Variable<REAL_T>*, uint32_t>::const_iterator piter;
+            piter pi;
+            pi = this->phase_info.find((atl::Variable<REAL_T>*) & v);
+            if (pi != this->phase_info.end()) {
+                return pi->second;
+            }
+            return 0;
+        }
+        
+        
+        bool LastPhase() {
+            return this->current_phase == this->max_phase;
+        }
+
+
+        virtual void Objective_Function(atl::Variable<T>& ff) {
+            ff = this->Evaluate();
+        }
+
+        const ObjectiveFunctionStatistics<T> GetObjectiveFunctionStatistics() {
+
+            ObjectiveFunctionStatistics<T> stats;
+
+            atl::Variable<T>::gradient_structure_g.derivative_trace_level = atl::SECOND_ORDER_MIXED_PARTIALS;
+
+            atl::Variable<T> f = this->Evaluate();
+            stats.function_value = f.GetValue();
+
+            atl::Variable<T>::gradient_structure_g.Accumulate();
+            stats.parameter_values.resize(this->hyper_parameters_m.size());
+            stats.parameter_names.resize(this->hyper_parameters_m.size());
+            stats.gradient.resize(this->hyper_parameters_m.size());
+            stats.hessian.resize(this->hyper_parameters_m.size(), std::vector<T>(this->hyper_parameters_m.size()));
+
+            for (int i = 0; i < this->hyper_parameters_m.size(); i++) {
+                stats.gradient[i] = this->hyper_parameters_m[i]->info->dvalue;
+                stats.parameter_values[i] = this->hyper_parameters_m[i]->info->vvalue;
+                stats.parameter_names[i] = this->hyper_parameters_m[i]->GetName();
+
+                if (i == 0) {
+                    stats.max_gradient_component = std::fabs(this->hyper_parameters_m[i]->info->dvalue);
+                } else {
+                    if (std::fabs(this->hyper_parameters_m[i]->info->dvalue) > stats.max_gradient_component) {
+                        stats.max_gradient_component = std::fabs(this->hyper_parameters_m[i]->info->dvalue);
                     }
-                for (int i = n - 1; i >= 0; i--)
-                    for (int j = 0; j <= i; j++) {
-                        T sum = i < j ? 0.0 : ainv[j][i];
-                        for (int k = i + 1; k < n; k++)
-                            sum -= el[k][i] * ainv[j][k];
-                        T temp = sum / el[i][i];
-                        ainv[i][j] = temp;
-                        ainv[j][i] = temp;
-                    }
+                }
+
+                for (int j = 0; j < this->hyper_parameters_m.size(); j++) {
+                    atl::Variable<T>::gradient_structure_g.Value(this->hyper_parameters_m[i]->info->id, this->hyper_parameters_m[j]->info->id);
+                }
             }
 
-            const T logdet() {
-                T sum = 0.0;
-                for (int i = 0; i < n; i++)
-                    sum += std::log(std::fabs(el[i][i]));
-                return static_cast<T> (2.0) * sum;
-            }
+            Cholesky<T> chol(stats.hessian);
+            stats.log_determinant_of_hessian = chol.logdet();
 
-            const T det() {
-                return std::exp(logdet());
+            if (this->random_variable_phases_m.size()) {
+                stats.random_variable_names.resize(this->random_variables_m.size());
+                stats.random_variable_names.resize(this->random_variables_m.size());
             }
 
 
-
-        private:
-
-            inline int index(int i, int j) {
-                return i * n + j;
-            }
+            return stats;
+        }
 
 
-        };
+    };
+
+    template<typename T>
+    std::ostream& operator<<(std::ostream& out, const ObjectiveFunctionStatistics<T>& stats) {
+        out << "Function Value = " << stats.function_value << std::endl;
+        out << "Max Gradient Component = " << stats.max_gradient_component << std::endl;
+        out << std::left << std::setw(15) << "Parameter" << std::setw(15) << "Value" << std::setw(15) << "Gradient" << std::endl;
+        for (int i = 0; i < stats.parameter_values.size(); i++) {
+            out << std::setw(15) << stats.parameter_names[i] << std::setw(15) << stats.parameter_values[i] << std::setw(15) << stats.gradient[i] << std::endl;
+        }
+        return out;
+    }
+
+    template<class T>
+    class OptimizationRoutine {
+    protected:
+
 
         ObjectiveFunction<T>* objective_function_m = NULL;
         std::vector<atl::Variable<T>* > hyper_parameters_m;
@@ -454,8 +551,8 @@ namespace atl {
         std::vector<T> results;
         long outer_iteration;
 
-        Cholesky cholesky_outer;
-        Cholesky cholesky_inner;
+        Cholesky<T> cholesky_outer;
+        Cholesky<T> cholesky_inner;
     public:
 
         OptimizationRoutine(ObjectiveFunction<T>* objective_function = NULL) :
@@ -727,7 +824,7 @@ namespace atl {
                 }
 
 
-                //                push adjoint entry for of
+                //push adjoint entry for objective function
                 atl::StackEntry<T>& entry2 = atl::Variable<T>::gradient_structure_g.NextEntry();
                 entry2.w = f.info;
                 for (it = derivatives_f.begin(); it != derivatives_f.end(); ++it) {
@@ -745,7 +842,7 @@ namespace atl {
             }
 
             f += static_cast<T> (.5) * log_det;
-            f -= static_cast<T> (.5)*(T(RANDOM_SIZE) * std::log((static_cast<T> (2.0 * M_PI))));
+            f -= static_cast<T> (.5)*(static_cast<T> (RANDOM_SIZE) * std::log((static_cast<T> (2.0 * M_PI))));
 
         }
 
@@ -833,7 +930,7 @@ namespace atl {
                 }
                 this->inner_gradient[i] = 0;
             }
-            Cholesky lu;
+            Cholesky<T> lu;
 
 
 
@@ -862,35 +959,35 @@ namespace atl {
                 lu.solve(gradient_, p);
                 //prepare lone search
                 for (int i = 0; i < gradient_.size(); i++) {
-//                    this->inner_gradient[i] = gradient_[i];
-//                    this->inner_wg[i] = gradient_[i];
-//                    this->inner_x[i] = this->random_variables_m[i]->GetValue();
-//                    z[i] = p[i];
+                    //                    this->inner_gradient[i] = gradient_[i];
+                    //                    this->inner_wg[i] = gradient_[i];
+                    //                    this->inner_x[i] = this->random_variables_m[i]->GetValue();
+                    //                    z[i] = p[i];
                     if (std::fabs(gradient_[i]) > this->inner_maxgc) {
                         this->inner_maxgc = std::fabs(gradient_[i]);
                     }
 
                 }
-//                std::cout << "Inner max g = " << this->inner_maxgc << "\n";
+                //                std::cout << "Inner max g = " << this->inner_maxgc << "\n";
 
                 if (this->inner_maxgc <= tol /*&& all_positive*/) {
                     return true;
                 }
-//                
-//                if(!line_search(random_variables_m,
-//                        this->inner_function_value,
-//                        inner_x,
-//                        inner_best,
-//                        z,
-//                        inner_gradient,
-//                        inner_wg,
-//                        inner_maxgc, iter,
-//                        true)){
-//                    std::cout<<"Inner max line searches"<<std::endl;
-//                    return false;
-//                }
+                //                
+                //                if(!line_search(random_variables_m,
+                //                        this->inner_function_value,
+                //                        inner_x,
+                //                        inner_best,
+                //                        z,
+                //                        inner_gradient,
+                //                        inner_wg,
+                //                        inner_maxgc, iter,
+                //                        true)){
+                //                    std::cout<<"Inner max line searches"<<std::endl;
+                //                    return false;
+                //                }
 
- 
+
                 for (int j = 0; j < random_variables_m.size(); j++) {
                     random_variables_m[j]->SetValue(random_variables_m[j]->GetValue() - p[j]);
                 }
@@ -926,9 +1023,9 @@ namespace atl {
             descent *= T(-1.0); // * Dot(z, g);
             if ((descent > T(-0.00000001) * relative_tolerance /* tolerance relative_tolerance*/)) {
                 z = wg + .001;
-                if(!inner){
-                this->max_iterations -= i;
-                i = 0;
+                if (!inner) {
+                    this->max_iterations -= i;
+                    i = 0;
                 }
                 descent = -1.0 * Dot(z, wg);
             }//end if
