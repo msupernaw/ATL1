@@ -436,6 +436,9 @@ namespace atl {
             return 0;
         }
         
+        bool IsActive(const atl::Variable<REAL_T>& v){
+            return GetActivePhase(v)<= this->phase_m;
+        }
         
         bool LastPhase() {
             return this->current_phase == this->max_phase;
