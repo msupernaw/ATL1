@@ -309,7 +309,7 @@ namespace atl {
 
 #ifdef ATL_ENABLE_BOUNDS_CHECKING
 
-            assert(lhs_m.Size(0) == rhs_m.Size(1));
+            assert(lhs_m.Size(0) == rhs_m.Size(0));
 
 #endif
 
