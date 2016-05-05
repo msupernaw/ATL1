@@ -385,7 +385,7 @@ namespace atl {
 
     template<class T>
     class ObjectiveFunction : public DerivativeChecker<T> {
-        std::map<atl::Variable<REAL_T>*, int> phase_info;
+        std::map<atl::Variable<T>*, int> phase_info;
         std::vector<atl::Variable<T>* > hyper_parameters_m;
         std::vector<int> hyper_parameter_phases_m;
         std::vector<atl::Variable<T>* > random_variables_m;
@@ -426,17 +426,17 @@ namespace atl {
             }
         }
 
-        int GetActivePhase(const atl::Variable<REAL_T>& v) {
-            typedef typename std::map<atl::Variable<REAL_T>*, uint32_t>::const_iterator piter;
+        int GetActivePhase(const atl::Variable<T>& v) {
+            typedef typename std::map<atl::Variable<T>*, uint32_t>::const_iterator piter;
             piter pi;
-            pi = this->phase_info.find((atl::Variable<REAL_T>*) & v);
+            pi = this->phase_info.find((atl::Variable<T>*) & v);
             if (pi != this->phase_info.end()) {
                 return pi->second;
             }
             return 0;
         }
         
-        bool IsActive(const atl::Variable<REAL_T>& v){
+        bool IsActive(const atl::Variable<T>& v){
             return GetActivePhase(v)<= this->phase_m;
         }
         

@@ -45,11 +45,7 @@ namespace atl {
         SubVector(const SubVector<T>& other) :
         start(other.start), end(other.end), data_m(other.data_m) {
         }
-<<<<<<< HEAD
-        
-=======
 
->>>>>>> origin/master
         SubVector(size_t start, size_t end, std::vector<T>* data_m) :
         start(start), end(end), data_m(data_m) {
         }
