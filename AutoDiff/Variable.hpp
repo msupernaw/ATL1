@@ -123,8 +123,25 @@ namespace atl {
         }
 
         virtual REAL_T DerivativeInternal2External(REAL_T val, REAL_T min_, REAL_T max_)const {
-                        return 0.5 * ((max_ - min_) * std::cos(val));
-//            return ((max_ - min_) * std::cos(val)) / 2.0;
+            return 0.5 * ((max_ - min_) * std::cos(val));
+            //            return ((max_ - min_) * std::cos(val)) / 2.0;
+        }
+    };
+
+    template<typename REAL_T>
+    class ADMBParameterTransformation : public ParameterTransformation<REAL_T> {
+    public:
+
+        virtual REAL_T External2Internal(REAL_T val, REAL_T min_, REAL_T max_) const {
+            return std::asin(2.0 * (val - min_) / (max_ - min_) - 1.0) / (M_PI / 2.0); 
+        }
+
+        virtual REAL_T Internal2External(REAL_T val, REAL_T min_, REAL_T max_) const {
+            return min_ + (max_ - min_)*(.5 * std::sin(val * M_PI / 2.0) + .5); 
+        }
+
+        virtual REAL_T DerivativeInternal2External(REAL_T val, REAL_T min_, REAL_T max_)const {
+            return (max_-min_)*.5*M_PI/2.0*std::cos(val*M_PI/2.0);
         }
     };
 
@@ -147,13 +164,11 @@ namespace atl {
                     (::exp(2.0 * val) * ::log(M_E)*(max_ - min_)) / ::pow((::exp(val) + 1), 2.0);
         }
     };
-    
-    
 
     template<typename REAL_T, //base type
     int group = 0 > //group identifier
     class Variable : public atl::ExpressionBase<REAL_T, Variable<REAL_T, group > > {
-        static SinParameterTransformation<REAL_T> default_transformation;
+        static LogitParameterTransformation<REAL_T> default_transformation;
         VariableInfo<REAL_T>* mapped_info;
         ParameterTransformation<REAL_T>* transformation;
 
@@ -1138,7 +1153,7 @@ namespace atl {
     /* ATTRIBUTE_TLS */ GradientStructure<REAL_T> Variable<REAL_T, group>::gradient_structure_g;
 
     template<typename REAL_T, int group>
-    SinParameterTransformation<REAL_T> Variable<REAL_T, group>::default_transformation;
+    LogitParameterTransformation<REAL_T> Variable<REAL_T, group>::default_transformation;
 
 
 }

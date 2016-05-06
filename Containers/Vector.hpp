@@ -25,6 +25,7 @@
 #include "MatrixVectorOperators.hpp"
 #include "ArrayTraits.hpp"
 
+
 #include <iostream>
 #include <sstream>
 #include <initializer_list>
@@ -725,6 +726,9 @@ namespace atl {
             return this->data_m.rend();
         }
 
+        void SetName(const std::string& name){
+            
+        }
 
     };
 
@@ -736,6 +740,16 @@ namespace atl {
             this->data_m[i].SetBounds(minb, maxb);\
         }\
     }\
+    template<>\
+    void Vector<atl::Variable<TYPE> >::SetName(const std::string& name) {\
+        for (int i = 0; i < this->data_m.size(); i++) {\
+            std::stringstream ss; \
+            ss<<name<<"["<<i<<"]"; \
+            this->data_m[i].SetName(ss.str()); \
+        }\
+    }\
+    \
+   
 
 
     MAKE_VARIABLE_VECTOR_TYPE(float)
