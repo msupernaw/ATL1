@@ -323,15 +323,7 @@ namespace atl {
             for (size_t i = 0; i < s; i++) {
                 ret += expr(i) * expr(i);
             }
-            //            size_t end = (((s - 1UL) & size_t(-2)) + 1UL);
-            //            ret = expr(0) * expr(0);
-            //            for (size_t i = 1UL; i < end; i += 2UL) {
-            //                ret += expr(i) * expr(i) + expr(i + 1) * expr(i + 1);
-            //            }
-            //
-            //            if (end < s) {
-            //                ret += expr(end) * expr(end);
-            //            }
+   
         }
         return (ret);
     }

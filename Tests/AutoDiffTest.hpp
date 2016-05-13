@@ -20,6 +20,7 @@
 #include <iostream>
 #include <random>
 #include "../ATL.hpp"
+#include "../Utilities/BigFloat.hpp"
 
 #define HESSIAN_USE_AD_GRADIENT
 
@@ -2423,6 +2424,8 @@ namespace atl {
             
             template<>
             std::string TestTypeTrait<long double>::type = "long double";
+            
+
             
             void Run() {
                 typedef double real_t;

@@ -12,6 +12,8 @@
 #include <stack>
 #include <memory>
 
+#define ATL_VARIABLE_INFO_USE_MEMORY_POOL
+
 #ifdef ATL_VARIABLE_INFO_USE_MEMORY_POOL
 #include "PoolAllocator.hpp"
 #endif
@@ -20,7 +22,7 @@
 
 #include <cassert>
 #include <unordered_map>
-
+#include <atomic>
 namespace atl {
 
     /*!
@@ -32,11 +34,30 @@ namespace atl {
         std::atomic<uint32_t> available_size;
         static std::mutex mutex_g;
 
+        class SpinLock {
+            std::atomic_flag locked = ATOMIC_FLAG_INIT;
+        public:
+
+            void lock() {
+                while (locked.test_and_set(std::memory_order_acquire)) {
+                    ;
+                }
+            }
+
+            void unlock() {
+                locked.clear(std::memory_order_release);
+            }
+        };
+
+        SpinLock lock;
+
     public:
         static std::shared_ptr<VariableIdGenerator> instance();
 
         const uint32_t next() {
-            mutex_g.lock();
+#ifdef ATL_THREAD_SAFE
+            lock.lock();
+#endif
             uint32_t ret;
             if (!available.empty() > 0) {
                 ret = available.top();
@@ -47,16 +68,21 @@ namespace atl {
             }
 
 
-
-            mutex_g.unlock();
+#ifdef ATL_THREAD_SAFE
+            lock.unlock();
+#endif
             return ret; //(++_id);
         }
 
         void release(const uint32_t& id) {
-            mutex_g.lock();
+#ifdef ATL_THREAD_SAFE
+            lock.lock();
+#endif
             available.push(id);
             available_size++;
-            mutex_g.unlock();
+#ifdef ATL_THREAD_SAFE
+            lock.unlock();
+#endif
         }
 
         const uint32_t current() {
@@ -109,9 +135,6 @@ namespace atl {
             } else {
                 ret = ++_id;
             }
-
-
-
             mutex_g.unlock();
             return ret; //(++_id);
         }
@@ -209,13 +232,13 @@ namespace atl {
             typename IDSet<atl::VariableInfo<REAL_T>* >::iterator it;
             this->nldependencies.insert(vi);
             if (vi != this) {
-                if(!this->is_dependent)
-                vi->nldependencies.insert(this);
+                if (!this->is_dependent)
+                    vi->nldependencies.insert(this);
                 for (it = this->dependencies.begin(); it != this->dependencies.end(); ++it) {
-                    
-                    if ((*it)->is_dependent){
+
+                    if ((*it)->is_dependent) {
                         (*it)->PushNLDependency(vi);
-                    }else{
+                    } else {
                         vi->nldependencies.insert((*it));
                     }
                 }

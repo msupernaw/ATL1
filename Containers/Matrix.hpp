@@ -7,7 +7,7 @@
  */
 
 #ifndef MATRIX_HPP
-#define	MATRIX_HPP
+#define MATRIX_HPP
 #include "ContainerDefs.hpp"
 #if defined(ATL_CONCURRENCY_ENABLED)
 #include  "../third_party/tbb42_20140601oss/include/tbb/concurrent_vector.h"
@@ -103,6 +103,23 @@ namespace atl {
             }
             return *this;
         }
+        
+          template<class T2, class A>
+        const MatrixRowVector& operator=(const MatrixVectorExpression<T2, A> &expr)const {
+
+#ifdef ATL_ENABLE_BOUNDS_CHECKING
+            assert(jsize == expr.Size(0));
+#endif   
+
+
+            for (int i = 0; i < jsize; i++) {
+                data_m->at((row * jsize) + i) = expr(i, 0);
+            }
+
+            return *this;
+        }
+
+        
 
         inline MatrixRowVector& operator+=(const T& val) {
             for (int j = 0; j < jsize; j++) {
@@ -110,6 +127,8 @@ namespace atl {
             }
             return *this;
         }
+
+      
 
         //        inline MatrixRowVector& operator+=(const Vector &other) {
         //#ifdef ATL_ENABLE_BOUNDS_CHECKING
@@ -1289,5 +1308,5 @@ namespace atl {
     }
 
 }
-#endif	/* MATRIX_HPP */
+#endif /* MATRIX_HPP */
 

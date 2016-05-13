@@ -14,6 +14,8 @@
 #ifndef POOLALLOCATOR_HPP
 #define POOLALLOCATOR_HPP
 
+#include "../Utilities/MemoryPool.hpp"
+
 namespace atl{
     template <class T>
     class PoolAllocator {
