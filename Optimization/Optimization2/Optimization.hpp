@@ -435,15 +435,14 @@ namespace atl {
             }
             return 0;
         }
-        
-        bool IsActive(const atl::Variable<T>& v){
-            return GetActivePhase(v)<= this->phase_m;
+
+        bool IsActive(const atl::Variable<T>& v) {
+            return GetActivePhase(v) <= this->phase_m;
         }
-        
+
         bool LastPhase() {
             return this->current_phase == this->max_phase;
         }
-
 
         virtual void Objective_Function(atl::Variable<T>& ff) {
             ff = this->Evaluate();
@@ -588,6 +587,8 @@ namespace atl {
         }
 
     protected:
+        
+        
 
         void Prepare(int phase) {
             this->outer_iteration = 0;
@@ -869,6 +870,7 @@ namespace atl {
 
         void Print() {
             std::cout << "F = " << this->function_value << "\n";
+            std::cout << "Number of Parameters: " << this->hyper_parameters_m.size() << "\n";
             std::cout << " -----------------------------------------------------------------------------------\n";
             std::cout << '|' << util::center("Name", 15) << '|' << util::center("Value", 12) << '|' << util::center("Gradient", 12) << '|'
                     << util::center("Name", 15) << '|' << util::center("Value", 12) << '|' << util::center("Gradient", 12) << '|' << std::endl;

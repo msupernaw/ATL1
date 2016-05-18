@@ -1,12 +1,27 @@
 
 
 #ifndef FLAT_SET_HPP
-#define	FLAT_SET_HPP
+#define FLAT_SET_HPP
 
 
 
 #include <vector>
 #include "../AutoDiff/AlignedAllocator.hpp"
+
+
+template<class FwdIt, class T, class P>
+inline FwdIt fs_branchless_lower_bound(FwdIt begin, FwdIt end, T const &val, P pred) {
+    while (begin != end) {
+        FwdIt middle(begin);
+        std::advance(middle, std::distance(begin, end) >> 1);
+        FwdIt middle_plus_one(middle);
+        ++middle_plus_one;
+        bool const b = pred(*middle, val);
+        begin = b ? middle_plus_one : begin;
+        end = b ? end : middle;
+    }
+    return begin;
+}
 
 template <class T, class Compare = std::less<T>, class Allocator = std::allocator<T> >
 class flat_set {
@@ -20,7 +35,7 @@ public:
 
     flat_set(const Compare& c = Compare())
     : data_m(), cmp(c) {
-//                        data_m.reserve(8);
+//                                data_m.reserve(8);
     }
 
     template <class InputIterator>
@@ -72,11 +87,11 @@ public:
         return data_m.end();
     }
 
-    inline const_iterator begin() const  {
+    inline const_iterator begin() const {
         return data_m.begin();
     }
 
-    inline const_iterator end() const  {
+    inline const_iterator end() const {
         return data_m.end();
     }
 
@@ -100,14 +115,14 @@ public:
         return data_m.size();
     }
 
-    inline void reserve(size_t size){
+    inline void reserve(size_t size) {
         data_m.reserve(size);
     }
-    
-    inline std::vector<T, Allocator>& data(){
+
+    inline std::vector<T, Allocator>& data() {
         return data_m;
     }
-    
+
     inline bool contains(const T& t) {
         return std::binary_search(this->data_m.begin(), this->data_m.end(), t);
     }
@@ -116,7 +131,9 @@ public:
         data_m.clear();
     }
 
-
+    void clear_no_resize() {
+        data_m.resize(0);
+    }
 
 };
 
@@ -209,23 +226,24 @@ public:
         return begin() + i;
     }
 
-  
-
-    
-    void build(){
+    void build() {
         std::sort(impl.begin(), impl.end());
-//        impl = aux_;
+        //        impl = aux_;
         insert(0, impl.size(), impl.begin());
     }
-    
-    void push(const T& t){
+
+    void push(const T& t) {
         impl.push_back(t);
     }
-    
-    void clear(){
+
+    void clear() {
         impl.clear();
     }
-    
+
+    void clear_no_resize() {
+        impl.resize(0);
+    }
+
 private:
 
     void insert(size_type i, size_type n, const_iterator first) {
@@ -245,10 +263,10 @@ private:
     }
 
     vector impl;
- 
+
 };
 
 
 
-#endif	/* FLAT_SET_HPP */
+#endif /* FLAT_SET_HPP */
 

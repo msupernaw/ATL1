@@ -5,6 +5,33 @@
  * Created on April 7, 2015, 4:05 PM
  */
 
+
+/**
+ *
+ * @author  Matthew R. Supernaw
+ *
+ * Public Domain Notice
+ * National Oceanic And Atmospheric Administration
+ *
+ * This software is a "United States Government Work" under the terms of the
+ * United States Copyright Act.  It was written as part of the author's official
+ * duties as a United States Government employee and thus cannot be copyrighted.
+ * This software is freely available to the public for use. The National Oceanic
+ * And Atmospheric Administration and the U.S. Government have not placed any
+ * restriction on its use or reproduction.  Although all reasonable efforts have
+ * been taken to ensure the accuracy and reliability of the software and data,
+ * the National Oceanic And Atmospheric Administration and the U.S. Government
+ * do not and cannot warrant the performance warrant the performance or results
+ * that may be obtained by using this  software or data. The National Oceanic
+ * And Atmospheric Administration and the U.S. Government disclaim all
+ * warranties, express or implied, including warranties of performance,
+ * merchantability or fitness for any particular purpose.
+ *
+ * Please cite the author(s) in any work or product based on this material.
+ *
+ */
+
+
 #ifndef GRADIENTSTRUCTURE_HPP
 #define GRADIENTSTRUCTURE_HPP
 
@@ -133,16 +160,7 @@ namespace atl {
             typename std::vector<atl::VariableInfo<REAL_T>* >::iterator jt;
 
             for (jt = live_ids.begin(); jt != ee; ++jt) {
-                //                if ((*jt)->is_nl || (*jt)->has_nl_interaction) {
-                //                    for (it = ids.begin(); it != e; ++it) {
-                //                        if ((*it)->is_dependent) {
-                ////                            if((*it)->CheckDeepDependency((*jt))){
-                ////                                valid_id_list.push_back((*jt));
-                ////                                break;
-                ////                            }
-                //                        }
-                //                    }
-                //                }
+
                 valid_id_list.push_back((*jt));
                 id_list.push_back((*jt));
             }
@@ -193,19 +211,23 @@ namespace atl {
             third_mixed.resize(0);
             typename IDSet<atl::VariableInfo<REAL_T>* >::iterator it;
             typename IDSet<atl::VariableInfo<REAL_T>* >::iterator end = ids.end();
+            //if using the memory pool, these maybe deleted before reset is called
             for (it = ids.begin(); it != end; ++it) {
-                (*it)->Reset();
+                if ((*it) != NULL) {
+                    (*it)->Reset();
+                }
             }
-
-            w->Reset();
-            w = NULL;
+            if (w != NULL) {
+                w->Reset();
+                w = NULL;
+            }
             this->live_ids.clear();
 
-            if (exp) {
-                delete exp;
-                exp = NULL;
-            }
-            ids.clear();
+//            if (exp) {
+//                delete exp;
+//                exp = NULL;
+//            }
+            ids.clear_no_resize();
 
         }
 
@@ -331,10 +353,6 @@ namespace atl {
      */
     template<typename REAL_T>
     class GradientStructure {
-        DerivativeMatrix<REAL_T> somp; //second-order mixed
-        std::vector<DerivativeMatrix<REAL_T> > tomp; //third-order mixed
-        std::vector<std::vector<bool> > tompv; // third-order look up
-
         typedef typename std::map<uint32_t, REAL_T>::iterator derivative_iterator;
 
         std::map<uint32_t, std::map<uint32_t, REAL_T> > second;
@@ -367,7 +385,7 @@ namespace atl {
         GradientStructure(uint32_t size = 10000)
         : recording(true), stack_current(0), stack_begin(0),
         gradient_computed(false),
-        derivative_trace_level(GRADIENT_AND_HESSIAN) {
+        derivative_trace_level(FIRST_ORDER) {
             gradient_stack.resize(size);
             max_stack_size = size;
             max_initialized_size = 0;
@@ -416,38 +434,23 @@ namespace atl {
                 std::swap(i, j);
             }
             return this->second[i][j];
-            //            size_t ind = static_cast<size_t> (i - this->min_id);
-            //            size_t jnd = static_cast<size_t> (j - this->min_id);
-            //            return this->somp(ind, jnd);
-
         }
 
         inline REAL_T& ReferenceNoSort(uint32_t i, uint32_t j) {
 
 
             return this->second[i][j];
-            //            size_t ind = static_cast<size_t> (i - this->min_id);
-            //            size_t jnd = static_cast<size_t> (j - this->min_id);
-            //            return this->somp(ind, jnd);
-
         }
 
-        void MakeZero(uint32_t i, uint32_t j) {
+        inline void MakeZero(uint32_t i, uint32_t j) {
             if (j < i) {
                 std::swap(i, j);
             }
             this->second[i][j] = 0.0;
-            //            size_t ind = static_cast<size_t> (i - this->min_id);
-            //            size_t jnd = static_cast<size_t> (j - this->min_id);
-            //            return this->somp.remove(ind, jnd);
         }
 
-        void MakeZeroNoSort(uint32_t i, uint32_t j) {
-
+        inline void MakeZeroNoSort(uint32_t i, uint32_t j) {
             this->second[i][j] = 0.0;
-            //            size_t ind = static_cast<size_t> (i - this->min_id);
-            //            size_t jnd = static_cast<size_t> (j - this->min_id);
-            //            return this->somp.remove(ind, jnd);
         }
 
         inline REAL_T& Reference(uint32_t i, uint32_t j, uint32_t k) {
@@ -459,20 +462,13 @@ namespace atl {
             }
             if (k < j) std::swap(j, k);
             return third[i][j][k];
-            //            size_t ind = static_cast<size_t> (i - this->min_id);
-            //            return this->tomp[ind]((j - this->min_id), (k - this->min_id)); //[j][k];
-
         }
 
         inline REAL_T& ReferenceNoSort(uint32_t i, uint32_t j, uint32_t k) {
-
             return third[i][j][k];
-            //            size_t ind = static_cast<size_t> (i - this->min_id);
-            //            return this->tomp[ind]((j - this->min_id), (k - this->min_id)); //[j][k];
-
         }
 
-        void MakeZero(uint32_t i, uint32_t j, uint32_t k) {
+        inline void MakeZero(uint32_t i, uint32_t j, uint32_t k) {
             if (i < j) {
                 if (k < i) std::swap(i, k);
             } else {
@@ -481,17 +477,10 @@ namespace atl {
             }
             if (k < j) std::swap(j, k);
             third[i][j][k] = 0.0;
-
-            //            size_t ind = static_cast<size_t> (i - this->min_id);
-            //            return this->tomp[ind].remove((j - this->min_id), (k - this->min_id));
         }
 
-        void MakeZeroNoSort(uint32_t i, uint32_t j, uint32_t k) {
-
+        inline void MakeZeroNoSort(uint32_t i, uint32_t j, uint32_t k) {
             third[i][j][k] = 0.0;
-
-            //            size_t ind = static_cast<size_t> (i - this->min_id);
-            //            return this->tomp[ind].remove((j - this->min_id), (k - this->min_id));
         }
 
         inline const REAL_T Value(uint32_t i) {
@@ -513,7 +502,7 @@ namespace atl {
                 }
 
             }
-            return 0.0; //somp.value((i - this->min_id), (j - this->min_id));
+            return 0.0;
 
         }
 
@@ -529,7 +518,7 @@ namespace atl {
                 }
 
             }
-            return 0.0; //somp.value((i - this->min_id), (j - this->min_id));
+            return 0.0;
 
         }
 
@@ -559,7 +548,7 @@ namespace atl {
                 }
             }
 
-            return static_cast<REAL_T> (0.0); // this->tomp[(i - this->min_id)].value((j - this->min_id), (k - this->min_id));
+            return static_cast<REAL_T> (0.0);
 
         }
 
@@ -580,7 +569,7 @@ namespace atl {
                 }
             }
 
-            return static_cast<REAL_T> (0.0); // this->tomp[(i - this->min_id)].value((j - this->min_id), (k - this->min_id));
+            return static_cast<REAL_T> (0.0);
 
         }
 
@@ -822,8 +811,7 @@ namespace atl {
         void AccumulateSecondOrderMixed() {
 
             if (recording) {
-                this->PrepareDerivativeTables(2);
-                //                this->second_order_mixed = SecondOrderMixed(this->min_id, this->max_id);
+                //                this->PrepareDerivativeTables(2);           
 
                 REAL_T w;
                 REAL_T w2;
@@ -930,10 +918,10 @@ namespace atl {
                             entry += w * gradient_stack[i].second_mixed[j * rows + k];
 
 
-                            if (gradient_stack[i].second_mixed[j * rows + k] != 0.0) {
-                                vj->push_count = 1;
-                                vk->push_count = 1;
-                            }
+//                            if (gradient_stack[i].second_mixed[j * rows + k] != 0.0) {
+//                                vj->push_count = 1;
+//                                vk->push_count = 1;
+//                            }
 
 
 
@@ -967,10 +955,10 @@ namespace atl {
                             if (j < rows && k < rows) {
 
                                 entry += w * gradient_stack[i].second_mixed[j * rows + k];
-                                if (gradient_stack[i].second_mixed[j * rows + k] != 0.0) {
-                                    vj->push_count = 1;
-                                    vk->push_count = 1;
-                                }
+//                                if (gradient_stack[i].second_mixed[j * rows + k] != 0.0) {
+//                                    vj->push_count = 1;
+//                                    vk->push_count = 1;
+//                                }
                             }
 
 
@@ -995,7 +983,7 @@ namespace atl {
                             }
 #pragma unroll
                             for (int ii = rows; ii < ID_LIST_SIZE; ii++) {
-                                //                                gradient_stack[i - 1].PushVariable(gradient_stack[i].id_list[ii]);
+
                                 if ((!gradient_stack[i].id_list[ii]->is_dependent) && needs_push[ii]) {
                                     gradient_stack[i - 1].PushVariable(gradient_stack[i].id_list[ii]);
                                 }
@@ -1003,207 +991,6 @@ namespace atl {
                             }
 
 
-                            //                            for (int ii = 0; ii < ID_LIST_SIZE; ii++) {
-                            //                                if ((gradient_stack[i].id_list[ii]->push_start >= i)) {
-                            ////                                    gradient_stack[i - 1].PushVariable(gradient_stack[i].id_list[ii]);
-                            //                                }
-                            //
-                            //                                if ((!gradient_stack[i].id_list[ii]->is_dependent )) {
-                            ////                                    gradient_stack[i - 1].PushVariable(gradient_stack[i].id_list[ii]);
-                            //                                }
-                            //                                //
-                            //
-                            //                                //                                if ((gradient_stack[i].id_list[ii]->is_nl && gradient_stack[i].id_list[ii]->push_count >= 1)) {
-                            //                                //                                    gradient_stack[i - 1].PushVariable(gradient_stack[i].id_list[ii]);
-                            //                                //                                }
-                            //                            }
-                        }
-                        gradient_stack[i].w->dependence_level--;
-                    }
-                }
-            }
-        }
-
-        void AccumulateSecondOrderMixedDynamic() {
-
-            if (recording) {
-                this->PrepareDerivativeTables(2);
-                //                this->second_order_mixed = SecondOrderMixed(this->min_id, this->max_id);
-                std::vector<std::vector<int> > combinations;
-
-                REAL_T w;
-                REAL_T w2;
-
-
-                //initialize w
-                this->gradient_stack[stack_current - 1].w->dvalue = 1.0;
-
-
-                unsigned rows = 0; //the size of the local derivatives, anything higher was pushed from previous calculation
-
-                std::vector<REAL_T> vij; //holds current second order derivative for i wrt j
-
-
-
-                REAL_T hii = 0.0;
-                REAL_T hij = 0.0;
-                REAL_T hjk = 0;
-                REAL_T dj = 0;
-                REAL_T dk = 0;
-
-
-
-                util::CombinationsWithRepetition combos(10, 2);
-
-                for (int i = (stack_current - 1); i >= 0; i--) {
-#ifdef HESSIAN_TRACE
-                    std::cout << "\n\n\n";
-                    std::stringstream ss;
-                    int pushed_count = 0;
-#endif
-                    atl::VariableInfo<REAL_T>* vi = gradient_stack[i].w; //variable info for i
-                    w = gradient_stack[i].w->dvalue; //gradient_stack[i].w->dvalue; //set w
-                    gradient_stack[i].w->dvalue = 0; //cancel out derivative for i
-
-                    rows = gradient_stack[i].ids.size();
-
-                    //get h[i][i]
-                    hii = this->Value(vi->id, vi->id);
-                    if (hii != 0) {
-                        this->Reference(vi->id, vi->id) = 0.0;
-                    }
-
-
-                    //prepare for the hessian calculation. 
-                    //builds a list of variables to use, statement level variables come first,
-                    //then any pushed variables are after.
-                    gradient_stack[i].Prepare();
-
-                    size_t ID_LIST_SIZE = gradient_stack[i].id_list.size();
-
-                    //resize second order derivative for i wrt j
-                    vij.resize(ID_LIST_SIZE);
-                    std::vector<bool> needs_push(ID_LIST_SIZE, false);
-                    for (int j = 0; j < rows; j++) {
-                        needs_push[j] = true;
-                    }
-
-#pragma unroll
-                    for (unsigned j = 0; j < ID_LIST_SIZE; j++) {
-                        //                        std::cout << "push " << j << std::endl;
-                        atl::VariableInfo<REAL_T>* vj = gradient_stack[i].id_list[j];
-
-                        //compute gradient
-                        if (j < rows && w != REAL_T(0.0)) {
-                            vj->dvalue += w * gradient_stack[i].exp->EvaluateDerivative(vj->id);
-
-                        }
-
-                        //load second order partial derivative for i wrt j and k
-                        hij = this->Value(vi->id, vj->id);
-
-                        if (hij != 0) {
-                            this->Reference(vi->id, vj->id) = 0.0;
-                        }
-
-
-                        vij[j] = (hij);
-
-                    }
-#pragma unroll
-                    for (int j = 0; j < rows; j++) {
-                        atl::VariableInfo<REAL_T>* vj = gradient_stack[i].id_list[j];
-                        dj = gradient_stack[i].first[j];
-                        REAL_T hij = vij[j]; //h[i][j]
-#pragma unroll
-                        for (int k = j; k < rows; k++) {
-
-                            atl::VariableInfo<REAL_T>* vk = gradient_stack[i].id_list[k];
-
-                            REAL_T entry = 0.0; //the entry value for h[j][k]
-
-
-                            dk = gradient_stack[i].exp->EvaluateDerivative(vk->id);
-
-
-
-
-
-
-                            entry += vij[k] * dj + (hij * dk) + hii * dj*dk;
-
-
-                            entry += w * gradient_stack[i].second_mixed[j * rows + k];
-                            if (gradient_stack[i].second_mixed[j * rows + k] != 0.0) {
-                                vj->push_count = 1;
-                                vk->push_count = 1;
-                            }
-
-
-
-                            if (/*std::fabs(entry)*/entry != REAL_T(0.0)) {//h[j][k] needs to be updated
-                                this->Reference(vj->id, vk->id) += entry;
-                                needs_push[k] = true;
-                                needs_push[j] = true;
-                            }
-
-                        }
-
-                        for (int k = rows; k < ID_LIST_SIZE; k++) {
-
-                            atl::VariableInfo<REAL_T>* vk = gradient_stack[i].id_list[k];
-
-                            REAL_T entry = 0.0; //the entry value for h[j][k]
-
-                            dk = 0;
-
-
-
-
-
-                            entry += vij[k] * dj; // + (hij * dk) + hii * dj*dk;
-
-
-                            if (j < rows && k < rows) {
-                                REAL_T d2 = gradient_stack[i].exp->EvaluateDerivative(vj->id, vk->id);
-                                entry += w * gradient_stack[i].second_mixed[j * rows + k];
-                                if (d2 != 0.0) {
-                                    vj->push_count = 1;
-                                    vk->push_count = 1;
-                                }
-                            }
-
-
-                            if (/*std::fabs(entry)*/entry != REAL_T(0.0) && entry == entry) {//h[j][k] needs to be updated
-                                this->Reference(vj->id, vk->id) += entry;
-                                needs_push[k] = true;
-                                needs_push[j] = true;
-                            }
-
-                        }
-                    }
-                    if (gradient_stack[i].w->dependence_level > 0) {//this was a compound assignment and its dependencies must be pushed
-                        if (i > 0) {
-
-                            for (int ii = 0; ii < rows; ii++) {
-                                gradient_stack[i - 1].PushVariable(gradient_stack[i].id_list[ii]);
-                            }
-
-#pragma unroll
-
-                            for (int ii = rows; ii < ID_LIST_SIZE; ii++) {
-                                if ((gradient_stack[i].id_list[ii]->has_nl_interaction
-                                        && gradient_stack[i].id_list[ii]->push_start >= i)) {
-                                    gradient_stack[i - 1].PushVariable(gradient_stack[i].id_list[ii]);
-                                }
-
-                                if ((!gradient_stack[i].id_list[ii]->is_dependent && needs_push[ii])) {
-                                    gradient_stack[i - 1].PushVariable(gradient_stack[i].id_list[ii]);
-                                }
-                                if ((gradient_stack[i].id_list[ii]->is_nl && gradient_stack[i].id_list[ii]->push_count >= 1)) {
-                                    gradient_stack[i - 1].PushVariable(gradient_stack[i].id_list[ii]);
-                                }
-                            }
                         }
                         gradient_stack[i].w->dependence_level--;
                     }
@@ -1216,7 +1003,7 @@ namespace atl {
 
             if (recording) {
 
-                this->PrepareDerivativeTables(3);
+                //                this->PrepareDerivativeTables(3);
 
 
                 REAL_T w;
@@ -1248,12 +1035,11 @@ namespace atl {
 
 
                 for (int i = (stack_current - 1); i >= 0; i--) {
-                    //                    std::cout << "------------------------------------------------\nI = " << i << "\n";
+
                     atl::VariableInfo<REAL_T>* vi = gradient_stack[i].w; //variable info for i
                     w = gradient_stack[i].w->dvalue; //set w
                     gradient_stack[i].w->dvalue = 0; //cancel out derivative for i
-                    //                    std::cout << "W = " << gradient_stack[i].w->name << "\n";
-//                    gradient_stack[i].w->ShowNL();
+
                     rows = gradient_stack[i].first.size();
 
                     //get h[i][i]
@@ -1285,9 +1071,7 @@ namespace atl {
                     vijk_.resize(ID_LIST_SIZE * ID_LIST_SIZE);
 
                     std::vector<bool> needs_push(ID_LIST_SIZE, false);
-                    //                    for (int j = 0; j < rows; j++) {
-                    //                        needs_push[j] = true;
-                    //                    }
+
 
                     std::map<uint32_t, IDSet<atl::VariableInfo<REAL_T>* > > mattered_with;
 
@@ -1302,46 +1086,21 @@ namespace atl {
                     atl::VariableInfo<REAL_T>* vl;
                     //prepare higher order stuff
 #pragma unroll
-                    //                    if (ID_LIST_SIZE > 50) {
-                    //
-                    //                        // vector container stores threads
-                    //
-                    //                        std::vector<std::thread> workers;
-                    //                        int nt = std::thread::hardware_concurrency();
-                    //                        int range = ID_LIST_SIZE / nt;
-                    //                        for (int t = 0; t < nt; t++) {
-                    //                            int start = range*t;
-                    //                            int end;
-                    //                            t == (nt - 1) ? end = (range * (t + 1)) : end = ID_LIST_SIZE;
-                    //                            //int start, int end, std::vector<T>& vij, std::vector<T>& viij_,
-                    //                            //            std::vector<T>& vijk_, int ID_LIST_SIZE, int i, atl::VariableInfo<T>* vi, 
-                    //                            //            StackEntry<T>& entry, atl::GradientStructure<T>* gs
-                    //                            workers.push_back(std::thread(&PrepareThread<REAL_T>, start,
-                    //                                    end, std::ref(vij), std::ref(viij_), std::ref(vijk_), ID_LIST_SIZE, vi, std::ref(gradient_stack[i]), this));
-                    //                          
-                    //                        }
-                    //
-                    //                        for(int t =0; t < workers.size(); t++){
-                    //                            workers[t].join();
-                    //                        }
-                    //
-                    //                    } else {
+
                     for (unsigned j = 0; j < ID_LIST_SIZE; j++) {
 
                         vj = gradient_stack[i].valid_id_list[j];
-                        //                        std::cout << vj->name << "  ";
+
                         //load second order partial derivative for i wrt j and k
                         vij[j] = Value(vi->id, vj->id);
 
                         if (std::fabs(vij[j]) > 0.0) {
-                            //                            Reference(vi->id, vj->id) = 0.0;
                             MakeZero(vi->id, vj->id);
                         }
 
                         viij_[j] = Value(vi->id, vi->id, vj->id);
 
                         if (std::fabs(viij_[j]) > 0.0) {
-                            //                            Reference(vi->id, vi->id, vj->id) = 0.0;
                             MakeZero(vi->id, vi->id, vj->id);
                         }
 
@@ -1353,16 +1112,15 @@ namespace atl {
                             vijk_[(j * ID_LIST_SIZE) + k] = Value(vi->id, vj->id, vk->id);
 
                             if (vijk_[(j * ID_LIST_SIZE) + k] != 0.0) {
-                                //                                Reference(vi->id, vj->id, vk->id) = 0.0;
+
                                 MakeZero(vi->id, vj->id, vk->id);
 
                             }
                             vijk_[(k * ID_LIST_SIZE) + j] = vijk_[(j * ID_LIST_SIZE) + k]; // dijk;
                         }
                     }
-                    //                    }
 
-                    //                    std::cout << "\n";
+
                     REAL_T entry;
                     REAL_T hdk;
                     REAL_T hdj;
@@ -1394,7 +1152,7 @@ namespace atl {
 
 
                                     entry += w * gradient_stack[i].second_mixed[k * rows + l];
-                                    
+
 
                                     if (entry != entry) {
                                         std::cout << "Derivative signaling NaN\n";
@@ -1402,13 +1160,7 @@ namespace atl {
                                     }
                                     if (/*std::fabs(entry)*/entry != REAL_T(0.0)) {//h[j][k] needs to be updated
                                         this->Reference(vk->id, vl->id) += entry;
-                                        //                                        needs_push[k] = true;
                                         needs_push[l] = true;
-                                        
-                                        //          
-                                        //                                        std::cout << "[" << vk->name << ", " << vl->name << "] += " << entry << "\n";
-
-                                        //                                        mattered_with[vk->id].insert(vl);
                                     }
                                 }
 
@@ -1427,13 +1179,9 @@ namespace atl {
                                     }
                                     if (entry != REAL_T(0.0)) {//h[j][k] needs to be updated
                                         Reference(vk->id, vl->id) += entry;
-                                        //                                        vl->push_count++;
-                                        //                                        needs_push[k] = true;
                                         needs_push[l] = true;
-                                                                                needs_push[k] = true;
+                                        needs_push[k] = true;
 
-                                        //                                                                                mattered_with[vk->id].insert(vl);
-                                        //                                        std::cout << "[" << vk->name << ", " << vl->name << "] += " << entry << "\n";
 
                                     }
                                 }
@@ -1464,9 +1212,6 @@ namespace atl {
                                         + (pkl * vij[j])
                                         + (dk * dl * viij_[j])
                                         + (pjk * dl * hii);
-                                if (d3 != 0.0) {
-                                    //                                    vl->push_count++;
-                                }
 
 
                                 entry_3 += (pjk * vij[l])
@@ -1481,11 +1226,6 @@ namespace atl {
 
                                 if (entry_3 != 0.0) {
                                     Reference(vj->id, vk->id, vl->id) += entry_3;
-                                                                            
-                                                                            
-
-                                    //                                    std::cout << "[" << vj->name << ", " << vk->name << ", " << vl->name << "] += " << entry_3 << "\n";
-
                                 }
 
                             }
@@ -1508,19 +1248,14 @@ namespace atl {
 
 
                                 entry_3 += dj * (vijk_[(k * ID_LIST_SIZE + l)] + (dk * viij_[l]));
-                                
+
                                 if (entry_3 != entry_3) {
                                     std::cout << "Derivative signaling NaN\n";
-                                    //                                    exit(0);
                                 }
                                 if (entry_3 != 0.0) {
                                     Reference(vj->id, vk->id, vl->id) += entry_3;
                                     needs_push[l] = true;
-                                                                            needs_push[k] = true;
-
-                                    //                                    std::cout << "[" << vj->name << ", " << vk->name << ", " << vl->name << "] += " << entry_3 << "\n";
-
-                                    //                                    mattered_with[vk->id].insert(vl);
+                                    needs_push[k] = true;
                                 }
 
                             }
@@ -1537,15 +1272,11 @@ namespace atl {
 
                                     if (entry_3 != entry_3) {
                                         std::cout << "Derivative signaling NaN\n";
-                                        //                                        exit(0);
                                     }
                                     if (entry_3 != 0.0) {
                                         Reference(vj->id, vk->id, vl->id) += entry_3;
                                         needs_push[l] = true;
                                         needs_push[k] = true;
-                                        //                                        std::cout << "[" << vj->name << ", " << vk->name << ", " << vl->name << "] += " << entry_3 << "\n";
-                                        //                                        mattered_with[vk->id].insert(vl);
-                                        //                                        vl->push_count++;
                                     }
 
                                 }
@@ -1559,14 +1290,13 @@ namespace atl {
 
                     if (gradient_stack[i].w->dependence_level > 0) {//this was a compound assignment and its dependencies must be pushed
                         if (i > 0) {
-                           
+
                             for (int ii = 0; ii < rows; ii++) {
                                 gradient_stack[i - 1].PushVariable(gradient_stack[i].id_list[ii]);
 
                             }
 
                             for (int ii = rows; ii < ID_LIST_SIZE; ii++) {
-                                //                                gradient_stack[i - 1].PushVariable(gradient_stack[i].id_list[ii]);
                                 if ((!gradient_stack[i].id_list[ii]->is_dependent) && needs_push[ii]) {
                                     gradient_stack[i - 1].PushVariable(gradient_stack[i].id_list[ii]);
                                 }
@@ -1577,8 +1307,8 @@ namespace atl {
                         gradient_stack[i].w->dependence_level--;
                     }
                 }
-                
-              
+
+
             }
 
         }
@@ -1602,21 +1332,23 @@ namespace atl {
             if (max_initialized_size < stack_current) {
                 max_initialized_size = stack_current;
             }
-            this->second.clear();
-            this->third.clear();
+            if (this->second.size()) {
+                this->second.clear();
+                this->third.clear();
+            }
 #pragma unroll
             for (int i = (stack_current - 1); i >= 0; i--) {
                 this->gradient_stack[i].Reset();
             }
-
-            initialized_variables_iterator it;
-            for (it = this->initialized_variables.begin(); it != this->initialized_variables.end();) {
-                if ((*it).second.w->count == 0) {
-                    this->initialized_variables.erase(it++);
-                } else {
-                    ++it;
-                }
-            }
+            //
+            //            initialized_variables_iterator it;
+            //            for (it = this->initialized_variables.begin(); it != this->initialized_variables.end();) {
+            //                if ((*it).second.w->count == 0) {
+            //                    this->initialized_variables.erase(it++);
+            //                } else {
+            //                    ++it;
+            //                }
+            //            }
 
             if (empty_trash) {
                 VariableInfo<REAL_T>::FreeAll();
@@ -1631,7 +1363,7 @@ namespace atl {
 
 
 
-                max_id = 0; //atl::VariableIdGenerator::instance()->current(); //std::numeric_limits<uint32_t>::min();
+                max_id = 0;
                 min_id = std::numeric_limits<uint32_t>::max();
 
                 for (int i = 0; i < this->stack_current; i++) {

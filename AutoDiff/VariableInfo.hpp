@@ -5,8 +5,35 @@
  * Created on April 8, 2015, 12:12 PM
  */
 
-#ifndef DERIVATIVEPOINTER_HPP
-#define DERIVATIVEPOINTER_HPP
+
+/**
+ *
+ * @author  Matthew R. Supernaw
+ *
+ * Public Domain Notice
+ * National Oceanic And Atmospheric Administration
+ *
+ * This software is a "United States Government Work" under the terms of the
+ * United States Copyright Act.  It was written as part of the author's official
+ * duties as a United States Government employee and thus cannot be copyrighted.
+ * This software is freely available to the public for use. The National Oceanic
+ * And Atmospheric Administration and the U.S. Government have not placed any
+ * restriction on its use or reproduction.  Although all reasonable efforts have
+ * been taken to ensure the accuracy and reliability of the software and data,
+ * the National Oceanic And Atmospheric Administration and the U.S. Government
+ * do not and cannot warrant the performance warrant the performance or results
+ * that may be obtained by using this  software or data. The National Oceanic
+ * And Atmospheric Administration and the U.S. Government disclaim all
+ * warranties, express or implied, including warranties of performance,
+ * merchantability or fitness for any particular purpose.
+ *
+ * Please cite the author(s) in any work or product based on this material.
+ *
+ */
+
+
+#ifndef VARIABLEINFO_HPP
+#define VARIABLEINFO_HPP
 #include <atomic>
 #include <mutex>
 #include <stack>
@@ -193,10 +220,10 @@ namespace atl {
         IDSet<atl::VariableInfo<REAL_T>* > dependencies;
         IDSet<atl::VariableInfo<REAL_T>* > nldependencies;
         uint32_t id;
-        uint32_t push_start = 0; //the beginning of nonlinear interaction
+        //        uint32_t push_start = 0; //the beginning of nonlinear interaction
         std::string name;
-        int push_count = 0;
-        int push_mattered = 0;
+        ////        int push_count = 0;
+        ////        int push_mattered = 0;
         bool has_nl_interaction = false;
         bool is_nl = false;
 
@@ -273,22 +300,29 @@ namespace atl {
         inline void Reset() {
             this->dvalue = 0;
             this->dependence_level = 1;
-            this->is_dependent = 0;
-            this->push_count = 0;
-            push_start = 0;
-            push_mattered = 0;
-            this->has_nl_interaction = false;
+            if (this->is_dependent) {
+                this->is_dependent = 0;
+                this->dependencies.clear();
+            }
+            if (this->has_nl_interaction) {
+                this->has_nl_interaction = false;
+                this->nldependencies.clear();
+            }
             this->is_nl = false;
-            this->dependencies.clear();
-            this->nldependencies.clear();
+            //            this->push_count = 0;
+            //            push_start = 0;
+            //            push_mattered = 0;
+
         }
 
         static void FreeAll() {
 #pragma unroll
             for (int i = 0; i < freed.size(); i++) {
+                if(freed[i]!=NULL){//memory pool may have destructed first
                 VariableIdGenerator::instance()->release(freed[i]->id);
                 freed[i]->vvalue = 0;
                 delete freed[i];
+                }
             }
             freed.resize(0);
         }

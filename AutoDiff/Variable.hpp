@@ -5,6 +5,32 @@
  * Created on September 24, 2014, 1:09 PM
  */
 
+/**
+ *
+ * @author  Matthew R. Supernaw
+ *
+ * Public Domain Notice
+ * National Oceanic And Atmospheric Administration
+ *
+ * This software is a "United States Government Work" under the terms of the
+ * United States Copyright Act.  It was written as part of the author's official
+ * duties as a United States Government employee and thus cannot be copyrighted.
+ * This software is freely available to the public for use. The National Oceanic
+ * And Atmospheric Administration and the U.S. Government have not placed any
+ * restriction on its use or reproduction.  Although all reasonable efforts have
+ * been taken to ensure the accuracy and reliability of the software and data,
+ * the National Oceanic And Atmospheric Administration and the U.S. Government
+ * do not and cannot warrant the performance warrant the performance or results
+ * that may be obtained by using this  software or data. The National Oceanic
+ * And Atmospheric Administration and the U.S. Government disclaim all
+ * warranties, express or implied, including warranties of performance,
+ * merchantability or fitness for any particular purpose.
+ *
+ * Please cite the author(s) in any work or product based on this material.
+ *
+ */
+
+
 #ifndef ET4AD_VARIABLE_HPP
 #define ET4AD_VARIABLE_HPP
 
@@ -133,15 +159,15 @@ namespace atl {
     public:
 
         virtual REAL_T External2Internal(REAL_T val, REAL_T min_, REAL_T max_) const {
-            return std::asin(2.0 * (val - min_) / (max_ - min_) - 1.0) / (M_PI / 2.0); 
+            return std::asin(2.0 * (val - min_) / (max_ - min_) - 1.0) / (M_PI / 2.0);
         }
 
         virtual REAL_T Internal2External(REAL_T val, REAL_T min_, REAL_T max_) const {
-            return min_ + (max_ - min_)*(.5 * std::sin(val * M_PI / 2.0) + .5); 
+            return min_ + (max_ - min_)*(.5 * std::sin(val * M_PI / 2.0) + .5);
         }
 
         virtual REAL_T DerivativeInternal2External(REAL_T val, REAL_T min_, REAL_T max_)const {
-            return (max_-min_)*.5*M_PI/2.0*std::cos(val*M_PI/2.0);
+            return (max_ - min_)*.5 * M_PI / 2.0 * std::cos(val * M_PI / 2.0);
         }
     };
 
@@ -181,301 +207,490 @@ namespace atl {
         inline void Assign_p(atl::GradientStructure<REAL_T>& gs, const atl::ExpressionBase<REAL_T, A>& exp) {
             if (gs.recording) {
 
-                std::vector<atl::VariableInfo<REAL_T>* > ids;
+                //                std::vector<atl::VariableInfo<REAL_T>* > ids;
                 size_t index = gs.NextIndex();
                 StackEntry<REAL_T>& entry = gs.gradient_stack[index];
 
 
                 typename IDSet<atl::VariableInfo<REAL_T>* >::iterator it;
-                typename IDSet<atl::VariableInfo<REAL_T>* >::iterator jt;
-                typename IDSet<atl::VariableInfo<REAL_T>* >::iterator kt;
-                typename IDSet<atl::VariableInfo<REAL_T>* >::iterator dt;
+
+                //                typename IDSet<atl::VariableInfo<REAL_T>* >::iterator dt;
 
                 exp.PushIds(entry.ids);
                 entry.first.resize(entry.ids.size());
                 REAL_T dx = 0.0;
-                REAL_T dxx = 0.0;
-                REAL_T dxxx = 0.0;
+
                 int i, j, k;
-                util::CombinationsWithRepetition combos(0, 0);
+                //                util::CombinationsWithRepetition combos(0, 0);
 
 
-                switch (gs.derivative_trace_level) {
-
-                        this->info->is_dependent++;
-                    case FIRST_ORDER:
-                        i = 0;
-                        entry.w = this->info;
-                        for (it = entry.ids.begin(); it != entry.ids.end(); ++it) {
-                            if ((*it)->id > gs.max_id) {
-                                gs.max_id = (*it)->id;
-                            }
-                            if ((*it)->id < gs.min_id) {
-                                gs.min_id = (*it)->id;
-                            }
-                            dx = exp.EvaluateDerivative((*it)->id);
-
-                            entry.first[i] = dx;
-                            i++;
-                        }
-                        break;
-                    case SECOND_ORDER:
-                        std::cout << "\"SECOND_ORDER\" not yet available!\n" << std::flush;
-                        exit(0);
-                        i = 0;
-                        entry.w = this->info;
-                        entry.second.resize(entry.ids.size());
-                        for (it = entry.ids.begin(); it != entry.ids.end(); ++it) {
-                            dx = exp.EvaluateDerivative((*it)->id);
-                            dxx = exp.EvaluateDerivative((*it)->id, (*it)->id);
-                            entry.first[i] = dx;
-                            entry.second[i] = dxx;
-                            i++;
-                        }
-                        break;
-                    case THIRD_ORDER:
-                        std::cout << "\"THIRD_ORDER\" not yet available!\n" << std::flush;
-                        exit(0);
-                        i = 0;
-                        entry.w = this->info;
-                        entry.second.resize(entry.ids.size());
-                        entry.third.resize(entry.ids.size());
-                        for (it = entry.ids.begin(); it != entry.ids.end(); ++it) {
-                            (*it)->dependence_level++;
-                            dx = exp.EvaluateDerivative((*it)->id);
-                            dxx = exp.EvaluateDerivative((*it)->id, (*it)->id);
-                            dxxx = exp.EvaluateDerivative((*it)->id, (*it)->id, (*it)->id);
-                            entry.first[i] = dx;
-                            entry.second[i] = dxx;
-                            entry.third[i] = dxxx;
-                            i++;
-                        }
-                        break;
-                    case SECOND_ORDER_MIXED_PARTIALS:
-
-                        i = 0;
-                        entry.w = new VariableInfo<REAL_T>();
-                        entry.w->is_dependent = 1;
-                        entry.w->is_nl = exp.IsNonFunction();
-                        entry.second_mixed.resize(entry.ids.size() * entry.ids.size());
-                        exp.MakeNLInteractions();
-
-                        //                        for (it = entry.ids.begin(); it != entry.ids.end(); ++it) {
-                        //
-                        //                            if ((*it)->is_dependent) {
-                        //                                for(dt = (*it)->dependencies.begin(); dt != (*it)->dependencies.end(); ++dt){
-                        //                                    if(!(*dt)->is_dependent){
-                        //                                        entry.w->dependencies.insert((*dt));
-                        //                                    }
-                        //                                }
+                if (gs.derivative_trace_level == FIRST_ORDER || gs.derivative_trace_level == GRADIENT) {
+                    i = 0;
+                    entry.w = this->info;
+                    for (it = entry.ids.begin(); it != entry.ids.end(); ++it) {
+                        //                            if ((*it)->id > gs.max_id) {
+                        //                                gs.max_id = (*it)->id;
                         //                            }
-                        //                            
-                        //                        }
+                        //                            if ((*it)->id < gs.min_id) {
+                        //                                gs.min_id = (*it)->id;
+                        //                            }
+                        dx = exp.EvaluateDerivative((*it)->id);
+
+                        entry.first[i] = dx;
+                        i++;
+                    }
+                } else if (gs.derivative_trace_level == SECOND_ORDER_MIXED_PARTIALS|| gs.derivative_trace_level == GRADIENT_AND_HESSIAN) {
+                    i = 0;
+                    entry.w = new VariableInfo<REAL_T>();
+                    entry.w->is_dependent = 1;
+                    entry.w->is_nl = exp.IsNonFunction();
+                    entry.second_mixed.resize(entry.ids.size() * entry.ids.size());
+                    exp.MakeNLInteractions();
+
+                    //                        for (it = entry.ids.begin(); it != entry.ids.end(); ++it) {
+                    //
+                    //                            if ((*it)->is_dependent) {
+                    //                                for(dt = (*it)->dependencies.begin(); dt != (*it)->dependencies.end(); ++dt){
+                    //                                    if(!(*dt)->is_dependent){
+                    //                                        entry.w->dependencies.insert((*dt));
+                    //                                    }
+                    //                                }
+                    //                            }
+                    //                            
+                    //                        }
 
 
 
-                        for (it = entry.ids.begin(); it != entry.ids.end(); ++it) {
-
-
-                            if ((*it) != entry.w) {
-                                entry.w->dependencies.insert((*it));
-                            }
-
-
-                            (*it)->dependence_level++;
-                            dx = exp.EvaluateDerivative((*it)->id);
-
-                            entry.first[i] = dx;
-                            j = 0;
-
-                            if (((*it)->is_nl) || (*it)->has_nl_interaction) {
-
-                                for (jt = entry.ids.begin(); jt != entry.ids.end(); ++jt) {
-
-                                    dxx = exp.EvaluateDerivative((*it)->id, (*jt)->id);
-                                    entry.second_mixed[i * entry.first.size() + j] = dxx;
-                                    //                                    if (i > 0 && i != j) {
-                                    entry.second_mixed[j * entry.first.size() + i] = dxx;
-
-                                    if (dxx != 0.0) {
-                                        (*it)->PushNLDependency((*jt));
-                                    }
-
-
-                                    //                                    }
-
-                                    j++;
-                                }
-
-                            } else {
-                                for (jt = entry.ids.begin(); jt != entry.ids.end(); ++jt) {
-                                    dxx = exp.EvaluateDerivative((*it)->id, (*jt)->id);
-                                    entry.second_mixed[i * entry.first.size() + j] = dxx;
-                                    //                                    if (i > 0 && i != j) {
-                                    entry.second_mixed[j * entry.first.size() + i] = dxx;
-
-                                    //                                    }
-
-                                    j++;
-                                }
-                            }
-                            i++;
+                    for (it = entry.ids.begin(); it != entry.ids.end(); ++it) {
+                        REAL_T dxx = 0.0;
+                        typename IDSet<atl::VariableInfo<REAL_T>* >::iterator jt;
+                        if ((*it) != entry.w) {
+                            entry.w->dependencies.insert((*it));
                         }
 
 
-                        this->info->Release();
-                        this->info = entry.w;
-                        this->info->dependence_level++;
-                        break;
-                    case THIRD_ORDER_MIXED_PARTIALS:
-                        //Uses the extended Clairaut’s Theorem here. We expect our functions to be 
-                        //continuous, therefore f_xyz = f_zxy = f_zyx and so on,
-                        //this will speed up the evaluation.
+                        (*it)->dependence_level++;
+                        dx = exp.EvaluateDerivative((*it)->id);
 
-                        entry.w = new VariableInfo<REAL_T>();
-                        entry.w->is_dependent = 1;
-                        entry.w->is_nl = exp.IsNonFunction();
-                        entry.second_mixed.resize(entry.ids.size() * entry.ids.size());
-                        entry.third_mixed.resize(entry.ids.size() * entry.ids.size() * entry.ids.size());
-                        i = 0;
+                        entry.first[i] = dx;
+                        j = 0;
 
-                        exp.MakeNLInteractions();
+                        if (((*it)->is_nl) || (*it)->has_nl_interaction) {
 
+                            for (jt = entry.ids.begin(); jt != entry.ids.end(); ++jt) {
 
-                        for (it = entry.ids.begin(); it != entry.ids.end(); ++it) {
+                                dxx = exp.EvaluateDerivative((*it)->id, (*jt)->id);
+                                entry.second_mixed[i * entry.first.size() + j] = dxx;
+                                //                                    if (i > 0 && i != j) {
+                                entry.second_mixed[j * entry.first.size() + i] = dxx;
 
-                            if ((*it) != entry.w) {
-                                entry.w->dependencies.insert((*it));
-                            }
-                            (*it)->dependence_level++;
-                            dx = exp.EvaluateDerivative((*it)->id);
-                            //                            if ((((*it)->has_nl_interaction && !(*it)->is_dependent) || (*it)->is_nl) && dx != 0.0) {
-                            //                                (*it)->push_start = index;
-                            //                            }
-                            //                            if (!(*it)->is_dependent ) {
-                            //                                (*it)->push_start = index;
-                            //                            }
-                            entry.first[i] = dx;
-                            j = 0;
-                            if (((*it)->is_nl) || (*it)->has_nl_interaction) {
-
-                                for (jt = entry.ids.begin(); jt != entry.ids.end(); ++jt) {
-
-                                    dxx = exp.EvaluateDerivative((*it)->id, (*jt)->id);
-                                    entry.second_mixed[i * entry.first.size() + j] = dxx;
-                                    //                                    if (i > 0 && i != j) {
-                                    entry.second_mixed[j * entry.first.size() + i] = dxx;
-
-                                    if (dxx != 0.0) {
-                                        (*it)->PushNLDependency((*jt));
-                                    }
-
-
-                                    //                                    }
-                                    k = 0;
-                                    for (kt = entry.ids.begin(); kt != entry.ids.end(); ++kt) {
-                                        dxxx = exp.EvaluateDerivative((*it)->id, (*jt)->id, (*kt)->id);
-                                        entry.third_mixed[i * entry.first.size() * entry.first.size() + j * entry.first.size() + k] = dxxx;
-
-                                        k++;
-                                    }
-
-                                    j++;
+                                if (dxx != 0.0) {
+                                    (*it)->PushNLDependency((*jt));
                                 }
 
-                            } else {
-                                for (jt = entry.ids.begin(); jt != entry.ids.end(); ++jt) {
-                                    dxx = exp.EvaluateDerivative((*it)->id, (*jt)->id);
-                                    entry.second_mixed[i * entry.first.size() + j] = dxx;
-                                    //                                    if (i > 0 && i != j) {
-                                    entry.second_mixed[j * entry.first.size() + i] = dxx;
 
-                                    //
-                                    //                                    }
-                                    k = 0;
-                                    for (kt = entry.ids.begin(); kt != entry.ids.end(); ++kt) {
-                                        dxxx = exp.EvaluateDerivative((*it)->id, (*jt)->id, (*kt)->id);
-                                        entry.third_mixed[i * entry.first.size() * entry.first.size() + j * entry.first.size() + k] = dxxx;
-                                        k++;
-                                    }
+                                //                                    }
 
-                                    j++;
-                                }
+                                j++;
                             }
-                            i++;
-                        }
 
-                        //                        for (it = entry.ids.begin(); it != entry.ids.end(); ++it) {
-                        //                            ids.push_back((*it));
-                        //                        }
-                        //                        combos.Reset(entry.ids.size(), 3);
-                        //
-                        //                        do {
-                        //
-                        //                            dxxx = exp.EvaluateDerivative(ids[combos[0]]->id, ids[combos[1]]->id, ids[combos[2]]->id);
-                        //                            entry.third_mixed[combos[0] * ids.size() * ids.size() + combos[1] * ids.size() + combos[2]] = dxxx;
-                        //                            entry.third_mixed[combos[0] * ids.size() * ids.size() + combos[2] * ids.size() + combos[1]] = dxxx;
-                        //                            entry.third_mixed[combos[1] * ids.size() * ids.size() + combos[2] * ids.size() + combos[0]] = dxxx;
-                        //                            entry.third_mixed[combos[1] * ids.size() * ids.size() + combos[0] * ids.size() + combos[2]] = dxxx;
-                        //                            entry.third_mixed[combos[2] * ids.size() * ids.size() + combos[1] * ids.size() + combos[0]] = dxxx;
-                        //                            entry.third_mixed[combos[2] * ids.size() * ids.size() + combos[0] * ids.size() + combos[1]] = dxxx;
-                        //                        } while (combos.Next());
-
-                        this->info->Release();
-                        this->info = entry.w;
-
-                        break;
-                    case GRADIENT:
-
-                        i = 0;
-                        entry.w = this->info;
-                        for (it = entry.ids.begin(); it != entry.ids.end(); ++it) {
-                            dx = exp.EvaluateDerivative((*it)->id);
-                            entry.first[i] = dx;
-                            i++;
-                        }
-                        break;
-                    case GRADIENT_AND_HESSIAN:
-                        i = 0;
-                        entry.w = new VariableInfo<REAL_T>();
-                        entry.second_mixed.resize(entry.ids.size() * entry.ids.size());
-
-                        for (it = entry.ids.begin(); it != entry.ids.end(); ++it) {
-                            (*it)->dependence_level++;
-
-                            dx = exp.EvaluateDerivative((*it)->id);
-                            entry.first[i] = dx;
-                            j = 0;
+                        } else {
                             for (jt = entry.ids.begin(); jt != entry.ids.end(); ++jt) {
                                 dxx = exp.EvaluateDerivative((*it)->id, (*jt)->id);
                                 entry.second_mixed[i * entry.first.size() + j] = dxx;
-                                if (i > 0 && i != j) {
-                                    entry.second_mixed[j * entry.first.size() + i] = dxx;
-                                }
-                                if (j == i) {
-                                    break;
-                                }
+                                //                                    if (i > 0 && i != j) {
+                                entry.second_mixed[j * entry.first.size() + i] = dxx;
+
+                                //                                    }
+
                                 j++;
                             }
-                            i++;
                         }
-                        this->info->Release();
-                        this->info = entry.w;
-                        break;
-                    case DYNAMIC_RECORD:
-                        entry.w = this->info; //new VariableInfo<REAL_T>();
-                        for (it = entry.ids.begin(); it != entry.ids.end(); ++it) {
-                            (*it)->dependence_level++;
+                        i++;
+                    }
+
+
+                    this->info->Release();
+                    this->info = entry.w;
+                    this->info->dependence_level++;
+                } else if (gs.derivative_trace_level == THIRD_ORDER_MIXED_PARTIALS) {
+                    //Uses the extended Clairaut’s Theorem here. We expect our functions to be 
+                    //continuous, therefore f_xyz = f_zxy = f_zyx and so on,
+                    //this will speed up the evaluation.
+                    typename IDSet<atl::VariableInfo<REAL_T>* >::iterator jt;
+                    typename IDSet<atl::VariableInfo<REAL_T>* >::iterator kt;
+                    REAL_T dxx = 0.0;
+                    REAL_T dxxx = 0.0;
+                    entry.w = new VariableInfo<REAL_T>();
+                    entry.w->is_dependent = 1;
+                    entry.w->is_nl = exp.IsNonFunction();
+                    entry.second_mixed.resize(entry.ids.size() * entry.ids.size());
+                    entry.third_mixed.resize(entry.ids.size() * entry.ids.size() * entry.ids.size());
+                    i = 0;
+
+                    exp.MakeNLInteractions();
+
+
+                    for (it = entry.ids.begin(); it != entry.ids.end(); ++it) {
+
+                        if ((*it) != entry.w) {
+                            entry.w->dependencies.insert((*it));
                         }
-                        entry.exp = exp.GetDynamicExpession();
-                        //                        std::cout << "\"DYNAMIC_RECORD\" not yet available!\n" << std::flush;
-                        //                        exit(0);
-                        break;
-                    default:
-                        std::cout << "Unkown derivative trace level.";
-                        exit(0);
+                        (*it)->dependence_level++;
+                        dx = exp.EvaluateDerivative((*it)->id);
+                        //                            if ((((*it)->has_nl_interaction && !(*it)->is_dependent) || (*it)->is_nl) && dx != 0.0) {
+                        //                                (*it)->push_start = index;
+                        //                            }
+                        //                            if (!(*it)->is_dependent ) {
+                        //                                (*it)->push_start = index;
+                        //                            }
+                        entry.first[i] = dx;
+                        j = 0;
+                        if (((*it)->is_nl) || (*it)->has_nl_interaction) {
+
+                            for (jt = entry.ids.begin(); jt != entry.ids.end(); ++jt) {
+
+                                dxx = exp.EvaluateDerivative((*it)->id, (*jt)->id);
+                                entry.second_mixed[i * entry.first.size() + j] = dxx;
+                                //                                    if (i > 0 && i != j) {
+                                entry.second_mixed[j * entry.first.size() + i] = dxx;
+
+                                if (dxx != 0.0) {
+                                    (*it)->PushNLDependency((*jt));
+                                }
+
+
+                                //                                    }
+                                k = 0;
+                                for (kt = entry.ids.begin(); kt != entry.ids.end(); ++kt) {
+                                    dxxx = exp.EvaluateDerivative((*it)->id, (*jt)->id, (*kt)->id);
+                                    entry.third_mixed[i * entry.first.size() * entry.first.size() + j * entry.first.size() + k] = dxxx;
+
+                                    k++;
+                                }
+
+                                j++;
+                            }
+
+                        } else {
+                            for (jt = entry.ids.begin(); jt != entry.ids.end(); ++jt) {
+                                dxx = exp.EvaluateDerivative((*it)->id, (*jt)->id);
+                                entry.second_mixed[i * entry.first.size() + j] = dxx;
+                                //                                    if (i > 0 && i != j) {
+                                entry.second_mixed[j * entry.first.size() + i] = dxx;
+
+                                //
+                                //                                    }
+                                k = 0;
+                                for (kt = entry.ids.begin(); kt != entry.ids.end(); ++kt) {
+                                    dxxx = exp.EvaluateDerivative((*it)->id, (*jt)->id, (*kt)->id);
+                                    entry.third_mixed[i * entry.first.size() * entry.first.size() + j * entry.first.size() + k] = dxxx;
+                                    k++;
+                                }
+
+                                j++;
+                            }
+                        }
+                        i++;
+                    }
+
+                    //                        for (it = entry.ids.begin(); it != entry.ids.end(); ++it) {
+                    //                            ids.push_back((*it));
+                    //                        }
+                    //                        combos.Reset(entry.ids.size(), 3);
+                    //
+                    //                        do {
+                    //
+                    //                            dxxx = exp.EvaluateDerivative(ids[combos[0]]->id, ids[combos[1]]->id, ids[combos[2]]->id);
+                    //                            entry.third_mixed[combos[0] * ids.size() * ids.size() + combos[1] * ids.size() + combos[2]] = dxxx;
+                    //                            entry.third_mixed[combos[0] * ids.size() * ids.size() + combos[2] * ids.size() + combos[1]] = dxxx;
+                    //                            entry.third_mixed[combos[1] * ids.size() * ids.size() + combos[2] * ids.size() + combos[0]] = dxxx;
+                    //                            entry.third_mixed[combos[1] * ids.size() * ids.size() + combos[0] * ids.size() + combos[2]] = dxxx;
+                    //                            entry.third_mixed[combos[2] * ids.size() * ids.size() + combos[1] * ids.size() + combos[0]] = dxxx;
+                    //                            entry.third_mixed[combos[2] * ids.size() * ids.size() + combos[0] * ids.size() + combos[1]] = dxxx;
+                    //                        } while (combos.Next());
+
+                    this->info->Release();
+                    this->info = entry.w;
 
                 }
+
+                //                switch (gs.derivative_trace_level) {
+                //
+                //                        //                        this->info->is_dependent++;
+                //                    case FIRST_ORDER:
+                //                        i = 0;
+                //                        entry.w = this->info;
+                //                        for (it = entry.ids.begin(); it != entry.ids.end(); ++it) {
+                //                            //                            if ((*it)->id > gs.max_id) {
+                //                            //                                gs.max_id = (*it)->id;
+                //                            //                            }
+                //                            //                            if ((*it)->id < gs.min_id) {
+                //                            //                                gs.min_id = (*it)->id;
+                //                            //                            }
+                //                            dx = exp.EvaluateDerivative((*it)->id);
+                //
+                //                            entry.first[i] = dx;
+                //                            i++;
+                //                        }
+                //                        break;
+                //                    case SECOND_ORDER:
+                //                        std::cout << "\"SECOND_ORDER\" not yet available!\n" << std::flush;
+                //                        exit(0);
+                //                        i = 0;
+                //                        entry.w = this->info;
+                //                        entry.second.resize(entry.ids.size());
+                //                        for (it = entry.ids.begin(); it != entry.ids.end(); ++it) {
+                //                            dx = exp.EvaluateDerivative((*it)->id);
+                //                            dxx = exp.EvaluateDerivative((*it)->id, (*it)->id);
+                //                            entry.first[i] = dx;
+                //                            entry.second[i] = dxx;
+                //                            i++;
+                //                        }
+                //                        break;
+                //                    case THIRD_ORDER:
+                //                        std::cout << "\"THIRD_ORDER\" not yet available!\n" << std::flush;
+                //                        exit(0);
+                //                        i = 0;
+                //                        entry.w = this->info;
+                //                        entry.second.resize(entry.ids.size());
+                //                        entry.third.resize(entry.ids.size());
+                //                        for (it = entry.ids.begin(); it != entry.ids.end(); ++it) {
+                //                            (*it)->dependence_level++;
+                //                            dx = exp.EvaluateDerivative((*it)->id);
+                //                            dxx = exp.EvaluateDerivative((*it)->id, (*it)->id);
+                //                            dxxx = exp.EvaluateDerivative((*it)->id, (*it)->id, (*it)->id);
+                //                            entry.first[i] = dx;
+                //                            entry.second[i] = dxx;
+                //                            entry.third[i] = dxxx;
+                //                            i++;
+                //                        }
+                //                        break;
+                //                    case SECOND_ORDER_MIXED_PARTIALS:
+                //
+                //                        i = 0;
+                //                        entry.w = new VariableInfo<REAL_T>();
+                //                        entry.w->is_dependent = 1;
+                //                        entry.w->is_nl = exp.IsNonFunction();
+                //                        entry.second_mixed.resize(entry.ids.size() * entry.ids.size());
+                //                        exp.MakeNLInteractions();
+                //
+                //                        //                        for (it = entry.ids.begin(); it != entry.ids.end(); ++it) {
+                //                        //
+                //                        //                            if ((*it)->is_dependent) {
+                //                        //                                for(dt = (*it)->dependencies.begin(); dt != (*it)->dependencies.end(); ++dt){
+                //                        //                                    if(!(*dt)->is_dependent){
+                //                        //                                        entry.w->dependencies.insert((*dt));
+                //                        //                                    }
+                //                        //                                }
+                //                        //                            }
+                //                        //                            
+                //                        //                        }
+                //
+                //
+                //
+                //                        for (it = entry.ids.begin(); it != entry.ids.end(); ++it) {
+                //
+                //
+                //                            if ((*it) != entry.w) {
+                //                                entry.w->dependencies.insert((*it));
+                //                            }
+                //
+                //
+                //                            (*it)->dependence_level++;
+                //                            dx = exp.EvaluateDerivative((*it)->id);
+                //
+                //                            entry.first[i] = dx;
+                //                            j = 0;
+                //
+                //                            if (((*it)->is_nl) || (*it)->has_nl_interaction) {
+                //
+                //                                for (jt = entry.ids.begin(); jt != entry.ids.end(); ++jt) {
+                //
+                //                                    dxx = exp.EvaluateDerivative((*it)->id, (*jt)->id);
+                //                                    entry.second_mixed[i * entry.first.size() + j] = dxx;
+                //                                    //                                    if (i > 0 && i != j) {
+                //                                    entry.second_mixed[j * entry.first.size() + i] = dxx;
+                //
+                //                                    if (dxx != 0.0) {
+                //                                        (*it)->PushNLDependency((*jt));
+                //                                    }
+                //
+                //
+                //                                    //                                    }
+                //
+                //                                    j++;
+                //                                }
+                //
+                //                            } else {
+                //                                for (jt = entry.ids.begin(); jt != entry.ids.end(); ++jt) {
+                //                                    dxx = exp.EvaluateDerivative((*it)->id, (*jt)->id);
+                //                                    entry.second_mixed[i * entry.first.size() + j] = dxx;
+                //                                    //                                    if (i > 0 && i != j) {
+                //                                    entry.second_mixed[j * entry.first.size() + i] = dxx;
+                //
+                //                                    //                                    }
+                //
+                //                                    j++;
+                //                                }
+                //                            }
+                //                            i++;
+                //                        }
+                //
+                //
+                //                        this->info->Release();
+                //                        this->info = entry.w;
+                //                        this->info->dependence_level++;
+                //                        break;
+                //                    case THIRD_ORDER_MIXED_PARTIALS:
+                //                        //Uses the extended Clairaut’s Theorem here. We expect our functions to be 
+                //                        //continuous, therefore f_xyz = f_zxy = f_zyx and so on,
+                //                        //this will speed up the evaluation.
+                //
+                //                        entry.w = new VariableInfo<REAL_T>();
+                //                        entry.w->is_dependent = 1;
+                //                        entry.w->is_nl = exp.IsNonFunction();
+                //                        entry.second_mixed.resize(entry.ids.size() * entry.ids.size());
+                //                        entry.third_mixed.resize(entry.ids.size() * entry.ids.size() * entry.ids.size());
+                //                        i = 0;
+                //
+                //                        exp.MakeNLInteractions();
+                //
+                //
+                //                        for (it = entry.ids.begin(); it != entry.ids.end(); ++it) {
+                //
+                //                            if ((*it) != entry.w) {
+                //                                entry.w->dependencies.insert((*it));
+                //                            }
+                //                            (*it)->dependence_level++;
+                //                            dx = exp.EvaluateDerivative((*it)->id);
+                //                            //                            if ((((*it)->has_nl_interaction && !(*it)->is_dependent) || (*it)->is_nl) && dx != 0.0) {
+                //                            //                                (*it)->push_start = index;
+                //                            //                            }
+                //                            //                            if (!(*it)->is_dependent ) {
+                //                            //                                (*it)->push_start = index;
+                //                            //                            }
+                //                            entry.first[i] = dx;
+                //                            j = 0;
+                //                            if (((*it)->is_nl) || (*it)->has_nl_interaction) {
+                //
+                //                                for (jt = entry.ids.begin(); jt != entry.ids.end(); ++jt) {
+                //
+                //                                    dxx = exp.EvaluateDerivative((*it)->id, (*jt)->id);
+                //                                    entry.second_mixed[i * entry.first.size() + j] = dxx;
+                //                                    //                                    if (i > 0 && i != j) {
+                //                                    entry.second_mixed[j * entry.first.size() + i] = dxx;
+                //
+                //                                    if (dxx != 0.0) {
+                //                                        (*it)->PushNLDependency((*jt));
+                //                                    }
+                //
+                //
+                //                                    //                                    }
+                //                                    k = 0;
+                //                                    for (kt = entry.ids.begin(); kt != entry.ids.end(); ++kt) {
+                //                                        dxxx = exp.EvaluateDerivative((*it)->id, (*jt)->id, (*kt)->id);
+                //                                        entry.third_mixed[i * entry.first.size() * entry.first.size() + j * entry.first.size() + k] = dxxx;
+                //
+                //                                        k++;
+                //                                    }
+                //
+                //                                    j++;
+                //                                }
+                //
+                //                            } else {
+                //                                for (jt = entry.ids.begin(); jt != entry.ids.end(); ++jt) {
+                //                                    dxx = exp.EvaluateDerivative((*it)->id, (*jt)->id);
+                //                                    entry.second_mixed[i * entry.first.size() + j] = dxx;
+                //                                    //                                    if (i > 0 && i != j) {
+                //                                    entry.second_mixed[j * entry.first.size() + i] = dxx;
+                //
+                //                                    //
+                //                                    //                                    }
+                //                                    k = 0;
+                //                                    for (kt = entry.ids.begin(); kt != entry.ids.end(); ++kt) {
+                //                                        dxxx = exp.EvaluateDerivative((*it)->id, (*jt)->id, (*kt)->id);
+                //                                        entry.third_mixed[i * entry.first.size() * entry.first.size() + j * entry.first.size() + k] = dxxx;
+                //                                        k++;
+                //                                    }
+                //
+                //                                    j++;
+                //                                }
+                //                            }
+                //                            i++;
+                //                        }
+                //
+                //                        //                        for (it = entry.ids.begin(); it != entry.ids.end(); ++it) {
+                //                        //                            ids.push_back((*it));
+                //                        //                        }
+                //                        //                        combos.Reset(entry.ids.size(), 3);
+                //                        //
+                //                        //                        do {
+                //                        //
+                //                        //                            dxxx = exp.EvaluateDerivative(ids[combos[0]]->id, ids[combos[1]]->id, ids[combos[2]]->id);
+                //                        //                            entry.third_mixed[combos[0] * ids.size() * ids.size() + combos[1] * ids.size() + combos[2]] = dxxx;
+                //                        //                            entry.third_mixed[combos[0] * ids.size() * ids.size() + combos[2] * ids.size() + combos[1]] = dxxx;
+                //                        //                            entry.third_mixed[combos[1] * ids.size() * ids.size() + combos[2] * ids.size() + combos[0]] = dxxx;
+                //                        //                            entry.third_mixed[combos[1] * ids.size() * ids.size() + combos[0] * ids.size() + combos[2]] = dxxx;
+                //                        //                            entry.third_mixed[combos[2] * ids.size() * ids.size() + combos[1] * ids.size() + combos[0]] = dxxx;
+                //                        //                            entry.third_mixed[combos[2] * ids.size() * ids.size() + combos[0] * ids.size() + combos[1]] = dxxx;
+                //                        //                        } while (combos.Next());
+                //
+                //                        this->info->Release();
+                //                        this->info = entry.w;
+                //
+                //                        break;
+                //                    case GRADIENT:
+                //
+                //                        i = 0;
+                //                        entry.w = this->info;
+                //                        for (it = entry.ids.begin(); it != entry.ids.end(); ++it) {
+                //                            dx = exp.EvaluateDerivative((*it)->id);
+                //                            entry.first[i] = dx;
+                //                            i++;
+                //                        }
+                //                        break;
+                //                    case GRADIENT_AND_HESSIAN:
+                //                        i = 0;
+                //                        entry.w = new VariableInfo<REAL_T>();
+                //                        entry.second_mixed.resize(entry.ids.size() * entry.ids.size());
+                //
+                //                        for (it = entry.ids.begin(); it != entry.ids.end(); ++it) {
+                //                            (*it)->dependence_level++;
+                //
+                //                            dx = exp.EvaluateDerivative((*it)->id);
+                //                            entry.first[i] = dx;
+                //                            j = 0;
+                //                            for (jt = entry.ids.begin(); jt != entry.ids.end(); ++jt) {
+                //                                dxx = exp.EvaluateDerivative((*it)->id, (*jt)->id);
+                //                                entry.second_mixed[i * entry.first.size() + j] = dxx;
+                //                                if (i > 0 && i != j) {
+                //                                    entry.second_mixed[j * entry.first.size() + i] = dxx;
+                //                                }
+                //                                if (j == i) {
+                //                                    break;
+                //                                }
+                //                                j++;
+                //                            }
+                //                            i++;
+                //                        }
+                //                        this->info->Release();
+                //                        this->info = entry.w;
+                //                        break;
+                //                    case DYNAMIC_RECORD:
+                //                        entry.w = this->info; //new VariableInfo<REAL_T>();
+                //                        for (it = entry.ids.begin(); it != entry.ids.end(); ++it) {
+                //                            (*it)->dependence_level++;
+                //                        }
+                //                        entry.exp = exp.GetDynamicExpession();
+                //                        //                        std::cout << "\"DYNAMIC_RECORD\" not yet available!\n" << std::flush;
+                //                        //                        exit(0);
+                //                        break;
+                //                    default:
+                //                        std::cout << "Unkown derivative trace level.";
+                //                        exit(0);
+                //
+                //                }
             }
             this->SetValue(exp.GetValue());
         }
@@ -560,7 +775,13 @@ namespace atl {
         }
 
         virtual ~Variable() {
+            if(this->info){
             info->Release();
+            }
+        }
+
+        void Initialize() {
+            this->Initialize_p(Variable<REAL_T, group>::gradient_structure_g, this->GetValue());
         }
 
         /**
