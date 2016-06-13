@@ -139,6 +139,12 @@ namespace atl {
         inline atl::DynamicExpression<REAL_T>* GetDynamicExpession() const {
             return new atl::DynamicSin<REAL_T>(expr_m.GetDynamicExpession());
         }
+        
+        std::string ToString() const{
+            std::stringstream ss;
+            ss<<"Sin"<<expr_m.ToString()<<")";
+            return ss.str();
+        }
 
 
     private:

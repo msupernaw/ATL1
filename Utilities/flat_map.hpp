@@ -6,7 +6,7 @@
  */
 
 #ifndef FLAT_MAP_HPP
-#define	FLAT_MAP_HPP
+#define FLAT_MAP_HPP
 
 #include <iostream>
 #include <vector>
@@ -15,6 +15,59 @@
 #include <string>
 #include <sstream>
 #include <map>
+#include <iterator>
+
+
+        /**
+         * Port of eastl lower_bound
+         * License: https://github.com/electronicarts/EASTL/blob/master/LICENSE
+         * @param first
+         * @param last
+         * @param value
+         * @param compare
+         * @return 
+         */
+	template <typename ForwardIterator, typename T, typename Compare >
+	inline ForwardIterator
+	eastl_lower_bound(ForwardIterator first, ForwardIterator last, const T& value,const Compare& compare)
+	{
+		typedef typename std::iterator_traits<ForwardIterator>::difference_type DifferenceType;
+
+		DifferenceType d = std::distance(first, last); // This will be efficient for a random access iterator such as an array.
+
+		while(d > 0)
+		{
+			ForwardIterator i  = first;
+			DifferenceType  d2 = d >> 1; // We use '>>1' here instead of '/2' because MSVC++ for some reason generates significantly worse code for '/2'. Go figure.
+
+			std::advance(i, d2); // This will be efficient for a random access iterator such as an array.
+
+			if(compare(*i, value))
+			{
+				// Disabled because std::lower_bound doesn't specify (23.3.3.3, p3) this can be done: EASTL_VALIDATE_COMPARE(!(value < *i)); // Validate that the compare function is sane.
+				first = ++i;
+				d    -= d2 + 1;
+			}
+			else
+				d = d2;
+		}
+		return first;
+	}
+
+
+template<class FwdIt, class T, class P>
+inline FwdIt branchless_lower_bound(FwdIt begin, FwdIt end, T const &val, P pred) {
+    while (begin != end) {
+        FwdIt middle(begin);
+        std::advance(middle, std::distance(begin, end) >> 1);
+        FwdIt middle_plus_one(middle);
+        ++middle_plus_one;
+        bool const b = pred(*middle, val);
+        begin = b ? middle_plus_one : begin;
+        end = b ? end : middle;
+    }
+    return begin;
+}
 
 template<class Key, class T>
 class flat_map {
@@ -29,15 +82,15 @@ private:
 
     struct compare_elems {
 
-        inline bool operator()(const value_type& x, const value_type& y) const {
+        inline const bool operator()(const value_type& x, const value_type& y) const {
             return x.first < y.first;
         }
 
-        inline bool operator()(const value_type& x, const key_type& y) const {
+        inline const bool operator()(const value_type& x, const key_type& y) const {
             return x.first < y;
         }
 
-        inline bool operator()(const key_type& x, const value_type& y) const {
+        inline const bool operator()(const key_type& x, const value_type& y) const {
             return x < y.first;
         }
     };
@@ -53,7 +106,7 @@ public:
     }
 
     inline std::pair<iterator, bool> insert(const value_type& value) {
-        iterator it = std::lower_bound(data_m.begin(), data_m.end(), value.first, compare_elems());
+        iterator it = eastl_lower_bound(data_m.begin(), data_m.end(), value.first, compare_elems());
         if (it == data_m.end() || it->first != value.first) {
             iterator it2 = data_m.insert(it, value);
             return std::make_pair(it2, true);
@@ -63,7 +116,7 @@ public:
     }
 
     inline T& operator[](const Key& key) {
-        iterator it = std::lower_bound(data_m.begin(), data_m.end(), key, compare_elems());
+        iterator it = eastl_lower_bound(data_m.begin(), data_m.end(), key, compare_elems());
         if (it == data_m.end() || it->first != key) {
             iterator it2 = data_m.insert(it, value_type(key, T()));
             return it2->second;
@@ -77,7 +130,7 @@ public:
     }
 
     iterator find(const Key& key) {
-        iterator it = std::lower_bound(data_m.begin(), data_m.end(), key, compare_elems());
+        iterator it = eastl_lower_bound(data_m.begin(), data_m.end(), key, compare_elems());
         if (it == data_m.end() || it->first != key) {
             return data_m.end();
         } else {
@@ -86,7 +139,7 @@ public:
     }
 
     const_iterator find(const Key& key) const {
-        const_iterator it = std::lower_bound(data_m.begin(), data_m.end(), key, compare_elems());
+        const_iterator it = eastl_lower_bound(data_m.begin(), data_m.end(), key, compare_elems());
         if (it == data_m.end() || it->first != key) {
             return data_m.end();
         } else {
@@ -95,7 +148,7 @@ public:
     }
 
     void erase(const Key& key) {
-        iterator it = std::lower_bound(data_m.begin(), data_m.end(), key, compare_elems());
+        iterator it = eastl_lower_bound(data_m.begin(), data_m.end(), key, compare_elems());
         if (it != data_m.end() && it->first == key) {
             data_m.erase(it);
         }
@@ -152,5 +205,5 @@ public:
 
 
 
-#endif	/* FLAT_MAP_HPP */
+#endif /* FLAT_MAP_HPP */
 

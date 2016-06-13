@@ -135,6 +135,13 @@ namespace atl {
         inline atl::DynamicExpression<REAL_T>* GetDynamicExpession() const {
             return new atl::DynamicLog<REAL_T>(expr_m.GetDynamicExpession());
         }
+        
+        std::string ToString() const{
+            std::stringstream ss;
+            ss<<"Log"<<expr_m.ToString()<<")";
+            return ss.str();
+        }
+        
     private:
         const EXPR& expr_m;
         const REAL_T value_m;

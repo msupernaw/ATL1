@@ -9,6 +9,34 @@
 #include "../AutoDiff/AlignedAllocator.hpp"
 
 
+
+	template <typename ForwardIterator, typename T,class P>
+	inline ForwardIterator
+	fs_eastl_lower_bound(ForwardIterator first, ForwardIterator last, const T& value, P pred)
+	{
+		typedef typename std::iterator_traits<ForwardIterator>::difference_type DifferenceType;
+
+		DifferenceType d = std::distance(first, last); // This will be efficient for a random access iterator such as an array.
+
+		while(d > 0)
+		{
+			ForwardIterator i  = first;
+			DifferenceType  d2 = d >> 1; // We use '>>1' here instead of '/2' because MSVC++ for some reason generates significantly worse code for '/2'. Go figure.
+
+			std::advance(i, d2); // This will be efficient for a random access iterator such as an array.
+
+			if(pred(*i, value))
+			{
+				// Disabled because std::lower_bound doesn't specify (23.3.3.3, p3) this can be done: EASTL_VALIDATE_COMPARE(!(value < *i)); // Validate that the compare function is sane.
+				first = ++i;
+				d    -= d2 + 1;
+			}
+			else
+				d = d2;
+		}
+		return first;
+	}
+
 template<class FwdIt, class T, class P>
 inline FwdIt fs_branchless_lower_bound(FwdIt begin, FwdIt end, T const &val, P pred) {
     while (begin != end) {
@@ -55,7 +83,7 @@ public:
     }
 
     inline iterator insert(const T& t) {
-        iterator i = std::lower_bound(begin(), end(), t, cmp);
+        iterator i = fs_eastl_lower_bound(begin(), end(), t, cmp);
         if (i == end() || cmp(t, *i))
             data_m.insert(i, std::move(t));
         return i;
@@ -70,12 +98,12 @@ public:
     }
 
     inline const_iterator find(const T& t) const {
-        const_iterator i = std::lower_bound(begin(), end(), t, cmp);
+        const_iterator i = fs_eastl_lower_bound(begin(), end(), t, cmp);
         return i == end() || cmp(t, *i) ? end() : i;
     }
 
     inline iterator find(const T& t) {
-        iterator i = std::lower_bound(begin(), end(), t, cmp);
+        iterator i =fs_eastl_lower_bound(begin(), end(), t, cmp);
         return i == end() || cmp(t, *i) ? end() : i;
     }
 

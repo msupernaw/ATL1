@@ -955,18 +955,21 @@ namespace std {
      * @return 
      */
     template<class T> const atl::BigFloat<T> pow(const atl::BigFloat<T> &x, const atl::BigFloat<T> &y) {
+        atl::BigFloat<T> temp;
+        temp.value_m = x.value_m.PowFrac(y.value_m);
+        return temp;
         
-        if (y == T(0))
-            return 1;
-        atl::BigFloat<T> temp(pow(x, y*T(.5)));
-        if (y % T(2.0) == 0)
-            return temp * temp;
-        else {
-            if (y > T(0))
-                return x * temp * temp;
-            else
-                return (temp * temp) / x;
-        }
+//        if (y == T(0))
+//            return 1;
+//        atl::BigFloat<T> temp = (pow(x, y/2.0));
+//        if (y % T(2.0) == 0)
+//            return temp * temp;
+//        else {
+//            if (y > T(0))
+//                return x * temp * temp;
+//            else
+//                return (temp * temp) / x;
+//        }
         //        atl::BigFloat<T> ret;
         //        // atl::BigFloat<T> rt = rhs;
         //        //
@@ -1149,7 +1152,7 @@ namespace std {
 
     }
 
-    template<class T> atl::BigFloat<T>& max(const atl::BigFloat<T> &a, const atl::BigFloat<T> &b) {
+    template<class T>const atl::BigFloat<T>& max(const atl::BigFloat<T> &a, const atl::BigFloat<T> &b) {
         if (a < b) {
             return a;
         } else {
@@ -1157,7 +1160,7 @@ namespace std {
         }
     }
 
-    template<class T> atl::BigFloat<T>& min(const atl::BigFloat<T> &a, const atl::BigFloat<T> &b) {
+    template<class T> const atl::BigFloat<T>& min(const atl::BigFloat<T> &a, const atl::BigFloat<T> &b) {
         if (a < b) {
             return a;
         } else {

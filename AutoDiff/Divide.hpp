@@ -142,24 +142,31 @@ namespace atl {
 
         inline REAL_T EvaluateDerivative(uint32_t a, uint32_t b) const {
 
-            REAL_T aa = ((2.0 * lhs_m.GetValue() * rhs_m.EvaluateDerivative(a) * rhs_m.EvaluateDerivative(b)) / (rhs_m.GetValue() * rhs_m.GetValue() * rhs_m.GetValue())); //(2*f(a,b)*('diff(g(a,b),a,1))*('diff(g(a,b),b,1)))/g(a,b)^3
-            REAL_T bb = ((lhs_m.EvaluateDerivative(a) * rhs_m.EvaluateDerivative(b)) / (rhs_m.GetValue() * rhs_m.GetValue())); //(('diff(f(a,b),a,1))*('diff(g(a,b),b,1)))/g(a,b)^2
-            REAL_T cc = ((lhs_m.GetValue() * rhs_m.EvaluateDerivative(a, b)) / (rhs_m.GetValue() * rhs_m.GetValue())); //(f(a,b)*('diff(g(a,b),a,1,b,1)))/g(a,b)^2
-            REAL_T dd = ((lhs_m.EvaluateDerivative(b) * rhs_m.EvaluateDerivative(a)) / (rhs_m.GetValue() * rhs_m.GetValue())); //(('diff(f(a,b),b,1))*('diff(g(a,b),a,1)))/g(a,b)^2
-            REAL_T ee = lhs_m.EvaluateDerivative(a, b) / rhs_m.GetValue();
+            REAL_T aa = ((2.0 * lhs_value_m* rhs_m.EvaluateDerivative(a) * rhs_m.EvaluateDerivative(b)) / (rhs_value_m* rhs_value_m* rhs_value_m)); //(2*f(a,b)*('diff(g(a,b),a,1))*('diff(g(a,b),b,1)))/g(a,b)^3
+            REAL_T bb = ((lhs_m.EvaluateDerivative(a) * rhs_m.EvaluateDerivative(b)) / (rhs_value_m* rhs_value_m)); //(('diff(f(a,b),a,1))*('diff(g(a,b),b,1)))/g(a,b)^2
+            REAL_T cc = ((lhs_value_m* rhs_m.EvaluateDerivative(a, b)) / (rhs_value_m* rhs_value_m)); //(f(a,b)*('diff(g(a,b),a,1,b,1)))/g(a,b)^2
+            REAL_T dd = ((lhs_m.EvaluateDerivative(b) * rhs_m.EvaluateDerivative(a)) / (rhs_value_m * rhs_value_m)); //(('diff(f(a,b),b,1))*('diff(g(a,b),a,1)))/g(a,b)^2
+            REAL_T ee = lhs_m.EvaluateDerivative(a, b) / rhs_value_m;
             return aa - bb - cc - dd + ee;
 
         }
 
         inline REAL_T EvaluateDerivative(uint32_t x, uint32_t y, uint32_t z) const {
-            return -(6 * lhs_m.GetValue()*(rhs_m.EvaluateDerivative(x))*(rhs_m.EvaluateDerivative(y))*(rhs_m.EvaluateDerivative(z))) / std::pow(rhs_m.GetValue(), 4.0)+(2 * (lhs_m.EvaluateDerivative(x))*(rhs_m.EvaluateDerivative(y))*(rhs_m.EvaluateDerivative(z))) / std::pow(rhs_m.GetValue(), 3.0)+
-                    (2 * lhs_m.GetValue()*(rhs_m.EvaluateDerivative(x, y))*(rhs_m.EvaluateDerivative(z))) / std::pow(rhs_m.GetValue(), 3.0)+(2 * (lhs_m.EvaluateDerivative(y))*(rhs_m.EvaluateDerivative(x))*(rhs_m.EvaluateDerivative(z))) / std::pow(rhs_m.GetValue(), 3.0)-
-                    ((lhs_m.EvaluateDerivative(x, y))*(rhs_m.EvaluateDerivative(z))) / std::pow(rhs_m.GetValue(), 2.0)+(2 * lhs_m.GetValue()*(rhs_m.EvaluateDerivative(x))*(rhs_m.EvaluateDerivative(y, z))) / std::pow(rhs_m.GetValue(), 3.0)-((lhs_m.EvaluateDerivative(x))*(rhs_m.EvaluateDerivative(y, z))) / std::pow(rhs_m.GetValue(), 2.0)+
-                    (2 * lhs_m.GetValue()*(rhs_m.EvaluateDerivative(x, z))*(rhs_m.EvaluateDerivative(y))) / std::pow(rhs_m.GetValue(), 3.0)+(2 * (lhs_m.EvaluateDerivative(z))*(rhs_m.EvaluateDerivative(x))*(rhs_m.EvaluateDerivative(y))) / std::pow(rhs_m.GetValue(), 3.0)-
-                    ((lhs_m.EvaluateDerivative(x, z))*(rhs_m.EvaluateDerivative(y))) / std::pow(rhs_m.GetValue(), 2.0)-((lhs_m.EvaluateDerivative(y))*(rhs_m.EvaluateDerivative(x, z))) / std::pow(rhs_m.GetValue(), 2.0)-(lhs_m.GetValue()*(rhs_m.EvaluateDerivative(x, y, z))) / std::pow(rhs_m.GetValue(), 2.0)-
-                    ((lhs_m.EvaluateDerivative(z))*(rhs_m.EvaluateDerivative(x, y))) / std::pow(rhs_m.GetValue(), 2.0)-((lhs_m.EvaluateDerivative(y, z))*(rhs_m.EvaluateDerivative(x))) / std::pow(rhs_m.GetValue(), 2.0) + lhs_m.EvaluateDerivative(x, y, z) / rhs_m.GetValue()
+            return -1.0*(static_cast<REAL_T>(6.0) * lhs_m.GetValue()*(rhs_m.EvaluateDerivative(x))*(rhs_m.EvaluateDerivative(y))*(rhs_m.EvaluateDerivative(z))) / std::pow(rhs_value_m, 4.0)+(2 * (lhs_m.EvaluateDerivative(x))*(rhs_m.EvaluateDerivative(y))*(rhs_m.EvaluateDerivative(z))) / std::pow(rhs_value_m, static_cast<REAL_T>(3.0))+
+                    (static_cast<REAL_T>(2) * lhs_m.GetValue()*(rhs_m.EvaluateDerivative(x, y))*(rhs_m.EvaluateDerivative(z))) / std::pow(rhs_value_m, static_cast<REAL_T>(3.0))+(static_cast<REAL_T>(2.0) * (lhs_m.EvaluateDerivative(y))*(rhs_m.EvaluateDerivative(x))*(rhs_m.EvaluateDerivative(z))) / std::pow(rhs_value_m, static_cast<REAL_T>(3.0))-
+                    ((lhs_m.EvaluateDerivative(x, y))*(rhs_m.EvaluateDerivative(z))) / std::pow(rhs_value_m, static_cast<REAL_T>(2.0))+(static_cast<REAL_T>(2.0) * lhs_m.GetValue()*(rhs_m.EvaluateDerivative(x))*(rhs_m.EvaluateDerivative(y, z))) / std::pow(rhs_value_m, static_cast<REAL_T>(3.0))-((lhs_m.EvaluateDerivative(x))*(rhs_m.EvaluateDerivative(y, z))) / std::pow(rhs_value_m, static_cast<REAL_T>(2.0))+
+                    (static_cast<REAL_T>(2.0) * lhs_m.GetValue()*(rhs_m.EvaluateDerivative(x, z))*(rhs_m.EvaluateDerivative(y))) / std::pow(rhs_value_m, static_cast<REAL_T>(3.0))+(static_cast<REAL_T>(2.0) * (lhs_m.EvaluateDerivative(z))*(rhs_m.EvaluateDerivative(x))*(rhs_m.EvaluateDerivative(y))) / std::pow(rhs_value_m, static_cast<REAL_T>(3.0))-
+                    ((lhs_m.EvaluateDerivative(x, z))*(rhs_m.EvaluateDerivative(y))) / std::pow(rhs_value_m, static_cast<REAL_T>(2.0))-((lhs_m.EvaluateDerivative(y))*(rhs_m.EvaluateDerivative(x, z))) / std::pow(rhs_value_m, static_cast<REAL_T>(2.0))-(lhs_m.GetValue()*(rhs_m.EvaluateDerivative(x, y, z))) / std::pow(rhs_value_m, static_cast<REAL_T>(2.0))-
+                    ((lhs_m.EvaluateDerivative(z))*(rhs_m.EvaluateDerivative(x, y))) / std::pow(rhs_value_m, static_cast<REAL_T>(2.0))-((lhs_m.EvaluateDerivative(y, z))*(rhs_m.EvaluateDerivative(x))) / std::pow(rhs_value_m, static_cast<REAL_T>(2.0)) + lhs_m.EvaluateDerivative(x, y, z) / rhs_value_m
                     ;
 
+        }
+        
+        
+        std::string ToString() const{
+            std::stringstream ss;
+            ss<<"("<<lhs_m.ToString()<<" / "<<rhs_m.ToString()<<")";
+            return ss.str();
         }
 
         inline atl::DynamicExpression<REAL_T>* GetDynamicExpession() const {
@@ -270,6 +277,11 @@ namespace atl {
             return new atl::DynamicDivide<REAL_T>(lhs_m.GetDynamicExpession(), new atl::DynamicScalar<REAL_T>(rhs_m));
         }
 
+        std::string ToString() const{
+            std::stringstream ss;
+            ss<<"("<<lhs_m.ToString()<<" / "<<rhs_m<<")";
+            return ss.str();
+        }
 
 
     private:
@@ -394,7 +406,11 @@ namespace atl {
             return new atl::DynamicDivide<REAL_T>(new atl::DynamicScalar<REAL_T>(lhs_m), rhs_m.GetDynamicExpession());
         }
 
-
+        std::string ToString() const{
+            std::stringstream ss;
+            ss<<"("<<lhs_m<<" / "<<rhs_m.ToString()<<")";
+            return ss.str();
+        }
 
     private:
 

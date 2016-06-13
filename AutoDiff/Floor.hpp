@@ -129,6 +129,12 @@ namespace atl {
         inline atl::DynamicExpression<REAL_T>* GetDynamicExpession() const {
             return new atl::DynamicFloor<REAL_T>(expr_m.GetDynamicExpession());
         }
+        
+        std::string ToString() const{
+            std::stringstream ss;
+            ss<<"Floor"<<expr_m.ToString()<<")";
+            return ss.str();
+        }
 
     private:
         const EXPR& expr_m;

@@ -160,6 +160,11 @@ namespace atl {
             return new atl::DynamicASin<REAL_T>(expr_m.GetDynamicExpession());
         }
 
+        std::string ToString() const{
+            std::stringstream ss;
+            ss<<"ASin("<<expr_m.ToString()<<")";
+            return ss.str();
+        }
 
 
     private:

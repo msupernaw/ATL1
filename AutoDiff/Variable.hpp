@@ -187,7 +187,7 @@ namespace atl {
 
         virtual REAL_T DerivativeInternal2External(REAL_T val, REAL_T min_, REAL_T max_)const {
             return (::exp(val) * ::log(M_E)*(max_ - min_)) / (::exp(val) + 1.0)-
-                    (::exp(2.0 * val) * ::log(M_E)*(max_ - min_)) / ::pow((::exp(val) + 1), 2.0);
+                    (::exp(static_cast<REAL_T>(2.0 * val)) * ::log(M_E)*(max_ - min_)) / ::pow((::exp(val) + 1), 2.0);
         }
     };
 
@@ -235,7 +235,11 @@ namespace atl {
                         //                                gs.min_id = (*it)->id;
                         //                            }
                         dx = exp.EvaluateDerivative((*it)->id);
-
+                        if(dx!=dx){
+                            std::cout<<__func__<<" derivative NaN\n";
+                            std::cout<<exp.ToString();
+                            exit(0);
+                        }
                         entry.first[i] = dx;
                         i++;
                     }
@@ -271,7 +275,11 @@ namespace atl {
 
                         (*it)->dependence_level++;
                         dx = exp.EvaluateDerivative((*it)->id);
-
+                        if(dx!=dx){
+                            std::cout<<__func__<<" derivative NaN\n";
+                            std::cout<<exp.ToString();
+                            exit(0);
+                        }
                         entry.first[i] = dx;
                         j = 0;
 
@@ -338,6 +346,11 @@ namespace atl {
                         }
                         (*it)->dependence_level++;
                         dx = exp.EvaluateDerivative((*it)->id);
+                        if(dx!=dx){
+                            std::cout<<__func__<<" derivative NaN\n";
+                            std::cout<<exp.ToString();
+                            exit(0);
+                        }
                         //                            if ((((*it)->has_nl_interaction && !(*it)->is_dependent) || (*it)->is_nl) && dx != 0.0) {
                         //                                (*it)->push_start = index;
                         //                            }
@@ -1202,6 +1215,13 @@ namespace atl {
          */
         inline atl::DynamicExpression<REAL_T>* GetDynamicExpession() const {
             return new atl::DynamicVariable<REAL_T>(info);
+        }
+        
+        
+        std::string ToString() const{
+            std::stringstream ss;
+            ss<<"Variable("<<this->GetName()<<","<<info->id<<","<<this->GetValue()<<")";
+            return ss.str();
         }
 
         /**

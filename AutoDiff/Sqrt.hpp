@@ -129,7 +129,7 @@ namespace atl {
                     *(expr_m.EvaluateDerivative(z))) / (8.0 * std::pow(expr_m.GetValue(), 5.0 / 2.0))
                     -((expr_m.EvaluateDerivative(x, y))*(expr_m.EvaluateDerivative(z)))
                     / (4.0 * std::pow(expr_m.GetValue(), 3.0 / 2.0))-((expr_m.EvaluateDerivative(x))
-                    *(expr_m.EvaluateDerivative(y, z))) / (4 * std::pow(expr_m.GetValue(), 3.0 / 2.0))
+                    *(expr_m.EvaluateDerivative(y, z))) / (4.0 * std::pow(expr_m.GetValue(), 3.0 / 2.0))
                     -((expr_m.EvaluateDerivative(x, z))*(expr_m.EvaluateDerivative(y)))
                     / (4.0 * std::pow(expr_m.GetValue(), 3.0 / 2.0)) + expr_m.EvaluateDerivative(x, y, z)
                     / (2.0 * std::sqrt(expr_m.GetValue()));
@@ -137,6 +137,12 @@ namespace atl {
 
         inline atl::DynamicExpression<REAL_T>* GetDynamicExpession() const {
             return new atl::DynamicSqrt<REAL_T>(expr_m.GetDynamicExpession());
+        }
+        
+        std::string ToString() const{
+            std::stringstream ss;
+            ss<<"Sqrt"<<expr_m.ToString()<<")";
+            return ss.str();
         }
 
 

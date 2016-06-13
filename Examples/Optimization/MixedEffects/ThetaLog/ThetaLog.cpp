@@ -1,6 +1,7 @@
 #include "../../../../Optimization/Optimization2/Optimization.hpp"
 #include "../../../../Utilities/IO/StreamedDataFile.hpp"
 
+//#define ADMB_VERSION
 
 #ifdef ADMB_VERSION
 
@@ -117,7 +118,7 @@ class ThetaLog : public atl::ObjectiveFunction<T> {
     std::vector<atl::Variable<T> > X;
     atl::Variable<T> logr0; //  = -2.6032947;
     atl::Variable<T> logtheta; //  = 0.7625692;
-    atl::Variable<T> logK = 6.0; //  = 6.7250075;
+    atl::Variable<T> logK = T(6.0); //  = 6.7250075;
     atl::Variable<T> logQ; //  = -4.7496015;
     atl::Variable<T> logR; // = -3.1889239;
     atl::Variable<T> Neg_SQRT_2_PI;
@@ -137,12 +138,15 @@ public:
         int size = 0;
         data >> size;
         std::cout << "size = " << size;
+   
         this->Y.resize(size);
         this->X.resize(size);
         
         
         for (int i = 0; i < X.size(); i++) {
+            double tmp;
             data >> Y[i];
+//            Y[i] = tmp;
         }
         
         
@@ -169,9 +173,7 @@ public:
             throw std::overflow_error("Divide by zero exception");
         }
         
-        atl::Variable<T> logres;
-        logres = -1.0 * std::sqrt(2.0 * M_PI) * sd -
-        .5 * atl::pow((x - mean) / sd, 2.0);
+        atl::Variable<T> logres = -1.0*atl::log(T(sqrt(2*M_PI))*sd)-T(.5)*atl::pow((x-mean)/sd,2.0);
         if (give_log)return logres;
         else return atl::exp(logres);
     }
@@ -181,19 +183,25 @@ public:
         atl::Variable<T> r0 = atl::exp(logr0);
         atl::Variable<T> theta = atl::exp(logtheta);
         atl::Variable<T> K = atl::exp(logK);
-        
-        
         atl::Variable<T> Q = atl::exp(logQ);
         atl::Variable<T> R = atl::exp(logR);
+        
+        
         int timeSteps = Y.size();
-        atl::Variable<T> ans = 0;
+        atl::Variable<T> ans = T(0.0);
+        
+        atl::Variable<T> sqrtq = atl::sqrt(Q);
         for (int i = 1; i < timeSteps; i++) {
-            atl::Variable<T> m = X[i - 1] + r0 * (1.0 - atl::pow(atl::exp(X[i - 1]) / K, theta));
-            ans -= this->dnorm(X[i], m, atl::sqrt(Q), true);
+            atl::Variable<T> m = X[i - 1] + r0 * (static_cast<T>(1.0) - std::pow(std::exp(X[i - 1]) / K, theta));
+            ans -= this->dnorm(X[i], m, sqrtq, true);
         }
+        atl::Variable<T> sqrtr = atl::sqrt(R);
         for (int i = 0; i < timeSteps; i++) {
-            ans -= this->dnorm(Y[i], X[i], atl::sqrt(R), true);
+            ans -= this->dnorm(atl::Variable<T>(Y[i]), X[i], sqrtr, true);
         }
+        
+        
+        
         return ans;
     }
     
@@ -234,9 +242,11 @@ int main(int argc, char** argv) {
     
     //run the minimizer
     fm.Run();
-    
-    //dump the results
-    objective_function.Report();
+//    
+//    //dump the results
+//    objective_function.Report();
+//    
+//    std::cout<<objective_function.GetObjectiveFunctionStatistics()<<"\n";
     return 0;
 }
 

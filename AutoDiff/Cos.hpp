@@ -136,6 +136,13 @@ namespace atl {
                     *(expr_m.EvaluateDerivative(y)) -
                     std::sin(expr_m.GetValue())*(expr_m.EvaluateDerivative(x, y, z));
         }
+        
+        
+        std::string ToString() const{
+            std::stringstream ss;
+            ss<<"Cos("<<expr_m.ToString()<<")";
+            return ss.str();
+        }
 
         inline atl::DynamicExpression<REAL_T>* GetDynamicExpession() const {
             return new atl::DynamicCos<REAL_T>(expr_m.GetDynamicExpession());

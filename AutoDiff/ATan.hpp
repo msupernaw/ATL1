@@ -147,6 +147,13 @@ namespace atl {
         inline atl::DynamicExpression<REAL_T>* GetDynamicExpession() const {
             return new atl::DynamicATan<REAL_T>(expr_m.GetDynamicExpession());
         }
+        
+        
+        std::string ToString() const{
+            std::stringstream ss;
+            ss<<"ATan("<<expr_m.ToString()<<")";
+            return ss.str();
+        }
 
     private:
         const EXPR& expr_m;

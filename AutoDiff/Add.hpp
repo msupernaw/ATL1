@@ -135,6 +135,12 @@ namespace atl {
         inline atl::DynamicExpression<REAL_T>* GetDynamicExpession() const {
             return new atl::DynamicAdd<REAL_T>(lhs_m.GetDynamicExpession(), rhs_m.GetDynamicExpession());
         }
+        
+        std::string ToString() const{
+            std::stringstream ss;
+            ss<<"("<<lhs_m.ToString()<<" + "<<rhs_m.ToString()<<")";
+            return ss.str();
+        }
 
 
         const LHS& lhs_m;
@@ -228,6 +234,12 @@ namespace atl {
 
         inline atl::DynamicExpression<REAL_T>* GetDynamicExpession() const {
             return new atl::DynamicAdd<REAL_T>(lhs_m.GetDynamicExpession(), new atl::DynamicScalar<REAL_T>(rhs_m));
+        }
+        
+        std::string ToString() const{
+            std::stringstream ss;
+            ss<<"("<<lhs_m.ToString()<<" + "<<rhs_m<<")";
+            return ss.str();
         }
 
         const LHS& lhs_m;
@@ -324,6 +336,12 @@ namespace atl {
 
         inline atl::DynamicExpression<REAL_T>* GetDynamicExpession() const {
             return new atl::DynamicAdd<REAL_T>(new atl::DynamicScalar<REAL_T>(lhs_m), rhs_m.GetDynamicExpession());
+        }
+        
+        std::string ToString() const{
+            std::stringstream ss;
+            ss<<"("<<lhs_m<<" + "<<rhs_m.ToString()<<")";
+            return ss.str();
         }
 
         REAL_T lhs_m;

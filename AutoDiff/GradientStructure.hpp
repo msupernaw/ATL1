@@ -223,10 +223,10 @@ namespace atl {
             }
             this->live_ids.clear();
 
-//            if (exp) {
-//                delete exp;
-//                exp = NULL;
-//            }
+            //            if (exp) {
+            //                delete exp;
+            //                exp = NULL;
+            //            }
             ids.clear_no_resize();
 
         }
@@ -353,13 +353,13 @@ namespace atl {
      */
     template<typename REAL_T>
     class GradientStructure {
-        typedef typename std::map<uint32_t, REAL_T>::iterator derivative_iterator;
+        typedef typename flat_map<uint32_t, REAL_T>::iterator derivative_iterator;
 
-        std::map<uint32_t, std::map<uint32_t, REAL_T> > second;
-        typedef typename std::map<uint32_t, std::map<uint32_t, REAL_T> >::iterator second_order_iterator;
+        flat_map<uint32_t, flat_map<uint32_t, REAL_T> > second;
+        typedef typename flat_map<uint32_t, flat_map<uint32_t, REAL_T> >::iterator second_order_iterator;
 
-        std::map<uint32_t, std::map<uint32_t, std::map<uint32_t, REAL_T> > > third;
-        typedef typename std::map<uint32_t, std::map<uint32_t, std::map<uint32_t, REAL_T> > >::iterator third_order_iterator;
+        flat_map<uint32_t, flat_map<uint32_t, flat_map<uint32_t, REAL_T> > > third;
+        typedef typename flat_map<uint32_t, flat_map<uint32_t, flat_map<uint32_t, REAL_T> > >::iterator third_order_iterator;
 
     public:
         uint32_t max_id = std::numeric_limits<uint32_t>::min();
@@ -850,11 +850,13 @@ namespace atl {
                     rows = gradient_stack[i].first.size();
 
                     //get h[i][i]
-                    hii = this->Value(vi->id, vi->id);
-                    if (hii != 0) {
-                        this->MakeZero(vi->id, vi->id); // = 0.0;
+                    hii = 0.0;
+                    if (vi->so_mark) {
+                        hii = this->Value(vi->id, vi->id);
+                        if (hii != 0) {
+                            this->MakeZero(vi->id, vi->id); // = 0.0;
+                        }
                     }
-
 
                     //prepare for the hessian calculation. 
                     //builds a list of variables to use, statement level variables come first,
@@ -882,10 +884,13 @@ namespace atl {
                         vj = gradient_stack[i].id_list[j];
 
                         //load second order partial derivative for i wrt j and k
-                        hij = this->Value(vi->id, vj->id);
+                        hij = 0.0;
+                        if (vi->so_mark && vj->so_mark) {
+                            hij = this->Value(vi->id, vj->id);
 
-                        if (hij != 0) {
-                            this->MakeZero(vi->id, vj->id); // = 0.0;
+                            if (hij != 0) {
+                                this->MakeZero(vi->id, vj->id); // = 0.0;
+                            }
                         }
                         vij[j] = (hij);
                     }
@@ -918,19 +923,21 @@ namespace atl {
                             entry += w * gradient_stack[i].second_mixed[j * rows + k];
 
 
-//                            if (gradient_stack[i].second_mixed[j * rows + k] != 0.0) {
-//                                vj->push_count = 1;
-//                                vk->push_count = 1;
-//                            }
+                            //                            if (gradient_stack[i].second_mixed[j * rows + k] != 0.0) {
+                            //                                vj->push_count = 1;
+                            //                                vk->push_count = 1;
+                            //                            }
 
 
 
                             if (/*std::fabs(entry)*/entry != REAL_T(0.0)) {//h[j][k] needs to be updated
                                 if (entry != entry) {
                                     std::cout << "Derivative signaling NaN\n";
-                                    exit(0);
+                                    //                                    exit(0);
                                 }
                                 this->Reference(vj->id, vk->id) += entry;
+                                vj->so_mark = true;
+                                vk->so_mark = true;
                                 needs_push[k] = true;
                                 //                                needs_push[j] = true;
                             }
@@ -955,19 +962,21 @@ namespace atl {
                             if (j < rows && k < rows) {
 
                                 entry += w * gradient_stack[i].second_mixed[j * rows + k];
-//                                if (gradient_stack[i].second_mixed[j * rows + k] != 0.0) {
-//                                    vj->push_count = 1;
-//                                    vk->push_count = 1;
-//                                }
+                                //                                if (gradient_stack[i].second_mixed[j * rows + k] != 0.0) {
+                                //                                    vj->push_count = 1;
+                                //                                    vk->push_count = 1;
+                                //                                }
                             }
 
 
                             if (/*std::fabs(entry)*/entry != REAL_T(0.0) && entry == entry) {//h[j][k] needs to be updated
                                 if (entry != entry) {
                                     std::cout << "Derivative signaling NaN\n";
-                                    exit(0);
+                                    //                                    exit(0);
                                 }
                                 this->Reference(vj->id, vk->id) += entry;
+                                vj->so_mark = true;
+                                vk->so_mark = true;
                                 needs_push[k] = true;
                                 //                                needs_push[j] = true;
                             }
@@ -1042,20 +1051,25 @@ namespace atl {
 
                     rows = gradient_stack[i].first.size();
 
+                    hii = 0.0;
+
                     //get h[i][i]
-                    hii = Value(vi->id, vi->id);
+                    if (vi->so_mark) {
+                        hii = Value(vi->id, vi->id);
 
-                    if (hii != 0.0) {
-                        Reference(vi->id, vi->id) = 0.0;
+                        if (hii != 0.0) {
+                            Reference(vi->id, vi->id) = 0.0;
+                        }
                     }
+
                     diii = 0.0;
+                    if (vi->to_mark) {
+                        diii = Value(vi->id, vi->id, vi->id);
 
-                    diii = Value(vi->id, vi->id, vi->id);
-
-                    if (diii != 0.0) {
-                        Reference(vi->id, vi->id, vi->id) = 0.0;
+                        if (diii != 0.0) {
+                            Reference(vi->id, vi->id, vi->id) = 0.0;
+                        }
                     }
-
 
                     //prepare for the hessian calculation. 
                     //builds a list of variables to use, statement level variables come first,
@@ -1092,29 +1106,38 @@ namespace atl {
                         vj = gradient_stack[i].valid_id_list[j];
 
                         //load second order partial derivative for i wrt j and k
-                        vij[j] = Value(vi->id, vj->id);
+                        vij[j] = 0.0;
+                        if (vi->so_mark && vj->so_mark) {
+                            vij[j] = Value(vi->id, vj->id);
 
-                        if (std::fabs(vij[j]) > 0.0) {
-                            MakeZero(vi->id, vj->id);
+                            if (std::fabs(vij[j]) > 0.0) {
+                                MakeZero(vi->id, vj->id);
+                            }
                         }
 
-                        viij_[j] = Value(vi->id, vi->id, vj->id);
+                        viij_[j] = 0.0;
+                        if (vi->to_mark && vj->to_mark) {
+                            viij_[j] = Value(vi->id, vi->id, vj->id);
 
-                        if (std::fabs(viij_[j]) > 0.0) {
-                            MakeZero(vi->id, vi->id, vj->id);
+                            if (std::fabs(viij_[j]) > 0.0) {
+                                MakeZero(vi->id, vi->id, vj->id);
+                            }
                         }
-
 
 #pragma unroll
                         for (unsigned k = j; k < ID_LIST_SIZE; k++) {
                             vk = gradient_stack[i].valid_id_list[k];
 
-                            vijk_[(j * ID_LIST_SIZE) + k] = Value(vi->id, vj->id, vk->id);
+                            vijk_[(j * ID_LIST_SIZE) + k] = 0.0;
 
-                            if (vijk_[(j * ID_LIST_SIZE) + k] != 0.0) {
+                            if (vi->to_mark && vj->to_mark && vk->to_mark) {
+                                vijk_[(j * ID_LIST_SIZE) + k] = Value(vi->id, vj->id, vk->id);
 
-                                MakeZero(vi->id, vj->id, vk->id);
+                                if (vijk_[(j * ID_LIST_SIZE) + k] != 0.0) {
 
+                                    MakeZero(vi->id, vj->id, vk->id);
+
+                                }
                             }
                             vijk_[(k * ID_LIST_SIZE) + j] = vijk_[(j * ID_LIST_SIZE) + k]; // dijk;
                         }
@@ -1160,6 +1183,8 @@ namespace atl {
                                     }
                                     if (/*std::fabs(entry)*/entry != REAL_T(0.0)) {//h[j][k] needs to be updated
                                         this->Reference(vk->id, vl->id) += entry;
+                                        vk->so_mark = true;
+                                        vl->so_mark = true;
                                         needs_push[l] = true;
                                     }
                                 }
@@ -1167,6 +1192,7 @@ namespace atl {
                                 for (int l = rows; l < ID_LIST_SIZE; l++) {
 
                                     vl = gradient_stack[i].valid_id_list[l];
+                                    
                                     hdk = 0;
 
                                     entry = 0.0; //the entry value for h[j][k]
@@ -1179,6 +1205,8 @@ namespace atl {
                                     }
                                     if (entry != REAL_T(0.0)) {//h[j][k] needs to be updated
                                         Reference(vk->id, vl->id) += entry;
+                                        vk->so_mark = true;
+                                        vl->so_mark = true;
                                         needs_push[l] = true;
                                         needs_push[k] = true;
 
@@ -1226,6 +1254,9 @@ namespace atl {
 
                                 if (entry_3 != 0.0) {
                                     Reference(vj->id, vk->id, vl->id) += entry_3;
+                                    vj->to_mark = true;
+                                    vk->to_mark = true;
+                                    vl->to_mark = true;
                                 }
 
                             }
@@ -1254,6 +1285,9 @@ namespace atl {
                                 }
                                 if (entry_3 != 0.0) {
                                     Reference(vj->id, vk->id, vl->id) += entry_3;
+                                    vj->to_mark = true;
+                                    vk->to_mark = true;
+                                    vl->to_mark = true;
                                     needs_push[l] = true;
                                     needs_push[k] = true;
                                 }
@@ -1275,6 +1309,9 @@ namespace atl {
                                     }
                                     if (entry_3 != 0.0) {
                                         Reference(vj->id, vk->id, vl->id) += entry_3;
+                                        vj->to_mark = true;
+                                        vk->to_mark = true;
+                                        vl->to_mark = true;
                                         needs_push[l] = true;
                                         needs_push[k] = true;
                                     }

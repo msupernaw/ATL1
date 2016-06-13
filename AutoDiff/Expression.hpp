@@ -151,6 +151,10 @@ namespace atl {
         const ExpressionBase& operator=(const ExpressionBase & exp) const {
             return *this;
         }
+        
+        std::string ToString() const{
+            return Cast().ToString();
+        }
     };
 
     template <class REAL_T, class T>

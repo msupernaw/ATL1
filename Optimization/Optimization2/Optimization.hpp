@@ -277,7 +277,7 @@ namespace atl {
             // solve L^T x = y
 #pragma unroll
             for (int i = n - 1; i >= 0; i--) {
-                double sum;
+                T sum;
                 int k;
 #pragma unroll
                 for (sum = x[i], k = 0; k < this->upper_pattern[i].size(); k++)
@@ -847,7 +847,6 @@ namespace atl {
 
             f += static_cast<T> (.5) * log_det;
             f -= static_cast<T> (.5)*(static_cast<T> (RANDOM_SIZE) * std::log((static_cast<T> (2.0 * M_PI))));
-
         }
 
         void ComputeGradient(std::vector<atl::Variable<T>* >&p,
@@ -1100,10 +1099,10 @@ namespace atl {
                         return true;
                     } else {
                         atl::Variable<T>::SetRecording(false);
-                        step *= 2.0; //10.0;
+                        step *= 10.0;//2.0; //10.0;
                     }
                 } else {
-                    step *= .5; /// /= 10.0;
+                    step  /= 10.0;//*= .5; ///
                     down = true;
                 }
             }
@@ -1233,7 +1232,7 @@ namespace atl {
                     wg[j] = this->hyper_parameters_m[j]->GetScaledGradient(this->hyper_parameters_m[j]->GetInternalValue()) * this->gradient[j];
                 }
 
-                if ((i % 10) == 0 || i == 0) {
+                if ((i % 1) == 0 || i == 0) {
                     std::cout << "Iteration " << i << "\n";
                     std::cout << "Phase = " << this->phase_m << "\n";
 

@@ -116,6 +116,12 @@ namespace atl {
         inline atl::DynamicExpression<REAL_T>* GetDynamicExpession() const {
             return new atl::DynamicScalar<REAL_T>(value_m);
         }
+        
+        std::string ToString() const{
+            std::stringstream ss;
+            ss<<value_m;
+            return ss.str();
+        }
 
 
     private:

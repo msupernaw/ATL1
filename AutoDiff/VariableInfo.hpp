@@ -39,7 +39,7 @@
 #include <stack>
 #include <memory>
 
-#define ATL_VARIABLE_INFO_USE_MEMORY_POOL
+//#define ATL_VARIABLE_INFO_USE_MEMORY_POOL
 
 #ifdef ATL_VARIABLE_INFO_USE_MEMORY_POOL
 #include "PoolAllocator.hpp"
@@ -226,6 +226,8 @@ namespace atl {
         ////        int push_mattered = 0;
         bool has_nl_interaction = false;
         bool is_nl = false;
+        bool so_mark = false;
+        bool to_mark = false;
 
         VariableInfo() : dvalue(0.0), vvalue(0.0), count(1), dependence_level(1), is_dependent(0), id(VariableIdGenerator::instance()->next()) {
 
@@ -309,6 +311,8 @@ namespace atl {
                 this->nldependencies.clear();
             }
             this->is_nl = false;
+            this->so_mark = false;
+            this->to_mark = false;
             //            this->push_count = 0;
             //            push_start = 0;
             //            push_mattered = 0;
@@ -318,10 +322,10 @@ namespace atl {
         static void FreeAll() {
 #pragma unroll
             for (int i = 0; i < freed.size(); i++) {
-                if(freed[i]!=NULL){//memory pool may have destructed first
-                VariableIdGenerator::instance()->release(freed[i]->id);
-                freed[i]->vvalue = 0;
-                delete freed[i];
+                if (freed[i] != NULL) {//memory pool may have destructed first
+                    VariableIdGenerator::instance()->release(freed[i]->id);
+                    freed[i]->vvalue = 0;
+                    delete freed[i];
                 }
             }
             freed.resize(0);

@@ -155,6 +155,11 @@ namespace atl {
             return new atl::DynamicACos<REAL_T>(expr_m.GetDynamicExpession());
         }
 
+        std::string ToString() const{
+            std::stringstream ss;
+            ss<<"Cos("<<expr_m.ToString()<<")";
+            return ss.str();
+        }
 
 
     private:

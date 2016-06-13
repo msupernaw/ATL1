@@ -127,6 +127,13 @@ namespace atl {
         inline atl::DynamicExpression<REAL_T>* GetDynamicExpession() const {
             return new atl::DynamicCeil<REAL_T>(expr_m.GetDynamicExpession());
         }
+        
+        
+        std::string ToString() const{
+            std::stringstream ss;
+            ss<<"Ciel("<<expr_m.ToString()<<")";
+            return ss.str();
+        }
 
 
     private:

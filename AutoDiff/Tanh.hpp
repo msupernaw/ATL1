@@ -145,6 +145,13 @@ namespace atl {
         inline atl::DynamicExpression<REAL_T>* GetDynamicExpession() const {
             return new atl::DynamicTanh<REAL_T>(expr_m.GetDynamicExpession());
         }
+        
+        
+        std::string ToString() const{
+            std::stringstream ss;
+            ss<<"Tanh"<<expr_m.ToString()<<")";
+            return ss.str();
+        }
 
     private:
         const EXPR& expr_m;

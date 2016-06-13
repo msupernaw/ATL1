@@ -101,7 +101,7 @@ namespace atl {
         typedef REAL_T BASE_TYPE;
 
         Pow(const ExpressionBase<REAL_T, EXPR1>& expr1, const ExpressionBase<REAL_T, EXPR2>& expr2)
-        : expr1_m(expr1.Cast()), expr2_m(expr2.Cast()) {
+        : expr1_m(expr1.Cast()), expr2_m(expr2.Cast()),l_value(expr1_m.GetValue()),r_value(expr2_m.GetValue()),value(std::pow(expr1_m.GetValue(),expr2_m.GetValue())) {
         }
 
         inline const REAL_T GetValue() const {
@@ -151,8 +151,8 @@ namespace atl {
         }
 
         inline REAL_T EvaluateDerivative(uint32_t id) const {
-            REAL_T g = expr2_m.GetValue();
-            REAL_T f = expr1_m.GetValue();
+            REAL_T g = r_value;
+            REAL_T f = l_value;
             REAL_T fx = expr1_m.EvaluateDerivative(id);
             REAL_T gx = expr2_m.EvaluateDerivative(id);
             return std::pow(f, g)*(std::log(f) * gx + g * fx / f);
@@ -160,8 +160,8 @@ namespace atl {
 
         inline REAL_T EvaluateDerivative(uint32_t a, uint32_t b) const {
             REAL_T fxy = expr1_m.EvaluateDerivative(a, b);
-            REAL_T g = expr2_m.GetValue();
-            REAL_T f = expr1_m.GetValue();
+            REAL_T g = r_value;
+            REAL_T f = l_value;
             REAL_T fx = expr1_m.EvaluateDerivative(a);
             REAL_T gy = expr2_m.EvaluateDerivative(b);
             REAL_T fy = expr1_m.EvaluateDerivative(b);
@@ -174,16 +174,16 @@ namespace atl {
         }
 
         inline REAL_T EvaluateDerivative(uint32_t x, uint32_t y, uint32_t z) const {
-            return std::pow(expr1_m.GetValue(), expr2_m.GetValue())*(-((expr1_m.EvaluateDerivative(x))*(expr1_m.EvaluateDerivative(y))*(expr2_m.EvaluateDerivative(z))) / std::pow(expr1_m.GetValue(), 2.0)+((expr1_m.EvaluateDerivative(x, y))*(expr2_m.EvaluateDerivative(z))) / expr1_m.GetValue()+((expr1_m.EvaluateDerivative(x))*(expr2_m.EvaluateDerivative(y, z))) / expr1_m.GetValue()-((expr1_m.EvaluateDerivative(x))*(expr1_m.EvaluateDerivative(z))*(expr2_m.EvaluateDerivative(y))) / std::pow(expr1_m.GetValue(), 2.0)+((expr1_m.EvaluateDerivative(x, z))*(expr2_m.EvaluateDerivative(y))) / expr1_m.GetValue()+
-                    ((expr1_m.EvaluateDerivative(y))*(expr2_m.EvaluateDerivative(x, z))) / expr1_m.GetValue() + std::log(expr1_m.GetValue())*(expr2_m.EvaluateDerivative(x, y, z))+((expr1_m.EvaluateDerivative(z))*(expr2_m.EvaluateDerivative(x, y))) / expr1_m.GetValue()-((expr1_m.EvaluateDerivative(y))*(expr1_m.EvaluateDerivative(z))*(expr2_m.EvaluateDerivative(x))) / std::pow(expr1_m.GetValue(), 2.0)+((expr1_m.EvaluateDerivative(y, z))*(expr2_m.EvaluateDerivative(x))) / expr1_m.GetValue()+
-                    (2.0 * expr2_m.GetValue()*(expr1_m.EvaluateDerivative(x))*(expr1_m.EvaluateDerivative(y))*(expr1_m.EvaluateDerivative(z))) / std::pow(expr1_m.GetValue(), 3.0) - (expr2_m.GetValue()*(expr1_m.EvaluateDerivative(x, y))*(expr1_m.EvaluateDerivative(z))) / std::pow(expr1_m.GetValue(), 2.0)-(expr2_m.GetValue()*(expr1_m.EvaluateDerivative(x))*(expr1_m.EvaluateDerivative(y, z))) / std::pow(expr1_m.GetValue(), 2.0)-(expr2_m.GetValue()*(expr1_m.EvaluateDerivative(x, z))*(expr1_m.EvaluateDerivative(y))) / std::pow(expr1_m.GetValue(), 2.0)+(expr2_m.GetValue()*(expr1_m.EvaluateDerivative(x, y, z))) / expr1_m.GetValue()) +
-                    std::pow(expr1_m.GetValue(), expr2_m.GetValue())*(std::log(expr1_m.GetValue())*(expr2_m.EvaluateDerivative(x))+(expr2_m.GetValue()*(expr1_m.EvaluateDerivative(x))) / expr1_m.GetValue())*
-                    (((expr1_m.EvaluateDerivative(y))*(expr2_m.EvaluateDerivative(z))) / expr1_m.GetValue() + std::log(expr1_m.GetValue())*(expr2_m.EvaluateDerivative(y, z))+((expr1_m.EvaluateDerivative(z))*(expr2_m.EvaluateDerivative(y))) / expr1_m.GetValue()-(expr2_m.GetValue()*(expr1_m.EvaluateDerivative(y))*(expr1_m.EvaluateDerivative(z))) / std::pow(expr1_m.GetValue(), 2.0)+(expr2_m.GetValue()*(expr1_m.EvaluateDerivative(y, z))) / expr1_m.GetValue()) + std::pow(expr1_m.GetValue(), expr2_m.GetValue())*
-                    (std::log(expr1_m.GetValue())*(expr2_m.EvaluateDerivative(y))+(expr2_m.GetValue()*(expr1_m.EvaluateDerivative(y))) / expr1_m.GetValue())*
-                    (((expr1_m.EvaluateDerivative(x))*(expr2_m.EvaluateDerivative(z))) / expr1_m.GetValue() + std::log(expr1_m.GetValue())*(expr2_m.EvaluateDerivative(x, z))+((expr1_m.EvaluateDerivative(z))*(expr2_m.EvaluateDerivative(x))) / expr1_m.GetValue()-(expr2_m.GetValue()*(expr1_m.EvaluateDerivative(x))*(expr1_m.EvaluateDerivative(z))) / std::pow(expr1_m.GetValue(), 2.0)+(expr2_m.GetValue()*(expr1_m.EvaluateDerivative(x, z))) / expr1_m.GetValue()) + std::pow(expr1_m.GetValue(), expr2_m.GetValue())*
-                    (((expr1_m.EvaluateDerivative(x))*(expr2_m.EvaluateDerivative(y))) / expr1_m.GetValue() + std::log(expr1_m.GetValue())*(expr2_m.EvaluateDerivative(x, y))+((expr1_m.EvaluateDerivative(y))*(expr2_m.EvaluateDerivative(x))) / expr1_m.GetValue()-(expr2_m.GetValue()*(expr1_m.EvaluateDerivative(x))*(expr1_m.EvaluateDerivative(y))) / std::pow(expr1_m.GetValue(), 2.0)+(expr2_m.GetValue()*(expr1_m.EvaluateDerivative(x, y))) / expr1_m.GetValue())*
-                    (std::log(expr1_m.GetValue())*(expr2_m.EvaluateDerivative(z))+(expr2_m.GetValue()*(expr1_m.EvaluateDerivative(z))) / expr1_m.GetValue()) + std::pow(expr1_m.GetValue(), expr2_m.GetValue())*(std::log(expr1_m.GetValue())*(expr2_m.EvaluateDerivative(x))+(expr2_m.GetValue()*(expr1_m.EvaluateDerivative(x))) / expr1_m.GetValue())*(std::log(expr1_m.GetValue())*(expr2_m.EvaluateDerivative(y))+(expr2_m.GetValue()*(expr1_m.EvaluateDerivative(y))) / expr1_m.GetValue())*
-                    (std::log(expr1_m.GetValue())*(expr2_m.EvaluateDerivative(z))+(expr2_m.GetValue()*(expr1_m.EvaluateDerivative(z))) / expr1_m.GetValue());
+            return std::pow(l_value, r_value)*(-1.0*((expr1_m.EvaluateDerivative(x))*(expr1_m.EvaluateDerivative(y))*(expr2_m.EvaluateDerivative(z))) / std::pow(l_value, 2.0)+((expr1_m.EvaluateDerivative(x, y))*(expr2_m.EvaluateDerivative(z))) / l_value+((expr1_m.EvaluateDerivative(x))*(expr2_m.EvaluateDerivative(y, z))) / l_value-((expr1_m.EvaluateDerivative(x))*(expr1_m.EvaluateDerivative(z))*(expr2_m.EvaluateDerivative(y))) / std::pow(l_value, 2.0)+((expr1_m.EvaluateDerivative(x, z))*(expr2_m.EvaluateDerivative(y))) / l_value+
+                    ((expr1_m.EvaluateDerivative(y))*(expr2_m.EvaluateDerivative(x, z))) / l_value + std::log(l_value)*(expr2_m.EvaluateDerivative(x, y, z))+((expr1_m.EvaluateDerivative(z))*(expr2_m.EvaluateDerivative(x, y))) / l_value-((expr1_m.EvaluateDerivative(y))*(expr1_m.EvaluateDerivative(z))*(expr2_m.EvaluateDerivative(x))) / std::pow(l_value, 2.0)+((expr1_m.EvaluateDerivative(y, z))*(expr2_m.EvaluateDerivative(x))) / l_value+
+                    (2.0 * r_value*(expr1_m.EvaluateDerivative(x))*(expr1_m.EvaluateDerivative(y))*(expr1_m.EvaluateDerivative(z))) / std::pow(l_value, 3.0) - (r_value*(expr1_m.EvaluateDerivative(x, y))*(expr1_m.EvaluateDerivative(z))) / std::pow(l_value, 2.0)-(r_value*(expr1_m.EvaluateDerivative(x))*(expr1_m.EvaluateDerivative(y, z))) / std::pow(l_value, 2.0)-(r_value*(expr1_m.EvaluateDerivative(x, z))*(expr1_m.EvaluateDerivative(y))) / std::pow(l_value, 2.0)+(r_value*(expr1_m.EvaluateDerivative(x, y, z))) / l_value) +
+                    std::pow(l_value, r_value)*(std::log(l_value)*(expr2_m.EvaluateDerivative(x))+(r_value*(expr1_m.EvaluateDerivative(x))) / l_value)*
+                    (((expr1_m.EvaluateDerivative(y))*(expr2_m.EvaluateDerivative(z))) / l_value + std::log(l_value)*(expr2_m.EvaluateDerivative(y, z))+((expr1_m.EvaluateDerivative(z))*(expr2_m.EvaluateDerivative(y))) / l_value-(r_value*(expr1_m.EvaluateDerivative(y))*(expr1_m.EvaluateDerivative(z))) / std::pow(l_value, 2.0)+(r_value*(expr1_m.EvaluateDerivative(y, z))) / l_value) + std::pow(l_value, r_value)*
+                    (std::log(l_value)*(expr2_m.EvaluateDerivative(y))+(r_value*(expr1_m.EvaluateDerivative(y))) / l_value)*
+                    (((expr1_m.EvaluateDerivative(x))*(expr2_m.EvaluateDerivative(z))) / l_value + std::log(l_value)*(expr2_m.EvaluateDerivative(x, z))+((expr1_m.EvaluateDerivative(z))*(expr2_m.EvaluateDerivative(x))) / l_value-(r_value*(expr1_m.EvaluateDerivative(x))*(expr1_m.EvaluateDerivative(z))) / std::pow(l_value, 2.0)+(r_value*(expr1_m.EvaluateDerivative(x, z))) / l_value) + std::pow(l_value, r_value)*
+                    (((expr1_m.EvaluateDerivative(x))*(expr2_m.EvaluateDerivative(y))) / l_value + std::log(l_value)*(expr2_m.EvaluateDerivative(x, y))+((expr1_m.EvaluateDerivative(y))*(expr2_m.EvaluateDerivative(x))) / l_value-(r_value*(expr1_m.EvaluateDerivative(x))*(expr1_m.EvaluateDerivative(y))) / std::pow(l_value, 2.0)+(r_value*(expr1_m.EvaluateDerivative(x, y))) / l_value)*
+                    (std::log(l_value)*(expr2_m.EvaluateDerivative(z))+(r_value*(expr1_m.EvaluateDerivative(z))) / l_value) + std::pow(l_value, r_value)*(std::log(l_value)*(expr2_m.EvaluateDerivative(x))+(r_value*(expr1_m.EvaluateDerivative(x))) / l_value)*(std::log(l_value)*(expr2_m.EvaluateDerivative(y))+(r_value*(expr1_m.EvaluateDerivative(y))) / l_value)*
+                    (std::log(l_value)*(expr2_m.EvaluateDerivative(z))+(r_value*(expr1_m.EvaluateDerivative(z))) / l_value);
         }
 
         inline atl::DynamicExpression<REAL_T>* GetDynamicExpession() const {
@@ -191,9 +191,17 @@ namespace atl {
         }
 
 
+        std::string ToString() const{
+            std::stringstream ss;
+            ss<<"Pow("<<expr1_m.ToString()<<" , "<<expr2_m.ToString()<<")";
+            return ss.str();
+        }
 
         const EXPR1& expr1_m;
         const EXPR2& expr2_m;
+        REAL_T l_value;
+        REAL_T r_value;
+        REAL_T value;
     };
 
     /**
@@ -206,6 +214,8 @@ namespace atl {
 
         PowScalar(const ExpressionBase<REAL_T, EXPR1>& expr1, const REAL_T & expr2)
         : expr1_m(expr1.Cast()), expr2_m(expr2) {
+            rminus_one = (expr2_m-1.0);
+            pofrminus_one =std::pow(expr1_m.GetValue(), rminus_one)*expr2_m;
         }
 
         inline const REAL_T GetValue() const {
@@ -249,11 +259,11 @@ namespace atl {
         }
 
         inline REAL_T EvaluateDerivative(uint32_t id) const {
-            return expr2_m * std::pow(expr1_m.GetValue(), expr2_m - 1.0) * expr1_m.EvaluateDerivative(id);
+            return pofrminus_one * expr1_m.EvaluateDerivative(id);
         }
 
         inline REAL_T EvaluateDerivative(uint32_t a, uint32_t b) const {
-            return ((expr2_m - 1) * expr2_m)*std::pow(expr1_m.GetValue(), expr2_m - 2.0) * expr1_m.EvaluateDerivative(a) * expr1_m.EvaluateDerivative(b) +
+            return ((expr2_m - 1.0) * expr2_m)*std::pow(expr1_m.GetValue(), expr2_m - 2.0) * expr1_m.EvaluateDerivative(a) * expr1_m.EvaluateDerivative(b) +
                     expr2_m * std::pow(expr1_m.GetValue(), expr2_m - 1.0) * expr1_m.EvaluateDerivative(a, b);
         }
 
@@ -263,16 +273,22 @@ namespace atl {
                     *(expr1_m.EvaluateDerivative(z))+(expr2_m - 1.0)
                     * expr2_m * std::pow(expr1_m.GetValue(), expr2_m - 2.0)*(expr1_m.EvaluateDerivative(x, y))
                     *(expr1_m.EvaluateDerivative(z))+(expr2_m - 1.0) * expr2_m * std::pow(expr1_m.GetValue(), expr2_m - 2.0)*
-                    (expr1_m.EvaluateDerivative(x))*(expr1_m.EvaluateDerivative(y, z))+(expr2_m - 1)
+                    (expr1_m.EvaluateDerivative(x))*(expr1_m.EvaluateDerivative(y, z))+(expr2_m - 1.0)
                     * expr2_m * std::pow(expr1_m.GetValue(), expr2_m - 2.0) * (expr1_m.EvaluateDerivative(x, z))
                     *(expr1_m.EvaluateDerivative(y)) + expr2_m * std::pow(expr1_m.GetValue(), expr2_m - 1.0)
                     * (expr1_m.EvaluateDerivative(x, y, z));
         }
 
-
+        std::string ToString() const{
+            std::stringstream ss;
+            ss<<"Pow("<<expr1_m.ToString()<<" , "<<expr2_m<<")";
+            return ss.str();
+        }
 
         const EXPR1& expr1_m;
         const REAL_T& expr2_m;
+        REAL_T rminus_one;
+        REAL_T pofrminus_one;
     };
 
     /**
@@ -365,6 +381,11 @@ namespace atl {
 
         }
 
+        std::string ToString() const{
+            std::stringstream ss;
+            ss<<"Pow("<<expr1_m <<" , "<<expr2_m.ToString()<<")";
+            return ss.str();
+        }
 
         const REAL_T& expr1_m;
         const EXPR2& expr2_m;
