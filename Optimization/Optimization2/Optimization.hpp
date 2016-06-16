@@ -1373,6 +1373,7 @@ namespace atl {
             atl::Variable<T> f;
             this->CallObjectiveFunction(f);
             fx = f.GetValue();
+            this->function_value = f.GetValue();
             this->ComputeGradient(this->hyper_parameters_m, this->gradient, this->maxgc);
             for (int i = 0; i < n; i++) {
                 g[i] = this->hyper_parameters_m[i]->GetScaledGradient(this->hyper_parameters_m[i]->GetInternalValue()) * this->gradient[i];
@@ -1400,6 +1401,7 @@ namespace atl {
                     atl::Variable<T>::gradient_structure_g.Reset();
                     this->CallObjectiveFunction(f);
                     fx = f.GetValue();
+                    this->function_value = f.GetValue();
                     this->ComputeGradient(this->hyper_parameters_m, this->gradient, this->maxgc);
                     for (int i = 0; i < n; i++) {
                         g[i] = this->hyper_parameters_m[i]->GetScaledGradient(this->hyper_parameters_m[i]->GetInternalValue()) * this->gradient[i];
@@ -1427,6 +1429,7 @@ namespace atl {
                     atl::Variable<T>::gradient_structure_g.Reset();
                     this->CallObjectiveFunction(f);
                     fx = f.GetValue();
+                    this->function_value = f.GetValue();
 
                     if (fx != fx) {
                         std::cout << "Objective Function signaling NaN";
@@ -1443,6 +1446,7 @@ namespace atl {
             atl::Variable<T>::gradient_structure_g.Reset();
             this->CallObjectiveFunction(f);
             fx = f.GetValue();
+            this->function_value = f.GetValue();
             this->ComputeGradient(this->hyper_parameters_m, this->gradient, this->maxgc);
             this->Print();
         }

@@ -1,7 +1,7 @@
 #include "../../../../Optimization/Optimization2/Optimization.hpp"
 #include "../../../../Utilities/IO/StreamedDataFile.hpp"
 
-#define ADMB_VERSION
+//#define ADMB_VERSION
 
 #ifdef ADMB_VERSION
 
