@@ -172,7 +172,7 @@ public:
             throw std::overflow_error("Divide by zero exception");
         }
         
-        atl::Variable<T> logres = -1.0*atl::log(T(sqrt(2*M_PI))*sd)-T(.5)*atl::pow((x-mean)/sd,2.0);
+        atl::Variable<T> logres = static_cast<T>(-1.0)*atl::log(T(sqrt(2*M_PI))*sd)-static_cast<T>(.5)*atl::pow((x-mean)/sd,static_cast<T>(2.0));
         if (give_log)return logres;
         else return atl::exp(logres);
     }

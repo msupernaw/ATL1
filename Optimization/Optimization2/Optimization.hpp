@@ -690,15 +690,18 @@ namespace atl {
     public:
 
         void EvaluateLaplace(atl::Variable<T>& f) {
+
+            //            atl::Variable<T> f;
+
             bool recording = atl::Variable<T>::gradient_structure_g.recording;
             size_t PARAMETERS_SIZE = this->hyper_parameters_m.size();
             size_t RANDOM_SIZE = this->random_variables_m.size();
-            size_t ALL_SIZE = this->all_variables_m.size();
+
             if (recording) {
                 for (int i = 0; i < RANDOM_SIZE; i++) {
                     this->random_variables_m[i]->SetValue(0.0);
                 }
-                if (this->NewtonInner(10, 1e-7)) {
+                if (this->NewtonInner(10, 1e-4)) {
                     std::cout << "Inner converged!\n";
                     std::cout << "Inner f = " << this->inner_function_value << "\n";
                     std::cout << "Inner maxg = " << this->inner_maxgc << "\n\n";
@@ -708,68 +711,43 @@ namespace atl {
                     std::cout << "Inner f = " << this->inner_function_value << "\n";
                     std::cout << "Inner maxg = " << this->inner_maxgc << "\n\n";
                 }
-            }
 
-            std::unordered_map<atl::VariableInfo<T>*, T> derivatives_logdet;
-            std::unordered_map<atl::VariableInfo<T>*, T> derivatives_f;
+                std::unordered_map<atl::VariableInfo<T>*, T> derivatives_logdet;
+                std::unordered_map<atl::VariableInfo<T>*, T> derivatives_f;
 
-            this->ClearReStructures();
-            if (recording) {
+                this->ClearReStructures();
                 atl::Variable<T>::gradient_structure_g.derivative_trace_level = atl::THIRD_ORDER_MIXED_PARTIALS;
-            } else {
-                atl::Variable<T>::gradient_structure_g.derivative_trace_level = atl::SECOND_ORDER_MIXED_PARTIALS;
-            }
-            atl::Variable<T>::gradient_structure_g.recording = true;
-            atl::Variable<T>::gradient_structure_g.Reset();
-            atl::Variable<T> innerf2 = this->objective_function_m->Evaluate();
-            atl::Variable<T>::gradient_structure_g.AccumulateFirstOrder();
-            std::vector<T> g(PARAMETERS_SIZE);
+                atl::Variable<T>::gradient_structure_g.recording = true;
+                atl::Variable<T>::gradient_structure_g.Reset();
+                atl::Variable<T> innerf = this->objective_function_m->Evaluate();
 
-            for (int j = 0; j < PARAMETERS_SIZE; j++) {
-                g[j] = this->hyper_parameters_m[j]->info->dvalue;
-            }
+                if (innerf.GetValue() != innerf.GetValue()) {
+                    std::cout << "Inner minimizer returned NaN, bailing out!" << std::endl;
+                    exit(0);
+                }
 
-            atl::Variable<T>::gradient_structure_g.Reset();
-            atl::Variable<T> innerf = this->objective_function_m->Evaluate();
-
-            if (innerf.GetValue() != innerf.GetValue()) {
-                std::cout << "Inner minimizer returned NaN, bailing out!" << std::endl;
-                exit(0);
-            }
-
-            innerf.SetName("innerf");
-            if (recording && re_active) {
                 std::cout << "accumulating third-order mixed derivatives..." << std::flush;
                 atl::Variable<T>::gradient_structure_g.AccumulateThirdOrderMixed();
-                std::cout << "done\n" << std::flush;
-            } else {
-                atl::Variable<T>::gradient_structure_g.AccumulateSecondOrderMixed();
-            }
-
-
-
-
-            int ii = 0;
-            for (int i = 0; i < RANDOM_SIZE; i++) {
-                for (int j = 0; j < RANDOM_SIZE; j++) {
-                    rand_hessian[i][j] = atl::Variable<T>::gradient_structure_g.Value(this->random_variables_m[i]->info->id, this->random_variables_m[j]->info->id);
-
+                std::cout << "done." << std::endl;
+                std::vector<T> g(PARAMETERS_SIZE);
+                for (int j = 0; j < PARAMETERS_SIZE; j++) {
+                    g[j] = this->hyper_parameters_m[j]->info->dvalue;
                 }
-            }
+                int ii = 0;
+                for (int i = 0; i < RANDOM_SIZE; i++) {
+                    for (int j = 0; j < RANDOM_SIZE; j++) {
+                        rand_hessian[i][j] = atl::Variable<T>::gradient_structure_g.Value(this->random_variables_m[i]->info->id, this->random_variables_m[j]->info->id);
 
-            this->outer_iteration ? cholesky_outer.compute(rand_hessian) : cholesky_outer.recompute(rand_hessian);
+                    }
+                }
 
-
-
-
-            //compute logdetH
-            T ld = cholesky_outer.logdet();
-            log_det = ld;
-            log_det.SetName("log_det");
+                this->cholesky_outer.has_pattern ? cholesky_outer.compute(rand_hessian) : cholesky_outer.recompute(rand_hessian);
 
 
-
-            if (recording) {
+                //compute logdetH
+                T ld = cholesky_outer.logdet();
+                log_det = ld;
+                log_det.SetName("log_det");
 
                 for (int i = 0; i < PARAMETERS_SIZE; i++) {
                     derivatives_f[this->hyper_parameters_m[i]->info] = g[i]; //hr(0, i);
@@ -799,17 +777,13 @@ namespace atl {
 
                     derivatives_logdet[this->hyper_parameters_m[p]->info] = tr;
                 }
-            }
-            //reset derivative structure
-            atl::Variable<T>::gradient_structure_g.Reset();
-            atl::Variable<T>::gradient_structure_g.derivative_trace_level = atl::FIRST_ORDER;
 
+                atl::Variable<T>::gradient_structure_g.Reset();
+                atl::Variable<T>::gradient_structure_g.recording = false;
+                f = this->objective_function_m->Evaluate();
+                f.SetName("F");
+                atl::Variable<T>::gradient_structure_g.recording = recording;
 
-            atl::Variable<T>::gradient_structure_g.recording = false;
-            f = this->objective_function_m->Evaluate();
-            f.SetName("F");
-            atl::Variable<T>::gradient_structure_g.recording = recording;
-            if (recording) {
 
                 //push adjoint entry for log_det
                 atl::StackEntry<T>& entry = atl::Variable<T>::gradient_structure_g.NextEntry();
@@ -843,10 +817,203 @@ namespace atl {
                     in++;
                 }
                 atl::Variable<T>::gradient_structure_g.recording = true;
+
+                f += static_cast<T> (.5) * log_det;
+                f -= static_cast<T> (.5)*(static_cast<T> (RANDOM_SIZE) * std::log((static_cast<T> (2.0 * M_PI))));
+
+
+                //                return f;
+
+            } else {
+
+                atl::Variable<T>::gradient_structure_g.derivative_trace_level = atl::SECOND_ORDER_MIXED_PARTIALS;
+                this->ClearReStructures();
+                atl::Variable<T>::gradient_structure_g.recording = true;
+                atl::Variable<T>::gradient_structure_g.Reset();
+                atl::Variable<T> innerf = this->objective_function_m->Evaluate();
+                atl::Variable<T>::gradient_structure_g.AccumulateSecondOrderMixed();
+                int ii = 0;
+                for (int i = 0; i < RANDOM_SIZE; i++) {
+                    for (int j = 0; j < RANDOM_SIZE; j++) {
+                        rand_hessian[i][j] = atl::Variable<T>::gradient_structure_g.Value(this->random_variables_m[i]->info->id, this->random_variables_m[j]->info->id);
+
+                    }
+                }
+
+                this->cholesky_outer.has_pattern ? cholesky_outer.compute(rand_hessian) : cholesky_outer.recompute(rand_hessian);
+
+
+                //compute logdetH
+                T ld = cholesky_outer.logdet();
+                log_det = ld;
+                log_det.SetName("log_det");
+                atl::Variable<T>::gradient_structure_g.recording = false;
+                f = this->objective_function_m->Evaluate();
+
+                f += static_cast<T> (.5) * log_det;
+                f -= static_cast<T> (.5)*(static_cast<T> (RANDOM_SIZE) * std::log((static_cast<T> (2.0 * M_PI))));
+
+                //                return f;
             }
 
-            f += static_cast<T> (.5) * log_det;
-            f -= static_cast<T> (.5)*(static_cast<T> (RANDOM_SIZE) * std::log((static_cast<T> (2.0 * M_PI))));
+
+            //            bool recording = atl::Variable<T>::gradient_structure_g.recording;
+            //            size_t PARAMETERS_SIZE = this->hyper_parameters_m.size();
+            //            size_t RANDOM_SIZE = this->random_variables_m.size();
+            //            size_t ALL_SIZE = this->all_variables_m.size();
+            //            if (recording) {
+            //                for (int i = 0; i < RANDOM_SIZE; i++) {
+            //                    this->random_variables_m[i]->SetValue(0.0);
+            //                }
+            //                if (this->NewtonInner(10, 1e-7)) {
+            //                    std::cout << "Inner converged!\n";
+            //                    std::cout << "Inner f = " << this->inner_function_value << "\n";
+            //                    std::cout << "Inner maxg = " << this->inner_maxgc << "\n\n";
+            //
+            //                } else {
+            //                    std::cout << "Inner failed!\n";
+            //                    std::cout << "Inner f = " << this->inner_function_value << "\n";
+            //                    std::cout << "Inner maxg = " << this->inner_maxgc << "\n\n";
+            //                }
+            //            }
+            //
+            //            std::unordered_map<atl::VariableInfo<T>*, T> derivatives_logdet;
+            //            std::unordered_map<atl::VariableInfo<T>*, T> derivatives_f;
+            //
+            //            this->ClearReStructures();
+            //            if (recording) {
+            //                atl::Variable<T>::gradient_structure_g.derivative_trace_level = atl::THIRD_ORDER_MIXED_PARTIALS;
+            //            } else {
+            //                atl::Variable<T>::gradient_structure_g.derivative_trace_level = atl::SECOND_ORDER_MIXED_PARTIALS;
+            //            }
+            //            atl::Variable<T>::gradient_structure_g.recording = true;
+            //            atl::Variable<T>::gradient_structure_g.Reset();
+            //            atl::Variable<T> innerf2 = this->objective_function_m->Evaluate();
+            //            atl::Variable<T>::gradient_structure_g.AccumulateFirstOrder();
+            //            std::vector<T> g(PARAMETERS_SIZE);
+            //
+            //            for (int j = 0; j < PARAMETERS_SIZE; j++) {
+            //                g[j] = this->hyper_parameters_m[j]->info->dvalue;
+            //            }
+            //
+            //            atl::Variable<T>::gradient_structure_g.Reset();
+            //            atl::Variable<T> innerf = this->objective_function_m->Evaluate();
+            //
+            //            if (innerf.GetValue() != innerf.GetValue()) {
+            //                std::cout << "Inner minimizer returned NaN, bailing out!" << std::endl;
+            //                exit(0);
+            //            }
+            //
+            //            innerf.SetName("innerf");
+            //            if (recording && re_active) {
+            //                std::cout << "accumulating third-order mixed derivatives..." << std::flush;
+            //                atl::Variable<T>::gradient_structure_g.AccumulateThirdOrderMixed();
+            //                std::cout << "done\n" << std::flush;
+            //            } else {
+            //                atl::Variable<T>::gradient_structure_g.AccumulateSecondOrderMixed();
+            //            }
+            //
+            //
+            //
+            //
+            //            int ii = 0;
+            //            for (int i = 0; i < RANDOM_SIZE; i++) {
+            //                for (int j = 0; j < RANDOM_SIZE; j++) {
+            //                    rand_hessian[i][j] = atl::Variable<T>::gradient_structure_g.Value(this->random_variables_m[i]->info->id, this->random_variables_m[j]->info->id);
+            //
+            //                }
+            //            }
+            //
+            //            this->outer_iteration ? cholesky_outer.compute(rand_hessian) : cholesky_outer.recompute(rand_hessian);
+            //
+            //
+            //
+            //
+            //            //compute logdetH
+            //            T ld = cholesky_outer.logdet();
+            //            log_det = ld;
+            //            log_det.SetName("log_det");
+            //
+            //
+            //
+            //            if (recording) {
+            //
+            //                for (int i = 0; i < PARAMETERS_SIZE; i++) {
+            //                    derivatives_f[this->hyper_parameters_m[i]->info] = g[i]; //hr(0, i);
+            //                }
+            //
+            //
+            //                //compute derivatives of the logdetH using third-order mixed partials
+            //
+            //                for (int p = 0; p < PARAMETERS_SIZE; p++) {
+            //
+            //                    for (int i = 0; i < RANDOM_SIZE; i++) {
+            //                        for (int j = 0; j < RANDOM_SIZE; j++) {
+            //                            this->rand_hessian_dx[i][j] = atl::Variable<T>::gradient_structure_g.Value(this->random_variables_m[i]->info->id,
+            //                                    this->random_variables_m[j]->info->id, this->hyper_parameters_m[p]->info->id);
+            //                            ret[i][j] = 0.0;
+            //                        }
+            //                    }
+            //                    //                    }
+            //
+            //                    cholesky_outer.solve(rand_hessian_dx, ret);
+            //
+            //
+            //                    T tr = 0;
+            //                    for (int i = 0; i < RANDOM_SIZE; i++) {
+            //                        tr += ret[i][i];
+            //                    }
+            //
+            //                    derivatives_logdet[this->hyper_parameters_m[p]->info] = tr;
+            //                }
+            //            }
+            //            //reset derivative structure
+            //            atl::Variable<T>::gradient_structure_g.Reset();
+            //            atl::Variable<T>::gradient_structure_g.derivative_trace_level = atl::FIRST_ORDER;
+            //
+            //
+            //            atl::Variable<T>::gradient_structure_g.recording = false;
+            //            f = this->objective_function_m->Evaluate();
+            //            f.SetName("F");
+            //            atl::Variable<T>::gradient_structure_g.recording = recording;
+            //            if (recording) {
+            //
+            //                //push adjoint entry for log_det
+            //                atl::StackEntry<T>& entry = atl::Variable<T>::gradient_structure_g.NextEntry();
+            //                entry.w = log_det.info;
+            //                typename std::unordered_map<atl::VariableInfo<T>*, T>::iterator it;
+            //                for (it = derivatives_logdet.begin(); it != derivatives_logdet.end(); ++it) {
+            //                    entry.ids.insert((*it).first);
+            //                }
+            //                typename atl::StackEntry<T>::id_itereator id_it;
+            //                entry.first.resize(entry.ids.size());
+            //                size_t in = 0;
+            //                for (id_it = entry.ids.begin(); id_it != entry.ids.end(); ++id_it) {
+            //                    T dx = derivatives_logdet[(*id_it)];
+            //                    entry.first[in] = dx;
+            //                    in++;
+            //                }
+            //
+            //
+            //                //push adjoint entry for objective function
+            //                atl::StackEntry<T>& entry2 = atl::Variable<T>::gradient_structure_g.NextEntry();
+            //                entry2.w = f.info;
+            //                for (it = derivatives_f.begin(); it != derivatives_f.end(); ++it) {
+            //                    entry2.ids.insert((*it).first);
+            //                }
+            //                entry2.first.resize(entry.ids.size());
+            //                in = 0;
+            //                for (id_it = entry2.ids.begin(); id_it != entry2.ids.end(); ++id_it) {
+            //
+            //                    T dx = derivatives_f[(*id_it)];
+            //                    entry2.first[in] = dx;
+            //                    in++;
+            //                }
+            //                atl::Variable<T>::gradient_structure_g.recording = true;
+            //            }
+            //
+            //            f += static_cast<T> (.5) * log_det;
+            //            f -= static_cast<T> (.5)*(static_cast<T> (RANDOM_SIZE) * std::log((static_cast<T> (2.0 * M_PI))));
         }
 
         void ComputeGradient(std::vector<atl::Variable<T>* >&p,
@@ -868,7 +1035,10 @@ namespace atl {
         }
 
         void Print() {
+            std::cout << "Iteration: " << this->outer_iteration << "\n";
             std::cout << "F = " << this->function_value << "\n";
+            std::cout << "Max Gradient Component: " << this->maxgc << "\n";
+            std::cout << "Floating-Point Type: Float" << (sizeof (T)*8) << "\n";
             std::cout << "Number of Parameters: " << this->hyper_parameters_m.size() << "\n";
             std::cout << " -----------------------------------------------------------------------------------\n";
             std::cout << '|' << util::center("Name", 15) << '|' << util::center("Value", 12) << '|' << util::center("Gradient", 12) << '|'
@@ -941,7 +1111,7 @@ namespace atl {
             for (int iter = 0; iter < max_iter; iter++) {
 
 
-                std::cout << "Newton raphson " << iter << std::endl;
+//                std::cout << "Newton raphson " << iter << std::endl;
                 atl::Variable<T>::gradient_structure_g.Reset();
                 atl::Variable<T>::SetRecording(true);
                 atl::Variable<T>::gradient_structure_g.derivative_trace_level = atl::SECOND_ORDER_MIXED_PARTIALS;
@@ -973,7 +1143,7 @@ namespace atl {
 
                 }
                 //                std::cout << "Inner max g = " << this->inner_maxgc << "\n";
-
+                std::cout << "Newton raphson " << iter << ", inner maxgc = " << this->inner_maxgc << std::endl;
                 if (this->inner_maxgc <= tol /*&& all_positive*/) {
                     return true;
                 }
@@ -1381,6 +1551,7 @@ namespace atl {
             atl::Variable<T>::gradient_structure_g.Reset();
 
             int iter = 0;
+            this->outer_iteration = iter;
             T maxgc;
 
             do {
@@ -1392,13 +1563,14 @@ namespace atl {
 
                 if ((iv[0]) == 2) {
                     iter++;
+                    this->outer_iteration = iter;
                     atl::Variable<T>::gradient_structure_g.Reset();
                     for (int i = 0; i < n; i++) {
                         this->hyper_parameters_m[i]->UpdateValue(x[i]);
                     }
 
                     atl::Variable<T>::SetRecording(true);
-                    atl::Variable<T>::gradient_structure_g.Reset();
+                    //                    atl::Variable<T>::gradient_structure_g.Reset();
                     this->CallObjectiveFunction(f);
                     fx = f.GetValue();
                     this->function_value = f.GetValue();
@@ -1416,7 +1588,7 @@ namespace atl {
 
                     }
                     this->maxgc = maxgc;
-                    atl::Variable<T>::gradient_structure_g.Reset();
+                    //                    atl::Variable<T>::gradient_structure_g.Reset();
                     if ((iter % 10) == 0) {
                         this->Print();
                     }
@@ -1426,7 +1598,7 @@ namespace atl {
                     }
 
                     atl::Variable<T>::SetRecording(false);
-                    atl::Variable<T>::gradient_structure_g.Reset();
+                    //                    atl::Variable<T>::gradient_structure_g.Reset();
                     this->CallObjectiveFunction(f);
                     fx = f.GetValue();
                     this->function_value = f.GetValue();
@@ -1437,7 +1609,7 @@ namespace atl {
                 }
 
             } while ((iv[0]) < 3);
-            atl::Variable<T>::gradient_structure_g.Reset();
+            //            atl::Variable<T>::gradient_structure_g.Reset();
             for (int i = 0; i < n; i++) {
                 this->hyper_parameters_m[i]->UpdateValue(x[i]);
             }
