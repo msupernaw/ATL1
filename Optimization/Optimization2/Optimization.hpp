@@ -20,6 +20,8 @@
 #include <vector>
 #include "DerivativeChecker.hpp"
 #include <iomanip>
+#include "support/port.hpp"
+
 
 namespace atl {
 
@@ -587,8 +589,6 @@ namespace atl {
         }
 
     protected:
-        
-        
 
         void Prepare(int phase) {
             this->outer_iteration = 0;
@@ -1099,10 +1099,10 @@ namespace atl {
                         return true;
                     } else {
                         atl::Variable<T>::SetRecording(false);
-                        step *= 10.0;//2.0; //10.0;
+                        step *= 10.0; //2.0; //10.0;
                     }
                 } else {
-                    step  /= 10.0;//*= .5; ///
+                    step /= 10.0; //*= .5; ///
                     down = true;
                 }
             }
@@ -1345,6 +1345,107 @@ namespace atl {
             return ret;
         }
 
+
+    };
+
+    template<typename T>
+    class PortMinimizer : public atl::OptimizationRoutine<T> {
+    public:
+
+        virtual bool Evaluate() {
+            port::integer n = this->hyper_parameters_m.size();
+            std::vector<T> g(n, 0.0);
+            std::vector<T> d(n, 0.0);
+            std::vector<T> x(n, 0.0);
+
+            port::integer lv = 71 + n * (n + 13) / 2;
+            std::vector<T> v(lv, 0.0);
+            port::integer liv = 60 + n;
+            std::vector<port::integer>iv(liv, 0);
+            v[0] = 2;
+            for (int i = 0; i < n; i++) {
+                d[i] = 1.0;
+                x[i] = this->hyper_parameters_m[i]->GetInternalValue();
+            }
+
+            atl::Variable<T>::SetRecording(true);
+            T fx = 0.0;
+            atl::Variable<T> f;
+            this->CallObjectiveFunction(f);
+            fx = f.GetValue();
+            this->ComputeGradient(this->hyper_parameters_m, this->gradient, this->maxgc);
+            for (int i = 0; i < n; i++) {
+                g[i] = this->hyper_parameters_m[i]->GetScaledGradient(this->hyper_parameters_m[i]->GetInternalValue()) * this->gradient[i];
+            }
+            atl::Variable<T>::gradient_structure_g.Reset();
+
+            int iter = 0;
+            T maxgc;
+
+            do {
+
+
+                port::drmng_<T>(d.data(), &fx, g.data(), iv.data(), &liv, &lv, &n, v.data(), x.data());
+
+
+
+                if ((iv[0]) == 2) {
+                    iter++;
+                    atl::Variable<T>::gradient_structure_g.Reset();
+                    for (int i = 0; i < n; i++) {
+                        this->hyper_parameters_m[i]->UpdateValue(x[i]);
+                    }
+
+                    atl::Variable<T>::SetRecording(true);
+                    atl::Variable<T>::gradient_structure_g.Reset();
+                    this->CallObjectiveFunction(f);
+                    fx = f.GetValue();
+                    this->ComputeGradient(this->hyper_parameters_m, this->gradient, this->maxgc);
+                    for (int i = 0; i < n; i++) {
+                        g[i] = this->hyper_parameters_m[i]->GetScaledGradient(this->hyper_parameters_m[i]->GetInternalValue()) * this->gradient[i];
+                    }
+                    maxgc = std::numeric_limits<T>::min();
+                    for (int i = 0; i < n; i++) {
+                        if (i == 0) {
+                            maxgc = std::fabs(g[i]);
+                        } else if (std::fabs(g[i]) > maxgc) {
+                            maxgc = std::fabs(g[i]);
+                        }
+
+                    }
+                    this->maxgc = maxgc;
+                    atl::Variable<T>::gradient_structure_g.Reset();
+                    if ((iter % 10) == 0) {
+                        this->Print();
+                    }
+                } else {
+                    for (int i = 0; i < n; i++) {
+                        this->hyper_parameters_m[i]->UpdateValue(x[i]);
+                    }
+
+                    atl::Variable<T>::SetRecording(false);
+                    atl::Variable<T>::gradient_structure_g.Reset();
+                    this->CallObjectiveFunction(f);
+                    fx = f.GetValue();
+
+                    if (fx != fx) {
+                        std::cout << "Objective Function signaling NaN";
+                    }
+                }
+
+            } while ((iv[0]) < 3);
+            atl::Variable<T>::gradient_structure_g.Reset();
+            for (int i = 0; i < n; i++) {
+                this->hyper_parameters_m[i]->UpdateValue(x[i]);
+            }
+
+            atl::Variable<T>::SetRecording(true);
+            atl::Variable<T>::gradient_structure_g.Reset();
+            this->CallObjectiveFunction(f);
+            fx = f.GetValue();
+            this->ComputeGradient(this->hyper_parameters_m, this->gradient, this->maxgc);
+            this->Print();
+        }
 
     };
 

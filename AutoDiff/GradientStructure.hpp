@@ -34,7 +34,7 @@
 
 #ifndef GRADIENTSTRUCTURE_HPP
 #define GRADIENTSTRUCTURE_HPP
-
+#define ATL_THREAD_SAFE
 
 #include "Config.hpp"
 #include <memory>
@@ -380,7 +380,7 @@ namespace atl {
         size_t max_initialized_size;
 
         bool gradient_computed;
-        std::mutex stack_lock;
+//        std::mutex stack_lock;
 
         GradientStructure(uint32_t size = 10000)
         : recording(true), stack_current(0), stack_begin(0),

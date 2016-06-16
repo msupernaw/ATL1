@@ -1,7 +1,7 @@
 #include "../../../../Optimization/Optimization2/Optimization.hpp"
 #include "../../../../Utilities/IO/StreamedDataFile.hpp"
 
-//#define ADMB_VERSION
+#define ADMB_VERSION
 
 #ifdef ADMB_VERSION
 
@@ -121,7 +121,6 @@ class ThetaLog : public atl::ObjectiveFunction<T> {
     atl::Variable<T> logK = T(6.0); //  = 6.7250075;
     atl::Variable<T> logQ; //  = -4.7496015;
     atl::Variable<T> logR; // = -3.1889239;
-    atl::Variable<T> Neg_SQRT_2_PI;
     
     
 public:
@@ -200,8 +199,6 @@ public:
             ans -= this->dnorm(atl::Variable<T>(Y[i]), X[i], sqrtr, true);
         }
         
-        
-        
         return ans;
     }
     
@@ -235,7 +232,7 @@ int main(int argc, char** argv) {
     objective_function.Initialize();
     
     //create an instance of a L-BFGS minimizer
-    atl::LBFGS<REAL> fm;
+    atl::PortMinimizer<REAL> fm;
     
     //set the objective function
     fm.SetObjectiveFunction(&objective_function);

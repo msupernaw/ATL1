@@ -235,11 +235,11 @@ namespace atl {
                         //                                gs.min_id = (*it)->id;
                         //                            }
                         dx = exp.EvaluateDerivative((*it)->id);
-                        if(dx!=dx){
-                            std::cout<<__func__<<" derivative NaN\n";
-                            std::cout<<exp.ToString();
-                            exit(0);
-                        }
+//                        if(dx!=dx){
+//                            std::cout<<__func__<<" derivative NaN\n";
+//                            std::cout<<exp.ToString();
+//                            exit(0);
+//                        }
                         entry.first[i] = dx;
                         i++;
                     }
@@ -275,11 +275,11 @@ namespace atl {
 
                         (*it)->dependence_level++;
                         dx = exp.EvaluateDerivative((*it)->id);
-                        if(dx!=dx){
-                            std::cout<<__func__<<" derivative NaN\n";
-                            std::cout<<exp.ToString();
-                            exit(0);
-                        }
+//                        if(dx!=dx){
+//                            std::cout<<__func__<<" derivative NaN\n";
+//                            std::cout<<exp.ToString();
+//                            exit(0);
+//                        }
                         entry.first[i] = dx;
                         j = 0;
 
