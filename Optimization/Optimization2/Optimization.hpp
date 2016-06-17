@@ -701,15 +701,16 @@ namespace atl {
                 for (int i = 0; i < RANDOM_SIZE; i++) {
                     this->random_variables_m[i]->SetValue(0.0);
                 }
+                std::cout<<"Inner Minimization:\n";
                 if (this->NewtonInner(10, 1e-4)) {
                     std::cout << "Inner converged!\n";
                     std::cout << "Inner f = " << this->inner_function_value << "\n";
-                    std::cout << "Inner maxg = " << this->inner_maxgc << "\n\n";
+                    std::cout << "Inner maxg = " << this->inner_maxgc << "\n";
 
                 } else {
                     std::cout << "Inner failed!\n";
                     std::cout << "Inner f = " << this->inner_function_value << "\n";
-                    std::cout << "Inner maxg = " << this->inner_maxgc << "\n\n";
+                    std::cout << "Inner maxg = " << this->inner_maxgc << "\n";
                 }
 
                 std::unordered_map<atl::VariableInfo<T>*, T> derivatives_logdet;
@@ -726,9 +727,9 @@ namespace atl {
                     exit(0);
                 }
 
-                std::cout << "accumulating third-order mixed derivatives..." << std::flush;
+                std::cout << "Accumulating third-order mixed derivatives..." << std::flush;
                 atl::Variable<T>::gradient_structure_g.AccumulateThirdOrderMixed();
-                std::cout << "done." << std::endl;
+                std::cout << "done.\n" << std::endl;
                 std::vector<T> g(PARAMETERS_SIZE);
                 for (int j = 0; j < PARAMETERS_SIZE; j++) {
                     g[j] = this->hyper_parameters_m[j]->info->dvalue;
@@ -1143,7 +1144,7 @@ namespace atl {
 
                 }
                 //                std::cout << "Inner max g = " << this->inner_maxgc << "\n";
-                std::cout << "Newton raphson " << iter << ", inner maxgc = " << this->inner_maxgc << std::endl;
+                std::cout << "  Newton raphson " << iter << ", inner maxgc = " << this->inner_maxgc << std::endl;
                 if (this->inner_maxgc <= tol /*&& all_positive*/) {
                     return true;
                 }

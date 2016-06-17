@@ -193,7 +193,7 @@ int main(int argc, char** argv) {
     objective_function.Initialize();
     
     //create an instance of a L-BFGS minimizer
-    atl::LBFGS<REAL> fm;
+    atl::PortMinimizer<REAL> fm;
     
     //set the objective function
     fm.SetObjectiveFunction(&objective_function);
