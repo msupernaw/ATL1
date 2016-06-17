@@ -40,14 +40,14 @@ namespace atl {
 
 
     public:
-        size_t n;
+        size_t n =0;
         CMatrix el;
         CPattern pattern;
         CPattern upper_pattern;
         CPattern lower_pattern;
 
-        bool pd;
-        bool has_pattern;
+        bool pd = false;
+        bool has_pattern = false;
 
         Cholesky() {
 
