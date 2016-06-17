@@ -40,7 +40,7 @@ namespace atl {
 
 
     public:
-        size_t n =0;
+        size_t n = 0;
         CMatrix el;
         CPattern pattern;
         CPattern upper_pattern;
@@ -701,7 +701,7 @@ namespace atl {
                 for (int i = 0; i < RANDOM_SIZE; i++) {
                     this->random_variables_m[i]->SetValue(0.0);
                 }
-                std::cout<<"Inner Minimization:\n";
+                std::cout << "Inner Minimization:\n";
                 if (this->NewtonInner(10, 1e-4)) {
                     std::cout << "Inner converged!\n";
                     std::cout << "Inner f = " << this->inner_function_value << "\n";
@@ -1112,7 +1112,7 @@ namespace atl {
             for (int iter = 0; iter < max_iter; iter++) {
 
 
-//                std::cout << "Newton raphson " << iter << std::endl;
+                //                std::cout << "Newton raphson " << iter << std::endl;
                 atl::Variable<T>::gradient_structure_g.Reset();
                 atl::Variable<T>::SetRecording(true);
                 atl::Variable<T>::gradient_structure_g.derivative_trace_level = atl::SECOND_ORDER_MIXED_PARTIALS;
@@ -1622,6 +1622,10 @@ namespace atl {
             this->function_value = f.GetValue();
             this->ComputeGradient(this->hyper_parameters_m, this->gradient, this->maxgc);
             this->Print();
+            if (this->maxgc <= this->tolerance) {
+                return true;
+            }
+            return false;
         }
 
     };
