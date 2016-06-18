@@ -51,15 +51,15 @@ public:
         
         
         
-        this->RegisterHyperParameter(logSigmaB, 3);
+        this->RegisterParameter(logSigmaB, 3);
         logSigmaB.SetName("logSigmaB");
-        this->RegisterHyperParameter(phi1);
+        this->RegisterParameter(phi1);
         phi1.SetName("phi1");
-        this->RegisterHyperParameter(phi2);
+        this->RegisterParameter(phi2);
         phi2.SetName("phi2");
-        this->RegisterHyperParameter(phi3);
+        this->RegisterParameter(phi3);
         phi3.SetName("phi3");
-        this->RegisterHyperParameter(logSigma);
+        this->RegisterParameter(logSigma);
         logSigma.SetName("logSigma");
         
         x.resize(N);

@@ -49,12 +49,12 @@ public:
         /**
          * Register parameters.
          */
-        this->RegisterHyperParameter(logr0);
-        this->RegisterHyperParameter(logtheta);
+        this->RegisterParameter(logr0);
+        this->RegisterParameter(logtheta);
         logK.SetBounds(4.6, 7.6);
-        this->RegisterHyperParameter(logK);
-        this->RegisterHyperParameter(logQ);
-        this->RegisterHyperParameter(logR);
+        this->RegisterParameter(logK);
+        this->RegisterParameter(logQ);
+        this->RegisterParameter(logR);
         
         /**
          * Register random variables.
@@ -149,15 +149,15 @@ public:
         }
         
         
-        this->RegisterHyperParameter(logr0);
+        this->RegisterParameter(logr0);
         logr0.SetName("logr0");
-        this->RegisterHyperParameter(logtheta);
+        this->RegisterParameter(logtheta);
         logtheta.SetName("logtheta");
-        this->RegisterHyperParameter(logK);
+        this->RegisterParameter(logK);
         logK.SetName("logK");
-        this->RegisterHyperParameter(logQ);
+        this->RegisterParameter(logQ);
         logQ.SetName("logQ");
-        this->RegisterHyperParameter(logR);
+        this->RegisterParameter(logR);
         logR.SetName("logR");
         
         for (int i = 0; i < X.size(); i++) {

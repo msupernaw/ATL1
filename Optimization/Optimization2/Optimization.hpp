@@ -349,13 +349,13 @@ namespace atl {
         T convergence_criteria;
         int max_phases;
 
-        std::vector<atl::Variable<T>* > hyper_parameters_m;
+        std::vector<atl::Variable<T>* > parameters_m;
 
         std::vector<T> gradient;
-        std::vector<std::vector<T> > hyper_parameter_hessian;
-        T log_determinant_of_hyper_parmameter_hessian;
-        std::vector<std::vector<T> > hyper_parameter_var_covar_matrix;
-        std::vector<T> hyper_parameter_standard_deviation;
+        std::vector<std::vector<T> > parameter_hessian;
+        T log_determinant_of_parmameter_hessian;
+        std::vector<std::vector<T> > parameter_var_covar_matrix;
+        std::vector<T> parameter_standard_deviation;
 
         std::vector<atl::Variable<T>* > random_variables_m;
         std::vector<std::vector<T> > random_variable_hessian;
@@ -388,8 +388,8 @@ namespace atl {
     template<class T>
     class ObjectiveFunction : public DerivativeChecker<T> {
         std::map<atl::Variable<T>*, int> phase_info;
-        std::vector<atl::Variable<T>* > hyper_parameters_m;
-        std::vector<int> hyper_parameter_phases_m;
+        std::vector<atl::Variable<T>* > parameters_m;
+        std::vector<int> parameter_phases_m;
         std::vector<atl::Variable<T>* > random_variables_m;
         std::vector<int> random_variable_phases_m;
         int max_phase_m = 0;
@@ -411,9 +411,9 @@ namespace atl {
 
         virtual const atl::Variable<T> Evaluate() = 0;
 
-        void RegisterHyperParameter(atl::Variable<T>& v, int phase = 1) {
-            this->hyper_parameters_m.push_back(&v);
-            this->hyper_parameter_phases_m.push_back(phase);
+        void RegisterParameter(atl::Variable<T>& v, int phase = 1) {
+            this->parameters_m.push_back(&v);
+            this->parameter_phases_m.push_back(phase);
             this->phase_info[&v] = phase;
             if (phase > max_phase_m) {
                 max_phase_m = phase;
@@ -460,26 +460,26 @@ namespace atl {
             stats.function_value = f.GetValue();
 
             atl::Variable<T>::gradient_structure_g.Accumulate();
-            stats.parameter_values.resize(this->hyper_parameters_m.size());
-            stats.parameter_names.resize(this->hyper_parameters_m.size());
-            stats.gradient.resize(this->hyper_parameters_m.size());
-            stats.hessian.resize(this->hyper_parameters_m.size(), std::vector<T>(this->hyper_parameters_m.size()));
+            stats.parameter_values.resize(this->parameters_m.size());
+            stats.parameter_names.resize(this->parameters_m.size());
+            stats.gradient.resize(this->parameters_m.size());
+            stats.hessian.resize(this->parameters_m.size(), std::vector<T>(this->parameters_m.size()));
 
-            for (int i = 0; i < this->hyper_parameters_m.size(); i++) {
-                stats.gradient[i] = this->hyper_parameters_m[i]->info->dvalue;
-                stats.parameter_values[i] = this->hyper_parameters_m[i]->info->vvalue;
-                stats.parameter_names[i] = this->hyper_parameters_m[i]->GetName();
+            for (int i = 0; i < this->parameters_m.size(); i++) {
+                stats.gradient[i] = this->parameters_m[i]->info->dvalue;
+                stats.parameter_values[i] = this->parameters_m[i]->info->vvalue;
+                stats.parameter_names[i] = this->parameters_m[i]->GetName();
 
                 if (i == 0) {
-                    stats.max_gradient_component = std::fabs(this->hyper_parameters_m[i]->info->dvalue);
+                    stats.max_gradient_component = std::fabs(this->parameters_m[i]->info->dvalue);
                 } else {
-                    if (std::fabs(this->hyper_parameters_m[i]->info->dvalue) > stats.max_gradient_component) {
-                        stats.max_gradient_component = std::fabs(this->hyper_parameters_m[i]->info->dvalue);
+                    if (std::fabs(this->parameters_m[i]->info->dvalue) > stats.max_gradient_component) {
+                        stats.max_gradient_component = std::fabs(this->parameters_m[i]->info->dvalue);
                     }
                 }
 
-                for (int j = 0; j < this->hyper_parameters_m.size(); j++) {
-                    atl::Variable<T>::gradient_structure_g.Value(this->hyper_parameters_m[i]->info->id, this->hyper_parameters_m[j]->info->id);
+                for (int j = 0; j < this->parameters_m.size(); j++) {
+                    atl::Variable<T>::gradient_structure_g.Value(this->parameters_m[i]->info->id, this->parameters_m[j]->info->id);
                 }
             }
 
@@ -515,7 +515,7 @@ namespace atl {
 
 
         ObjectiveFunction<T>* objective_function_m = NULL;
-        std::vector<atl::Variable<T>* > hyper_parameters_m;
+        std::vector<atl::Variable<T>* > parameters_m;
         std::vector<atl::Variable<T>* > random_variables_m;
         std::vector<atl::Variable<T>* > all_variables_m;
 
@@ -592,14 +592,14 @@ namespace atl {
 
         void Prepare(int phase) {
             this->outer_iteration = 0;
-            this->hyper_parameters_m.resize(0);
+            this->parameters_m.resize(0);
             this->random_variables_m.resize(0);
             this->all_variables_m.resize(0);
             this->objective_function_m->phase_m = phase;
-            for (int i = 0; i < this->objective_function_m->hyper_parameter_phases_m.size(); i++) {
-                if (this->objective_function_m->hyper_parameter_phases_m[i] <= phase) {
-                    this->hyper_parameters_m.push_back(this->objective_function_m->hyper_parameters_m[i]);
-                    this->all_variables_m.push_back(this->objective_function_m->hyper_parameters_m[i]);
+            for (int i = 0; i < this->objective_function_m->parameter_phases_m.size(); i++) {
+                if (this->objective_function_m->parameter_phases_m[i] <= phase) {
+                    this->parameters_m.push_back(this->objective_function_m->parameters_m[i]);
+                    this->all_variables_m.push_back(this->objective_function_m->parameters_m[i]);
                 }
             }
 
@@ -679,11 +679,7 @@ namespace atl {
 
         void ClearReStructures() {
             for (int i = 0; i < this->random_variables_m.size(); i++) {
-                for (int j = 0; j < this->random_variables_m.size(); j++) {
-                    //                    this->rand_hessian_dx[i][j] = 0.0;
-                    this->rand_hessian[i][j] = 0.0;
-                    //                    this->rand_hessian_inv[i][j] = 0.0;
-                }
+                std::fill(this->rand_hessian[i].begin(),this->rand_hessian[i].end(),static_cast<T>(0.0));
             }
         }
 
@@ -691,10 +687,8 @@ namespace atl {
 
         void EvaluateLaplace(atl::Variable<T>& f) {
 
-            //            atl::Variable<T> f;
-
             bool recording = atl::Variable<T>::gradient_structure_g.recording;
-            size_t PARAMETERS_SIZE = this->hyper_parameters_m.size();
+            size_t PARAMETERS_SIZE = this->parameters_m.size();
             size_t RANDOM_SIZE = this->random_variables_m.size();
 
             if (recording) {
@@ -732,7 +726,7 @@ namespace atl {
                 std::cout << "done.\n" << std::endl;
                 std::vector<T> g(PARAMETERS_SIZE);
                 for (int j = 0; j < PARAMETERS_SIZE; j++) {
-                    g[j] = this->hyper_parameters_m[j]->info->dvalue;
+                    g[j] = this->parameters_m[j]->info->dvalue;
                 }
                 int ii = 0;
                 for (int i = 0; i < RANDOM_SIZE; i++) {
@@ -748,10 +742,10 @@ namespace atl {
                 //compute logdetH
                 T ld = cholesky_outer.logdet();
                 log_det = ld;
-                log_det.SetName("log_det");
+//                log_det.SetName("log_det");
 
                 for (int i = 0; i < PARAMETERS_SIZE; i++) {
-                    derivatives_f[this->hyper_parameters_m[i]->info] = g[i]; //hr(0, i);
+                    derivatives_f[this->parameters_m[i]->info] = g[i]; //hr(0, i);
                 }
 
 
@@ -762,7 +756,7 @@ namespace atl {
                     for (int i = 0; i < RANDOM_SIZE; i++) {
                         for (int j = 0; j < RANDOM_SIZE; j++) {
                             this->rand_hessian_dx[i][j] = atl::Variable<T>::gradient_structure_g.Value(this->random_variables_m[i]->info->id,
-                                    this->random_variables_m[j]->info->id, this->hyper_parameters_m[p]->info->id);
+                                    this->random_variables_m[j]->info->id, this->parameters_m[p]->info->id);
                             ret[i][j] = 0.0;
                         }
                     }
@@ -776,13 +770,13 @@ namespace atl {
                         tr += ret[i][i];
                     }
 
-                    derivatives_logdet[this->hyper_parameters_m[p]->info] = tr;
+                    derivatives_logdet[this->parameters_m[p]->info] = tr;
                 }
 
                 atl::Variable<T>::gradient_structure_g.Reset();
                 atl::Variable<T>::gradient_structure_g.recording = false;
                 f = this->objective_function_m->Evaluate();
-                f.SetName("F");
+//                f.SetName("F");
                 atl::Variable<T>::gradient_structure_g.recording = recording;
 
 
@@ -847,174 +841,13 @@ namespace atl {
                 //compute logdetH
                 T ld = cholesky_outer.logdet();
                 log_det = ld;
-                log_det.SetName("log_det");
+//                log_det.SetName("log_det");
                 atl::Variable<T>::gradient_structure_g.recording = false;
                 f = this->objective_function_m->Evaluate();
 
                 f += static_cast<T> (.5) * log_det;
                 f -= static_cast<T> (.5)*(static_cast<T> (RANDOM_SIZE) * std::log((static_cast<T> (2.0 * M_PI))));
-
-                //                return f;
             }
-
-
-            //            bool recording = atl::Variable<T>::gradient_structure_g.recording;
-            //            size_t PARAMETERS_SIZE = this->hyper_parameters_m.size();
-            //            size_t RANDOM_SIZE = this->random_variables_m.size();
-            //            size_t ALL_SIZE = this->all_variables_m.size();
-            //            if (recording) {
-            //                for (int i = 0; i < RANDOM_SIZE; i++) {
-            //                    this->random_variables_m[i]->SetValue(0.0);
-            //                }
-            //                if (this->NewtonInner(10, 1e-7)) {
-            //                    std::cout << "Inner converged!\n";
-            //                    std::cout << "Inner f = " << this->inner_function_value << "\n";
-            //                    std::cout << "Inner maxg = " << this->inner_maxgc << "\n\n";
-            //
-            //                } else {
-            //                    std::cout << "Inner failed!\n";
-            //                    std::cout << "Inner f = " << this->inner_function_value << "\n";
-            //                    std::cout << "Inner maxg = " << this->inner_maxgc << "\n\n";
-            //                }
-            //            }
-            //
-            //            std::unordered_map<atl::VariableInfo<T>*, T> derivatives_logdet;
-            //            std::unordered_map<atl::VariableInfo<T>*, T> derivatives_f;
-            //
-            //            this->ClearReStructures();
-            //            if (recording) {
-            //                atl::Variable<T>::gradient_structure_g.derivative_trace_level = atl::THIRD_ORDER_MIXED_PARTIALS;
-            //            } else {
-            //                atl::Variable<T>::gradient_structure_g.derivative_trace_level = atl::SECOND_ORDER_MIXED_PARTIALS;
-            //            }
-            //            atl::Variable<T>::gradient_structure_g.recording = true;
-            //            atl::Variable<T>::gradient_structure_g.Reset();
-            //            atl::Variable<T> innerf2 = this->objective_function_m->Evaluate();
-            //            atl::Variable<T>::gradient_structure_g.AccumulateFirstOrder();
-            //            std::vector<T> g(PARAMETERS_SIZE);
-            //
-            //            for (int j = 0; j < PARAMETERS_SIZE; j++) {
-            //                g[j] = this->hyper_parameters_m[j]->info->dvalue;
-            //            }
-            //
-            //            atl::Variable<T>::gradient_structure_g.Reset();
-            //            atl::Variable<T> innerf = this->objective_function_m->Evaluate();
-            //
-            //            if (innerf.GetValue() != innerf.GetValue()) {
-            //                std::cout << "Inner minimizer returned NaN, bailing out!" << std::endl;
-            //                exit(0);
-            //            }
-            //
-            //            innerf.SetName("innerf");
-            //            if (recording && re_active) {
-            //                std::cout << "accumulating third-order mixed derivatives..." << std::flush;
-            //                atl::Variable<T>::gradient_structure_g.AccumulateThirdOrderMixed();
-            //                std::cout << "done\n" << std::flush;
-            //            } else {
-            //                atl::Variable<T>::gradient_structure_g.AccumulateSecondOrderMixed();
-            //            }
-            //
-            //
-            //
-            //
-            //            int ii = 0;
-            //            for (int i = 0; i < RANDOM_SIZE; i++) {
-            //                for (int j = 0; j < RANDOM_SIZE; j++) {
-            //                    rand_hessian[i][j] = atl::Variable<T>::gradient_structure_g.Value(this->random_variables_m[i]->info->id, this->random_variables_m[j]->info->id);
-            //
-            //                }
-            //            }
-            //
-            //            this->outer_iteration ? cholesky_outer.compute(rand_hessian) : cholesky_outer.recompute(rand_hessian);
-            //
-            //
-            //
-            //
-            //            //compute logdetH
-            //            T ld = cholesky_outer.logdet();
-            //            log_det = ld;
-            //            log_det.SetName("log_det");
-            //
-            //
-            //
-            //            if (recording) {
-            //
-            //                for (int i = 0; i < PARAMETERS_SIZE; i++) {
-            //                    derivatives_f[this->hyper_parameters_m[i]->info] = g[i]; //hr(0, i);
-            //                }
-            //
-            //
-            //                //compute derivatives of the logdetH using third-order mixed partials
-            //
-            //                for (int p = 0; p < PARAMETERS_SIZE; p++) {
-            //
-            //                    for (int i = 0; i < RANDOM_SIZE; i++) {
-            //                        for (int j = 0; j < RANDOM_SIZE; j++) {
-            //                            this->rand_hessian_dx[i][j] = atl::Variable<T>::gradient_structure_g.Value(this->random_variables_m[i]->info->id,
-            //                                    this->random_variables_m[j]->info->id, this->hyper_parameters_m[p]->info->id);
-            //                            ret[i][j] = 0.0;
-            //                        }
-            //                    }
-            //                    //                    }
-            //
-            //                    cholesky_outer.solve(rand_hessian_dx, ret);
-            //
-            //
-            //                    T tr = 0;
-            //                    for (int i = 0; i < RANDOM_SIZE; i++) {
-            //                        tr += ret[i][i];
-            //                    }
-            //
-            //                    derivatives_logdet[this->hyper_parameters_m[p]->info] = tr;
-            //                }
-            //            }
-            //            //reset derivative structure
-            //            atl::Variable<T>::gradient_structure_g.Reset();
-            //            atl::Variable<T>::gradient_structure_g.derivative_trace_level = atl::FIRST_ORDER;
-            //
-            //
-            //            atl::Variable<T>::gradient_structure_g.recording = false;
-            //            f = this->objective_function_m->Evaluate();
-            //            f.SetName("F");
-            //            atl::Variable<T>::gradient_structure_g.recording = recording;
-            //            if (recording) {
-            //
-            //                //push adjoint entry for log_det
-            //                atl::StackEntry<T>& entry = atl::Variable<T>::gradient_structure_g.NextEntry();
-            //                entry.w = log_det.info;
-            //                typename std::unordered_map<atl::VariableInfo<T>*, T>::iterator it;
-            //                for (it = derivatives_logdet.begin(); it != derivatives_logdet.end(); ++it) {
-            //                    entry.ids.insert((*it).first);
-            //                }
-            //                typename atl::StackEntry<T>::id_itereator id_it;
-            //                entry.first.resize(entry.ids.size());
-            //                size_t in = 0;
-            //                for (id_it = entry.ids.begin(); id_it != entry.ids.end(); ++id_it) {
-            //                    T dx = derivatives_logdet[(*id_it)];
-            //                    entry.first[in] = dx;
-            //                    in++;
-            //                }
-            //
-            //
-            //                //push adjoint entry for objective function
-            //                atl::StackEntry<T>& entry2 = atl::Variable<T>::gradient_structure_g.NextEntry();
-            //                entry2.w = f.info;
-            //                for (it = derivatives_f.begin(); it != derivatives_f.end(); ++it) {
-            //                    entry2.ids.insert((*it).first);
-            //                }
-            //                entry2.first.resize(entry.ids.size());
-            //                in = 0;
-            //                for (id_it = entry2.ids.begin(); id_it != entry2.ids.end(); ++id_it) {
-            //
-            //                    T dx = derivatives_f[(*id_it)];
-            //                    entry2.first[in] = dx;
-            //                    in++;
-            //                }
-            //                atl::Variable<T>::gradient_structure_g.recording = true;
-            //            }
-            //
-            //            f += static_cast<T> (.5) * log_det;
-            //            f -= static_cast<T> (.5)*(static_cast<T> (RANDOM_SIZE) * std::log((static_cast<T> (2.0 * M_PI))));
         }
 
         void ComputeGradient(std::vector<atl::Variable<T>* >&p,
@@ -1040,7 +873,7 @@ namespace atl {
             std::cout << "F = " << this->function_value << "\n";
             std::cout << "Max Gradient Component: " << this->maxgc << "\n";
             std::cout << "Floating-Point Type: Float" << (sizeof (T)*8) << "\n";
-            std::cout << "Number of Parameters: " << this->hyper_parameters_m.size() << "\n";
+            std::cout << "Number of Parameters: " << this->parameters_m.size() << "\n";
             std::cout << " -----------------------------------------------------------------------------------\n";
             std::cout << '|' << util::center("Name", 15) << '|' << util::center("Value", 12) << '|' << util::center("Gradient", 12) << '|'
                     << util::center("Name", 15) << '|' << util::center("Value", 12) << '|' << util::center("Gradient", 12) << '|' << std::endl;
@@ -1048,18 +881,18 @@ namespace atl {
             int i = 0;
             std::cout.precision(4);
             std::cout << std::scientific;
-            for (i = 0; (i + 2)< this->hyper_parameters_m.size(); i += 2) {
-                std::cout << '|' << util::center(this->hyper_parameters_m[i]->GetName(), 15) << '|';
-                std::cout << std::setw(12) << this->hyper_parameters_m[i]->GetValue() << '|' << std::setw(12) << this->gradient[i];
-                std::cout << '|' << util::center(this->hyper_parameters_m[i + 1]->GetName(), 15) << '|';
-                std::cout << std::setw(12) << this->hyper_parameters_m[i + 1]->GetValue() << '|' << std::setw(12) << this->gradient[i + 1] << "|\n";
+            for (i = 0; (i + 2)< this->parameters_m.size(); i += 2) {
+                std::cout << '|' << util::center(this->parameters_m[i]->GetName(), 15) << '|';
+                std::cout << std::setw(12) << this->parameters_m[i]->GetValue() << '|' << std::setw(12) << this->gradient[i];
+                std::cout << '|' << util::center(this->parameters_m[i + 1]->GetName(), 15) << '|';
+                std::cout << std::setw(12) << this->parameters_m[i + 1]->GetValue() << '|' << std::setw(12) << this->gradient[i + 1] << "|\n";
 
                 //                }
             }
 
-            for (; i< this->hyper_parameters_m.size(); i++) {
-                std::cout << '|' << util::center(this->hyper_parameters_m[i]->GetName(), 15) << '|';
-                std::cout << std::setw(12) << this->hyper_parameters_m[i]->GetValue() << '|' << std::setw(12) << this->gradient[i];
+            for (; i< this->parameters_m.size(); i++) {
+                std::cout << '|' << util::center(this->parameters_m[i]->GetName(), 15) << '|';
+                std::cout << std::setw(12) << this->parameters_m[i]->GetValue() << '|' << std::setw(12) << this->gradient[i];
                 std::cout << '|' << util::center("-", 15) << '|';
                 std::cout << util::center("-", 12) << '|' << util::center("-", 12) << "|\n";
             }
@@ -1346,7 +1179,7 @@ namespace atl {
             atl::Variable<T>::gradient_structure_g.derivative_trace_level = atl::FIRST_ORDER;
             atl::Variable<T>::SetRecording(true);
             atl::Variable<T>::gradient_structure_g.Reset();
-            int nops = this->hyper_parameters_m.size();
+            int nops = this->parameters_m.size();
             bool has_random_effects = false;
             if (this->random_variables_m.size()) {
                 has_random_effects = true;
@@ -1359,10 +1192,10 @@ namespace atl {
             this->gradient.resize(nops);
 
             for (int i = 0; i < nops; i++) {
-                if (this->hyper_parameters_m[i]->IsBounded()) {
-                    this->x[i] = this->hyper_parameters_m[i]->GetInternalValue();
+                if (this->parameters_m[i]->IsBounded()) {
+                    this->x[i] = this->parameters_m[i]->GetInternalValue();
                 } else {
-                    this->x[i] = this->hyper_parameters_m[i]->GetValue();
+                    this->x[i] = this->parameters_m[i]->GetValue();
                 }
                 this->gradient[i] = 0;
             }
@@ -1386,7 +1219,7 @@ namespace atl {
             //search direction
             std::valarray<T> z(nops);
 
-            this->ComputeGradient(this->hyper_parameters_m, this->gradient, this->maxgc);
+            this->ComputeGradient(this->parameters_m, this->gradient, this->maxgc);
 
             atl::Variable<T>::gradient_structure_g.Reset();
 
@@ -1400,7 +1233,7 @@ namespace atl {
                 i = iteration;
                 this->outer_iteration = iteration;
                 for (int j = 0; j < nops; j++) {
-                    wg[j] = this->hyper_parameters_m[j]->GetScaledGradient(this->hyper_parameters_m[j]->GetInternalValue()) * this->gradient[j];
+                    wg[j] = this->parameters_m[j]->GetScaledGradient(this->parameters_m[j]->GetInternalValue()) * this->gradient[j];
                 }
 
                 if ((i % 1) == 0 || i == 0) {
@@ -1427,7 +1260,7 @@ namespace atl {
 
                     //update histories
                     for (size_t r = 0; r < nops; r++) {
-                        dxs[r][end] = this->hyper_parameters_m[r]->GetInternalValue() - px[r];
+                        dxs[r][end] = this->parameters_m[r]->GetInternalValue() - px[r];
                         dgs[r][end] = wg[r] - pg[r];
                     }
 
@@ -1435,24 +1268,24 @@ namespace atl {
 
                     for (size_t j = 0; j < h; ++j) {
                         const size_t k = (end - j + h) % h;
-                        p[k] = 1.0 / this->Dot(this->Column(dxs, k, this->hyper_parameters_m.size()), this->Column(dgs, k, this->hyper_parameters_m.size()));
+                        p[k] = 1.0 / this->Dot(this->Column(dxs, k, this->parameters_m.size()), this->Column(dgs, k, this->parameters_m.size()));
 
-                        a[k] = p[k] * this->Dot(this->Column(dxs, k, this->hyper_parameters_m.size()), z);
-                        z -= a[k] * this->Column(dgs, k, this->hyper_parameters_m.size());
+                        a[k] = p[k] * this->Dot(this->Column(dxs, k, this->parameters_m.size()), z);
+                        z -= a[k] * this->Column(dgs, k, this->parameters_m.size());
                     }
                     // Scaling of initial Hessian (identity matrix)
-                    z *= this->Dot(this->Column(dxs, end, this->hyper_parameters_m.size()), this->Column(dgs, end, this->hyper_parameters_m.size())) / this->Dot(this->Column(dgs, end, this->hyper_parameters_m.size()), Column(dgs, end, this->hyper_parameters_m.size()));
+                    z *= this->Dot(this->Column(dxs, end, this->parameters_m.size()), this->Column(dgs, end, this->parameters_m.size())) / this->Dot(this->Column(dgs, end, this->parameters_m.size()), Column(dgs, end, this->parameters_m.size()));
 
                     for (size_t j = 0; j < h; ++j) {
                         const size_t k = (end + j + 1) % h;
-                        const T b = p[k] * Dot(this->Column(dgs, k, this->hyper_parameters_m.size()), z);
-                        z += this->Column(dxs, k, this->hyper_parameters_m.size()) * (a[k] - b);
+                        const T b = p[k] * Dot(this->Column(dgs, k, this->parameters_m.size()), z);
+                        z += this->Column(dxs, k, this->parameters_m.size()) * (a[k] - b);
                     }
 
                 }//end if(i>0)
 
                 for (size_t j = 0; j < nops; j++) {
-                    px[j] = this->hyper_parameters_m[j]->GetInternalValue();
+                    px[j] = this->parameters_m[j]->GetInternalValue();
                     this->x[j] = px[j];
                     pg[j] = wg[j];
 
@@ -1462,7 +1295,7 @@ namespace atl {
 
 
 
-                if (!this->line_search(this->hyper_parameters_m,
+                if (!this->line_search(this->parameters_m,
                         this->function_value,
                         this->x,
                         this->best,
@@ -1524,7 +1357,7 @@ namespace atl {
     public:
 
         virtual bool Evaluate() {
-            port::integer n = this->hyper_parameters_m.size();
+            port::integer n = this->parameters_m.size();
             std::vector<T> g(n, 0.0);
             std::vector<T> d(n, 0.0);
             std::vector<T> x(n, 0.0);
@@ -1536,7 +1369,7 @@ namespace atl {
             v[0] = 2;
             for (int i = 0; i < n; i++) {
                 d[i] = 1.0;
-                x[i] = this->hyper_parameters_m[i]->GetInternalValue();
+                x[i] = this->parameters_m[i]->GetInternalValue();
             }
 
             atl::Variable<T>::SetRecording(true);
@@ -1545,9 +1378,9 @@ namespace atl {
             this->CallObjectiveFunction(f);
             fx = f.GetValue();
             this->function_value = f.GetValue();
-            this->ComputeGradient(this->hyper_parameters_m, this->gradient, this->maxgc);
+            this->ComputeGradient(this->parameters_m, this->gradient, this->maxgc);
             for (int i = 0; i < n; i++) {
-                g[i] = this->hyper_parameters_m[i]->GetScaledGradient(this->hyper_parameters_m[i]->GetInternalValue()) * this->gradient[i];
+                g[i] = this->parameters_m[i]->GetScaledGradient(this->parameters_m[i]->GetInternalValue()) * this->gradient[i];
             }
             atl::Variable<T>::gradient_structure_g.Reset();
 
@@ -1567,7 +1400,7 @@ namespace atl {
                     this->outer_iteration = iter;
                     atl::Variable<T>::gradient_structure_g.Reset();
                     for (int i = 0; i < n; i++) {
-                        this->hyper_parameters_m[i]->UpdateValue(x[i]);
+                        this->parameters_m[i]->UpdateValue(x[i]);
                     }
 
                     atl::Variable<T>::SetRecording(true);
@@ -1575,9 +1408,9 @@ namespace atl {
                     this->CallObjectiveFunction(f);
                     fx = f.GetValue();
                     this->function_value = f.GetValue();
-                    this->ComputeGradient(this->hyper_parameters_m, this->gradient, this->maxgc);
+                    this->ComputeGradient(this->parameters_m, this->gradient, this->maxgc);
                     for (int i = 0; i < n; i++) {
-                        g[i] = this->hyper_parameters_m[i]->GetScaledGradient(this->hyper_parameters_m[i]->GetInternalValue()) * this->gradient[i];
+                        g[i] = this->parameters_m[i]->GetScaledGradient(this->parameters_m[i]->GetInternalValue()) * this->gradient[i];
                     }
                     maxgc = std::numeric_limits<T>::min();
                     for (int i = 0; i < n; i++) {
@@ -1595,7 +1428,7 @@ namespace atl {
                     }
                 } else {
                     for (int i = 0; i < n; i++) {
-                        this->hyper_parameters_m[i]->UpdateValue(x[i]);
+                        this->parameters_m[i]->UpdateValue(x[i]);
                     }
 
                     atl::Variable<T>::SetRecording(false);
@@ -1612,7 +1445,7 @@ namespace atl {
             } while ((iv[0]) < 3);
             //            atl::Variable<T>::gradient_structure_g.Reset();
             for (int i = 0; i < n; i++) {
-                this->hyper_parameters_m[i]->UpdateValue(x[i]);
+                this->parameters_m[i]->UpdateValue(x[i]);
             }
 
             atl::Variable<T>::SetRecording(true);
@@ -1620,7 +1453,7 @@ namespace atl {
             this->CallObjectiveFunction(f);
             fx = f.GetValue();
             this->function_value = f.GetValue();
-            this->ComputeGradient(this->hyper_parameters_m, this->gradient, this->maxgc);
+            this->ComputeGradient(this->parameters_m, this->gradient, this->maxgc);
             this->Print();
             if (this->maxgc <= this->tolerance) {
                 return true;
@@ -1633,7 +1466,7 @@ namespace atl {
     template<class T>
     class MCMC {
         ObjectiveFunction<T>* objective_function_m = NULL;
-        std::vector<atl::Variable<T>* > hyper_parameters_m;
+        std::vector<atl::Variable<T>* > parameters_m;
         std::vector<atl::Variable<T>* > random_variables_m;
         std::vector<atl::Variable<T>* > all_variables_m;
     public:
@@ -1672,20 +1505,20 @@ namespace atl {
     private:
 
         void Prepare(int phase) {
-            this->hyper_parameters_m.resize(0);
+            this->parameters_m.resize(0);
             this->random_variables_m.resize(0);
 
-            for (int i = 0; i < this->objective_function_m->hyper_parameter_phases_m.size(); i++) {
-                if (this->objective_function_m->hyper_parameter_phases_m[i] <= phase) {
-                    this->hyper_parameters_m.push_back(this->objective_function_m->hyper_parameters_m[i]);
-                    this->all_variables_m.push_back(this->objective_function_m->hyper_parameters_m[i]);
+            for (int i = 0; i < this->objective_function_m->parameter_phases_m.size(); i++) {
+                if (this->objective_function_m->parameter_phases_m[i] <= phase) {
+                    this->parameters_m.push_back(this->objective_function_m->parameters_m[i]);
+                    this->all_variables_m.push_back(this->objective_function_m->parameters_m[i]);
                 }
             }
 
             for (int i = 0; i < this->objective_function_m->random_variable_phases_m.size(); i++) {
                 if (this->objective_function_m->random_variable_phases_m[i] <= phase) {
 
-                    this->hyper_parameters_m.push_back(this->objective_function_m->random_variables_m[i]);
+                    this->parameters_m.push_back(this->objective_function_m->random_variables_m[i]);
                     this->all_variables_m.push_back(this->objective_function_m->random_variables_m[i]);
                 }
             }
@@ -1693,7 +1526,7 @@ namespace atl {
         }
 
         bool MetropoliHastings() {
-            //minimizer wrt hyper-parameters
+            //minimizer wrt parameters
         }
 
         bool LBGFS_Inner() {
