@@ -372,7 +372,7 @@ namespace atl {
 #ifdef ATL_THREAD_SAFE
         std::mutex stack_lock;
 #endif
-        size_t stack_current;
+        std::atomic<size_t> stack_current;
         size_t stack_begin;
 
         bool recording;
