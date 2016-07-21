@@ -746,7 +746,8 @@ namespace atl {
         min_boundary_m(std::numeric_limits<REAL_T>::min()),
         max_boundary_m(std::numeric_limits<REAL_T>::max()),
         transformation(&default_transformation) {
-            this->Initialize_p(Variable<REAL_T, group>::gradient_structure_g, 0.0);
+            info->vvalue = (0.0);
+            // this->Initialize_p(Variable<REAL_T, group>::gradient_structure_g, 0.0);
         }
 
         Variable(REAL_T val,
@@ -757,8 +758,8 @@ namespace atl {
         min_boundary_m(min_boundary),
         max_boundary_m(max_boundary),
         transformation(&default_transformation) {
-            //            info->vvalue = (val);
-            this->Initialize_p(Variable<REAL_T, group>::gradient_structure_g, val);
+                        info->vvalue = (val);
+            // this->Initialize_p(Variable<REAL_T, group>::gradient_structure_g, val);
         }
 
         Variable(const Variable& other)
