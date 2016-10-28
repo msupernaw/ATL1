@@ -58,6 +58,68 @@
 #include "Floor.hpp"
 #include "Ceil.hpp"
 
+
+namespace atl{
+  
+ /**
+ * Returns the maximum between a and b in a continuous manner using:
+ * 
+ * (a + b + |a - b|) / 2.0;
+ * 
+ * @param a
+ * @param b
+ * @return 
+ */
+template <typename T>
+inline const atl::Variable<T> max(const atl::Variable<T>& a, const atl::Variable<T>& b) {
+    return (a + b +  atl::fabs(a - b)) / 2.0;
+}
+
+/**
+ * Returns the minimum between a and b in a continuous manner using:
+ * 
+ * (a + b - |a - b|) / 2.0;
+ * 
+ * @param a
+ * @param b
+ * @return 
+ */
+template <typename T>
+inline const atl::Variable<T> min(const atl::Variable<T>& a, const atl::Variable<T>& b) {
+    return (a + b - atl::fabs(a - b)) / 2.0;
+} 
+  
+  
+  /**
+ * Returns the maximum between a and b in a continuous manner using:
+ * 
+ * (a + b + |a.GetValue() - b.GetValue()|) / 2.0;
+ * 
+ * @param a
+ * @param b
+ * @return 
+ */
+template <typename T>
+inline const atl::Variable<T> max2(const atl::Variable<T>& a, const atl::Variable<T>& b) {
+    return (a + b +  std::fabs(a.GetValue() - b.GetValue())) / 2.0;
+}
+
+/**
+ * Returns the minimum between a and b in a continuous manner using:
+ * 
+ * (a + b - |a.GetValue() - b.GetValue()|) / 2.0;
+ * 
+ * @param a
+ * @param b
+ * @return 
+ */
+template <typename T>
+inline const atl::Variable<T> min2(const atl::Variable<T>& a, const atl::Variable<T>& b) {
+    return (a + b - std::fabs(a.GetValue() - b.GetValue())) / 2.0;
+}
+  
+}
+
 //
 //typedef atl::Variable<double> variable;
 //typedef atl::Variable<long double> variablel;
