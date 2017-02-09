@@ -229,7 +229,7 @@ namespace atl {
         bool so_mark = false;
         bool to_mark = false;
 
-        VariableInfo() : dvalue(0.0), vvalue(0.0), count(1), dependence_level(1), is_dependent(0), id(VariableIdGenerator::instance()->next()) {
+        VariableInfo() : dvalue(0.0), vvalue(0.0), count(2), dependence_level(1), is_dependent(0), id(VariableIdGenerator::instance()->next()) {
 
 
         }
