@@ -679,7 +679,7 @@ namespace atl {
 
         void ClearReStructures() {
             for (int i = 0; i < this->random_variables_m.size(); i++) {
-                std::fill(this->rand_hessian[i].begin(),this->rand_hessian[i].end(),static_cast<T>(0.0));
+                std::fill(this->rand_hessian[i].begin(), this->rand_hessian[i].end(), static_cast<T> (0.0));
             }
         }
 
@@ -742,7 +742,7 @@ namespace atl {
                 //compute logdetH
                 T ld = cholesky_outer.logdet();
                 log_det = ld;
-//                log_det.SetName("log_det");
+                //                log_det.SetName("log_det");
 
                 for (int i = 0; i < PARAMETERS_SIZE; i++) {
                     derivatives_f[this->parameters_m[i]->info] = g[i]; //hr(0, i);
@@ -776,7 +776,7 @@ namespace atl {
                 atl::Variable<T>::gradient_structure_g.Reset();
                 atl::Variable<T>::gradient_structure_g.recording = false;
                 f = this->objective_function_m->Evaluate();
-//                f.SetName("F");
+                //                f.SetName("F");
                 atl::Variable<T>::gradient_structure_g.recording = recording;
 
 
@@ -841,7 +841,7 @@ namespace atl {
                 //compute logdetH
                 T ld = cholesky_outer.logdet();
                 log_det = ld;
-//                log_det.SetName("log_det");
+                //                log_det.SetName("log_det");
                 atl::Variable<T>::gradient_structure_g.recording = false;
                 f = this->objective_function_m->Evaluate();
 
@@ -870,33 +870,46 @@ namespace atl {
 
         void Print() {
             std::cout << "Iteration: " << this->outer_iteration << "\n";
+            std::cout << "Phase: " << this->phase_m << "\n";
             std::cout << "F = " << this->function_value << "\n";
             std::cout << "Max Gradient Component: " << this->maxgc << "\n";
             std::cout << "Floating-Point Type: Float" << (sizeof (T)*8) << "\n";
             std::cout << "Number of Parameters: " << this->parameters_m.size() << "\n";
-            std::cout << " -----------------------------------------------------------------------------------\n";
-            std::cout << '|' << util::center("Name", 15) << '|' << util::center("Value", 12) << '|' << util::center("Gradient", 12) << '|'
-                    << util::center("Name", 15) << '|' << util::center("Value", 12) << '|' << util::center("Gradient", 12) << '|' << std::endl;
-            std::cout << " -----------------------------------------------------------------------------------\n";
+            std::cout << " -------------------------------------------------------------------------------------------------------------------------------------\n";
+            std::cout << '|' << util::center("Name", 40) << '|' << util::center("Value", 12) << '|' << util::center("Gradient", 12) << '|'
+                    << util::center("Name", 40) << '|' << util::center("Value", 12) << '|' << util::center("Gradient", 12) << '|' << std::endl;
+            std::cout << " -------------------------------------------------------------------------------------------------------------------------------------\n";
             int i = 0;
             std::cout.precision(4);
             std::cout << std::scientific;
             for (i = 0; (i + 2)< this->parameters_m.size(); i += 2) {
-                std::cout << '|' << util::center(this->parameters_m[i]->GetName(), 15) << '|';
+                if (std::fabs(this->gradient[i]) == this->maxgc) {
+                    std::cout << "|" << util::center("*" + this->parameters_m[i]->GetName(), 40) << '|';
+                } else {
+                    std::cout << '|' << util::center(this->parameters_m[i]->GetName(), 40) << '|';
+                }
                 std::cout << std::setw(12) << this->parameters_m[i]->GetValue() << '|' << std::setw(12) << this->gradient[i];
-                std::cout << '|' << util::center(this->parameters_m[i + 1]->GetName(), 15) << '|';
+                if (std::fabs(this->gradient[i + 1]) == this->maxgc) {
+                    std::cout << "|" << util::center("*" + this->parameters_m[i + 1]->GetName(), 40) << '|';
+                } else {
+                    std::cout << '|' << util::center(this->parameters_m[i + 1]->GetName(), 40) << '|';
+                }
                 std::cout << std::setw(12) << this->parameters_m[i + 1]->GetValue() << '|' << std::setw(12) << this->gradient[i + 1] << "|\n";
 
                 //                }
             }
 
             for (; i< this->parameters_m.size(); i++) {
-                std::cout << '|' << util::center(this->parameters_m[i]->GetName(), 15) << '|';
+                if (std::fabs(this->gradient[i]) == this->maxgc) {
+                    std::cout << "|" << util::center("*" + this->parameters_m[i]->GetName(), 40) << '|';
+                } else {
+                    std::cout << '|' << util::center(this->parameters_m[i]->GetName(), 40) << '|';
+                }
                 std::cout << std::setw(12) << this->parameters_m[i]->GetValue() << '|' << std::setw(12) << this->gradient[i];
-                std::cout << '|' << util::center("-", 15) << '|';
+                std::cout << '|' << util::center("-", 40) << '|';
                 std::cout << util::center("-", 12) << '|' << util::center("-", 12) << "|\n";
             }
-            std::cout << " -----------------------------------------------------------------------------------\n";
+            std::cout << " -------------------------------------------------------------------------------------------------------------------------------------\n";
             std::cout << "\n\n";
         }
 
@@ -1361,15 +1374,30 @@ namespace atl {
             std::vector<T> g(n, 0.0);
             std::vector<T> d(n, 0.0);
             std::vector<T> x(n, 0.0);
-
+            std::vector<T> b(n * 2, 0.0);
             port::integer lv = 71 + n * (n + 13) / 2;
             std::vector<T> v(lv, 0.0);
             port::integer liv = 60 + n;
             std::vector<port::integer>iv(liv, 0);
             v[0] = 2;
+            std::valarray<T> z(n);
+            std::valarray<T> wg(n);
+            this->best.resize(n);
+            this->x.resize(n);
             for (int i = 0; i < n; i++) {
                 d[i] = 1.0;
                 x[i] = this->parameters_m[i]->GetInternalValue();
+                this->x[i] = x[i];
+                if (this->parameters_m[i]->GetMinBoundary() != std::numeric_limits<T>::min()) {
+                    b[2 * i] = this->parameters_m[i]->GetMinBoundary();
+                } else {
+                    b[2 * i] = this->parameters_m[i]->GetMinBoundary() + 1.0;
+                }
+                if (this->parameters_m[i]->GetMaxBoundary() != std::numeric_limits<T>::max()) {
+                    b[2 * i + 1] = this->parameters_m[i]->GetMaxBoundary();
+                } else {
+                    b[2 * i + 1] = this->parameters_m[i]->GetMaxBoundary() - 1.0;
+                }
             }
 
             atl::Variable<T>::SetRecording(true);
@@ -1379,8 +1407,10 @@ namespace atl {
             fx = f.GetValue();
             this->function_value = f.GetValue();
             this->ComputeGradient(this->parameters_m, this->gradient, this->maxgc);
+            T u = static_cast<T>(0.0);
             for (int i = 0; i < n; i++) {
                 g[i] = this->parameters_m[i]->GetScaledGradient(this->parameters_m[i]->GetInternalValue()) * this->gradient[i];
+                wg[i] = g[i];
             }
             atl::Variable<T>::gradient_structure_g.Reset();
 
@@ -1388,10 +1418,12 @@ namespace atl {
             this->outer_iteration = iter;
             T maxgc;
 
+            T previous_function_value;
             do {
 
 
-                port::drmng_<T>(d.data(), &fx, g.data(), iv.data(), &liv, &lv, &n, v.data(), x.data());
+
+                port::drmng_<T>(/*b.data(),*/ d.data(), &fx, g.data(), iv.data(), &liv, &lv, &n, v.data(), x.data());
 
 
 
@@ -1401,38 +1433,80 @@ namespace atl {
                     atl::Variable<T>::gradient_structure_g.Reset();
                     for (int i = 0; i < n; i++) {
                         this->parameters_m[i]->UpdateValue(x[i]);
+                        this->x[i] = x[i];
                     }
 
                     atl::Variable<T>::SetRecording(true);
-                    //                    atl::Variable<T>::gradient_structure_g.Reset();
+                    //                    atl::Variable<T>::gradient_structure_g.Reset()
+                    previous_function_value = f.GetValue();
                     this->CallObjectiveFunction(f);
                     fx = f.GetValue();
                     this->function_value = f.GetValue();
                     this->ComputeGradient(this->parameters_m, this->gradient, this->maxgc);
                     for (int i = 0; i < n; i++) {
                         g[i] = this->parameters_m[i]->GetScaledGradient(this->parameters_m[i]->GetInternalValue()) * this->gradient[i];
+                        wg[i] = g[i];
                     }
-                    maxgc = std::numeric_limits<T>::min();
+                    z = wg;
+
+                    maxgc = std::fabs(g[0]); // std::numeric_limits<T>::min();
                     for (int i = 0; i < n; i++) {
-                        if (i == 0) {
-                            maxgc = std::fabs(g[i]);
-                        } else if (std::fabs(g[i]) > maxgc) {
+                        if (std::fabs(g[i]) > maxgc) {
                             maxgc = std::fabs(g[i]);
                         }
 
                     }
                     this->maxgc = maxgc;
+
+                    if ((std::fabs(previous_function_value) - std::fabs(fx)) < 1e-5) {
+                        std::cout << "Line searching....\n";
+                        if (!this->line_search(this->parameters_m,
+                                this->function_value,
+                                this->x,
+                                this->best,
+                                z,
+                                this->gradient,
+                                wg,
+                                this->maxgc,
+                                iter, false)) {
+                            std::cout << "Outer Max line searches (" << this->max_line_searches << ").";
+                            for (int i = 0; i < n; i++) {
+                                this->x[i] = this->best[i];
+                            }
+
+                        }
+                    }
+
+                    for (int i = 0; i < n; i++) {
+                        if (std::fabs(g[i]) > maxgc) {
+                            maxgc = std::fabs(g[i]);
+                        }
+
+                    }
+                    this->maxgc = maxgc;
+
+                    for (int i = 0; i < n; i++) {
+                        this->parameters_m[i]->UpdateValue(this->x[i]);
+                        x[i] = this->x[i];
+                        g[i] = this->gradient[i];
+                    }
+
                     //                    atl::Variable<T>::gradient_structure_g.Reset();
                     if ((iter % 10) == 0) {
                         this->Print();
                     }
                 } else {
+
                     for (int i = 0; i < n; i++) {
                         this->parameters_m[i]->UpdateValue(x[i]);
+                        this->x[i] = x[i];
                     }
+
+
 
                     atl::Variable<T>::SetRecording(false);
                     //                    atl::Variable<T>::gradient_structure_g.Reset();
+                    previous_function_value = f.GetValue();
                     this->CallObjectiveFunction(f);
                     fx = f.GetValue();
                     this->function_value = f.GetValue();
@@ -1442,10 +1516,17 @@ namespace atl {
                     }
                 }
 
+
+                if (this->maxgc <= this->tolerance) {
+                    break;
+                }
+
+
             } while ((iv[0]) < 3);
             //            atl::Variable<T>::gradient_structure_g.Reset();
             for (int i = 0; i < n; i++) {
                 this->parameters_m[i]->UpdateValue(x[i]);
+                this->x[i] = x[i];
             }
 
             atl::Variable<T>::SetRecording(true);
@@ -1455,6 +1536,8 @@ namespace atl {
             this->function_value = f.GetValue();
             this->ComputeGradient(this->parameters_m, this->gradient, this->maxgc);
             this->Print();
+
+            std::cout << "port return =" << iv[0] << "\n";
             if (this->maxgc <= this->tolerance) {
                 return true;
             }

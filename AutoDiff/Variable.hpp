@@ -194,7 +194,7 @@ namespace atl {
     template<typename REAL_T, //base type
     int group = 0 > //group identifier
     class Variable : public atl::ExpressionBase<REAL_T, Variable<REAL_T, group > > {
-        static LogitParameterTransformation<REAL_T> default_transformation;
+        static SinParameterTransformation<REAL_T> default_transformation;
         VariableInfo<REAL_T>* mapped_info;
         ParameterTransformation<REAL_T>* transformation;
 
@@ -993,25 +993,25 @@ namespace atl {
          * @param v
          */
         inline void UpdateValue(REAL_T v, atl::Variable<REAL_T>& penalty) {
-
-            if (this->IsBounded()) {
-
-                if (v >= this->GetMaxBoundary()) {
-                    atl::Variable<REAL_T> p(v - this->GetMaxBoundary());
-
-                    this->info->vvalue = v;
-                    penalty += p;
-                } else if (v <= this->GetMinBoundary()) {
-                    atl::Variable<REAL_T> p(std::fabs(v - this->GetMaxBoundary()));
-                    this->info->vvalue = v;
-                    penalty += p;
-                } else {
-                    this->info->vvalue = v;
-                }
-
-            } else {
-                this->SetValue(v);
-            }
+//            this->info->vvalue = this->transformation->Internal2External()
+//            if (this->IsBounded()) {
+//
+//                if (v >= this->GetMaxBoundary()) {
+//                    atl::Variable<REAL_T> p(v - this->GetMaxBoundary());
+//
+//                    this->info->vvalue = v;
+//                    penalty += p;
+//                } else if (v <= this->GetMinBoundary()) {
+//                    atl::Variable<REAL_T> p(std::fabs(v - this->GetMaxBoundary()));
+//                    this->info->vvalue = v;
+//                    penalty += p;
+//                } else {
+//                    this->info->vvalue = v;
+//                }
+//
+//            } else {
+//                this->SetValue(v);
+//            }
 
         }
 
@@ -1073,6 +1073,7 @@ namespace atl {
          * @param max_boundary
          */
         void SetMaxBoundary(REAL_T max_boundary) {
+            this->bounded_m = true;
             this->max_boundary_m = max_boundary;
         }
 
@@ -1089,6 +1090,7 @@ namespace atl {
          * Sets the min boundary.
          */
         void SetMinBoundary(REAL_T min_boundary) {
+            this->bounded_m = true;
             this->min_boundary_m = min_boundary;
         }
 
@@ -1395,7 +1397,7 @@ namespace atl {
     /* ATTRIBUTE_TLS */ GradientStructure<REAL_T> Variable<REAL_T, group>::gradient_structure_g;
 
     template<typename REAL_T, int group>
-    LogitParameterTransformation<REAL_T> Variable<REAL_T, group>::default_transformation;
+    SinParameterTransformation<REAL_T> Variable<REAL_T, group>::default_transformation;
 
 
 }
